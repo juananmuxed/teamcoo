@@ -14,7 +14,7 @@
 
 ---
 
-![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Web&up_color=green&up_message=Online&url=https://datapistas.catapa.be) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/UnBtckE) [![Financial Contributors on Open Collective](https://img.shields.io/opencollective/all/catapa?logo=Open-Collective&label=Contributors)](https://opencollective.com/catapa) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) ![GitHub package.json version](https://img.shields.io/github/package-json/v/juananmuxed/teamcoo?label=Version)
+![Version](https://img.shields.io/github/package-json/version/juananmuxed/teamcoo?label=Version&logo=github) ![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU) 
 
 # What is TeamCoo
 TeamCoo is a platform for non-profit Associations that need to manage large numbers of Volunteers. MEVN (Mongo, Express, Vue, Node) technology based.
@@ -55,13 +55,25 @@ Small associations need some way to unify all the Human Resources options when i
 ## Wiki 🥘
 🚧 Under construction
 
-## Contributing 🍰
+# Associations in this project 💖
+  <a href="https://github.com/juananmuxed/teamcoo"><img src="https://catapa.be/wp-content/uploads/2018/05/cropped-CATAPA-NEW-LOGO-2.png" alt="Catapa" height="40"></a>
+
+[![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Web&up_color=green&up_message=Online&url=https://catapa.be)](https://catapa.be)
+
+[![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Application&up_color=green&up_message=Online&url=https://catapistas.catapa.be)](https://catapistas.catapa.be)
+
+[![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/catapa?label=Collaborators&logo=Open-Collective)](https://opencollective.com/postwoman)
+
+## Want this App ❓
+If you are an Association and want something like this. Contact via email, or any other method with me.
+
+# Contributing 🍰
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our [CODE OF CONDUCT](CODE_OF_CONDUCT.md), and the process for submitting pull requests.
 
 ## Buy Me a Coffee ☕️
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U21M2BE)
 
-## License 📑
+# License 📑
 
 MIT © [MuXeD](LICENSE.md)
