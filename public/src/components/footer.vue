@@ -2,29 +2,44 @@
     <v-footer
         padless
         app
-        elevation="1"
+        elevation="10"
     >
-        <v-container fluid class="pa-1 pr-3 pl-3">
+        <v-container fluid class="py-0 px-3">
 
-            <v-row>
+            <v-row align="center">
 
                 <v-col cols="4">
-                    <v-icon class="ml-2 mr-2"
-                        v-if="!loginuser.dark"
-                        @click="changeLight()"
-                    >fas fa-lightbulb</v-icon>
+                    <v-tooltip
+                        transition="slide-y-reverse-transition"
+                        open-delay="100"
+                        top
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-btn icon @click="changeLight()" class="mx-1" :ripple="false" v-on="on">
+                                <v-icon>{{ !loginuser.dark ? 'fas fa-lightbulb' : 'far fa-lightbulb' }}</v-icon>
+                            </v-btn>
+                        </template>
+                        <span class="text-right caption font-weight-light">{{!loginuser.dark ? 'Lights off' : 'Lights on'}}</span>
+                    </v-tooltip>
 
-                    <v-icon class="ml-2 mr-2"
-                        v-else
-                        @click="changeLight()"
-                    >far fa-lightbulb</v-icon>
                     <v-dialog
                         v-model="menu.dialogs.login"
                         max-width="500"
                         v-if="!isLogged()"
                     >
-                        <template v-slot:activator="{ on }">
-                            <v-icon class="ms-2" v-on="on">fas fa-user</v-icon>
+                        <template v-slot:activator="{ on: onDialog }">
+                            <v-tooltip
+                                transition="slide-y-reverse-transition"
+                                open-delay="100"
+                                top
+                            >
+                                <template v-slot:activator="{ on: onTooltip}">
+                                    <v-btn icon v-on="{...onDialog,...onTooltip}" class="mx-1" :ripple="false">
+                                        <v-icon>fas fa-user</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span class="text-right caption font-weight-light">Login</span>
+                            </v-tooltip>
                         </template>
                         <login-template></login-template>
                     </v-dialog>
@@ -33,8 +48,19 @@
                         v-model="menu.dialogs.logout"
                         max-width="400"
                     >
-                        <template v-slot:activator="{ on }">
-                            <v-icon class="ms-2" v-on="on">fas fa-sign-out-alt</v-icon>
+                        <template v-slot:activator="{ on: onDialog }">
+                            <v-tooltip
+                                transition="slide-y-reverse-transition"
+                                open-delay="100"
+                                top
+                            >
+                                <template v-slot:activator="{ on: onTooltip}">
+                                    <v-btn icon v-on="{...onDialog,...onTooltip}" class="mx-1" :ripple="false">
+                                        <v-icon>fas fa-sign-out-alt</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span class="text-right caption font-weight-light">Logout</span>
+                            </v-tooltip>
                         </template>
                         <confirmation-template 
                             title="Log Out" 
@@ -50,7 +76,7 @@
 
                 <v-col
                     cols="8"
-                    class="text-right caption font-weight-light"
+                    class="text-right caption font-weight-light pr-6"
                 >
                     <v-btn text x-small href="https://github.com/juananmuxed" target="_blank">
                         <v-icon left x-small>fab fa-github</v-icon> 

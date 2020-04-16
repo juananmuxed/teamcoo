@@ -4,7 +4,8 @@ import menu from './modules/menu'
 import user from './modules/user'
 import actions from './modules/actions'
 import createPersistedState from 'vuex-persistedstate'
-import Cookies from 'js-cookie'
+import SecureLS from "secure-ls";
+var ls = new SecureLS({ isCompression: false });
 
 Vue.use(Vuex);
 
@@ -21,10 +22,10 @@ export default new Vuex.Store({
       key: 'teamcoo-catapa-userdata',
       paths: ['user.loginuser'],
       storage: {
-        getItem: key => Cookies.get(key),
-        setItem: (key, value) => Cookies.set(key, value, { expires: 30 }),
-        removeItem: key => Cookies.remove(key)
+        getItem: (key) => ls.get(key),
+        setItem: (key, value) => ls.set(key, value),
+        removeItem: (key) => ls.remove(key),
       }
     })
   ]
-});
+})

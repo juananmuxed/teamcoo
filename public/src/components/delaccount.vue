@@ -19,11 +19,9 @@
                     >
                         <template v-slot:append>
                             <v-slide-x-transition>
-                                <v-icon color="primary" v-if="del.password != ''" @click="del.password = ''">fas fa-times</v-icon>
+                                <v-icon color="primary" v-if="del.password != ''" @click="del.password = ''">fas fa-times-circle</v-icon>
                             </v-slide-x-transition>
-                        </template>
-                        <template v-slot:append-outer>
-                            <v-icon color="primary" @click="del.show = !del.show">{{del.show ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
+                            <v-icon class="pl-2" color="primary" @click="del.show = !del.show">{{del.show ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
                         </template>
                     </v-text-field>
                 </v-col>
@@ -37,7 +35,7 @@
                     >
                         <template v-slot:append>
                             <v-slide-x-transition>
-                                <v-icon color="primary" v-if="del.del != ''" @click="del.del = ''">fas fa-times</v-icon>
+                                <v-icon color="primary" v-if="del.del != ''" @click="del.del = ''">fas fa-times-circle</v-icon>
                             </v-slide-x-transition>
                         </template>
                     </v-text-field>

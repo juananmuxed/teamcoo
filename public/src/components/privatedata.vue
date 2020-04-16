@@ -49,7 +49,7 @@
                     v-model="menu.dialogs.edituser"
                 >
                     <template v-slot:activator="{ on }">
-                        <v-btn v-on="on" block color="primary" class="my-2" :disabled="!loginuser.verifiedemail">
+                        <v-btn v-on="on" block color="primary" class="my-2" :disabled="!loginuser.verifiedemail" @click="loadUserData(loginuser.id)">
                             <v-icon left>fas fa-user-edit</v-icon> Edit Information
                         </v-btn>
                     </template>
@@ -140,49 +140,28 @@
                             </v-menu>
                         </template>
                         <template v-slot:append="{ item }">
-                            <v-dialog
-                                v-if="!loginuser.workgroups.some(wg => wg._wgId === item._id)"
-                                max-width="650"
+                            <v-tooltip 
+                                transition="slide-x-transition"
+                                open-delay="100"
+                                right
                             >
-                                <template v-slot:activator="{ on: onDialog }">
-                                    <v-tooltip
-                                        transition="slide-x-transition"
-                                        open-delay="100"
-                                        right
-                                    >
-                                        <template v-slot:activator="{ on: onTooltip }">
-                                            <v-icon color="accent" v-on="{...onDialog,...onTooltip}">fas fa-check</v-icon>
-                                        </template>
-                                        <span class="text-right caption font-weight-light">Join</span>
-                                    </v-tooltip>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon v-on="on" :color="loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'info' : 'error'">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'fas fa-check-circle' : 'fas fa-times-circle'}}</v-icon>
                                 </template>
-                                <suscribe-to-work-group :id="item._id"></suscribe-to-work-group>
-                            </v-dialog>
-                            <v-dialog
-                                v-else
-                                max-width="400"
+                                <span class="text-right caption font-weight-light">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'Joined' : 'Unjoined'}}</span>
+                            </v-tooltip>
+                            <v-tooltip
+                                transition="slide-x-transition"
+                                open-delay="100"
+                                right
                             >
-                                <template v-slot:activator="{ on: onDialog }">
-                                    <v-tooltip
-                                        transition="slide-x-transition"
-                                        open-delay="100"
-                                        right
-                                    >
-                                        <template v-slot:activator="{ on: onTooltip }">
-                                            <v-icon color="error" v-on="{...onDialog,...onTooltip}">fas fa-times</v-icon>
-                                        </template>
-                                        <span class="text-right caption font-weight-light">Unjoin</span>
-                                    </v-tooltip>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn v-on="on" :to="'/workgroup/' + item._id" icon>
+                                        <v-icon color="primary">fas fa-eye</v-icon>
+                                    </v-btn>
                                 </template>
-                                <confirmation-template 
-                                    :title="`Unjoin from <span class='${item.color}--text pl-2'>${item.name}</span>`" 
-                                    description="You are about to unjoin this Work Group. Your questions are saved in the Database for future stats. <br><br>Are you sure?" 
-                                    :cancelFunction="null" 
-                                    textButton="Unsuscribe" 
-                                    :actionparams="{id:item._id,name:item.name}" 
-                                    :action="unsuscribeto"
-                                ></confirmation-template>
-                            </v-dialog>
+                                <span class="text-right caption font-weight-light">See more</span>
+                            </v-tooltip>
                         </template>
                     </v-treeview>
                 </v-skeleton-loader>
@@ -249,6 +228,30 @@
                                 </v-card>
                             </v-menu>
                         </template>
+                        <template v-slot:append="{ item }">
+                            <v-tooltip 
+                                transition="slide-x-transition"
+                                open-delay="100"
+                                right
+                            >
+                                <template v-slot:activator="{ on }">
+                                    <v-icon v-on="on" :color="loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'info' : 'error'">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'fas fa-check-circle' : 'fas fa-times-circle'}}</v-icon>
+                                </template>
+                                <span class="text-right caption font-weight-light">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'Joined' : 'Unjoined'}}</span>
+                            </v-tooltip>
+                            <v-tooltip
+                                transition="slide-x-transition"
+                                open-delay="100"
+                                right
+                            >
+                                <template v-slot:activator="{ on }">
+                                    <v-btn v-on="on" :to="'/workgroup/' + item._id" icon>
+                                        <v-icon color="primary">fas fa-eye</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span class="text-right caption font-weight-light">See more</span>
+                            </v-tooltip>
+                        </template>
                     </v-treeview>
                 </v-skeleton-loader>
             </v-card-text>
@@ -284,20 +287,16 @@
 <script>
 import { mapState, mapActions , mapMutations, mapGetters } from 'vuex'
 import editUser from './edituser.vue'
-import confirm from './confirm.vue'
 import deleteAccount from './delaccount.vue'
 import changePassword from './changepass.vue'
 import createwg from './createwg.vue'
-import suscribeto from './suscribeto.vue'
 
 export default {
     components:{
         'edit-user':editUser,
         'delete-account': deleteAccount,
         'change-pass': changePassword,
-        'suscribe-to-work-group': suscribeto,
-        'create-work-group': createwg,
-        'confirmation-template': confirm
+        'create-work-group': createwg
     },
     computed: {
         ...mapState({
@@ -312,7 +311,7 @@ export default {
     methods: {
         ...mapMutations('menu',['cancelDialog']),
         ...mapMutations('actions',['clearLoadedWG']),
-        ...mapActions('user',['sendVerificationMail','unsuscribeto']),
+        ...mapActions('user',['sendVerificationMail','loadUserData']),
         ...mapGetters('user',['isSuscribed'])
     }
 }   

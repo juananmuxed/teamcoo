@@ -162,8 +162,7 @@ const mutations = {
             state.loginuser.workgroups = user.data.workgroups,
             state.loginuser.unsuscribedworkgroups = user.data.unsuscribedworkgroups,
             state.loginuser.membership = user.data.membership,
-            state.loginuser.emailconfig = user.data.emailconfig,
-            state.loginuser.tracing = user.data.tracing
+            state.loginuser.emailconfig = user.data.emailconfig
     },
     usertoedit: (state, user) => {
         state.edituser.firstname = user.data.firstname,
@@ -254,7 +253,9 @@ const getters = {
             state.edituser.rol.value == state.notEditUser.rol.value &&
             state.edituser.username == state.notEditUser.username &&
             state.edituser.image == state.notEditUser.image &&
-            state.edituser.emailconfig.length == state.notEditUser.emailconfig.length &&
+            state.edituser.emailconfig[0] == state.notEditUser.emailconfig[0] &&
+            state.edituser.emailconfig[1] == state.notEditUser.emailconfig[1] &&
+            state.edituser.emailconfig[2] == state.notEditUser.emailconfig[2] &&
             state.edituser.imagefile == state.notEditUser.imagefile
         ) {
             return false

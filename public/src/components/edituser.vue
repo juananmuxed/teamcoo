@@ -13,11 +13,6 @@
                         v-model="edituser.firstname"
                         :rules="[rules.required]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="edituser.firstname != ''" @click="edituser.firstname = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" class="py-1">
@@ -27,11 +22,6 @@
                         v-model="edituser.lastname"
                         :rules="[rules.required]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="edituser.lastname != ''" @click="edituser.lastname = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1">
@@ -42,11 +32,6 @@
                         v-model="edituser.username"
                         :rules="[rules.nospaces,rules.maxletters,rules.required]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="edituser.username != ''" @click="edituser.username = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1">
@@ -62,11 +47,6 @@
                         prepend-icon="fas fa-camera"
                         hint="PNG, JPEG, GIF or BMP"
                     >
-                        <template v-slot:append-outer>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="edituser.imagefile != null" @click="edituser.imagefile = null">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-file-input>
                 </v-col>
                 <v-col cols="12" class="py-1">
@@ -77,11 +57,6 @@
                         :disabled="edituser.imagefile != null"
                         hint="e.g.: https://i.picsum.photos/id/901/200/200.jpg"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="edituser.image != ''" @click="edituser.image = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1 headline">

@@ -11,7 +11,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "js-cookie": "^2.2.1",
-    "js-cookies": "^1.0.4",
+    "secure-ls": "^1.2.6",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-jwt-decode": "^0.1.0",

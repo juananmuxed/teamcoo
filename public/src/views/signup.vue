@@ -21,11 +21,6 @@
                                         v-model="newuser.firstname"
                                         :rules="[rules.required]"
                                     >
-                                        <template v-slot:append>
-                                            <v-slide-x-transition>
-                                                <v-icon color="primary" v-if="newuser.firstname != ''" @click="newuser.firstname = ''">fas fa-times</v-icon>
-                                            </v-slide-x-transition>
-                                        </template>
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6">
@@ -35,11 +30,6 @@
                                         v-model="newuser.lastname"
                                         :rules="[rules.required]"
                                     >
-                                        <template v-slot:append>
-                                            <v-slide-x-transition>
-                                                <v-icon color="primary" v-if="newuser.lastname != ''" @click="newuser.lastname = ''">fas fa-times</v-icon>
-                                            </v-slide-x-transition>
-                                        </template>
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="12">
@@ -50,11 +40,6 @@
                                         :rules="[rules.required, rules.emailrules]"
                                         hint="Correct Format: user@domain.com"
                                     >
-                                        <template v-slot:append>
-                                            <v-slide-x-transition>
-                                                <v-icon color="primary" v-if="newuser.email != ''" @click="newuser.email = ''">fas fa-times</v-icon>
-                                            </v-slide-x-transition>
-                                        </template>
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6">
@@ -65,11 +50,6 @@
                                         label="Password *"
                                         :rules="[rules.required,rules.passwordrules,rules.nospaces]"
                                     >
-                                        <template v-slot:append>
-                                            <v-slide-x-transition>
-                                                <v-icon color="primary" v-if="newuser.password != ''" @click="newuser.password = ''">fas fa-times</v-icon>
-                                            </v-slide-x-transition>
-                                        </template>
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="6">
@@ -80,11 +60,6 @@
                                         label="Password Confirm *"
                                         :rules="[rules.required,rules.passwordconfirm]"
                                     >
-                                        <template v-slot:append>
-                                            <v-slide-x-transition>
-                                                <v-icon color="primary" v-if="newuser.passwordconfirm != ''" @click="newuser.passwordconfirm = ''">fas fa-times</v-icon>
-                                            </v-slide-x-transition>
-                                        </template>
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="12">

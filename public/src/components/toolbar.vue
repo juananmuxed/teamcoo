@@ -35,8 +35,8 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon v-if="isLogged()">
-        <v-icon class="pa-2" @click="menu.active = !menu.active; menu.drawerMini = false">fas fa-bars</v-icon>
+      <v-btn icon v-if="isLogged()" :ripple="false">
+        <v-icon class="pa-2" @click="menu.active = !menu.active">{{ menu.drawerMini == true ? 'fas fa-ellipsis-v' : 'fas fa-list-ul' }}</v-icon>
       </v-btn>
 
     </v-app-bar>

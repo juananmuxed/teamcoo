@@ -14,11 +14,6 @@
                         v-model="tasksForm.name"
                         :rules="[rules.required]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="tasksForm.name != ''" @click="tasksForm.name = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1">
@@ -31,11 +26,6 @@
                         v-model="tasksForm.description"
                         :rules="[rules.required,rules.maxdescletters]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="tasksForm.description != ''" @click="tasksForm.description = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-textarea>
                 </v-col>
                 <v-col cols="12" md="6" class="py-1">
@@ -94,7 +84,7 @@
                     >
                         <template v-slot:append-outer>
                             <v-slide-x-transition>
-                                <v-icon color="primary" v-if="tasksForm.image != null" @click="tasksForm.image = null">fas fa-times</v-icon>
+                                <v-icon color="primary" v-if="tasksForm.image != null" @click="tasksForm.image = null">fas fa-times-circle</v-icon>
                             </v-slide-x-transition>
                         </template>
                     </v-file-input>
@@ -106,11 +96,6 @@
                         v-model="tasksForm.link"
                         :rules="[rules.validlink]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="tasksForm.link != ''" @click="tasksForm.link = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1">

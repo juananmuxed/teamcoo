@@ -20,7 +20,7 @@
               </a>
             </span>
           </p>
-          <p v-if="wg.linktodocuments != null">
+          <p v-if="wg.linktodocuments != ''">
             <span>
               In addition you have more info in
               <a

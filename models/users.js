@@ -44,10 +44,6 @@ const userScheme = mongoose.Schema({
             required: [true, 'Please accept policy']
         }
     },
-    tracing:{
-        type: Array,
-        default: []
-    },
     workgroups:{
         type: Array,
         default: []

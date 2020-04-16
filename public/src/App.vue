@@ -10,7 +10,7 @@
             v-if="menu.upDown"
             fixed
             fab
-            bottom
+            top
             right
             depressed
             color="secondary"

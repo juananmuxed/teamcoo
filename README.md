@@ -1,58 +1,67 @@
-## TeamCoo
-A little info about your project and/ or overview that explains **what** the project is about.
+<div align="center">
+  <a href="https://github.com/juananmuxed/teamcoo"><img src="media/TeamCoo_Logo_Shadow.png" alt="TeamCoo Logo" height="140"></a>
+  <br>
+  <br>
+  <p>
+    <b>HR Platform for Non-profit associations</b>
+  </p>
+  <p>
+    <sub>Built with ❤︎ by
+      <a href="https://github.com/juananmuxed">MuXeD</a>
+    </sub>
+  </p>
+</div>
 
-## Motivation
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+---
 
-## Build status
-Build status of continus integration i.e. travis, appveyor etc. Ex. - 
+![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Web&up_color=green&up_message=Online&url=https://datapistas.catapa.be) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/UnBtckE) [![Financial Contributors on Open Collective](https://img.shields.io/opencollective/all/catapa?logo=Open-Collective&label=Contributors)](https://opencollective.com/catapa) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) ![GitHub package.json version](https://img.shields.io/github/package-json/v/juananmuxed/teamcoo?label=Version)
 
-[![Build Status](https://travis-ci.org/akashnimare/foco.svg?branch=master)](https://travis-ci.org/akashnimare/foco)
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/akashnimare/foco?branch=master&svg=true)](https://ci.appveyor.com/project/akashnimare/foco/branch/master)
+# What is TeamCoo
+TeamCoo is a platform for non-profit Associations that need to manage large numbers of Volunteers. MEVN (Mongo, Express, Vue, Node) technology based.
 
-## Code style
-If you're using any code style like xo, standard etc. That will help others while contributing to your project. Ex. -
+Small associations need some way to unify all the Human Resources options when it comes to gathering Volunteers to do different tasks.
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
- 
-## Screenshots
-Include logo/demo screenshot etc.
+## Screenshots 🍩
 
-## Tech/framework used
-Ex. -
+🚧 Under construction
 
-<b>Built with</b>
-- [Electron](https://electron.atom.io)
+## Built with 🏗
+- [Vue](https://vuejs.org/)
+- [Express](https://expressjs.com)
+- [Node](https://nodejs.org/)
+- [Mongo](https://www.mongodb.com)
 
-## Features
-What makes your project stand out?
+<b>Dependencies</b>
+- [Vuex](https://github.com/vuejs/vuex)
+- [Vuetify](https://vuetifyjs.com/)
+- [Bcrypt](https://www.npmjs.com/package/bcrypt)
+- [DotEnv](https://www.npmjs.com/package/dotenv)
+- [Ejs](https://www.npmjs.com/package/ejs)
+- [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken)
+- [GridFS](https://www.npmjs.com/package/gridfs-stream)
+- [NodeMailer](https://nodemailer.com)
+- [Axios](https://github.com/axios/axios)
+- [JS Cookie](https://www.npmjs.com/package/js-cookie)
+- [Secure LS](https://www.npmjs.com/package/secure-ls)
+- [Vue JWT Decode](https://www.npmjs.com/package/vue-jwt-decode)
+- [Vuex PersistedState](https://www.npmjs.com/package/vuex-persistedstate)
 
-## Code Example
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+## Features 🎉
+🚧 Under construction
 
-## Installation
-Provide step by step series of examples and explanations about how to get a development env running.
+## Installation 🥪
+🚧 Under construction
 
-## API Reference
+## Wiki 🥘
+🚧 Under construction
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+## Contributing 🍰
 
-## Tests
-Describe and show how to run the tests with code examples.
+Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our [CODE OF CONDUCT](CODE_OF_CONDUCT.md), and the process for submitting pull requests.
 
-## How to use?
-If people like your project they’ll want to learn how they can use it. To do so include step by step guide to use your project.
+## Buy Me a Coffee ☕️
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U21M2BE)
 
-## Contribute
+## License 📑
 
-Let people know how they can contribute into your project. A [contributing guideline](https://github.com/zulip/zulip-electron/blob/master/CONTRIBUTING.md) will be a big plus.
-
-## Credits
-Give proper credits. This could be a link to any repo which inspired you to build this project, any blogposts or links to people who contrbuted in this project. 
-
-#### Anything else that seems useful
-
-## License
-A short snippet describing the license (MIT, Apache etc)
-
-MIT © [Yourname]()
+MIT © [MuXeD](LICENSE.md)

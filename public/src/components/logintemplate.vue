@@ -19,11 +19,6 @@
                             :rules="[rules.required, rules.emailrules]"
                             hint="Correct Format: user@domain.com"
                         >
-                            <template v-slot:append>
-                                <v-slide-x-transition>
-                                    <v-icon color="primary" v-if="user.email != ''" @click="user.email = ''">fas fa-times</v-icon>
-                                </v-slide-x-transition>
-                            </template>
                         </v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -37,9 +32,6 @@
                             @keyup.enter="login()"
                         >
                             <template v-slot:append>
-                                <v-slide-x-transition>
-                                    <v-icon color="primary" v-if="user.password != ''" @click="user.password = ''">fas fa-times</v-icon>
-                                </v-slide-x-transition>
                                 <v-icon width="52" class="pl-2" v-if="!user.passshow" transition="fade-transition" @click="user.passshow = !user.passshow">fas fa-eye-slash</v-icon>
                                 <v-icon width="52" class="pl-2" v-else transition="fade-transition" @click="user.passshow = !user.passshow">fas fa-eye</v-icon>
                             </template>

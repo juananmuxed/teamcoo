@@ -14,11 +14,6 @@
                         v-model="workgroupForm.name"
                         :rules="[rules.required,rules.minletter]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="workgroupForm.name != ''" @click="workgroupForm.name = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1">
@@ -69,11 +64,6 @@
                         v-model="workgroupForm.description"
                         :rules="[rules.required,rules.maxdescletters]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="workgroupForm.description != ''" @click="workgroupForm.description = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-textarea>
                 </v-col>
                 <v-col cols="12" class="py-1">
@@ -88,11 +78,6 @@
                         accept="application/pdf"
                         :rules="[rules.maxSize]"
                     >
-                        <template v-slot:append-outer>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="workgroupForm.dossier != null" @click="workgroupForm.dossier = null">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-file-input>
                 </v-col>
                 <v-col cols="12" class="py-1">
@@ -102,11 +87,6 @@
                         v-model="workgroupForm.link"
                         :rules="[rules.validlink]"
                     >
-                        <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="workgroupForm.link != ''" @click="workgroupForm.link = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1">

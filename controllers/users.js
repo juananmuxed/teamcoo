@@ -25,8 +25,6 @@ exports.registerNewUser = async(req,res) => {
             message: "E-mail already in use"
           });
         }
-        let trace = []
-        trace.push({name: 'Create his account', date: Date.now(), description: 'User create his account in the web'})
         const user = new User({
           username: req.body.username,
           email: req.body.email,
@@ -35,8 +33,7 @@ exports.registerNewUser = async(req,res) => {
           password: req.body.password,
           accept: req.body.accept,
           verifiedemail: req.body.verifiedemail,
-          rol: req.body.rol,
-          tracing: trace
+          rol: req.body.rol
         });
         
         let data = await user.save();
@@ -104,10 +101,10 @@ exports.loginUser = async(req,res) => {
 
 exports.getUserData = async(req,res) => {
     try {
-        const email = req.userData.email;
+        const email = req.userData.email
         const user = await User.findByEmail(email)
         if(!user){
-            return res.status(401).json({message: "Login failed! Check your credentials"});
+            return res.status(401).json({message: "Login failed! Check your credentials"})
         }
         res.status(201).json(user)
     } catch (error) {

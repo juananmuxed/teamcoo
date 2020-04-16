@@ -15,12 +15,7 @@
                         :type="password.oldshow ? 'text' : 'password'"
                     >
                         <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="password.oldpassword != ''" @click="password.oldpassword = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
-                        <template v-slot:append-outer>
-                            <v-icon color="primary" @click="password.oldshow = !password.oldshow">{{password.oldshow ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
+                            <v-icon class="pl-2" color="primary" @click="password.oldshow = !password.oldshow">{{password.oldshow ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
                         </template>
                     </v-text-field>
                 </v-col>
@@ -33,12 +28,7 @@
                         :type="password.newshow ? 'text' : 'password'"
                     >
                         <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="password.newpassword != ''" @click="password.newpassword = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
-                        <template v-slot:append-outer>
-                            <v-icon color="primary" @click="password.newshow = !password.newshow">{{password.newshow ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
+                            <v-icon class="pl-2" color="primary" @click="password.newshow = !password.newshow">{{password.newshow ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
                         </template>
                     </v-text-field>
                     <v-text-field
@@ -49,12 +39,7 @@
                         :type="password.confshow ? 'text' : 'password'"
                     >
                         <template v-slot:append>
-                            <v-slide-x-transition>
-                                <v-icon color="primary" v-if="password.confirmnewpassword != ''" @click="password.confirmnewpassword = ''">fas fa-times</v-icon>
-                            </v-slide-x-transition>
-                        </template>
-                        <template v-slot:append-outer>
-                            <v-icon color="primary" @click="password.confshow = !password.confshow">{{password.confshow ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
+                            <v-icon class="pl-2" color="primary" @click="password.confshow = !password.confshow">{{password.confshow ? 'fas fa-eye' : 'fas fa-eye-slash'}}</v-icon>
                         </template>
                     </v-text-field>
                 </v-col>

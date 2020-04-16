@@ -1,12 +1,13 @@
 <template>
   <v-navigation-drawer
         v-model="menu.active"
-        fixed
         app
         :mini-variant="menu.drawerMini"
+        mini-variant-width="68"
         clipped
         mobile-break-point="960"
         v-if="isLogged()"
+        floating
       >
         <v-list
           shaped
@@ -37,8 +38,6 @@
               <v-icon @click="menu.drawerMini = !menu.drawerMini">fas fa-arrow-left</v-icon>
             </v-list-item-action>
           </v-list-item>
-
-          <v-divider></v-divider>
 
           <template v-if="menu.drawerMini">
             <v-tooltip 
@@ -105,3 +104,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .v-navigation-drawer--clipped:not(.v-navigation-drawer--temporary):not(.v-navigation-drawer--is-mobile){
+    z-index:2
+  }
+</style>
