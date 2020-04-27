@@ -1,6 +1,5 @@
 <template>
     <v-card
-        max-width="400"
         class="mx-auto pa-2"
     >
         <v-card-title class="headline font-weight-medium text-uppercase" v-html="title"></v-card-title>

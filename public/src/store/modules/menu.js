@@ -1,4 +1,5 @@
 import Vuetify from '../../plugins/vuetify'
+import router from '@/router'
 
 const state = {
     menu: {
@@ -26,14 +27,22 @@ const state = {
             suscribeto: false,
             unsuscribewg: false,
             createtask:false,
-            createinterest:false
+            createinterest:false,
+            editwg:false,
+            confirm:false
         },
         loader:{
             wg:false,
             secretwg:false,
-            tasks:false
+            tasks:false,
+            itembig:false
         },
-        cookie: false
+        cookie: false,
+        progressbar:{
+            active:false,
+            color:'info',
+            value:0
+        }
     },
     snackbar: {
         active: false,
@@ -74,8 +83,13 @@ const mutations = {
         state.alert.color = color
     },
     cancelDialog: (state, dialog) => { state.menu.dialogs[dialog] = false },
-    loadingstate: (state, loader) => { state.menu.loader[loader] = !state.menu.loader[loader] },
-    cookieChange: (state) => { state.menu.cookie = !state.menu.cookie }
+    loadingstate: (state, [loader, bool]) => { state.menu.loader[loader] = bool },
+    cookieChange: (state) => { state.menu.cookie = !state.menu.cookie },
+    loadingbar:(state, [color, active , value]) => {
+        if(color != null){state.menu.progressbar.color = color}
+        if(active != null){state.menu.progressbar.active = active}
+        if(value != null){state.menu.progressbar.value = value}
+    }
 }
 
 const getters = {
@@ -98,6 +112,14 @@ const actions = {
         else {
             commit('notification', ['info', 1, 'Lights On']);
         }
+    },
+    goBack() {
+        setTimeout(() => {
+            router.go(-1)
+        }, 200);
+    },
+    skeletonOn({commit},nameSkeleton) {
+        commit('loadingstate',[nameSkeleton,true])
     }
 }
 

@@ -144,7 +144,7 @@ export default {
   computed: {
     ...mapState({
       menu: state => state.menu.menu,
-      wgloaded: state => state.actions.loadedSuscription,
+      wgloaded: state => state.actions.searchedWG,
       loginuser: state => state.user.loginuser
     })
   },
@@ -153,7 +153,6 @@ export default {
     ...mapActions("user", ["suscribeto"])
   },
   async created() {
-    await this.loadWGsuscription(this.id);
     this.wg = this.wgloaded;
     if (this.loginuser.unsuscribedworkgroups.some( uwg => uwg._wgId === this.wg._id)){
         this.suscribed = this.loginuser.unsuscribedworkgroups.find( uwg => uwg._wgId === this.wg._id)

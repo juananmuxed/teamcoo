@@ -1,3 +1,4 @@
+import router from '@/router'
 import Axios from 'axios'
 import Cookies from 'js-cookie'
 import { treeBuild , todayFormatToPicker , generateRandomColor } from '../../utils/utils'
@@ -9,6 +10,7 @@ const state = {
     nestedWGs: [],
     secretnestedWGs: [],
     topics: [],
+    searchedWG:{},
     temporaluser:{
         firstname:'',
         lastname:'',
@@ -115,6 +117,26 @@ const mutations = {
             state.workgroupForm.color = '#E0E0E0',
             state.workgroupForm.textcolor = 'black'
     },
+    loadeditedwg:(state) => {
+        state.workgroupForm.name = state.searchedWG.name,
+        state.workgroupForm.description = state.searchedWG.description,
+        state.workgroupForm.link = state.searchedWG.linktodocuments,
+        state.workgroupForm.color = state.searchedWG.color,
+        state.workgroupForm.textcolor = state.searchedWG.textcolor
+        if(state.searchedWG.dossier != null){state.workgroupForm.oldDossier = state.searchedWG.dossier}
+        else{state.workgroupForm.oldDossier = null}
+        state.workgroupForm.questionsSelected = []
+        for (let x = 0; x < state.searchedWG.questions.length; x++) {
+            let tempWGquestion = {
+                text:state.searchedWG.questions[x].name,
+                type:state.searchedWG.questions[x].type,
+                value:state.searchedWG.questions[x]._id
+            }
+            state.workgroupForm.questionsSelected.push(tempWGquestion)
+        }
+        if(state.searchedWG.secret){state.workgroupForm.secret = true, state.workgroupForm.secretparent = state.searchedWG.parent}
+        else{state.workgroupForm.secret = false,state.workgroupForm.parent = state.searchedWG.parent}
+    },
     actionsLoad: (state, actions) => { state.actions = actions },
     topicsLoad: (state, topics) => { state.topics = topics },
     wgLoad: (state, workgroups) => { state.workgroups = workgroups },
@@ -123,14 +145,16 @@ const mutations = {
     secretwgNested: (state, secretnestedWGs) => { state.secretnestedWGs = secretnestedWGs },
     questionsLoad: (state, questions) => {
         state.questions = questions
+        let tempQuestions = []
         for (let i = 0; i < questions.length; i++) {
             let question = {
                 text: questions[i].name,
                 value: questions[i]._id,
                 type: questions[i].type
             }
-            state.workgroupForm.questions.push(question)
+            tempQuestions.push(question)
         }
+        state.workgroupForm.questions = tempQuestions
     },
     addTopic: (state, topic) => { state.actions.topics.push(topic) },
     changeTextColor: (state, color) => { state.workgroupForm.textcolor = color },
@@ -140,7 +164,8 @@ const mutations = {
     delcheck: (state) => { state.questionForm.checkboxCount--; state.questionForm.checkboxs.pop() },
     addradio: (state, value) => { state.questionForm.radioCount++; state.questionForm.radios.push({ answer: 'Option ' + (state.questionForm.radioCount + 1), value: value + 1 }) },
     delradio: (state) => { state.questionForm.radioCount--; state.questionForm.radios.pop() },
-    wgforsuscription: (state, wg) => { state.loadedSuscription = wg[0] }
+    wgforsuscription: (state, wg) => { state.loadedSuscription = wg[0] },
+    pullWG:(state,wg) => {state.searchedWG = wg}
 }
 
 const getters = {
@@ -178,6 +203,40 @@ const getters = {
             state.questionForm.name != '' &&
             state.questionForm.type.length != 0 &&
             state.questionForm.description.length <= 200
+        ) {
+            return false
+        }
+        else {
+            return true
+        }
+    },
+    editedwg:(state) =>{
+        let invalidquestion = true
+        for (let x = 0; x < state.workgroupForm.questionsSelected.length; x++) {
+            if(state.searchedWG.questions.some(question => question._id == state.workgroupForm.questionsSelected[x].value)){
+                invalidquestion = false
+            }
+        }
+        if (
+            state.workgroupForm.name != state.searchedWG.name ||
+            state.workgroupForm.description != state.searchedWG.description ||
+            state.workgroupForm.link != state.searchedWG.linktodocuments ||
+            state.workgroupForm.color != state.searchedWG.color ||
+            invalidquestion
+        ) {
+            return false
+        }
+        else {
+            return true
+        }
+    },
+    correctwg:() => {
+        if (
+            state.workgroupForm.name != '' &&
+            state.workgroupForm.description != '' &&
+            state.workgroupForm.description.length <= 200 &&
+            state.workgroupForm.name.length >= 3 &&
+            state.workgroupForm.questionsSelected.length != 0
         ) {
             return false
         }
@@ -314,7 +373,7 @@ const actions = {
             }
             await Axios.post("/questions/create", body, config)
                 .then(() => {
-                    commit('menu/notification', ['info', 5, 'Question saved'], { root: true })
+                    commit('menu/notification', ['info', 3, 'Question saved'], { root: true })
                     dispatch('loadQuestions')
                     commit('menu/cancelDialog', 'createquestion', { root: true })
                     commit('clearquestionForm')
@@ -331,6 +390,11 @@ const actions = {
                 url = "/actions/action/" + item.id
                 message = 'Task Deleted'
                 break;
+
+            case 'workgroup':
+                url = "/wg/" + item.id
+                message = 'Work Group Deleted'
+                break;
         
             default:
                 break;
@@ -344,12 +408,13 @@ const actions = {
             }
             await Axios.delete(url, config)
             .then(() => {
-                commit('menu/notification', ['info', 5, message], { root: true })
+                commit('menu/notification', ['info', 3, message], { root: true })
                 dispatch('loadActions')
-                commit('menu/cancelDialog', 'deletesome', { root: true })
+                router.go(-1)
+                commit('menu/cancelDialog', 'confirm', { root: true })
             })
         } catch (error) {
-            commit('menu/notification', ['error', 5, error], { root: true });
+            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
         }
     },
     idealTextColor({ commit }, color) {
@@ -372,7 +437,7 @@ const actions = {
     },
     async loadActions({ state, commit, dispatch }) {
         try {
-            commit('menu/loadingstate', 'tasks', { root: true })
+            commit('menu/loadingstate', ['tasks',true], { root: true })
             await dispatch('loadTopics')
             await dispatch('loadWG')
             await Axios.get("/actions/all")
@@ -401,16 +466,16 @@ const actions = {
                     }
                     commit('actionsLoad', res.data)
                     setTimeout(() => {
-                        commit('menu/loadingstate', 'tasks', { root: true })
+                        commit('menu/loadingstate', ['tasks',false], { root: true })
                     }, 800);
                 })
                 .catch(error => {
                     commit('menu/notification', ['error', 3, error], { root: true });
-                    commit('menu/loadingstate', 'tasks', { root: true })
+                    commit('menu/loadingstate', ['tasks',false], { root: true })
                 })
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
-            commit('menu/loadingstate', 'tasks', { root: true })
+            commit('menu/loadingstate', ['tasks',false], { root: true })
         }
     },
     async loadcreator({commit},userId){
@@ -434,8 +499,8 @@ const actions = {
     },
     async loadWG({ commit , dispatch }) {
         try {
-            commit('menu/loadingstate', 'wg', { root: true });
-            commit('menu/loadingstate', 'secretwg', { root: true });
+            commit('menu/loadingstate', ['wg',true], { root: true })
+            commit('menu/loadingstate', ['secretwg',true], { root: true })
             let token = Cookies.get("catapa-jwt");
             let config = {
                 headers: {
@@ -455,6 +520,15 @@ const actions = {
                         else {
                             secretdata.push(res.data[i])
                         }
+                        let tempquestions = []
+                        for (let x = 0; x < res.data[i].questions.length; x++) {
+                            for (let y = 0; y < state.questions.length; y++) {
+                                if(state.questions[y]._id == res.data[i].questions[x]){
+                                    tempquestions.push(state.questions[y])
+                                }
+                            }
+                        }
+                        res.data[i].questions = tempquestions
                     }
                     commit('wgLoad', data)
                     commit('secretwgLoad', secretdata)
@@ -463,21 +537,21 @@ const actions = {
                     commit('wgNested', nestedWGs)
                     commit('secretwgNested', secretnestedWGs)
                     setTimeout(() => {
-                        commit('menu/loadingstate', 'secretwg', { root: true })
+                        commit('menu/loadingstate', ['secretwg',false], { root: true })
                     }, 800);
                     setTimeout(() => {
-                        commit('menu/loadingstate', 'wg', { root: true })
+                        commit('menu/loadingstate', ['wg',false], { root: true })
                     }, 600);
                 })
                 .catch(error => {
                     commit('menu/notification', ['error', 3, error], { root: true })
-                    commit('menu/loadingstate', 'wg', { root: true })
-                    commit('menu/loadingstate', 'secretwg', { root: true })
+                    commit('menu/loadingstate', ['wg',false], { root: true })
+                    commit('menu/loadingstate', ['secretwg',false], { root: true })
                 })
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true })
-            commit('menu/loadingstate', 'wg', { root: true })
-            commit('menu/loadingstate', 'secretwg', { root: true })
+            commit('menu/loadingstate', ['wg',false], { root: true })
+            commit('menu/loadingstate', ['secretwg',false], { root: true })
         }
     },
     async loadTopics({ commit }) {
@@ -518,23 +592,109 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true })
         }
     },
-    async loadWGsuscription({ state, commit, dispatch }, id) {
+    async searchWG({state,commit,dispatch},id) {
+        commit('menu/loadingbar', ['info', true , 0], { root: true })
+        commit('menu/loadingstate', ['itembig',true], { root: true })
         try {
-            if (state.questions.length == 0) {
+            if(state.searchedWG._id != id){
+                let token = Cookies.get("catapa-jwt");
+                let config = {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                }
                 await dispatch('loadQuestions')
+                commit('menu/loadingbar', ['info', null , 30], { root: true })
+                await Axios.get('/wg/' + id, config)
+                .then(res => {
+                    let wg = res.data
+                    dispatch('loadcreator',wg._userId)
+                    let creator =  state.temporaluser
+                    let questionList = wg.questions
+                    wg['creator'] = creator
+                    let tempQuestions = []
+                    for (let i = 0; i < questionList.length; i++) {
+                        let question = state.questions.find(q => q._id == questionList[i])
+                        tempQuestions.push(question)
+                    }
+                    wg.questions.length = 0
+                    wg.questions = tempQuestions
+                    commit('pullWG', wg) 
+                    commit('menu/loadingbar', ['primary', null , 100], { root: true })
+                })
             }
-            let workgroup = state.workgroups.filter(wg => wg._id == id)
-            let questionList = workgroup[0].questions
-            let tempQuestions = []
-            for (let i = 0; i < questionList.length; i++) {
-                let question = state.questions.find(q => q._id == questionList[i])
-                tempQuestions.push(question)
-            }
-            workgroup[0].questions.length = 0
-            workgroup[0].questions = tempQuestions
-            commit('wgforsuscription', workgroup)
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true })
+            commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
+            commit('menu/loadingbar', ['error', null , 100], { root: true })
+        }
+    },
+    async saveEditedWG({state,commit,dispatch},id) {
+        commit('menu/loadingstate', ['itembig',true], { root: true })
+        try {
+            let dossier = state.workgroupForm.dossier
+            if (dossier != null) {
+                let formData = new FormData()
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+                formData.append('file', state.workgroupForm.dossier)
+                await Axios.post("/files/upload", formData, config)
+                .then(res => {
+                    dossier = 'http://localhost:3000/api/files/upload/' + res.data.file.filename
+                })
+            }
+            let tempQuestions = []
+            for (let x = 0; x < state.workgroupForm.questionsSelected.length; x++) {
+                if(state.workgroupForm.questionsSelected[x].value != null) {
+                    tempQuestions.push(state.workgroupForm.questionsSelected[x].value)
+                }
+                else{
+                    tempQuestions.push(state.workgroupForm.questionsSelected[x])
+                }
+            }
+            let body = {
+                name: state.workgroupForm.name,
+                description: state.workgroupForm.description,
+                textcolor: state.workgroupForm.textcolor,
+                color: state.workgroupForm.color,
+                questions: tempQuestions,
+                dossier: dossier,
+                linktodocuments: state.workgroupForm.link
+            }
+            commit('menu/notification', ['info', 5, body.questions], { root: true })
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            await Axios.put("/wg/" + id, body, config)
+                .then((res) => {
+                    commit('menu/notification', ['info', 5, 'Work group edited'], { root: true })
+                    commit('menu/cancelDialog', 'editwg', { root: true })
+                    let wg = res.data
+                    dispatch('loadcreator',wg._userId)
+                    let creator =  state.temporaluser
+                    let questionList = wg.questions
+                    wg['creator'] = creator
+                    let tempQuestions = []
+                    for (let i = 0; i < questionList.length; i++) {
+                        let question = state.questions.find(q => q._id == questionList[i])
+                        tempQuestions.push(question)
+                    }
+                    wg.questions.length = 0
+                    wg.questions = tempQuestions
+                    commit('pullWG', wg)
+                    commit('clearwgform')
+                    setTimeout(() => {
+                        commit('menu/loadingstate', ['itembig',false], { root: true })
+                        commit('menu/loadingbar', [null,false,null], { root: true })
+                    }, 300)
+                })
+            } catch (error) {
+                commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+                setTimeout(() => {
+                    commit('menu/loadingbar', [null,false,null], { root: true })
+                    commit('menu/loadingstate', ['itembig',false], { root: true })
+                }, 300);
         }
     }
 }

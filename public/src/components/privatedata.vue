@@ -99,45 +99,18 @@
                             <span class="font-weight-bold subtitle-2 text-uppercase text-truncate grey--text">{{ item.name }}</span>
                         </template>
                         <template v-slot:prepend="{ item }">
-                            <v-menu
-                                :close-on-content-click="false" 
-                                offset-y
-                                max-width="360" 
-                                min-width="180" 
-                                transition="slide-y-transition"
+                            <v-tooltip
+                                transition="slide-x-transition"
+                                open-delay="100"
+                                right
                             >
                                 <template v-slot:activator="{ on }">
-                                    <a v-on="on">
-                                        <v-avatar :color="item.color" size="36"><span :class="`font-weight-regular ${item.textcolor}--text`">{{ item.name.substring(0,2) }}</span></v-avatar>
-                                    </a>
+                                    <router-link :to="'/workgroup/' + item._id">
+                                        <v-avatar v-on="on" :color="item.color" size="36"><span :class="`font-weight-regular ${item.textcolor}--text`">{{ item.name.substring(0,2) }}</span></v-avatar>
+                                    </router-link>
                                 </template>
-                                <v-card :color="item.color" :class="`${item.textcolor}--text`">
-                                    <v-card-title>{{ item.name }}</v-card-title>
-                                    <v-divider></v-divider>
-                                    <v-card-text :class="`${item.textcolor}--text`">
-                                        <v-row>
-                                            <v-col cols="12" class="py-0">
-                                                {{ item.description }}
-                                            </v-col>
-                                            <v-col class="caption font-weight-lightf font-italic text-right py-0">
-                                                By:
-                                                <v-chip>
-                                                    <v-avatar v-if="item.creator.avatar != ''" left><v-img :src="item.creator.avatar"></v-img></v-avatar>
-                                                    <v-avatar v-else left color="primary"><v-icon x-small>fas fa-user</v-icon></v-avatar>
-                                                    {{ item.creator.firstname }} {{ item.creator.lastname }}
-                                                </v-chip>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card-text>
-                                    <template v-if="item.dossier != null || item.linktodocuments != ''">
-                                        <v-divider></v-divider>
-                                        <v-card-actions>
-                                            <v-btn v-if="item.dossier != null" target="_blank" :href="item.dossier" color="info">Dossier <v-icon x-small class="ml-2">fas fa-link</v-icon></v-btn>
-                                            <v-btn v-if="item.linktodocuments != ''" target="_blank" :href="item.linktodocuments" color="info">Docs <v-icon x-small class="ml-2">fas fa-link</v-icon></v-btn>
-                                        </v-card-actions>
-                                    </template>
-                                </v-card>
-                            </v-menu>
+                                <span class="text-right caption font-weight-light">See more</span>
+                            </v-tooltip>
                         </template>
                         <template v-slot:append="{ item }">
                             <v-tooltip 
@@ -146,32 +119,20 @@
                                 right
                             >
                                 <template v-slot:activator="{ on }">
-                                    <v-icon v-on="on" :color="loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'info' : 'error'">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'fas fa-check-circle' : 'fas fa-times-circle'}}</v-icon>
+                                    <v-icon v-on="on" :color="loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'info' : 'error'">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'fas fa-check' : 'fas fa-times'}}</v-icon>
                                 </template>
                                 <span class="text-right caption font-weight-light">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'Joined' : 'Unjoined'}}</span>
-                            </v-tooltip>
-                            <v-tooltip
-                                transition="slide-x-transition"
-                                open-delay="100"
-                                right
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn v-on="on" :to="'/workgroup/' + item._id" icon>
-                                        <v-icon color="primary">fas fa-eye</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span class="text-right caption font-weight-light">See more</span>
                             </v-tooltip>
                         </template>
                     </v-treeview>
                 </v-skeleton-loader>
-                <v-row v-if="loginuser.rol.value == 'admin'">
+                <v-row v-if="loginuser.rol.value == 'admin' && secretworkgroups.length != 0">
                     <v-col cols="12">
                         Privated Groups
                     </v-col>
                 </v-row>
                 <v-skeleton-loader
-                    v-if="loginuser.rol.value == 'admin'"
+                    v-if="loginuser.rol.value == 'admin' && secretworkgroups.length != 0"
                     transition="fade-transition"
                     :loading="menu.loader.secretwg"
                     :types="{skeleton:'list-item-avatar-two-line,list-item-avatar-two-line'}"
@@ -188,45 +149,18 @@
                             <span class="font-weight-bold subtitle-2 text-uppercase text-truncate grey--text">{{ item.name }}</span>
                         </template>
                         <template v-slot:prepend="{ item }">
-                            <v-menu
-                                :close-on-content-click="false" 
-                                offset-y
-                                max-width="360" 
-                                min-width="180" 
-                                transition="slide-y-transition"
+                            <v-tooltip
+                                transition="slide-x-transition"
+                                open-delay="100"
+                                right
                             >
                                 <template v-slot:activator="{ on }">
-                                    <a v-on="on">
-                                        <v-avatar :color="item.color" size="36"><span :class="`font-weight-regular ${item.textcolor}--text`">{{ item.name.substring(0,2) }}</span></v-avatar>
-                                    </a>
+                                    <router-link :to="'/workgroup/' + item._id">
+                                        <v-avatar v-on="on" :color="item.color" size="36"><span :class="`font-weight-regular ${item.textcolor}--text`">{{ item.name.substring(0,2) }}</span></v-avatar>
+                                    </router-link>
                                 </template>
-                                <v-card :color="item.color" :class="`${item.textcolor}--text`">
-                                    <v-card-title>{{ item.name }}</v-card-title>
-                                    <v-divider></v-divider>
-                                    <v-card-text :class="`${item.textcolor}--text`">
-                                        <v-row>
-                                            <v-col cols="12" class="py-0">
-                                                {{ item.description }}
-                                            </v-col>
-                                            <v-col class="caption font-weight-lightf font-italic text-right py-0">
-                                                By:
-                                                <v-chip>
-                                                    <v-avatar v-if="item.creator.avatar != ''" left><v-img :src="item.creator.avatar"></v-img></v-avatar>
-                                                    <v-avatar v-else left color="primary"><v-icon x-small>fas fa-user</v-icon></v-avatar>
-                                                    {{ item.creator.firstname }} {{ item.creator.lastname }}
-                                                </v-chip>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card-text>
-                                    <template v-if="item.dossier != null || item.linktodocuments != ''">
-                                        <v-divider></v-divider>
-                                        <v-card-actions>
-                                            <v-btn v-if="item.dossier != null" target="_blank" :href="item.dossier" color="info">Dossier <v-icon x-small class="ml-2">fas fa-link</v-icon></v-btn>
-                                            <v-btn v-if="item.linktodocuments != ''" target="_blank" :href="item.linktodocuments" color="info">Docs <v-icon x-small class="ml-2">fas fa-link</v-icon></v-btn>
-                                        </v-card-actions>
-                                    </template>
-                                </v-card>
-                            </v-menu>
+                                <span class="text-right caption font-weight-light">See more</span>
+                            </v-tooltip>
                         </template>
                         <template v-slot:append="{ item }">
                             <v-tooltip 
@@ -235,21 +169,9 @@
                                 right
                             >
                                 <template v-slot:activator="{ on }">
-                                    <v-icon v-on="on" :color="loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'info' : 'error'">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'fas fa-check-circle' : 'fas fa-times-circle'}}</v-icon>
+                                    <v-icon v-on="on" :color="loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'info' : 'error'">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'fas fa-check' : 'fas fa-times'}}</v-icon>
                                 </template>
                                 <span class="text-right caption font-weight-light">{{loginuser.workgroups.some(wg => wg._wgId === item._id) ? 'Joined' : 'Unjoined'}}</span>
-                            </v-tooltip>
-                            <v-tooltip
-                                transition="slide-x-transition"
-                                open-delay="100"
-                                right
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn v-on="on" :to="'/workgroup/' + item._id" icon>
-                                        <v-icon color="primary">fas fa-eye</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span class="text-right caption font-weight-light">See more</span>
                             </v-tooltip>
                         </template>
                     </v-treeview>
@@ -262,7 +184,7 @@
                         v-model="menu.dialogs.createwg"
                     >
                         <template v-slot:activator="{ on }">
-                            <v-btn v-on="on" block color="secondary" class="my-2">
+                            <v-btn v-on="on" block color="secondary" class="my-2" @click="clearwgform">
                                 <v-icon left>fas fa-users</v-icon> Create Work Group
                             </v-btn>
                         </template>
@@ -310,7 +232,7 @@ export default {
     },
     methods: {
         ...mapMutations('menu',['cancelDialog']),
-        ...mapMutations('actions',['clearLoadedWG']),
+        ...mapMutations('actions',['clearLoadedWG','clearwgform']),
         ...mapActions('user',['sendVerificationMail','loadUserData']),
         ...mapGetters('user',['isSuscribed'])
     }

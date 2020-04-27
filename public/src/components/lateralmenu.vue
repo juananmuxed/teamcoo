@@ -7,7 +7,7 @@
         clipped
         mobile-break-point="960"
         v-if="isLogged()"
-        floating
+        
       >
         <v-list
           shaped

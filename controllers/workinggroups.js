@@ -27,7 +27,11 @@ exports.getWG = async (req,res) => {
     const _id = req.params.id
 
     try {
-        const actionDB = await WG.findById(_id)
+        const actionDB = await WG.findById(_id,function(err,wg){
+            if(wg==undefined){
+                return res.status(404).json({message:'Invalid ID'})
+            }
+        })
         res.json(actionDB)
 
     } catch (error) {
@@ -50,10 +54,6 @@ exports.updateWG = async (req,res) => {
 exports.deleteWG = async (req,res) => {
     const _id = req.params.id
     try {
-        let isWG = await WG.find({ name: body.name });
-        if (isWG.length >= 1) {
-            return res.status(409).json({message: "This Working Group are in use"});
-        }
         const actionDB = await WG.findByIdAndDelete({_id})
         if(!actionDB){
             return res.status(400).json({message: 'ID not found',error})

@@ -14,7 +14,7 @@
 
 ---
 
-![Version](https://img.shields.io/github/package-json/version/juananmuxed/teamcoo?label=Version&logo=github) ![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU) 
+![Version](https://img.shields.io/github/package-json/releaseversion/juananmuxed/teamcoo?label=Version&logo=github) ![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU) 
 
 # What is TeamCoo
 TeamCoo is a platform for non-profit Associations that need to manage large numbers of Volunteers. MEVN (Mongo, Express, Vue, Node) technology based.

@@ -3,6 +3,7 @@
       <lateral-menu></lateral-menu>
       <toolbar-top></toolbar-top>
       <v-content v-scroll="onScroll">
+        <v-slide-y-transition><v-progress-linear class="ma-0" :active="menu.progressbar.active" :value="menu.progressbar.value" height="8" :color="menu.progressbar.color"></v-progress-linear></v-slide-y-transition>
         <v-fade-transition mode="out-in"><router-view></router-view></v-fade-transition>            
         <v-scale-transition origin="center center">
           <v-btn

@@ -13,6 +13,7 @@ import sendreset from './views/resetpassword.vue'
 import membership from './views/membership.vue'
 import users from './views/users.vue'
 import workgroups from './views/workgroups.vue'
+import workgroup from './views/workgroup.vue'
 import interests from './views/interests.vue'
 import tasks from './views/tasks.vue'
 import questions from './views/questions.vue'
@@ -152,6 +153,15 @@ const router = new Router({
                 requiresAuth: true,
                 validRol:true
             }
+        },
+        {
+            path:'/workgroup/:id',
+            name: 'wg',
+            component: workgroup,
+            meta:{
+                requiresAuth: true,
+                isUser:true
+            }
         }
     ]
 });
@@ -193,6 +203,13 @@ router.beforeEach((to,from,next) => {
     }
     else {
         next()
+    }
+    if(to.matched.some(record => record.meta.isUser)) {
+        if(store.state.user.loginuser.rol.value != 'user'){
+            next()
+        }else{
+            next({path:"/404"})
+        }
     }
 })
 
