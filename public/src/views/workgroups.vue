@@ -21,14 +21,22 @@
             <v-chip :color="item.color">{{ item.color }}</v-chip>
           </template>
           <template v-slot:item.questions="{ item }">
-            <v-chip small class="mx-2 my-1" v-for="(question,index) in item.questions" v-bind:key="index">{{ question.name }}</v-chip>
+            <v-chip small class="ma-1" v-for="(question,index) in item.questions" v-bind:key="index">{{ question.name }}</v-chip>
+          </template>
+          <template v-slot:item.members="{ item }">
+            <span v-if="item.members.length==0">No members added</span>
+            <v-chip small class="ma-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.firstname }}</v-chip>
+          </template>
+          <template v-slot:item.coordinators="{ item }">
+            <span v-if="item.coordinators.length==0">No coordinators added</span>
+            <v-chip small class="ma-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.firstname }}</v-chip>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip link :to="'/user/' + item.creator.id"><v-avatar left><v-img :src="item.creator.avatar"></v-img></v-avatar>{{ item.creator.firstname }} {{ item.creator.lastname }}</v-chip>
+              {{ item.creator.firstname }}
           </template>
           <template v-slot:item.linktodocuments="{ item }">
             <template v-if="item.linktodocuments != ''">
-              <v-btn :href="item.linktodocuments" target="_blank" depressed>Link to documents <v-icon small>fas fa-external-link-alt</v-icon></v-btn>
+              <v-btn :href="item.linktodocuments" target="_blank" depressed>Link to documents <v-icon small class="ml-1">fas fa-external-link-alt</v-icon></v-btn>
             </template>
             <template v-else>
               Without link
@@ -36,7 +44,7 @@
           </template>
           <template v-slot:item.dossier="{ item }">
             <template v-if="item.dossier != null">
-              <v-btn :href="item.dossier" target="_blank" depressed>Dossier <v-icon small>fas fa-external-link-alt</v-icon></v-btn>
+              <v-btn :href="item.dossier" target="_blank" depressed>Dossier <v-icon small class="ml-1">fas fa-external-link-alt</v-icon></v-btn>
             </template>
             <template v-else>
               Without dossier
@@ -74,8 +82,20 @@
             <template v-slot:item.questions="{ item }">
               <v-chip small class="mx-2 my-1" v-for="(question,index) in item.questions" v-bind:key="index">{{ question.name }}</v-chip>
             </template>
+            <template v-slot:item.members="{ item }">
+              <span v-if="item.members.length==0">No members added</span>
+              <v-chip small class="mx-2 my-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.firstname }}</v-chip>
+            </template>
+            <template v-slot:item.coordinators="{ item }">
+              <span v-if="item.coordinators.length==0">No coordinators added</span>
+              <v-chip small class="mx-2 my-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.firstname }}</v-chip>
+            </template>
             <template v-slot:item.creator="{ item }">
-              <v-chip link :to="'/user/' + item.creator.id"><v-avatar left><v-img :src="item.creator.avatar"></v-img></v-avatar>{{ item.creator.firstname }} {{ item.creator.lastname }}</v-chip>
+              <v-chip link :to="'/user/' + item.creator.id">
+                <v-avatar left v-if="item.creator.avatar != ''"><v-img :src="item.creator.avatar"></v-img></v-avatar>
+                <v-avatar left v-else><v-icon color="info">fas fa-user</v-icon></v-avatar>
+                {{ item.creator.firstname }}
+              </v-chip>
             </template>
             <template v-slot:item.linktodocuments="{ item }">
               <template v-if="item.linktodocuments != ''">
@@ -134,9 +154,11 @@ export default {
           width: 100
         },
         { text: "Description", value: "description", sortable: false, width: 100},
-        { text: "Link", value: "linktodocuments", sortable: false, width: 100},
-        { text: "Dossier", value: "dossier", sortable: false, width: 100},
-        { text: "Questions", value: "questions", sortable: false, width: 100},
+        { text: "Link", value: "linktodocuments", sortable: false, width: 30},
+        { text: "Dossier", value: "dossier", sortable: false, width: 30},
+        { text: "Coordinators", value: "coordinators", sortable: false, width: 200},
+        { text: "Members", value: "members", sortable: false, width: 200},
+        { text: "Questions", value: "questions", sortable: false, width: 200},
         { text: "Creator", value: "creator", sortable: false, width: 100},
         { text: "Color", value: "color", sortable: false, width: 100},
         { text: "Actions", value: "actions", sortable: false, width: 100}

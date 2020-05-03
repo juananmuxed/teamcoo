@@ -1,7 +1,7 @@
 import router from '@/router'
 import Axios from 'axios'
 import Cookies from 'js-cookie'
-import { treeBuild , todayFormatToPicker , generateRandomColor } from '../../utils/utils'
+import { treeBuild , todayFormatToPicker , generateRandomColor , idEqualArray } from '../../utils/utils'
 
 const state = {
     actions: [],
@@ -31,6 +31,11 @@ const state = {
         secretparent: null,
         secret: false
     },
+    editmemberform:{
+        members:[],
+        coordinators:[],
+        loading: false
+    },
     interestForm: {
         name: '',
         color:''
@@ -46,6 +51,7 @@ const state = {
         image:null,
         imagelink:''
     },
+    usersforadd:[],
     questionForm: {
         name: '',
         type: null,
@@ -78,7 +84,8 @@ const mutations = {
         state.temporaluser.id = user._id,
         state.temporaluser.avatar = user.image,
         state.temporaluser.firstname = user.firstname,
-        state.temporaluser.lastname = user.lastname
+        state.temporaluser.lastname = user.lastname,
+        state.temporaluser.rol = user.rol
     },
     verifySecret: (state) => {
         if(state.workgroupForm.secret){state.workgroupForm.parent = null}
@@ -123,7 +130,7 @@ const mutations = {
         state.workgroupForm.link = state.searchedWG.linktodocuments,
         state.workgroupForm.color = state.searchedWG.color,
         state.workgroupForm.textcolor = state.searchedWG.textcolor
-        if(state.searchedWG.dossier != null){state.workgroupForm.oldDossier = state.searchedWG.dossier}
+        if(state.searchedWG.dossier != null){state.workgroupForm.oldDossier = state.searchedWG.dossier, state.workgroupForm.dossier = null}
         else{state.workgroupForm.oldDossier = null}
         state.workgroupForm.questionsSelected = []
         for (let x = 0; x < state.searchedWG.questions.length; x++) {
@@ -134,8 +141,6 @@ const mutations = {
             }
             state.workgroupForm.questionsSelected.push(tempWGquestion)
         }
-        if(state.searchedWG.secret){state.workgroupForm.secret = true, state.workgroupForm.secretparent = state.searchedWG.parent}
-        else{state.workgroupForm.secret = false,state.workgroupForm.parent = state.searchedWG.parent}
     },
     actionsLoad: (state, actions) => { state.actions = actions },
     topicsLoad: (state, topics) => { state.topics = topics },
@@ -165,7 +170,35 @@ const mutations = {
     addradio: (state, value) => { state.questionForm.radioCount++; state.questionForm.radios.push({ answer: 'Option ' + (state.questionForm.radioCount + 1), value: value + 1 }) },
     delradio: (state) => { state.questionForm.radioCount--; state.questionForm.radios.pop() },
     wgforsuscription: (state, wg) => { state.loadedSuscription = wg[0] },
-    pullWG:(state,wg) => {state.searchedWG = wg}
+    pullWG:(state,wg) => {state.searchedWG = wg},
+    newmembers:(state,members) => {
+        state.searchedWG.members = []
+        for (let x = 0; x < members.length; x++) {
+            state.searchedWG.members.push(members[x])
+        }
+    },
+    newcoors:(state,coors) => {
+        state.searchedWG.coordinators = []
+        for (let x = 0; x < coors.length; x++) {
+            state.searchedWG.coordinators.push(coors[x])
+        }
+    },
+    addallusers:(state,users) => {
+        state.usersforadd = []
+        for (let x = 0; x < users.length; x++) {
+            state.usersforadd.push(users[x])
+        }
+    },
+    loadmembers:(state,members) => {
+        state.editmemberform.members = []
+        for (let x = 0; x < members.members.length; x++) {
+            state.editmemberform.members.push(members.members[x])
+        }
+        state.editmemberform.coordinators = []
+        for (let x = 0; x < members.coordinators.length; x++) {
+            state.editmemberform.coordinators.push(members.coordinators[x])
+        }
+    }
 }
 
 const getters = {
@@ -173,7 +206,7 @@ const getters = {
         if (
             state.workgroupForm.name != '' &&
             state.workgroupForm.description != '' &&
-            state.workgroupForm.description.length <= 200 &&
+            state.workgroupForm.description.length <= 380 &&
             state.workgroupForm.name.length >= 3 &&
             state.workgroupForm.questionsSelected.length != 0
         ) {
@@ -189,7 +222,7 @@ const getters = {
             state.tasksForm.description != '' &&
             state.tasksForm.endDate != '' &&
             state.tasksForm.startDate != '' &&
-            state.tasksForm.description.length <= 200 &&
+            state.tasksForm.description.length <= 380 &&
             state.tasksForm.workgroupsSelected.length != 0
         ) {
             return false
@@ -202,7 +235,7 @@ const getters = {
         if (
             state.questionForm.name != '' &&
             state.questionForm.type.length != 0 &&
-            state.questionForm.description.length <= 200
+            state.questionForm.description.length <= 380
         ) {
             return false
         }
@@ -222,6 +255,8 @@ const getters = {
             state.workgroupForm.description != state.searchedWG.description ||
             state.workgroupForm.link != state.searchedWG.linktodocuments ||
             state.workgroupForm.color != state.searchedWG.color ||
+            state.workgroupForm.oldDossier != state.searchedWG.dossier ||
+            state.workgroupForm.dossier != null ||
             invalidquestion
         ) {
             return false
@@ -230,11 +265,20 @@ const getters = {
             return true
         }
     },
-    correctwg:() => {
+    editedMembers:(state) => {
+        if(idEqualArray(state.searchedWG.members,state.editmemberform.members,'id')){
+            return false
+        }
+        if(idEqualArray(state.searchedWG.coordinators,state.editmemberform.coordinators,'id')){
+            return false
+        }
+        return true
+    },
+    correctwg:(state) => {
         if (
             state.workgroupForm.name != '' &&
             state.workgroupForm.description != '' &&
-            state.workgroupForm.description.length <= 200 &&
+            state.workgroupForm.description.length <= 380 &&
             state.workgroupForm.name.length >= 3 &&
             state.workgroupForm.questionsSelected.length != 0
         ) {
@@ -322,15 +366,16 @@ const actions = {
                 parent: state.workgroupForm.parent,
                 _userId: userId,
                 dossier: dossier,
+                coordinators: [userId],
                 linktodocuments: state.workgroupForm.link
             }
             await Axios.post("/wg/create", body, config)
-                .then(() => {
-                    commit('menu/notification', ['info', 5, 'Work group created'], { root: true })
-                    dispatch('loadWG')
-                    commit('menu/cancelDialog', 'createwg', { root: true })
-                    commit('clearwgform')
-                })
+            .then(() => {
+                commit('menu/notification', ['info', 5, 'Work group created'], { root: true })
+                dispatch('loadWG')
+                commit('menu/cancelDialog', 'createwg', { root: true })
+                commit('clearwgform')
+            })
         } catch (error) {
             commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
         }
@@ -410,7 +455,7 @@ const actions = {
             .then(() => {
                 commit('menu/notification', ['info', 3, message], { root: true })
                 dispatch('loadActions')
-                router.go(-1)
+                router.push('/dashboard')
                 commit('menu/cancelDialog', 'confirm', { root: true })
             })
         } catch (error) {
@@ -440,45 +485,39 @@ const actions = {
             commit('menu/loadingstate', ['tasks',true], { root: true })
             await dispatch('loadTopics')
             await dispatch('loadWG')
-            await Axios.get("/actions/all")
-                .then(res => {
-                    for (let i = 0; i < res.data.length; i++) {
-                        let tempTopics = []
-                        let tempWG = []
-                        dispatch('loadcreator',res.data[i].createdBy)
-                        for (let y = 0; y < res.data[i].topics.length; y++) {
-                            for (let x = 0; x < state.topics.length; x++) {
-                                if (state.topics[x]._id == res.data[i].topics[y]) {
-                                    tempTopics.push(state.topics[x])
-                                }
-                            }
+            let res = await Axios.get("/actions/all")
+            for (let i = 0; i < res.data.length; i++) {
+                let tempTopics = []
+                let tempWG = []
+                await dispatch('loadUserByID',res.data[i].createdBy)
+                for (let y = 0; y < res.data[i].topics.length; y++) {
+                    for (let x = 0; x < state.topics.length; x++) {
+                        if (state.topics[x]._id == res.data[i].topics[y]) {
+                            tempTopics.push(state.topics[x])
                         }
-                        for (let y = 0; y < res.data[i].workgroups.length; y++) {
-                            for (let x = 0; x < state.workgroups.length; x++) {
-                                if (state.workgroups[x]._id == res.data[i].workgroups[y]) {
-                                    tempWG.push(state.workgroups[x])
-                                }
-                            }
-                        }
-                        res.data[i].creator = state.temporaluser
-                        res.data[i].topics = tempTopics
-                        res.data[i].workgroups = tempWG
                     }
-                    commit('actionsLoad', res.data)
-                    setTimeout(() => {
-                        commit('menu/loadingstate', ['tasks',false], { root: true })
-                    }, 800);
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error], { root: true });
-                    commit('menu/loadingstate', ['tasks',false], { root: true })
-                })
+                }
+                for (let y = 0; y < res.data[i].workgroups.length; y++) {
+                    for (let x = 0; x < state.workgroups.length; x++) {
+                        if (state.workgroups[x]._id == res.data[i].workgroups[y]) {
+                            tempWG.push(state.workgroups[x])
+                        }
+                    }
+                }
+                res.data[i].creator = state.temporaluser
+                res.data[i].topics = tempTopics
+                res.data[i].workgroups = tempWG
+            }
+            commit('actionsLoad', res.data)
+            setTimeout(() => {
+                commit('menu/loadingstate', ['tasks',false], { root: true })
+            }, 800)
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
             commit('menu/loadingstate', ['tasks',false], { root: true })
         }
     },
-    async loadcreator({commit},userId){
+    async loadUserByID({state,commit},userId){
         try {
             let token = Cookies.get("catapa-jwt");
             let config = {
@@ -488,6 +527,7 @@ const actions = {
             }
             await Axios.get("/users/user/" + userId, config)
                 .then(res => {
+                    state.temporaluser = {}
                     commit('temporaluser', res.data);
                 })
                 .catch(error => {
@@ -507,47 +547,53 @@ const actions = {
                     Authorization: "Bearer " + token
                 }
             }
-            await Axios.get("/wg/all", config)
-                .then(res => {
-                    let data = []
-                    let secretdata = []
-                    for (let i = 0; i < res.data.length; i++) {
-                        dispatch('loadcreator',res.data[i]._userId)
-                        res.data[i].creator = state.temporaluser
-                        if (!res.data[i].secret) {
-                            data.push(res.data[i])
+            let res = await Axios.get("/wg/all", config)
+            let data = []
+            let secretdata = []
+            for (let i = 0; i < res.data.length; i++) {
+                let wg = res.data[i]
+                await dispatch('loadUserByID',wg._userId)
+                wg.creator = state.temporaluser
+                let tempquestions = []
+                for (let x = 0; x < wg.questions.length; x++) {
+                    for (let y = 0; y < state.questions.length; y++) {
+                        if(state.questions[y]._id == wg.questions[x]){
+                            tempquestions.push(state.questions[y])
                         }
-                        else {
-                            secretdata.push(res.data[i])
-                        }
-                        let tempquestions = []
-                        for (let x = 0; x < res.data[i].questions.length; x++) {
-                            for (let y = 0; y < state.questions.length; y++) {
-                                if(state.questions[y]._id == res.data[i].questions[x]){
-                                    tempquestions.push(state.questions[y])
-                                }
-                            }
-                        }
-                        res.data[i].questions = tempquestions
                     }
-                    commit('wgLoad', data)
-                    commit('secretwgLoad', secretdata)
-                    let nestedWGs = treeBuild(data)
-                    let secretnestedWGs = treeBuild(secretdata)
-                    commit('wgNested', nestedWGs)
-                    commit('secretwgNested', secretnestedWGs)
-                    setTimeout(() => {
-                        commit('menu/loadingstate', ['secretwg',false], { root: true })
-                    }, 800);
-                    setTimeout(() => {
-                        commit('menu/loadingstate', ['wg',false], { root: true })
-                    }, 600);
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error], { root: true })
-                    commit('menu/loadingstate', ['wg',false], { root: true })
-                    commit('menu/loadingstate', ['secretwg',false], { root: true })
-                })
+                }
+                wg.questions = tempquestions
+                let tempCoordinators = []
+                for (let x = 0; x < wg.coordinators.length; x++) {
+                    await dispatch('loadUserByID',wg.coordinators[x])
+                    tempCoordinators.push(state.temporaluser)
+                }
+                wg.coordinators = tempCoordinators
+                let tempMembers = []
+                for (let x = 0; x < wg.members.length; x++) {
+                    await dispatch('loadUserByID',wg.members[x])
+                    tempMembers.push(state.temporaluser)
+                }
+                wg.members = tempMembers
+                if (!wg.secret) {
+                    data.push(wg)
+                }
+                else {
+                    secretdata.push(wg)
+                }
+            }
+            commit('wgLoad', data)
+            commit('secretwgLoad', secretdata)
+            let nestedWGs = treeBuild(data)
+            let secretnestedWGs = treeBuild(secretdata)
+            commit('wgNested', nestedWGs)
+            commit('secretwgNested', secretnestedWGs)
+            setTimeout(() => {
+                commit('menu/loadingstate', ['secretwg',false], { root: true })
+            }, 800);
+            setTimeout(() => {
+                commit('menu/loadingstate', ['wg',false], { root: true })
+            }, 600)
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true })
             commit('menu/loadingstate', ['wg',false], { root: true })
@@ -605,23 +651,33 @@ const actions = {
                 }
                 await dispatch('loadQuestions')
                 commit('menu/loadingbar', ['info', null , 30], { root: true })
-                await Axios.get('/wg/' + id, config)
-                .then(res => {
-                    let wg = res.data
-                    dispatch('loadcreator',wg._userId)
-                    let creator =  state.temporaluser
-                    let questionList = wg.questions
-                    wg['creator'] = creator
-                    let tempQuestions = []
-                    for (let i = 0; i < questionList.length; i++) {
-                        let question = state.questions.find(q => q._id == questionList[i])
-                        tempQuestions.push(question)
-                    }
-                    wg.questions.length = 0
-                    wg.questions = tempQuestions
-                    commit('pullWG', wg) 
-                    commit('menu/loadingbar', ['primary', null , 100], { root: true })
-                })
+                let res = await Axios.get('/wg/' + id, config)
+                let wg = res.data
+                await dispatch('loadUserByID',wg._userId)
+                let creator =  state.temporaluser
+                let questionList = wg.questions
+                wg['creator'] = creator
+                let tempCoordinators = []
+                for (let x = 0; x < wg.coordinators.length; x++) {
+                    await dispatch('loadUserByID',wg.coordinators[x])
+                    tempCoordinators.push(state.temporaluser)
+                }
+                wg.coordinators = tempCoordinators
+                let tempMembers = []
+                for (let x = 0; x < wg.members.length; x++) {
+                    await dispatch('loadUserByID',wg.members[x])
+                    tempMembers.push(state.temporaluser)
+                }
+                wg.members = tempMembers
+                let tempQuestions = []
+                for (let i = 0; i < questionList.length; i++) {
+                    let question = await state.questions.find(q => q._id == questionList[i])
+                    tempQuestions.push(question)
+                }
+                wg.questions.length = 0
+                wg.questions = tempQuestions
+                commit('pullWG', wg) 
+                commit('menu/loadingbar', ['primary', null , 100], { root: true })
             }
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
@@ -641,6 +697,9 @@ const actions = {
                     dossier = 'http://localhost:3000/api/files/upload/' + res.data.file.filename
                 })
             }
+            else{
+                dossier = state.workgroupForm.oldDossier
+            }
             let tempQuestions = []
             for (let x = 0; x < state.workgroupForm.questionsSelected.length; x++) {
                 if(state.workgroupForm.questionsSelected[x].value != null) {
@@ -659,42 +718,346 @@ const actions = {
                 dossier: dossier,
                 linktodocuments: state.workgroupForm.link
             }
-            commit('menu/notification', ['info', 5, body.questions], { root: true })
             let token = Cookies.get("catapa-jwt");
             let config = {
                 headers: {
                     Authorization: "Bearer " + token
                 }
             }
-            await Axios.put("/wg/" + id, body, config)
-                .then((res) => {
-                    commit('menu/notification', ['info', 5, 'Work group edited'], { root: true })
-                    commit('menu/cancelDialog', 'editwg', { root: true })
-                    let wg = res.data
-                    dispatch('loadcreator',wg._userId)
-                    let creator =  state.temporaluser
-                    let questionList = wg.questions
-                    wg['creator'] = creator
-                    let tempQuestions = []
-                    for (let i = 0; i < questionList.length; i++) {
-                        let question = state.questions.find(q => q._id == questionList[i])
-                        tempQuestions.push(question)
-                    }
-                    wg.questions.length = 0
-                    wg.questions = tempQuestions
-                    commit('pullWG', wg)
-                    commit('clearwgform')
-                    setTimeout(() => {
-                        commit('menu/loadingstate', ['itembig',false], { root: true })
-                        commit('menu/loadingbar', [null,false,null], { root: true })
-                    }, 300)
-                })
+            let res = await Axios.put("/wg/" + id, body, config)
+            commit('menu/notification', ['info', 5, 'Work group edited'], { root: true })
+            commit('menu/cancelDialog', 'editwg', { root: true })
+            let wg = res.data
+            await dispatch('loadUserByID',wg._userId)
+            let creator =  state.temporaluser
+            let questionList = wg.questions
+            wg['creator'] = creator
+            let tempCoordinators = []
+            for (let x = 0; x < wg.coordinators.length; x++) {
+                await dispatch('loadUserByID',wg.coordinators[x])
+                tempCoordinators.push(state.temporaluser)
+            }
+            wg.coordinators = tempCoordinators
+            let tempMembers = []
+            for (let x = 0; x < wg.members.length; x++) {
+                await dispatch('loadUserByID',wg.members[x])
+                tempMembers.push(state.temporaluser)
+            }
+            wg.members = tempMembers
+            let tempQuestionsLoaded = []
+            for (let i = 0; i < questionList.length; i++) {
+                let question = state.questions.find(q => q._id == questionList[i])
+                tempQuestionsLoaded.push(question)
+            }
+            wg.questions.length = 0
+            wg.questions = tempQuestionsLoaded
+            commit('pullWG', wg)
+            commit('clearwgform')
+            setTimeout(() => {
+                commit('menu/loadingstate', ['itembig',false], { root: true })
+                commit('menu/loadingbar', [null,false,null], { root: true })
+            }, 300)
             } catch (error) {
-                commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+                commit('menu/notification', ['error', 5, error.response.data.message], { root: true })
                 setTimeout(() => {
                     commit('menu/loadingbar', [null,false,null], { root: true })
                     commit('menu/loadingstate', ['itembig',false], { root: true })
                 }, 300);
+        }
+    },
+    async joinWG({state,commit,dispatch},ids) {
+        try {
+            let wg = state.searchedWG
+            let members = []
+            for (let x = 0; x < wg.members.length; x++) {
+                members.push(wg.members[x].id)
+            }
+            for (let x = 0; x < ids.idUsers.length; x++) {
+                members.push(ids.idUsers[x])
+            }
+            let body = {
+                members: members
+            }
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            let res = await Axios.put('/wg/' + ids.idWG,body,config)
+            let reswg = res.data
+            let tempMembers = []
+            for (let x = 0; x < reswg.members.length; x++) {
+                await dispatch('loadUserByID',reswg.members[x])
+                tempMembers.push(state.temporaluser)
+            }
+            reswg.members = tempMembers
+            commit('newmembers', reswg.members) 
+            commit('menu/cancelDialog', 'suscribeto', { root: true })
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error], { root: true })
+        }
+    },
+    async unjoinWG({state,commit,dispatch},ids) {
+        try {
+            let wg = state.searchedWG
+            let members = []
+            for (let x = 0; x < wg.members.length; x++) {
+                members.push(wg.members[x].id)
+            }
+            for (let x = 0; x < members.length; x++) {
+                if(ids.idUsers.some(id => id == members[x])){
+                    members.splice(x,1)
+                }
+            }
+            let body = {
+                members: members
+            }
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            let res = await Axios.put('/wg/' + ids.idWG,body,config)
+            let reswg = res.data
+            let tempMembers = []
+            for (let x = 0; x < reswg.members.length; x++) {
+                await dispatch('loadUserByID',reswg.members[x])
+                tempMembers.push(state.temporaluser)
+            }
+            reswg.members = tempMembers
+            commit('newmembers', reswg.members) 
+            commit('menu/cancelDialog', 'unsuscribewg', { root: true })
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error], { root: true })
+        }
+    },
+    async coorWG({state,commit,dispatch},ids) {
+        try {
+            let wg = state.searchedWG
+            let coordinators = []
+            for (let x = 0; x < wg.coordinators.length; x++) {
+                coordinators.push(wg.coordinators[x].id)
+            }
+            for (let x = 0; x < ids.idUsers.length; x++) {
+                coordinators.push(ids.idUsers[x])
+            }
+            let body = {
+                coordinators: coordinators
+            }
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            let res = await Axios.put('/wg/' + ids.idWG,body,config)
+            let reswg = res.data
+            let tempCoordinators = []
+            for (let x = 0; x < reswg.coordinators.length; x++) {
+                await dispatch('loadUserByID',reswg.coordinators[x])
+                tempCoordinators.push(state.temporaluser)
+            }
+            reswg.coordinators = tempCoordinators
+            commit('newcoors', reswg.coordinators)
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error], { root: true })
+        }
+    },
+    async uncoorWG({state,commit,dispatch},ids) {
+        try {
+            let wg = state.searchedWG
+            let coordinators = []
+            for (let x = 0; x < wg.coordinators.length; x++) {
+                coordinators.push(wg.coordinators[x].id)
+            }
+            for (let x = 0; x < coordinators.length; x++) {
+                if(ids.idUsers.some(id => id == coordinators[x])){
+                    coordinators.splice(x,1)
+                }
+            }
+            let body = {
+                coordinators: coordinators
+            }
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            let res = await Axios.put('/wg/' + ids.idWG,body,config)
+            let reswg = res.data
+            let tempCoordinators = []
+            for (let x = 0; x < reswg.coordinators.length; x++) {
+                await dispatch('loadUserByID',reswg.coordinators[x])
+                tempCoordinators.push(state.temporaluser)
+            }
+            reswg.coordinators = tempCoordinators
+            commit('newcoors', reswg.coordinators)
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error], { root: true })
+        }
+    },
+    async refreshingWG({state,commit,dispatch},id) {
+        try {
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            let res = await Axios.get('/wg/' + id,config)
+            let wg = res.data
+            await dispatch('loadUserByID',wg._userId)
+            let creator =  state.temporaluser
+            let questionList = wg.questions
+            wg['creator'] = creator
+            let tempCoordinators = []
+            for (let x = 0; x < wg.coordinators.length; x++) {
+                await dispatch('loadUserByID',wg.coordinators[x])
+                tempCoordinators.push(state.temporaluser)
+            }
+            wg.coordinators = tempCoordinators
+            let tempMembers = []
+            for (let x = 0; x < wg.members.length; x++) {
+                await dispatch('loadUserByID',wg.members[x])
+                tempMembers.push(state.temporaluser)
+            }
+            wg.members = tempMembers
+            let tempQuestionsLoaded = []
+            for (let i = 0; i < questionList.length; i++) {
+                let question = state.questions.find(q => q._id == questionList[i])
+                tempQuestionsLoaded.push(question)
+            }
+            wg.questions.length = 0
+            wg.questions = tempQuestionsLoaded
+            commit('pullWG', wg)
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error], { root: true })
+        }
+    },
+    async loadusers({state,commit}) {
+        try {
+            state.editmemberform.loading = true
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            let res = await Axios.get('/users/all',config)
+            commit('addallusers',res.data)
+            setTimeout(() => {
+                state.editmemberform.loading = false
+            }, 400)
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error], { root: true })
+        }
+    },
+    async saveMembers({state,commit,dispatch},ids) {
+        try {
+            state.editmemberform.loading = true
+            let idWG = ids.idWG
+            let idUsersToAdd = []
+            let idUsersToDel = []
+            let idCoorsToAdd = []
+            let idCoorsToDel = []
+            for (let x = 0; x < ids.idUsers.length; x++) {
+                if(state.searchedWG.members.length > 0) {
+                    if(!state.searchedWG.members.some(member => member.id == ids.idUsers[x].id)) {
+                        idUsersToAdd.push(ids.idUsers[x].id)
+                    }
+                }
+                else{
+                    idUsersToAdd.push(ids.idUsers[x].id)
+                }
+            }
+            for (let i = 0; i < state.searchedWG.members.length; i++) {
+                if(ids.idUsers.length > 0) {
+                    if(!ids.idUsers.some(user => user.id == state.searchedWG.members[i].id)) {
+                        idUsersToDel.push(state.searchedWG.members[i].id)
+                    }
+                }
+                else{
+                    idUsersToDel.push(state.searchedWG.members[i].id)
+                }
+            }
+            for (let x = 0; x < ids.idCoor.length; x++) {
+                if(state.searchedWG.coordinators.length > 0) {
+                    if(!state.searchedWG.coordinators.some(coor => coor.id == ids.idCoor[x].id)) {
+                        idCoorsToAdd.push(ids.idCoor[x].id)
+                    }
+                }
+                else{
+                    idCoorsToAdd.push(ids.idCoor[x].id)
+                }
+            }
+            for (let i = 0; i < state.searchedWG.coordinators.length; i++) {
+                if(ids.idCoor.length > 0) {
+                    if(!ids.idCoor.some(user => user.id == state.searchedWG.coordinators[i].id)) {
+                        idCoorsToDel.push(state.searchedWG.coordinators[i].id)
+                    }
+                }
+                else{
+                    idCoorsToDel.push(state.searchedWG.coordinators[i].id)
+                }
+            }
+            let token = Cookies.get("catapa-jwt")
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            if(idUsersToAdd.length != 0) {
+                await dispatch('joinWG',{idWG:idWG,idUsers:idUsersToAdd})
+                let wg = {
+                    _wgId: idWG,
+                    suscribedDate: Date.now(),
+                    answers: 'Added by Coordinator'
+                }
+                for (let x = 0; x < idUsersToAdd.length; x++) {
+                    let res = await Axios.get('/users/user/' + idUsersToAdd[x],config)
+                    let user = res.data
+                    let isWG = user.unsuscribedworkgroups.some(wg => wg._wgId === idWG)
+                    if (isWG) {
+                        let indexExtracted = await user.unsuscribedworkgroups.findIndex(wg => wg._wgId === idWG)
+                        user.unsuscribedworkgroups.splice(indexExtracted, 1)
+                    }
+                    user.workgroups.push(wg)
+                    await Axios.put("/users/user/" + user._id, user, config)
+                }
+            }
+            if(idUsersToDel.length != 0) {
+                await dispatch('unjoinWG',{idWG:idWG,idUsers:idUsersToDel})
+                for (let x = 0; x < idUsersToDel.length; x++) {
+                    let res = await Axios.get('/users/user/' + idUsersToDel[x],config)
+                    let user = res.data
+                    let isWG = user.workgroups.some(wg => wg._wgId === idWG)
+                    if (isWG) {
+                        let extractedItem = await user.workgroups.find(wg => wg._wgId === idWG)
+                        let indexExtracted = await user.workgroups.findIndex(wg => wg._wgId === idWG)
+                        user.unsuscribedworkgroups.push(extractedItem)
+                        user.workgroups.splice(indexExtracted, 1)
+                    }
+                    await Axios.put("/users/user/" + user._id, user, config)
+                }
+            }
+            if(idCoorsToAdd.length != 0) {
+                await dispatch('coorWG',{idWG:idWG,idUsers:idCoorsToAdd})
+            }
+            if(idCoorsToDel.length != 0) {
+                await dispatch('uncoorWG',{idWG:idWG,idUsers:idCoorsToDel})
+            }
+            await dispatch('user/userData',null,{root:true})
+            setTimeout(() => {
+                state.editmemberform.loading = false
+            }, 400);
+            commit('menu/cancelDialog', 'editmembers', { root: true });
+            commit('menu/notification', ['info', 10, 'Members updated'], { root: true })
+        } catch (error) {
+            state.editmemberform.loading = false
+            commit('menu/notification', ['info', 10, error], { root: true })
         }
     }
 }

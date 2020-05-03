@@ -79,6 +79,7 @@ const state = {
             { name: 'Admin', value: 'admin' }
         ]
     },
+    usersloaded:[],
     rules: {
         required: v => !!v || 'Required',
         maxSize: v => !v || v.size < 5000000 || 'Dossier size should be less than 5 MB!',
@@ -103,7 +104,7 @@ const state = {
         zerolength: v => v.length != 0 || 'Select one at least',
         minletter: v => v.length >= 3 || 'At least 3 letters',
         maxletters: v => v.length <= 20 || 'Max 20 characters',
-        maxdescletters: v => v.length <= 200 || 'Max 200 characters',
+        maxdescletters: v => v.length <= 380 || 'Max 380 characters',
         nospaces: v => {
             const pattern = /\s/;
             return !pattern.test(v) || 'No spaces'
@@ -356,7 +357,7 @@ const actions = {
         try {
             Cookies.remove('catapa-jwt')
             Cookies.remove('teamcoo-catapa-userdata')
-            commit('menu/cancelDialog', 'logout', { root: true });
+            commit('menu/cancelDialog', 'logout', { root: true })
             commit('clearUser')
             router.push('/');
             commit('menu/notification', ['success', 3, 'You are correctly log out.'], { root: true })
@@ -589,7 +590,7 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message]);
         }
     },
-    async suscribeto({ state, commit, dispatch }, { id, name, answers }) {
+    async suscribeto({ state, commit, dispatch }, { id, answers }) {
         try {
             let user = state.loginuser
             let isWG = user.unsuscribedworkgroups.some(wg => wg._wgId === id)
@@ -608,24 +609,18 @@ const actions = {
                     Authorization: "Bearer " + token
                 }
             }
-            let trace = { name: 'Join to ' + name, date: Date.now(), description: 'User join to this workgroup to colaborate. Work Group: ' + name, others: { answers: answers } }
+            dispatch('actions/joinWG',{idWG:id,idUsers:[state.loginuser.id]},{root:true})
             user.workgroups.push(wg)
-            user.tracing.push(trace)
             await Axios.put("/users/user/" + user.id, user, config)
                 .then(res => {
-                    commit('menu/notification', ['primary', 4, 'Succesfully joined'], { root: true })
-                    commit('menu/cancelDialog', 'suscribeto', { root: true })
                     dispatch('actions/loadWG', null, { root: true })
                     commit('userStore', res)
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
                 })
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
         }
     },
-    async unsuscribeto({ state, commit, dispatch }, { id, name }) {
+    async unsuscribeto({ state, commit, dispatch }, { id }) {
         try {
             let isWG = state.loginuser.workgroups.some(wg => wg._wgId === id)
             if (isWG) {
@@ -641,17 +636,11 @@ const actions = {
                     Authorization: "Bearer " + token
                 }
             }
-            let trace = { name: 'Unjoin to ' + name, date: Date.now(), description: 'User unjoin to this workgroup. Work Group: ' + name }
-            user.tracing.push(trace)
+            dispatch('actions/unjoinWG',{idWG:id,idUsers:[state.loginuser.id]},{root:true})
             await Axios.put("/users/user/" + user.id, user, config)
                 .then(res => {
-                    commit('menu/notification', ['primary', 4, 'Succesfully unjoined'], { root: true })
-                    commit('menu/cancelDialog', 'unsuscribewg', { root: true })
                     dispatch('actions/loadWG', null, { root: true })
                     commit('userStore', res)
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
                 })
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true })

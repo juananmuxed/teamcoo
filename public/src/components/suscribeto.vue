@@ -117,7 +117,7 @@
             block
             color="primary"
             :disabled="!valid"
-            @click="suscribeto({id:wg._id,name:wg.name,answers:answers})"
+            @click="suscribeto({id:wg._id,answers:answers})"
           >Suscribe</v-btn>
         </v-col>
       </v-row>

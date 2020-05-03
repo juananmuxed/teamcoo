@@ -28,16 +28,16 @@
                 <v-divider></v-divider>
                 <v-row class="px-3">
                     <v-col cols="12" class="headline">
-                        Email Configuration
+                        Communication Preferences
                     </v-col>
                     <v-col cols="12">
                         <v-icon left color="primary" v-if="loginuser.emailconfig.includes('newsletter')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> Newsletter
                     </v-col>
                     <v-col cols="12">
-                        <v-icon left color="primary" v-if="loginuser.emailconfig.includes('yearreport')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> Annual Report
+                        <v-icon left color="primary" v-if="loginuser.emailconfig.includes('newstaks')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> Task Notification
                     </v-col>
                     <v-col cols="12">
-                        <v-icon left color="primary" v-if="loginuser.emailconfig.includes('newstaks')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> New tasks
+                        <v-icon left color="primary" v-if="loginuser.emailconfig.includes('active')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> Temporal Innactive
                     </v-col>
                 </v-row>
             </v-card-text>

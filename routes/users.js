@@ -17,6 +17,10 @@ router.post("/login", userController.loginUser);
 
 router.get("/me", auth, userController.getUserData);
 
+// Return all users
+
+router.get("/all", auth, userController.getUsers);
+
 // Return data from user
 
 router.get("/user/:id", auth, userController.getUser)

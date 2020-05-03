@@ -50,6 +50,14 @@ const workingGroupSchema = new schema({
     secret:{
         type:Boolean,
         default:false
+    },
+    coordinators:{
+        type:Array,
+        default:[]
+    },
+    members:{
+        type:Array,
+        default:[]
     }
 })
 

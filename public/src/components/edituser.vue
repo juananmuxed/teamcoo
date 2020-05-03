@@ -60,12 +60,12 @@
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1 headline">
-                    Email Configurations
+                    Communication Preferences
                 </v-col>
                 <v-col cols="12" class="py-1">
                     <v-switch v-model="edituser.emailconfig" value="newsletter" label="Newsletter" color="primary"></v-switch>
-                    <v-switch v-model="edituser.emailconfig" value="yearreport" label="Annual Report" color="primary"></v-switch>
-                    <v-switch v-model="edituser.emailconfig" value="newstaks" label="News Tasks" color="primary"></v-switch>
+                    <v-switch v-model="edituser.emailconfig" value="newstaks" label="Task Notification" color="primary"></v-switch>
+                    <v-switch v-model="edituser.emailconfig" value="active" label="Temporal Innactive" color="primary"></v-switch>
                 </v-col>
                 Edit interests
                 <v-expand-transition>

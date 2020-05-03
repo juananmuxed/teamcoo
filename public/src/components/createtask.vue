@@ -45,7 +45,7 @@
                             v-on="on"
                         ></v-text-field>
                         </template>
-                        <v-date-picker :min="tasksForm.startDate" :max="tasksForm.endDate" color="primary" v-model="tasksForm.startDate" @input="menu2 = false"></v-date-picker>
+                        <v-date-picker :max="tasksForm.endDate" color="primary" v-model="tasksForm.startDate" @input="menu2 = false"></v-date-picker>
                     </v-menu>
                 </v-col>
                 <v-col cols="12" md="6" class="py-1">
@@ -124,17 +124,6 @@
                     </v-select>
                 </v-col>
                 <v-col cols="12" class="py-1">
-                    <v-dialog
-                        max-width="650"
-                        v-model="menu.dialogs.createinterest"
-                    >
-                        <template v-slot:activator="{ on }">
-                            <v-btn block color="accent" class="mb-3" v-on="on">New Interest</v-btn>
-                        </template>
-                        <create-interest></create-interest>
-                    </v-dialog>
-                </v-col>
-                <v-col cols="12" class="py-1">
                     <v-select
                         label="Interests"
                         v-model="tasksForm.interestsSelected"
@@ -166,11 +155,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import createinterest from './createinterest.vue'
 export default {
-    components:{
-        'create-interest': createinterest
-    },
     computed: {
         ...mapState({
             tasksForm: state => state.actions.tasksForm,

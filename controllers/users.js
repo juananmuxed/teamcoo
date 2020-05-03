@@ -127,6 +127,28 @@ exports.getUser = async(req,res) => {
     }
 }
 
+// Async method to return User
+
+exports.getUsers = async(req,res) => {
+    try {
+        const actionDB = await User.find()
+        let datatemp = []
+        for (let x = 0; x < actionDB.length; x++) {
+            let tempuser = {
+                lastname: actionDB[x].lastname,
+                rol: actionDB[x].rol,
+                avatar: actionDB[x].image,
+                firstname: actionDB[x].firstname,
+                id: actionDB[x]._id
+            }
+            datatemp.push(tempuser)
+        }
+        res.json(datatemp)
+    } catch (error) {
+        return res.status(400).json({mensaje: 'An error has occurred',error})
+    }
+}
+
 // Async method to update User
 
 exports.updateUser = async(req,res) => {

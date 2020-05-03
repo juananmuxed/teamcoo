@@ -29,7 +29,8 @@ const state = {
             createtask:false,
             createinterest:false,
             editwg:false,
-            confirm:false
+            confirm:false,
+            editmembers:false
         },
         loader:{
             wg:false,
