@@ -1,11 +1,12 @@
 <template>
     <v-card
         max-width="650"
-        class="mx-auto pa-2"
+        class="mx-auto"
+        :loading="questionForm.loading"
+        :disabled="questionForm.loading"
     >
-        <v-card-title class="headline font-weight-medium text-uppercase">New Question</v-card-title>
+        <v-card-title class="headline font-weight-medium text-uppercase">Edit {{ searchedQuestion.name }}</v-card-title>
         <v-card-text>
-            <p>Select one of the 4 types and fill the questions.</p>
             <v-row>
                 <v-col cols="12" class="py-1">
                     <v-select
@@ -37,22 +38,23 @@
                 </v-col>
                 <v-col cols="12" v-if="questionForm.type == 'select'" class="py-1">
                     <v-combobox
-                        outlined
                         v-model="questionForm.selectionsSelected"
-                        label="Answers"
-                        :rules="[rules.zerolength]"
+                        :items="searchedQuestion.selections"
+                        outlined
                         multiple
-                        persistent-hint
-                        hint="Press Enter to create a new one"
                         small-chips
+                        return-object
+                        hint="Select at least 1"
+                        :rules="[rules.zerolength]"
+                        label="Answers"
                     >
                         <template v-slot:no-data>
                             <v-list-item>
-                                <v-list-item-content>
+                            <v-list-item-content>
                                 <v-list-item-title>
-                                    Press <kbd>enter</kbd> to create a new one
+                                No results matching. Press <kbd>enter</kbd> to create a new one
                                 </v-list-item-title>
-                                </v-list-item-content>
+                            </v-list-item-content>
                             </v-list-item>
                         </template>
                     </v-combobox>
@@ -73,22 +75,23 @@
                 </v-col>
                 <v-col cols="12" v-if="questionForm.type == 'checkbox'" class="py-1">
                     <v-combobox
-                        outlined
                         v-model="questionForm.selectionsSelected"
-                        label="Answers"
-                        :rules="[rules.zerolength]"
+                        :items="searchedQuestion.selections"
+                        outlined
                         multiple
-                        persistent-hint
-                        hint="Press Enter to create a new one"
                         small-chips
+                        return-object
+                        hint="Select at least 1"
+                        :rules="[rules.zerolength]"
+                        label="Options"
                     >
                         <template v-slot:no-data>
                             <v-list-item>
-                                <v-list-item-content>
+                            <v-list-item-content>
                                 <v-list-item-title>
-                                    Press <kbd>enter</kbd> to create a new one
+                                No results matching. Press <kbd>enter</kbd> to create a new one
                                 </v-list-item-title>
-                                </v-list-item-content>
+                            </v-list-item-content>
                             </v-list-item>
                         </template>
                     </v-combobox>
@@ -111,22 +114,23 @@
                 </v-col>
                 <v-col cols="12" v-if="questionForm.type == 'radio'" class="py-1">
                     <v-combobox
-                        outlined
                         v-model="questionForm.selectionsSelected"
-                        label="Answers"
-                        :rules="[rules.zerolength]"
-                        multiple
-                        persistent-hint
-                        hint="Press Enter to create a new one"
+                        :items="searchedQuestion.selections"
                         small-chips
+                        outlined
+                        multiple
+                        return-object
+                        hint="Select at least 1"
+                        :rules="[rules.zerolength]"
+                        label="Radios"
                     >
                         <template v-slot:no-data>
                             <v-list-item>
-                                <v-list-item-content>
+                            <v-list-item-content>
                                 <v-list-item-title>
-                                    Press <kbd>enter</kbd> to create a new one
+                                No results matching. Press <kbd>enter</kbd> to create a new one
                                 </v-list-item-title>
-                                </v-list-item-content>
+                            </v-list-item-content>
                             </v-list-item>
                         </template>
                     </v-combobox>
@@ -167,27 +171,35 @@
                         ></v-text-field>
                     </v-card>
                 </v-col>
-                <v-col cols="12">
-                    <v-btn block color="primary" :disabled="validQuestion()" @click="createQuestion(userId)">Create Question</v-btn>
-                </v-col>
             </v-row>
+            <v-slide-y-transition origin="center center">
+                <v-btn fab right small top absolute color="primary" @click="saveEditedQuestion(searchedQuestion._id)" v-show="!validQuestion() && isEditedQuestion()" class="mt-8 mr-12">
+                    <v-icon small>fas fa-save</v-icon>
+                </v-btn>
+            </v-slide-y-transition>
+            <v-slide-y-transition origin="center center">
+                <v-btn fab right small top absolute color="info" @click="loadEditedQuestion(searchedQuestion)" v-show="isEditedQuestion()" class="mt-8">
+                    <v-icon small>fas fa-undo</v-icon>
+                </v-btn>
+            </v-slide-y-transition>
         </v-card-text>
     </v-card>
 </template>
 
 <script>
-import { mapState , mapGetters, mapActions } from 'vuex'
+import { mapState , mapGetters , mapMutations, mapActions } from 'vuex'
 export default {
     computed: {
         ...mapState({
+            searchedQuestion: state => state.actions.searchedQuestion,
             questionForm: state => state.actions.questionForm,
-            userId: state => state.user.loginuser.id,
             rules: state => state.user.rules
         })
     },
     methods: {
-        ...mapGetters('actions',['validQuestion']),
-        ...mapActions('actions',['createQuestion'])
-    },
+        ...mapMutations('actions',['loadEditedQuestion']),
+        ...mapGetters('actions',['validQuestion','isEditedQuestion']),
+        ...mapActions('actions',['saveEditedQuestion'])
+    }
 }
 </script>

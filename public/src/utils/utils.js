@@ -51,10 +51,25 @@ const generateRandomColor = (brightness) => {
     return '#' + randomChannel(brightness) + randomChannel(brightness) + randomChannel(brightness)
 }
 
-const idEqualArray = (first, second , param) => {
-    let idsFirst = first.map(x => {return x[param]}).sort()
-    let idsSecond = second.map(y => {return y[param]}).sort()
+const isDiferentArray = (first, second , paramfirst, paramsecond) => {
+    if(!first || !second) {
+        return false
+    }
+    let idsFirst = first.map(x => {
+        if(!paramfirst){
+            return x
+        } else {
+            return x[paramfirst]
+        }
+    }).sort()
+    let idsSecond = second.map(y => {
+        if(!paramsecond){
+            return y
+        } else {
+            return y[paramsecond]
+        }
+    }).sort()
     return (idsFirst.join(',') !== idsSecond.join(',') )
 }
 
-export { treeBuild, dateToFormat , todayFormatToPicker , generateRandomColor , idEqualArray}
+export { treeBuild, dateToFormat , todayFormatToPicker , generateRandomColor , isDiferentArray}

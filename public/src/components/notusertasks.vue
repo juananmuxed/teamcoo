@@ -45,7 +45,7 @@
                             {{ action.creator.firstname }} {{ action.creator.lastname }}
                         </v-chip>
 
-                        <template v-if="action.topics.length != 0">
+                        <template v-if="action.interests.length != 0">
                             <v-row>
                                 <v-col cols="12" md="1">
                                     <v-tooltip
@@ -58,7 +58,7 @@
                                     </v-tooltip>
                                 </v-col>
                                 <v-col cols="12" md="11">
-                                    <v-chip small v-for="(topic , index) in action.topics" :key="index" class="ma-1">{{ topic.name }}</v-chip>
+                                    <v-chip small v-for="(interest , index) in action.interests" :key="index" class="ma-1">{{ interest.name }}</v-chip>
                                 </v-col>
                             </v-row>
                         </template>
@@ -151,7 +151,7 @@
                                     {{ action.creator.firstname }} {{ action.creator.lastname }}
                                 </v-chip>
 
-                                <template v-if="action.topics.length != 0">
+                                <template v-if="action.interests.length != 0">
                                     <v-row>
                                         <v-col cols="12" md="1">
                                             <v-tooltip
@@ -164,7 +164,7 @@
                                             </v-tooltip>
                                         </v-col>
                                         <v-col cols="12" md="11">
-                                            <v-chip small v-for="(topic , index) in action.topics" :key="index" class="ma-1">{{ topic.name }}</v-chip>
+                                            <v-chip small v-for="(interest , index) in action.interests" :key="index" class="ma-1">{{ interest.name }}</v-chip>
                                         </v-col>
                                     </v-row>
                                 </template>

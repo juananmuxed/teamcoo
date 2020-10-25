@@ -41,7 +41,7 @@ app.use('/api/actions', require('./routes/actions'))
 app.use('/api/users', require('./routes/users'))
 app.use('/api/tokens', require('./routes/tokens'))
 app.use('/api/wg', require('./routes/workinggroups'))
-app.use('/api/topics', require('./routes/topics'))
+app.use('/api/interests', require('./routes/interests'))
 app.use('/api/files', require('./routes/files'))
 app.use('/api/questions', require('./routes/questions'))
 

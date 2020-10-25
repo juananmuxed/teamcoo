@@ -8,7 +8,7 @@ const questionSchema = new schema({
     },
     description: {
         type: String, 
-        required: [true,'Required field']
+        default: ''
     },
     type: {
         type: String, 

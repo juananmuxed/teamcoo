@@ -18,10 +18,10 @@ router.post('/create', auth, questionsController.createQuestion)
 
 // Update question
 
-router.put('/update', auth, questionsController.updateQuestion)
+router.put('/question/:id', auth, questionsController.updateQuestion)
 
 // Delete question
 
-router.delete('/delete', auth, questionsController.deleteQuestion)
+router.delete('/question/:id', auth, questionsController.deleteQuestion)
 
 module.exports = router

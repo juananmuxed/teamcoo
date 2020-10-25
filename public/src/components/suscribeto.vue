@@ -71,8 +71,6 @@
               :items="question.selections"
               multiple
               :label="question.name"
-              item-value="answer"
-              item-text="answer"
               color="primary"
               chips
               :rules="[rules[index]]"
@@ -81,7 +79,7 @@
             >
               <template v-slot:selection="{ data, item, index }">
                 <v-chip v-if="index < 3">
-                  <span>{{ item.answer }}</span>
+                  <span>{{ item }}</span>
                 </v-chip>
                 <span
                   v-if="index === 3"
@@ -99,10 +97,11 @@
               v-if="question.type == 'radio'"
             >
               <v-radio
+                class="pa-1"
                 v-for="( radio , index) in question.selections"
                 v-bind:key="index"
-                :value="radio.answer"
-                :label="radio.answer"
+                :value="radio"
+                :label="radio"
                 color="primary"
               ></v-radio>
             </v-radio-group>

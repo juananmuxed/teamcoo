@@ -1,7 +1,7 @@
 import router from '@/router'
 import Axios from 'axios'
 import Cookies from 'js-cookie'
-import { treeBuild , todayFormatToPicker , generateRandomColor , idEqualArray } from '../../utils/utils'
+import { treeBuild , todayFormatToPicker , generateRandomColor , isDiferentArray } from '../../utils/utils'
 
 const state = {
     actions: [],
@@ -9,8 +9,9 @@ const state = {
     secretworkgroups: [],
     nestedWGs: [],
     secretnestedWGs: [],
-    topics: [],
+    interests: [],
     searchedWG:{},
+    searchedQuestion:{},
     temporaluser:{
         firstname:'',
         lastname:'',
@@ -51,35 +52,40 @@ const state = {
         image:null,
         imagelink:''
     },
+    loading:{
+        workgroups:false,
+        secretworkgroups:false,
+        questions: false
+    },
     usersforadd:[],
     questionForm: {
         name: '',
+        loading: false,
         type: null,
         description: '',
+        selectionsSelected:[],
         types: [
             { text: "Selection from a list", value: 'select' },
             { text: "Multiple checkboxs", value: 'checkbox' },
             { text: "Radio select", value: 'radio' },
             { text: "Open question", value: 'text' }
         ],
-        selections: [
-            { answer: 'Answer 1', value: 0 }
-        ],
-        selectCount: 0,
-        checkboxs: [
-            { answer: 'Option 1', value: 0 }
-        ],
-        checkboxCount: 0,
-        radios: [
-            { answer: 'Option 1', value: 0 }
-        ],
-        radioCount: 0,
-        text: 'Simple question'
+        text: ''
     },
     loadedSuscription: {}
 }
 
 const mutations = {
+    loadEditedQuestion: (state,question) => {
+        state.searchedQuestion = question
+        state.questionForm.name = question.name,
+        state.questionForm.description = question.description,
+        state.questionForm.type = question.type
+        state.questionForm.selectionsSelected = question.selections
+        if(question.type == 'text') {
+            state.questionForm.text = question.selections[0]
+        }
+    },
     temporaluser: (state,user) => {
         state.temporaluser.id = user._id,
         state.temporaluser.avatar = user.image,
@@ -94,13 +100,8 @@ const mutations = {
         state.questionForm.name = '',
             state.questionForm.description = '',
             state.questionForm.type = null,
-            state.questionForm.selections = [{ answer: 'Answer 1', value: 0 }],
-            state.questionForm.selectCount = 0,
-            state.questionForm.checkboxs = [{ answer: 'Option 1', value: 0 }],
-            state.questionForm.checkboxCount = 0,
-            state.questionForm.radios = [{ answer: 'Option 1', value: 0 }],
-            state.questionForm.radioCount = 0,
-            state.questionForm.text = 'Simple question'
+            state.questionForm.selectionsSelected = [],
+            state.questionForm.text = ''
     },
     cleartaskform: (state) => {
         state.tasksForm.name = '',
@@ -143,7 +144,7 @@ const mutations = {
         }
     },
     actionsLoad: (state, actions) => { state.actions = actions },
-    topicsLoad: (state, topics) => { state.topics = topics },
+    interestsLoad: (state, interests) => { state.interests = interests },
     wgLoad: (state, workgroups) => { state.workgroups = workgroups },
     secretwgLoad: (state, secretworkgroups) => { state.secretworkgroups = secretworkgroups },
     wgNested: (state, nestedWGs) => { state.nestedWGs = nestedWGs },
@@ -161,14 +162,8 @@ const mutations = {
         }
         state.workgroupForm.questions = tempQuestions
     },
-    addTopic: (state, topic) => { state.actions.topics.push(topic) },
+    addInterests: (state, interest) => { state.actions.interests.push(interest) },
     changeTextColor: (state, color) => { state.workgroupForm.textcolor = color },
-    addselect: (state, value) => { state.questionForm.selectCount++; state.questionForm.selections.push({ answer: 'Answer ' + (state.questionForm.selectCount + 1), value: value + 1 }) },
-    delselect: (state) => { state.questionForm.selectCount--; state.questionForm.selections.pop() },
-    addcheck: (state, value) => { state.questionForm.checkboxCount++; state.questionForm.checkboxs.push({ answer: 'Option ' + (state.questionForm.checkboxCount + 1), value: value + 1 }) },
-    delcheck: (state) => { state.questionForm.checkboxCount--; state.questionForm.checkboxs.pop() },
-    addradio: (state, value) => { state.questionForm.radioCount++; state.questionForm.radios.push({ answer: 'Option ' + (state.questionForm.radioCount + 1), value: value + 1 }) },
-    delradio: (state) => { state.questionForm.radioCount--; state.questionForm.radios.pop() },
     wgforsuscription: (state, wg) => { state.loadedSuscription = wg[0] },
     pullWG:(state,wg) => {state.searchedWG = wg},
     newmembers:(state,members) => {
@@ -232,9 +227,16 @@ const getters = {
         }
     },
     validQuestion: (state) => {
+        let validating = null
+        if(state.questionForm.type != 'text') {
+            validating = state.questionForm.selectionsSelected.length != 0
+        } else {
+            validating = state.questionForm.text != ''
+        }
         if (
             state.questionForm.name != '' &&
-            state.questionForm.type.length != 0 &&
+            state.questionForm.type != '' &&
+            validating &&
             state.questionForm.description.length <= 380
         ) {
             return false
@@ -243,13 +245,26 @@ const getters = {
             return true
         }
     },
-    editedwg:(state) =>{
-        let invalidquestion = true
-        for (let x = 0; x < state.workgroupForm.questionsSelected.length; x++) {
-            if(state.searchedWG.questions.some(question => question._id == state.workgroupForm.questionsSelected[x].value)){
-                invalidquestion = false
-            }
+    isEditedQuestion: (state) => {
+        let validating = null
+        if (state.questionForm.type == 'text') {
+            validating = state.questionForm.text != state.searchedQuestion.selections
+        } else {
+            validating = isDiferentArray(state.questionForm.selectionsSelected,state.searchedQuestion.selections)
         }
+        if(
+            state.questionForm.name != state.searchedQuestion.name ||
+            state.questionForm.type != state.searchedQuestion.type ||
+            state.questionForm.description != state.searchedQuestion.description ||
+            validating
+            ) {
+            return true
+        }
+        else {
+            return false
+        }
+    },
+    editedwg:(state) =>{
         if (
             state.workgroupForm.name != state.searchedWG.name ||
             state.workgroupForm.description != state.searchedWG.description ||
@@ -257,7 +272,7 @@ const getters = {
             state.workgroupForm.color != state.searchedWG.color ||
             state.workgroupForm.oldDossier != state.searchedWG.dossier ||
             state.workgroupForm.dossier != null ||
-            invalidquestion
+            isDiferentArray(state.workgroupForm.questionsSelected,state.searchedWG.questions,'value','_id')
         ) {
             return false
         }
@@ -266,10 +281,10 @@ const getters = {
         }
     },
     editedMembers:(state) => {
-        if(idEqualArray(state.searchedWG.members,state.editmemberform.members,'id')){
+        if(isDiferentArray(state.searchedWG.members,state.editmemberform.members,'id','id')){
             return false
         }
-        if(idEqualArray(state.searchedWG.coordinators,state.editmemberform.coordinators,'id')){
+        if(isDiferentArray(state.searchedWG.coordinators,state.editmemberform.coordinators,'id','id')){
             return false
         }
         return true
@@ -318,7 +333,7 @@ const actions = {
             let body = {
                 name: state.tasksForm.name,
                 description: state.tasksForm.description,
-                topics: state.tasksForm.interestsSelected,
+                interests: state.tasksForm.interestsSelected,
                 workgroups: state.tasksForm.workgroupsSelected,
                 eventStartDate:state.tasksForm.startDate,
                 eventEndDate:state.tasksForm.endDate,
@@ -388,26 +403,29 @@ const actions = {
                     Authorization: "Bearer " + token
                 }
             }
-            let selections = []
-            switch (state.questionForm.type) {
-                case 'select':
-                    selections = state.questionForm.selections
-                    break;
-
-                case 'checkbox':
-                    selections = state.questionForm.checkboxs
-                    break;
-
-                case 'radio':
-                    selections = state.questionForm.radios
-                    break;
-
-                case 'text':
-                    selections = state.questionForm.text
-                    break;
-
-                default:
-                    break;
+            let selections = state.questionForm.selectionsSelected
+            let questionsAxios = await Axios.get('/questions/all',config)
+            let resQuestion = questionsAxios.data
+            if(resQuestion.some(question => question.name == state.questionForm.name)) {
+                throw new Error('Question name in use: ' + state.questionForm.name)
+            }
+            let interests = []
+            if(state.questionForm.type != 'text') {
+                let interestsAxios = await Axios.get('/interests/all', config)
+                let resInter = interestsAxios.data
+                for (let x = 0; x < selections.length; x++) {
+                    if(resInter.some(interest => interest.name == selections[x])) {
+                        throw new Error('Interest duplicated, use another: ' + selections[x])
+                    }
+                    let interest = {
+                        name: selections[x],
+                        description: 'From ' + state.questionForm.name + ' question',
+                        color: '#C8EAEF'
+                    }
+                    interests.push(interest)
+                }
+            } else {
+                selections = state.questionForm.text
             }
             let body = {
                 name: state.questionForm.name,
@@ -416,33 +434,50 @@ const actions = {
                 _userId: userId,
                 selections: selections,
             }
-            await Axios.post("/questions/create", body, config)
-                .then(() => {
-                    commit('menu/notification', ['info', 3, 'Question saved'], { root: true })
-                    dispatch('loadQuestions')
-                    commit('menu/cancelDialog', 'createquestion', { root: true })
-                    commit('clearquestionForm')
-                })
+            if(state.questionForm.type != 'text'){
+                for (let x = 0; x < interests.length; x++) {
+                    await Axios.post('/interests/create',interests[x],config)
+                }
+            }
+            await Axios.post('/questions/create', body, config)
+            commit('menu/notification', ['info', 3, 'Question saved'], { root: true })
+            dispatch('loadQuestions')
+            commit('menu/cancelDialog', 'createquestion', { root: true })
+            commit('clearquestionForm')
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+            if(!error.message){
+                commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+            }
+            else{
+                commit('menu/notification', ['error', 5, error.message], { root: true });
+            }
         }
     },
     async delSomething({commit,dispatch},item) {
         let url = ''
         let message = ''
+        let push = '/'
+        let actionfordispatch = null
         switch (item.type) {
             case 'task':
+                push = 'tasks'
                 url = "/actions/action/" + item.id
                 message = 'Task Deleted'
-                break;
-
+                break
             case 'workgroup':
                 url = "/wg/" + item.id
                 message = 'Work Group Deleted'
-                break;
-        
+                actionfordispatch = 'loadWG'
+                push = {go: true, path: '',number: -1}
+                break
+            case 'question':
+                push = {go: false, path: '/questions',number: 0}
+                actionfordispatch = 'loadQuestions'
+                url = "/questions/question/" + item.id
+                message = 'Question Deleted. The asociated Interests are actives.'
+                break
             default:
-                break;
+                break
         }
         try {
             let token = Cookies.get("catapa-jwt");
@@ -454,12 +489,17 @@ const actions = {
             await Axios.delete(url, config)
             .then(() => {
                 commit('menu/notification', ['info', 3, message], { root: true })
-                dispatch('loadActions')
-                router.push('/dashboard')
+                dispatch(actionfordispatch)
+                if(push.go) {
+                    router.go(push.number)
+                }
+                else{
+                    router.push(push.path)
+                }
                 commit('menu/cancelDialog', 'confirm', { root: true })
             })
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+            commit('menu/notification', ['error', 5, error.response.data], { root: true });
         }
     },
     idealTextColor({ commit }, color) {
@@ -483,17 +523,17 @@ const actions = {
     async loadActions({ state, commit, dispatch }) {
         try {
             commit('menu/loadingstate', ['tasks',true], { root: true })
-            await dispatch('loadTopics')
+            await dispatch('loadInterests')
             await dispatch('loadWG')
             let res = await Axios.get("/actions/all")
             for (let i = 0; i < res.data.length; i++) {
-                let tempTopics = []
+                let tempInterests = []
                 let tempWG = []
                 await dispatch('loadUserByID',res.data[i].createdBy)
-                for (let y = 0; y < res.data[i].topics.length; y++) {
-                    for (let x = 0; x < state.topics.length; x++) {
-                        if (state.topics[x]._id == res.data[i].topics[y]) {
-                            tempTopics.push(state.topics[x])
+                for (let y = 0; y < res.data[i].interests.length; y++) {
+                    for (let x = 0; x < state.interests.length; x++) {
+                        if (state.interests[x]._id == res.data[i].interests[y]) {
+                            tempInterests.push(state.interests[x])
                         }
                     }
                 }
@@ -505,7 +545,7 @@ const actions = {
                     }
                 }
                 res.data[i].creator = state.temporaluser
-                res.data[i].topics = tempTopics
+                res.data[i].interests = tempInterests
                 res.data[i].workgroups = tempWG
             }
             commit('actionsLoad', res.data)
@@ -537,8 +577,10 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
-    async loadWG({ commit , dispatch }) {
+    async loadWG({state ,  commit , dispatch }) {
         try {
+            state.loading.workgroups = true
+            state.loading.secretworkgroups = true
             commit('menu/loadingstate', ['wg',true], { root: true })
             commit('menu/loadingstate', ['secretwg',true], { root: true })
             let token = Cookies.get("catapa-jwt");
@@ -594,13 +636,17 @@ const actions = {
             setTimeout(() => {
                 commit('menu/loadingstate', ['wg',false], { root: true })
             }, 600)
+            state.loading.secretworkgroups = false
+            state.loading.workgroups = false
         } catch (error) {
+            state.loading.secretworkgroups = false
+            state.loading.workgroups = false
             commit('menu/notification', ['error', 3, error], { root: true })
             commit('menu/loadingstate', ['wg',false], { root: true })
             commit('menu/loadingstate', ['secretwg',false], { root: true })
         }
     },
-    async loadTopics({ commit }) {
+    async loadInterests({ commit }) {
         try {
             let token = Cookies.get("catapa-jwt");
             let config = {
@@ -608,9 +654,9 @@ const actions = {
                     Authorization: "Bearer " + token
                 }
             }
-            await Axios.get("/topics/all", config)
+            await Axios.get("/interests/all", config)
                 .then(res => {
-                    commit('topicsLoad', res.data)
+                    commit('interestsLoad', res.data)
                 })
                 .catch(error => {
                     commit('menu/notification', ['error', 3, error], { root: true })
@@ -619,22 +665,26 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true })
         }
     },
-    async loadQuestions({ commit }) {
+    async loadQuestions({ commit , dispatch }) {
         try {
+            state.loading.questions = true
             let token = Cookies.get("catapa-jwt")
             let config = {
                 headers: {
                     Authorization: "Bearer " + token
                 }
             }
-            await Axios.get("/questions/all", config)
-                .then(res => {
-                    commit('questionsLoad', res.data)
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error], { root: true })
-                })
+            let res = await Axios.get("/questions/all", config)
+            let questions = res.data
+            for (let x = 0; x < questions.length; x++) {
+                await dispatch('loadUserByID',questions[x]._userId)
+                let creator =  state.temporaluser
+                questions[x]['creator'] = creator
+            }
+            commit('questionsLoad', res.data)
+            state.loading.questions = false
         } catch (error) {
+            state.loading.questions = false
             commit('menu/notification', ['error', 3, error], { root: true })
         }
     },
@@ -678,11 +728,46 @@ const actions = {
                 wg.questions = tempQuestions
                 commit('pullWG', wg) 
                 commit('menu/loadingbar', ['primary', null , 100], { root: true })
+                setTimeout(() => {
+                    commit('menu/loadingbar', [null, false , null], { root: true })
+                    commit('menu/loadingstate', ['itembig',false], { root: true })
+                }, 400);
             }
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
             commit('menu/loadingbar', ['error', null , 100], { root: true })
         }
+    },
+    async searchQuestion({state,commit,dispatch},id){
+        try {
+            commit('clearquestionForm')
+            state.questionForm.loading = true
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            let res = await Axios.get('/questions/question/' + id, config)
+            let question = res.data
+            await dispatch('loadUserByID',question._userId)
+            let creator =  state.temporaluser
+            question['creator'] = creator
+            commit('loadEditedQuestion', question)
+            setTimeout(() => {
+                state.questionForm.loading = false
+            }, 400)
+        } catch (error) {
+            setTimeout(() => {
+                state.questionForm.loading = false
+            }, 400)
+            commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
+        }
+    },
+    async saveEditedQuestion({state,commit},id){
+        let exit = JSON.stringify(state.questionForm.selectionsSelected)
+        let exit2 = JSON.stringify(state.searchedQuestion.selections)
+        commit('menu/notification', ['primary', 5, id + ': ' + exit + ' / ' + exit2], { root: true })
     },
     async saveEditedWG({state,commit,dispatch},id) {
         commit('menu/loadingstate', ['itembig',true], { root: true })

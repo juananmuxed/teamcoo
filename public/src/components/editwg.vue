@@ -93,6 +93,7 @@
                         :items="workgroupForm.questions"
                         hint="Select at least 1"
                         :rules="[rules.zerolength]"
+                        return-object
                     >
                         <template v-slot:selection="{ data, item, index }">
                             <v-chip v-if="index < 3">

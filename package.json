@@ -1,7 +1,7 @@
 {
   "name": "teamcoo",
-  "version": "0.2.0",
-  "releaseversion": "0.2.0-beta",
+  "version": "0.3.0",
+  "releaseversion": "0.3.0-beta",
   "description": "🎩 A HR Collaborative team manager for Non-profit Associations",
   "main": "index.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "bcrypt": "^4.0.1",
     "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
+    "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.2",
     "express": "^4.17.1",

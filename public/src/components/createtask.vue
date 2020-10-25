@@ -130,7 +130,7 @@
                         multiple
                         chips
                         outlined
-                        :items="topics"
+                        :items="interests"
                         item-text="name"
                         item-value="_id"
                     >
@@ -163,7 +163,7 @@ export default {
             userId: state => state.user.loginuser.id,
             menu: state => state.menu.menu,
             rules: state => state.user.rules,
-            topics: state => state.actions.topics
+            interests: state => state.actions.interests,
         })
     },
     methods: {

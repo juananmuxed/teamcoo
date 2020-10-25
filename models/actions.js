@@ -14,7 +14,7 @@ const actionschema = new schema({
         type:mongoose.Schema.Types.ObjectId,
         required:true,
     },
-    topics:{
+    interests:{
         type:Array,
         required:true
     },

@@ -30,7 +30,8 @@ const state = {
             createinterest:false,
             editwg:false,
             confirm:false,
-            editmembers:false
+            editmembers:false,
+            editquestion:false
         },
         loader:{
             wg:false,
@@ -118,9 +119,6 @@ const actions = {
         setTimeout(() => {
             router.go(-1)
         }, 200);
-    },
-    skeletonOn({commit},nameSkeleton) {
-        commit('loadingstate',[nameSkeleton,true])
     }
 }
 

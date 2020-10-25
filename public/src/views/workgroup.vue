@@ -5,10 +5,10 @@
     
         <v-row>
             <v-col cols="12">
-                <v-skeleton-loader type="skeleton" :types="{skeleton:'card,article, table-tfoot'}" max-width="840" class="mx-auto" transition="fade-transition" :loading="menu.loader.itembig">
+                <v-skeleton-loader type="skeleton" :types="{skeleton:'card,article, table-tfoot'}" max-width="1080" class="mx-auto" transition="fade-transition" :loading="menu.loader.itembig">
                     <v-card :color="searchedWG.color" :class="`${searchedWG.textcolor}--text mx-auto`" max-width="1080">
                         <v-card-title>
-                            <v-btn class="mr-n12" absolute fab top right color="info" @click="goBack();skeletonOn('itembig')">
+                            <v-btn class="mr-n12" absolute fab top right color="info" @click="goBack()">
                                 <v-icon>fas fa-arrow-left</v-icon>
                             </v-btn>
                             <v-tooltip right :color="loginuser.workgroups.some(wg => wg._wgId === searchedWG._id) ? 'info' : 'error'" transition="scroll-x-transition">
@@ -48,27 +48,31 @@
                         </v-card-title>
                         <v-divider></v-divider>
                         <v-card-text :class="`${searchedWG.textcolor}--text`">
-                                <v-dialog
-                                    v-model="dialogs.editmembers"
-                                    max-width="650"
-                                >
-                                    <edit-members></edit-members>
-                                </v-dialog>
-                            <span class="text-uppercase headline font-weight-light">Description<br></span>
-                            <span class="font-italic">
-                                {{ searchedWG.description }}
-                            </span>
+                            <v-dialog
+                                v-model="dialogs.editmembers"
+                                max-width="650"
+                            >
+                                <edit-members></edit-members>
+                            </v-dialog>
+                            <v-row>
+                                <v-col cols="12" class="mb-4">
+                                    <span class="text-uppercase headline font-weight-light">Description<br></span>
+                                    <span class="font-italic">
+                                        {{ searchedWG.description }}
+                                    </span>
+                                </v-col>
+                            </v-row>
                             <v-row>
                                 <v-col cols="12" md="6" v-if="searchedWG.dossier != null"><v-btn color="info" target="_blank" :href="searchedWG.dossier" block height="80">Dossier <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
                                 <v-col cols="12" md="6" v-if="searchedWG.linktodocuments != ''"><v-btn color="accent" target="_blank" :href="searchedWG.linktodocuments" block height="80">Link to Documents <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
                             </v-row>
-                            <v-toolbar dense elevation="2" color="primary">
+                            <v-toolbar dense elevation="2" color="primary" class="my-1">
                                 <v-toolbar-title class="text-uppercase title font-weight-light">Coordinators</v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-btn small color="primary" v-if="searchedWG.coordinators.length != 0" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
                             </v-toolbar>
                             <v-row v-if="searchedWG.coordinators.length != 0">
-                                <v-col cols="12">
+                                <v-col cols="12" class="my-1">
                                     <v-chip v-for="(coor , index) in searchedWG.coordinators" v-bind:key="index" class="mx-1">
                                         <v-avatar left v-if="coor.avatar != ''"><v-img :src="coor.avatar"></v-img></v-avatar>
                                         <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
@@ -77,17 +81,17 @@
                                 </v-col>
                             </v-row>
                             <v-row v-else>
-                                <v-col cols="12">
+                                <v-col cols="12" class="my-1">
                                     <v-btn block color="info" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
                                 </v-col>
                             </v-row>
-                            <v-toolbar dense elevation="2" color="secondary">
+                            <v-toolbar dense elevation="2" color="secondary" class="my-1">
                                 <v-toolbar-title class="text-uppercase title font-weight-light">Members</v-toolbar-title>
                                 <v-spacer></v-spacer>
                                 <v-btn depressed small color="primary" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
                             </v-toolbar>
                             <v-row v-if="searchedWG.members.length != 0">
-                                <v-col cols="12">
+                                <v-col cols="12" class="my-1">
                                     <v-chip v-for="(member , index) in searchedWG.members" v-bind:key="index" class="mx-1">
                                         <v-avatar left v-if="member.avatar != ''"><v-img :src="member.avatar"></v-img></v-avatar>
                                         <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
@@ -96,8 +100,8 @@
                                 </v-col>
                             </v-row>
                             <v-row v-if="searchedWG.members.length == 0 && (loginuser.rol.value == 'admin' || searchedWG.coordinators.some(coor => coor.id == loginuser.id))">
-                                <v-col cols="12">
-                                    <v-btn v-on="on" block color="info" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}), dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
+                                <v-col cols="12" class="my-1">
+                                    <v-btn block color="info" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}), dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
                                 </v-col>
                             </v-row>
                             
@@ -177,8 +181,7 @@ export default {
     methods: {
         ...mapActions('actions',['searchWG','delSomething','loadWG','refreshingWG']),
         ...mapActions('user',['unsuscribeto']),
-        ...mapActions('menu',['goBack','skeletonOn']),
-        ...mapMutations('menu',['loadingbar','loadingstate']),
+        ...mapActions('menu',['goBack']),
         ...mapMutations('actions',['loadmembers']),
         refreshing() {
             this.polling = setInterval(() => {
@@ -191,12 +194,6 @@ export default {
         if(this.searchedWG == {} || this.searchedWG._id != this.$route.params.id){
             this.searchWG(this.$route.params.id)
         }
-    },
-    mounted() {
-        setTimeout(() => {
-            this.loadingstate(['itembig',false])
-            this.loadingbar([null, false , null])
-        }, 800)
     },
     beforeDestroy() {
         clearInterval(this.polling)  

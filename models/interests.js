@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const schema = mongoose.Schema
 
-const topicschema = new schema({
+const interestschema = new schema({
     name: {
         type: String, 
         required: [true,'Required field']
@@ -16,6 +16,6 @@ const topicschema = new schema({
     }
 })
 
-const topic = mongoose.model('Topics' , topicschema)
+const interest = mongoose.model('Interests' , interestschema)
 
-export default topic
+export default interest
