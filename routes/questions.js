@@ -1,8 +1,8 @@
 const express = require("express")
 const router = express.Router()
-import questionsController from '../controllers/questions'
 
 const auth = require("../controllers/auth")
+const questionsController = require("../controllers/questions")
 
 // To get an question by ID
 

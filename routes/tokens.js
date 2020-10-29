@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-import userController from '../controllers/users'
+const userController = require("../controllers/users");
 
 // Confirmation post
 

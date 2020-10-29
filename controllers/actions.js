@@ -1,4 +1,4 @@
-import Actions from '../models/actions'
+const Actions = require('../models/actions')
 
 exports.createAction = async (req,res) => {
     const body = req.body

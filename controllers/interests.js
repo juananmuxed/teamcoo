@@ -1,4 +1,4 @@
-import Interests from '../models/interests'
+const Interests = require('../models/interests')
 
 exports.createInterest = async (req,res) => {
     const body = req.body

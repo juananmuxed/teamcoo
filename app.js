@@ -1,8 +1,8 @@
-import express from 'express'
-import morgan from 'morgan'
-import cors from 'cors'
-import path from 'path'
-import mongoose from 'mongoose'
+const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
+const path = require('path')
+const mongoose = require('mongoose')
 
 const app = express()
 
@@ -18,9 +18,9 @@ const options = {
 const url = 'mongodb://localhost:27017/teamcoo'
 
 // Promises
-mongoose.connect(url,options)
+mongoose.connect(url, options)
   .then(
-    () => { console.log('Conectado a DB') },
+    () => { console.log('🟢 Conectado a DB 🥐') },
     err => { console.log(err) }
   )
   .catch((err) => {
@@ -53,5 +53,5 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.set('port', process.env.PORT || 3000)
 app.listen(app.get('port'), () => {
-  console.log('Server started on port ' + app.get('port'))
+  console.log('🟢 Server started on port ' + app.get('port') + ' 💻')
 })

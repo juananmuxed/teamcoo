@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-import auth from '../controllers/auth'
-import workinggroupsController from '../controllers/workinggroups'
+const auth = require("../controllers/auth")
+const workinggroupsController = require("../controllers/workinggroups")
 
 // Create working group
 

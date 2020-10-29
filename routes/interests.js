@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-import auth from '../controllers/auth'
-import interestsController from '../controllers/interests'
+const auth = require("../controllers/auth")
+const interestsController = require("../controllers/interests")
 
 // Create Interest
 

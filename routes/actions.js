@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-
-import auth from '../controllers/auth'
-import actionsController from '../controllers/actions'
+const auth = require("../controllers/auth");
+const actionsController = require("../controllers/actions");
 
 // Create action
 

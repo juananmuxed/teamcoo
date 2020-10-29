@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
-import Grid from 'gridfs-stream'
+const mongoose = require('mongoose')
+const Grid = require('gridfs-stream')
 
 // Connection mongo
 

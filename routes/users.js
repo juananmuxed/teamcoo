@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../controllers/auth")
-
-import userController from '../controllers/users'
+const userController = require("../controllers/users")
 
 // Sign in router from controller
 

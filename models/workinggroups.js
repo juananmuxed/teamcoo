@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
 const workingGroupSchema = new schema({
@@ -63,4 +63,4 @@ const workingGroupSchema = new schema({
 
 const wg = mongoose.model('wg',workingGroupSchema)
 
-export default wg
+module.exports = wg

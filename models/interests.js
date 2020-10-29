@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
 const interestschema = new schema({
@@ -18,4 +18,4 @@ const interestschema = new schema({
 
 const interest = mongoose.model('Interests' , interestschema)
 
-export default interest
+module.exports = interest

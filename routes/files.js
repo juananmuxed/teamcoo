@@ -1,12 +1,12 @@
-import crypto from 'crypto'
-import multer from 'multer'
-import GridFsStorage from 'multer-gridfs-storage'
-import path from 'path'
+const crypto = require('crypto')
+const multer = require('multer')
+const GridFsStorage = require('multer-gridfs-storage')
+const path = require('path')
 
 const express = require("express")
 const router = express.Router()
 const url = 'mongodb://localhost:27017/teamcoo'
-import filesController from '../controllers/files'
+const filesController = require('../controllers/files')
 
 // Create storage engine
 

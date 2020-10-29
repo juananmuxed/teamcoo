@@ -1,4 +1,4 @@
-import WG from '../models/workinggroups'
+const WG = require('../models/workinggroups')
 
 exports.createWG = async (req,res) => {
     const body = req.body

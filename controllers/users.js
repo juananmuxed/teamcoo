@@ -1,7 +1,7 @@
-import User from '../models/users'
-import Token from '../models/tokens'
-import nodemailer from 'nodemailer'
-import ejs from 'ejs'
+const User = require('../models/users')
+const Token = require('../models/tokens')
+const nodemailer = require('nodemailer')
+const ejs = require('ejs')
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
