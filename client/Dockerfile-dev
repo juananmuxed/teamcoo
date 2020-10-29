@@ -1,0 +1,13 @@
+FROM node:12-alpine as builder
+
+RUN mkdir -p /datapistas
+
+WORKDIR /datapistas
+
+COPY . .
+
+RUN npm install
+
+EXPOSE 8080
+
+CMD ["npm", "run", "serve"]

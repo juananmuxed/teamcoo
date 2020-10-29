@@ -15,7 +15,7 @@ const options = {
   useUnifiedTopology: true
 }
 
-const url = 'mongodb://localhost:27017/teamcoo'
+const url = 'mongodb://datapistas-db:27017/teamcoo'
 
 // Promises
 mongoose.connect(url, options)
@@ -52,6 +52,7 @@ app.use(history());
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.set('port', process.env.PORT || 3000)
-app.listen(app.get('port'), () => {
-  console.log('🟢 Server started on port ' + app.get('port') + ' 💻')
+app.set('host', process.env.HOST || '0.0.0.0')
+app.listen(app.get('port'),app.get('host') , () => {
+  console.log('🟢 Server started on ' + app.get('host') + ':' + app.get('port') + ' 💻')
 })

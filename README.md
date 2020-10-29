@@ -34,7 +34,7 @@ Small associations need some way to unify all the Human Resources options when i
 <b>Dependencies</b>
 - [Vuex](https://github.com/vuejs/vuex)
 - [Vuetify](https://vuetifyjs.com/)
-- [Bcrypt](https://www.npmjs.com/package/bcrypt)
+- [Bcrypt](https://www.npmjs.com/package/bcryptjs)
 - [DotEnv](https://www.npmjs.com/package/dotenv)
 - [Ejs](https://www.npmjs.com/package/ejs)
 - [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken)

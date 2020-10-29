@@ -5,7 +5,8 @@
   "description": "🎩 A HR Collaborative team manager for Non-profit Associations",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js --exec babel-node"
+    "dev": "nodemon app.js --exec babel-node",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,7 @@
   },
   "homepage": "https://github.com/juananmuxed/teamcoo#readme",
   "dependencies": {
-    "bcrypt": "^4.0.1",
+    "bcryptjs": "^2.4.3",
     "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
     "discord.js": "^12.2.0",

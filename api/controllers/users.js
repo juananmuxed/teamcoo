@@ -2,7 +2,7 @@ const User = require('../models/users')
 const Token = require('../models/tokens')
 const nodemailer = require('nodemailer')
 const ejs = require('ejs')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const transporter = nodemailer.createTransport({

@@ -1,0 +1,39 @@
+version: '3'
+services:
+    api:
+        build: 
+            context: ./api
+            dockerfile: Dockerfile-dev
+        networks: 
+            - datapistas
+        ports:
+            - "3000:3000"
+        container_name: datapistas-api
+        volumes: 
+            - ./api:/datapistas/v1
+            - /datapistas/v1/node_modules
+        depends_on: 
+            - db
+    web:
+        build: 
+            context: ./client
+            dockerfile: Dockerfile-dev
+        networks: 
+            - datapistas
+        ports: 
+            - "8080:8080"
+        container_name: datapistas-web
+        volumes: 
+            - ./client:/datapistas
+            - /datapistas/node_modules
+    db:
+        image: mongo
+        networks: 
+            - datapistas
+        ports: 
+            - "27017:27017"
+        container_name: datapistas-db
+networks: 
+    datapistas:
+        name: datapistas
+        driver: bridge

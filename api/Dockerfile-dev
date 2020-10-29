@@ -1,0 +1,15 @@
+FROM node:12-alpine as builder
+
+RUN npm install nodemon -g
+
+RUN mkdir -p /datapistas/v1
+
+WORKDIR /datapistas/v1
+
+COPY . .
+
+RUN npm install
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Dockerify all project to easy deploy
+- Configuration files for Docker
+
+### Changed
+
+- Bcrypt is replaced by Bcryptjs (errors in Docker)
+- All `imports` in the API for `require` and `export default` for compatibility with ES5 
+- DB url to adapt to Docker deployment `localhost:27017` => `datapistas-db:27017`
+
 ## [0.3-beta] - 2020-05-08
 
 ### Added
@@ -46,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Duplicated README in public folder
 
-[0.1-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.1-beta
-[0.2-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.2-beta
+[Unreleased]: https://github.com/juananmuxed/teamcoo/compare/v0.3-beta...HEAD
 [0.3-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.3-beta
+[0.2-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.2-beta
+[0.1-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.1-beta
