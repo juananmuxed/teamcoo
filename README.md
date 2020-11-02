@@ -6,7 +6,7 @@
     <b>HR Platform for Non-profit associations</b>
   </p>
   <p>
-    <sub>Built with ❤︎ by
+    <sub>⌨️ with ❤︎ by
       <a href="https://github.com/juananmuxed">MuXeD</a>
     </sub>
   </p>
@@ -14,7 +14,7 @@
 
 ---
 
-![Version](https://img.shields.io/github/package-json/releaseversion/juananmuxed/teamcoo?label=Version&logo=github) ![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU) 
+![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU) 
 
 # What is TeamCoo
 TeamCoo is a platform for non-profit Associations that need to manage large numbers of Volunteers. MEVN (Mongo, Express, Vue, Node) technology based.
@@ -30,11 +30,12 @@ Small associations need some way to unify all the Human Resources options when i
 - [Express](https://expressjs.com)
 - [Node](https://nodejs.org/)
 - [Mongo](https://www.mongodb.com)
+- [Docker](https://www.docker.com/)
 
 <b>Dependencies</b>
 - [Vuex](https://github.com/vuejs/vuex)
 - [Vuetify](https://vuetifyjs.com/)
-- [Bcrypt](https://www.npmjs.com/package/bcryptjs)
+- [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
 - [DotEnv](https://www.npmjs.com/package/dotenv)
 - [Ejs](https://www.npmjs.com/package/ejs)
 - [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken)
@@ -50,7 +51,81 @@ Small associations need some way to unify all the Human Resources options when i
 🚧 Under construction
 
 ## Installation 🥪
-🚧 Under construction
+We pack all the application to run in a Docker server for easy Deploy.
+
+### **Development**
+To run in local:
+
+Requirements:
+- Node 12 at least
+- MongoDB
+- Nodemon in global `npm install nodemon -g`
+
+Clone the repo
+```
+git clone https://github.com/juananmuxed/teamcoo.git
+```
+
+Access to the folder
+```
+cd teamcoo
+```
+
+Create (or modify) the .env to Enviorement Variables
+```
+SECRET_STRING=examplestringforhash
+EMAIL_ACCOUNT=account@domain.es
+EMAIL_PASSWORD=smtp_password
+EMAIL_DOMAIN=mail.host.domain.es
+```
+
+Then access to 2 folders (2 console prompt is easier)
+```
+CONSOLE 1: cd api
+CONSOLE 2: cd client
+```
+
+Run the scripts
+```
+CONSOLE 1: npm run dev
+CONSOLE 2: npm run serve
+```
+
+And you can access to the application via web browswer in http://localhost:8080
+
+### **Production**
+Easy, you need Docker in the Deploy server or machine
+
+Requirements:
+- Docker
+
+Clone the repo
+```
+git clone https://github.com/juananmuxed/teamcoo.git
+```
+
+Access to the folder
+```
+cd teamcoo
+```
+
+Create (or modify) the .env to Enviorement Variables
+```
+SECRET_STRING=examplestringforhash
+EMAIL_ACCOUNT=account@domain.es
+EMAIL_PASSWORD=smtp_password
+EMAIL_DOMAIN=mail.host.domain.es
+```
+
+Build the Dockers with docker-compose
+```
+docker-compose build
+```
+
+And up the Network
+```
+docker-compose up -d
+```
 
 ## Wiki 🥘
 🚧 Under construction

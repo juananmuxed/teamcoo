@@ -15,12 +15,13 @@ const options = {
   useUnifiedTopology: true
 }
 
-const url = 'mongodb://datapistas-db:27017/teamcoo'
+const database = process.env.DATABASE_HOST || 'localhost'
+const url = 'mongodb://' + database + ':27017/teamcoo'
 
 // Promises
 mongoose.connect(url, options)
   .then(
-    () => { console.log('🟢 Conectado a DB 🥐') },
+    () => { console.log('🟢 Conectado a DB en ' + url + ' 🥐') },
     err => { console.log(err) }
   )
   .catch((err) => {

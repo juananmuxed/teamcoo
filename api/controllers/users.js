@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
-    host: 'mail.catapa.be',
+    host: process.env.EMAIL_DOMAIN,
     port: 465,
     secure: true,
     auth: {

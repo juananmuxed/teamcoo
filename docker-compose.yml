@@ -14,6 +14,10 @@ services:
             - /datapistas/v1/node_modules
         depends_on: 
             - db
+        env_file: 
+            - ./api/.env
+        environment: 
+            - DATABASE_HOST=datapistas-db
     web:
         build: 
             context: ./client
