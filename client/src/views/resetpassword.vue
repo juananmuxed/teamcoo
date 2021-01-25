@@ -45,7 +45,7 @@ export default {
     computed: {
         ...mapState({
             user: state => state.user.user,
-            rules: state => state.user.rules
+            rules: state => state.general.rules
         })
     },
     methods: {

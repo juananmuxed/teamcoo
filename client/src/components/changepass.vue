@@ -35,7 +35,7 @@
                         outlined
                         label="Confirm new Password"
                         v-model="password.confirmnewpassword"
-                        :rules="[rules.required,rules.changepassconfirm]"
+                        :rules="[rules.required,rules.passwordconfirm(this.password.newpassword,this.password.confirmnewpassword)]"
                         :type="password.confshow ? 'text' : 'password'"
                     >
                         <template v-slot:append>
@@ -81,7 +81,7 @@ export default {
     computed: {
         ...mapState({
             password: state => state.user.password,
-            rules: state => state.user.rules
+            rules: state => state.general.rules
         })  
     },
     methods: {

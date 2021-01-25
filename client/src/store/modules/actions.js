@@ -1,7 +1,10 @@
 import router from '@/router'
 import Axios from 'axios'
 import Cookies from 'js-cookie'
-import { treeBuild , todayFormatToPicker , generateRandomColor , isDiferentArray } from '../../utils/utils'
+import globalConfig from '../../config/config.json'
+import { treeBuild , todayFormatToPicker , generateRandomColor , isDiferentArray, idealTextColor } from '../../utils/utils'
+
+// TODO: split this file by type.
 
 const state = {
     actions: [],
@@ -314,7 +317,7 @@ const actions = {
                 formData.append('file', state.tasksForm.image)
                 await Axios.post("/files/upload", formData, config)
                     .then(res => {
-                        state.tasksForm.imagelink = 'http://localhost:3000/api/files/image/' + res.data.file.filename
+                        state.tasksForm.imagelink = globalConfig.global.hostnameApi + '/files/image/' + res.data.file.filename
                     })
                     .catch(error => {
                         commit('menu/notification', ['error', 10, error], { root: true });
@@ -368,7 +371,7 @@ const actions = {
                 formData.append('file', state.workgroupForm.dossier)
                 await Axios.post("/files/upload", formData, config)
                     .then(res => {
-                        dossier = 'http://localhost:3000/api/files/upload/' + res.data.file.filename
+                        dossier = globalConfig.global.hostnameApi + '/files/upload/' + res.data.file.filename
                     })
             }
             let body = {
@@ -453,6 +456,7 @@ const actions = {
             }
         }
     },
+    // TODO: Revisar el vaciado completo Miembros/Coordinadores/Tareas todo lo asociado.
     async delSomething({commit,dispatch},item) {
         let url = ''
         let message = ''
@@ -503,22 +507,7 @@ const actions = {
         }
     },
     idealTextColor({ commit }, color) {
-
-        let r = color.substring(1, 3)
-        let g = color.substring(3, 5)
-        let b = color.substring(5, 7)
-
-        let components = { R: parseInt(r, 16), G: parseInt(g, 16), B: parseInt(b, 16) }
-
-        const nThreshold = 105
-        let bgDelta = (components.R * 0.299) + (components.G * 0.587) + (components.B * 0.114)
-
-        if ((255 - bgDelta) < nThreshold) {
-            commit('changeTextColor', "black")
-        }
-        else {
-            commit('changeTextColor', "white")
-        }
+        commit('changeTextColor', idealTextColor(color))
     },
     async loadActions({ state, commit, dispatch }) {
         try {
@@ -550,8 +539,8 @@ const actions = {
             }
             commit('actionsLoad', res.data)
             setTimeout(() => {
-                commit('menu/loadingstate', ['tasks',false], { root: true })
-            }, 800)
+                commit('menu/loadingstate', ['tasks',false], { root: true });
+            }, 800);
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
             commit('menu/loadingstate', ['tasks',false], { root: true })
@@ -565,7 +554,7 @@ const actions = {
                     Authorization: "Bearer " + token
                 }
             }
-            await Axios.get("/users/user/" + userId, config)
+            await Axios.get("/users/" + userId, config)
                 .then(res => {
                     state.temporaluser = {}
                     commit('temporaluser', res.data);
@@ -599,9 +588,7 @@ const actions = {
                 let tempquestions = []
                 for (let x = 0; x < wg.questions.length; x++) {
                     for (let y = 0; y < state.questions.length; y++) {
-                        if(state.questions[y]._id == wg.questions[x]){
-                            tempquestions.push(state.questions[y])
-                        }
+                        if(state.questions[y]._id == wg.questions[x]) tempquestions.push(state.questions[y])
                     }
                 }
                 wg.questions = tempquestions
@@ -617,12 +604,7 @@ const actions = {
                     tempMembers.push(state.temporaluser)
                 }
                 wg.members = tempMembers
-                if (!wg.secret) {
-                    data.push(wg)
-                }
-                else {
-                    secretdata.push(wg)
-                }
+                !wg.secret ? data.push(wg) : secretdata.push(wg);
             }
             commit('wgLoad', data)
             commit('secretwgLoad', secretdata)
@@ -724,7 +706,7 @@ const actions = {
                     let question = await state.questions.find(q => q._id == questionList[i])
                     tempQuestions.push(question)
                 }
-                wg.questions.length = 0
+                // wg.questions.length = 0
                 wg.questions = tempQuestions
                 commit('pullWG', wg) 
                 commit('menu/loadingbar', ['primary', null , 100], { root: true })
@@ -779,7 +761,7 @@ const actions = {
                 formData.append('file', state.workgroupForm.dossier)
                 await Axios.post("/files/upload", formData, config)
                 .then(res => {
-                    dossier = 'http://localhost:3000/api/files/upload/' + res.data.file.filename
+                    dossier = globalConfig.global.hostnameApi + '/files/upload/' + res.data.file.filename
                 })
             }
             else{
@@ -1102,7 +1084,7 @@ const actions = {
                     answers: 'Added by Coordinator'
                 }
                 for (let x = 0; x < idUsersToAdd.length; x++) {
-                    let res = await Axios.get('/users/user/' + idUsersToAdd[x],config)
+                    let res = await Axios.get('/users/' + idUsersToAdd[x],config)
                     let user = res.data
                     let isWG = user.unsuscribedworkgroups.some(wg => wg._wgId === idWG)
                     if (isWG) {
@@ -1110,13 +1092,13 @@ const actions = {
                         user.unsuscribedworkgroups.splice(indexExtracted, 1)
                     }
                     user.workgroups.push(wg)
-                    await Axios.put("/users/user/" + user._id, user, config)
+                    await Axios.put("/users/" + user._id, user, config)
                 }
             }
             if(idUsersToDel.length != 0) {
                 await dispatch('unjoinWG',{idWG:idWG,idUsers:idUsersToDel})
                 for (let x = 0; x < idUsersToDel.length; x++) {
-                    let res = await Axios.get('/users/user/' + idUsersToDel[x],config)
+                    let res = await Axios.get('/users/' + idUsersToDel[x],config)
                     let user = res.data
                     let isWG = user.workgroups.some(wg => wg._wgId === idWG)
                     if (isWG) {
@@ -1125,7 +1107,7 @@ const actions = {
                         user.unsuscribedworkgroups.push(extractedItem)
                         user.workgroups.splice(indexExtracted, 1)
                     }
-                    await Axios.put("/users/user/" + user._id, user, config)
+                    await Axios.put("/users/" + user._id, user, config)
                 }
             }
             if(idCoorsToAdd.length != 0) {

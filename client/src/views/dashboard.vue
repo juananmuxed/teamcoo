@@ -28,15 +28,12 @@
         </v-col>
         <v-col cols="12" md="8" xl="10" class="pa-3">
             <v-row>
-                <v-col cols="12" md="6" class="pa-2" v-if="loginuser.rol.value != 'user'">
+                <v-col cols="12" class="pa-2" v-if="loginuser.rol.value != 'user'">
                     <not-user-tasks></not-user-tasks>
                 </v-col>
 
-                <v-col cols="12" md="6" v-else>
+                <v-col cols="12" v-else>
                     <home-buttons></home-buttons>
-                </v-col>
-                <v-col cols="12" md="6">
-                    <script-calendar></script-calendar>
                 </v-col>
             </v-row>
         </v-col>
@@ -49,14 +46,12 @@
 
 import { mapState } from 'vuex'
 import privatedata from '../components/privatedata.vue'
-import externalcalendar from '../components/externalcalendar.vue'
 import homebuttons from '../components/homebuttons.vue'
 import notusertasks from '../components/notusertasks.vue'
 
 export default {
     components:{
         'private-data-column':privatedata,
-        'script-calendar':externalcalendar,
         'home-buttons':homebuttons,
         'not-user-tasks':notusertasks
     },

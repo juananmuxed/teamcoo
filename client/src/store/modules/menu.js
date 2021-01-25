@@ -1,5 +1,6 @@
 import Vuetify from '../../plugins/vuetify'
 import router from '@/router'
+import { sleep } from '../../utils/utils'
 
 const state = {
     menu: {
@@ -14,7 +15,8 @@ const state = {
             { name: 'Tasks', link: '/tasks', roles: ['coor','dire','admin','volu'], icon: 'fas fa-tasks' },
             { name: 'Interests', link: '/interests', roles: ['coor','dire','admin'], icon: 'fas fa-address-card' },
             { name: 'Questions', link: '/questions', roles: ['coor','dire','admin'], icon: 'fas fa-question' },
-            { name: 'Membership', link: '/membership', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-star' }
+            { name: 'Membership', link: '/membership', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-star' },
+            { name: 'Portal Config', link: '/config', roles: ['admin'], icon: 'fas fa-cogs' },
         ],
         dialogs: {
             login: false,
@@ -37,7 +39,8 @@ const state = {
             wg:false,
             secretwg:false,
             tasks:false,
-            itembig:false
+            itembig:false,
+            users:false
         },
         cookie: false,
         progressbar:{
@@ -119,7 +122,26 @@ const actions = {
         setTimeout(() => {
             router.go(-1)
         }, 200);
-    }
+    },
+    async startLoadingBar({commit}) {
+        commit('loadingbar', ['accent', true , 0]);
+        await sleep(800); 
+        commit('menu/loadingbar', ['success', true , 10], { root: true });
+    },
+    async stopLoadingBar({commit}) {
+        commit('loadingbar', ['info', true ,90]);
+        await sleep(800); 
+        commit('menu/loadingbar', ['success', true , 100], { root: true });
+        await sleep(400); 
+        commit('menu/loadingbar', ['success', false , 100], { root: true });
+    },
+    async stopLoadingBarError({commit}) {
+        commit('loadingbar', ['info', true ,90]);
+        await sleep(800); 
+        commit('menu/loadingbar', ['error', true , 90], { root: true });
+        await sleep(400); 
+        commit('menu/loadingbar', ['error', false , 90], { root: true });
+    },
 }
 
 export default {

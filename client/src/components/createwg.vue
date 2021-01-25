@@ -175,7 +175,7 @@ export default {
             menu: state => state.menu.menu,
             workgroups: state => state.actions.workgroups,
             secretworkgroups: state => state.actions.secretworkgroups,
-            rules: state => state.user.rules,
+            rules: state => state.general.rules,
             userId: state => state.user.loginuser.id
         })
     },

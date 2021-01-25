@@ -69,7 +69,7 @@
                             <v-toolbar dense elevation="2" color="primary" class="my-1">
                                 <v-toolbar-title class="text-uppercase title font-weight-light">Coordinators</v-toolbar-title>
                                 <v-spacer></v-spacer>
-                                <v-btn small color="primary" v-if="searchedWG.coordinators.length != 0" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
+                                <v-btn v-if="(loginuser.rol.value == 'admin' || loginuser.id == searchedWG.creator.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id))" depressed small color="secondary" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
                             </v-toolbar>
                             <v-row v-if="searchedWG.coordinators.length != 0">
                                 <v-col cols="12" class="my-1">
@@ -88,7 +88,7 @@
                             <v-toolbar dense elevation="2" color="secondary" class="my-1">
                                 <v-toolbar-title class="text-uppercase title font-weight-light">Members</v-toolbar-title>
                                 <v-spacer></v-spacer>
-                                <v-btn depressed small color="primary" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
+                                <v-btn v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWG.creator.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id)" depressed small color="primary" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
                             </v-toolbar>
                             <v-row v-if="searchedWG.members.length != 0">
                                 <v-col cols="12" class="my-1">
@@ -111,7 +111,7 @@
                             <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWG.creator.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id)">
                                 <v-row>
                                     <v-col cols="12" class="caption font-weight-light ml-5">Created by
-                                        <v-chip x-small class="font-italic">
+                                        <v-chip x-small class="font-italic ml-2" :to="`/users/`+ searchedWG.creator.id">
                                             {{ searchedWG.creator.firstname }}
                                         </v-chip>
                                     </v-col>

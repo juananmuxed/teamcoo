@@ -59,40 +59,16 @@
                     >
                     </v-text-field>
                 </v-col>
-                <v-col cols="12" class="py-1 headline">
-                    Communication Preferences
-                </v-col>
-                <v-col cols="12" class="py-1">
-                    <v-switch v-model="edituser.emailconfig" value="newsletter" label="Newsletter" color="primary"></v-switch>
-                    <v-switch v-model="edituser.emailconfig" value="newstaks" label="Task Notification" color="primary"></v-switch>
-                    <v-switch v-model="edituser.emailconfig" value="active" label="Temporal Innactive" color="primary"></v-switch>
-                </v-col>
-                Edit interests
-                <v-expand-transition>
-                    <v-col cols="12" v-if="isChangeUser()">
-                        <v-btn
-                            class="mb-2"
-                            x-large
-                            block
-                            depressed
-                            color="primary"
-                            @click="undoEdit"
-                        >
-                            <v-icon left>fas fa-undo-alt</v-icon> Undo
-                        </v-btn>
-                        <v-btn
-                            class="mt-2"
-                            x-large
-                            block
-                            :disabled="isValidSave()"
-                            depressed
-                            color="primary"
-                            @click="saveEditedData(edituser)"
-                        >
-                            <v-icon left>fas fa-save</v-icon> Save
-                        </v-btn>
-                    </v-col>
-                </v-expand-transition>
+                <v-slide-y-transition origin="center center">
+                    <v-btn fab right small top absolute color="primary" @click="saveEditedData(edituser)" v-show="isChangeUser() && !isValidSave()" class="mt-8 mr-12">
+                        <v-icon small>fas fa-save</v-icon>
+                    </v-btn>
+                </v-slide-y-transition>
+                <v-slide-y-transition origin="center center">
+                    <v-btn fab right small top absolute color="info" @click="undoEdit()" v-show="isChangeUser()" class="mt-8">
+                        <v-icon small>fas fa-undo</v-icon>
+                    </v-btn>
+                </v-slide-y-transition>
             </v-row>
         </v-card-text>
     </v-card>
@@ -103,15 +79,15 @@ import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 export default {
     computed: {
         ...mapState({
-            edituser: state => state.user.edituser,
-            rules: state => state.user.rules,
+            edituser: state => state.users.editUser,
+            rules: state => state.general.rules,
             loginuser: state => state.user.loginuser,
         })
     },
     methods: {
-        ...mapMutations('user',['undoEdit']),
-        ...mapGetters('user',['isValidSave','isChangeUser']),
-        ...mapActions('user',['saveEditedData'])
+        ...mapMutations('users',['undoEdit']),
+        ...mapGetters('users',['isValidSave','isChangeUser']),
+        ...mapActions('users',['saveEditedData'])
     },
 }
 </script>

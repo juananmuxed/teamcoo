@@ -127,7 +127,7 @@ exports.getUser = async(req,res) => {
     }
 }
 
-// Async method to return User
+// Async method to return Users
 
 exports.getUsers = async(req,res) => {
     try {
@@ -139,11 +139,16 @@ exports.getUsers = async(req,res) => {
                 rol: actionDB[x].rol,
                 avatar: actionDB[x].image,
                 firstname: actionDB[x].firstname,
-                id: actionDB[x]._id
+                id: actionDB[x]._id,
+                workgroups: actionDB[x].workgroups,
+                verifiedemail: actionDB[x].verifiedemail,
+                privatecomments: actionDB[x].privatecomments,
+                username: actionDB[x].username,
+                membership: actionDB[x].membership
             }
             datatemp.push(tempuser)
         }
-        res.json(datatemp)
+        res.status(201).json(datatemp)
     } catch (error) {
         return res.status(400).json({mensaje: 'An error has occurred',error})
     }

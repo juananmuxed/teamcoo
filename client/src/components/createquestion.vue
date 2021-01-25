@@ -182,7 +182,7 @@ export default {
         ...mapState({
             questionForm: state => state.actions.questionForm,
             userId: state => state.user.loginuser.id,
-            rules: state => state.user.rules
+            rules: state => state.general.rules
         })
     },
     methods: {

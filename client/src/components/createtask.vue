@@ -162,7 +162,7 @@ export default {
             workgroups: state => state.actions.workgroups,
             userId: state => state.user.loginuser.id,
             menu: state => state.menu.menu,
-            rules: state => state.user.rules,
+            rules: state => state.general.rules,
             interests: state => state.actions.interests,
         })
     },

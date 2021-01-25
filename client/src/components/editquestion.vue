@@ -193,7 +193,7 @@ export default {
         ...mapState({
             searchedQuestion: state => state.actions.searchedQuestion,
             questionForm: state => state.actions.questionForm,
-            rules: state => state.user.rules
+            rules: state => state.general.rules
         })
     },
     methods: {

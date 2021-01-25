@@ -62,7 +62,7 @@ const userScheme = mongoose.Schema({
     },
     membership:{
         type:Object,
-        default:{state:'inactive'}
+        default:{status:'inactive'}
     },
     emailconfig:{
         type:Array,

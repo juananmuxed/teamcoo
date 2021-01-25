@@ -57,7 +57,7 @@
             </template>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn depressed color="info" :to="'/workgroup/' + item._id">
+            <v-btn depressed color="info" :to="'/workgroups/' + item._id">
               See more <v-icon small class="ml-3">fas fa-eye</v-icon>
             </v-btn>
           </template>
@@ -122,7 +122,7 @@
               </template>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-btn depressed color="info" :to="'/workgroup/' + item._id">
+              <v-btn depressed color="info" :to="'/workgroups/' + item._id">
                 See more <v-icon small class="ml-3">fas fa-eye</v-icon>
               </v-btn>
             </template>

@@ -16,7 +16,7 @@
                 <v-avatar v-else color="primary">
                     <v-icon>fas fa-user</v-icon>
                 </v-avatar>
-                <span class="title font-weight-light pa-3">{{ loginuser.firstname }} {{ loginuser.lastname }}</span>
+                <span class="title font-weight-light pa-3">{{ loginuser.username }}</span>
             </v-card-title>
             <v-card-text>
                 <v-row>
@@ -25,36 +25,13 @@
                         <span cols="12" v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor' || loginuser.rol.value == 'dire'">Rol: {{ loginuser.rol.name }}</span>
                     </v-col>
                 </v-row>
-                <v-divider></v-divider>
-                <v-row class="px-3">
-                    <v-col cols="12" class="headline">
-                        Communication Preferences
-                    </v-col>
-                    <v-col cols="12">
-                        <v-icon left color="primary" v-if="loginuser.emailconfig.includes('newsletter')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> Newsletter
-                    </v-col>
-                    <v-col cols="12">
-                        <v-icon left color="primary" v-if="loginuser.emailconfig.includes('newstaks')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> Task Notification
-                    </v-col>
-                    <v-col cols="12">
-                        <v-icon left color="primary" v-if="loginuser.emailconfig.includes('active')">fas fa-check</v-icon><v-icon left color="secondary" v-else>fas fa-times</v-icon> Temporal Innactive
-                    </v-col>
-                </v-row>
             </v-card-text>
         </v-card>
         <v-row class="px-3">
             <v-col>
-                <v-dialog
-                    max-width="650"
-                    v-model="menu.dialogs.edituser"
-                >
-                    <template v-slot:activator="{ on }">
-                        <v-btn v-on="on" block color="primary" class="my-2" :disabled="!loginuser.verifiedemail" @click="loadUserData(loginuser.id)">
-                            <v-icon left>fas fa-user-edit</v-icon> Edit Information
-                        </v-btn>
-                    </template>
-                    <edit-user></edit-user>
-                </v-dialog>
+                <v-btn :to="'/users/' + loginuser.id" block color="primary" class="my-2" :disabled="!loginuser.verifiedemail">
+                    <v-icon left>fas fa-user-edit</v-icon> Edit Information
+                </v-btn>
                 <v-dialog
                     max-width="650"
                     v-model="menu.dialogs.changepassword"
@@ -105,7 +82,7 @@
                                 right
                             >
                                 <template v-slot:activator="{ on }">
-                                    <router-link :to="'/workgroup/' + item._id">
+                                    <router-link :to="'/workgroups/' + item._id">
                                         <v-avatar v-on="on" :color="item.color" size="36"><span :class="`font-weight-regular ${item.textcolor}--text`">{{ item.name.substring(0,2) }}</span></v-avatar>
                                     </router-link>
                                 </template>
@@ -155,7 +132,7 @@
                                 right
                             >
                                 <template v-slot:activator="{ on }">
-                                    <router-link :to="'/workgroup/' + item._id">
+                                    <router-link :to="'/workgroups/' + item._id">
                                         <v-avatar v-on="on" :color="item.color" size="36"><span :class="`font-weight-regular ${item.textcolor}--text`">{{ item.name.substring(0,2) }}</span></v-avatar>
                                     </router-link>
                                 </template>
@@ -195,11 +172,11 @@
         </v-card>
         <v-row class="px-3">
             <v-col>
-                <v-btn block color="info" class="my-2 headline" height="180" to="/membership" v-if="loginuser.membership.state == 'inactive'">
-                    <v-icon left>fas fa-star</v-icon> Be a member
+                <v-btn block color="info" class="my-2 headline" height="180" to="/membership" v-if="loginuser.membership.status != 'inactive'">
+                    <v-icon left>fas fa-star</v-icon> Manage your <br> Membership
                 </v-btn>
                 <v-btn block color="accent" class="my-2 headline text-center" height="180" to="/membership" v-else>
-                    Manage your <br> Membership
+                    <v-icon left>fas fa-star</v-icon> Be a member
                 </v-btn>
             </v-col>
         </v-row>
@@ -208,14 +185,12 @@
 
 <script>
 import { mapState, mapActions , mapMutations, mapGetters } from 'vuex'
-import editUser from './edituser.vue'
 import deleteAccount from './delaccount.vue'
 import changePassword from './changepass.vue'
 import createwg from './createwg.vue'
 
 export default {
     components:{
-        'edit-user':editUser,
         'delete-account': deleteAccount,
         'change-pass': changePassword,
         'create-work-group': createwg
@@ -226,14 +201,13 @@ export default {
             loginuser: state => state.user.loginuser,
             actions: state => state.actions.actions,
             workgroups: state => state.actions.nestedWGs,
-            secretworkgroups: state => state.actions.secretnestedWGs,
-            edituser: state => state.user.edituser
+            secretworkgroups: state => state.actions.secretnestedWGs
         })
     },
     methods: {
         ...mapMutations('menu',['cancelDialog']),
         ...mapMutations('actions',['clearLoadedWG','clearwgform']),
-        ...mapActions('user',['sendVerificationMail','loadUserData']),
+        ...mapActions('user',['sendVerificationMail']),
         ...mapGetters('user',['isSuscribed'])
     }
 }   

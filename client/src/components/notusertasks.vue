@@ -7,7 +7,7 @@
             <v-text-field label="Search" dense outlined></v-text-field>
         </v-col>
         <v-col cols="12" v-if="actions.length != 0"><v-divider></v-divider></v-col>
-        <v-col cols="12" xl="6" class="pa-3" v-for="(action , index) in actions" :key="index">
+        <v-col cols="12" md="6" xl="3" class="pa-3" v-for="(action , index) in actions" :key="index">
             <v-skeleton-loader
                 transition="fade-transition"
                 :types="{skeleton:'card,article,actions'}"
@@ -112,7 +112,7 @@
                 Your Tasks
             </v-col>
             <template v-for="(action , index) in actions">
-                <v-col cols="12" xl="6" class="pa-3" :key="index + '-own'" v-if="action.creator.id == loginuser.id">
+                <v-col cols="12" md="6" xl="3" class="pa-3" :key="index + '-own'" v-if="action.creator.id == loginuser.id">
                     <v-skeleton-loader
                         transition="fade-transition"
                         :types="{skeleton:'card,article,actions'}"
@@ -213,7 +213,7 @@
                     </v-skeleton-loader>
                 </v-col>
             </template>
-            <v-col cols="12" xl="6" class="pa-3">
+            <v-col cols="12" md="6" xl="3" class="pa-3">
                 <v-dialog
                     max-width="650"
                     v-model="menu.dialogs.createtask"

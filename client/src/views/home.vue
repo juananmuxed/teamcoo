@@ -10,19 +10,14 @@
       <v-col cols="12" md="6">
         <home-buttons></home-buttons>
       </v-col>
-      <v-col cols="12" md="6">
-        <script-calendar></script-calendar>
-      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import externalcalendar from '../components/externalcalendar.vue'
 import homebuttons from '../components/homebuttons.vue'
 export default {
   components:{
-    'script-calendar':externalcalendar,
     'home-buttons':homebuttons
   }
 };

@@ -17,6 +17,8 @@ import workgroup from './views/workgroup.vue'
 import interests from './views/interests.vue'
 import tasks from './views/tasks.vue'
 import questions from './views/questions.vue'
+import user from './views/user.vue'
+import configuration from './views/configuration.vue'
 import termsandcond from './views/termsandconditions.vue'
 import privacypolicy from './views/privacypolicy.vue'
 import cookiespolicy from './views/cookiespolicy.vue'
@@ -155,12 +157,30 @@ const router = new Router({
             }
         },
         {
-            path:'/workgroup/:id',
+            path:'/workgroups/:id',
             name: 'wg',
             component: workgroup,
             meta:{
                 requiresAuth: true,
                 isUser:true
+            }
+        },
+        {
+            path:'/users/:id',
+            name: 'user',
+            component: user,
+            meta:{
+                requiresAuth: true,
+                isUser:true
+            }
+        },
+        {
+            path:'/config',
+            name:'config',
+            component: configuration,
+            meta: {
+                requiresAuth: true,
+                validRol: true
             }
         }
     ]
@@ -191,7 +211,7 @@ router.beforeEach((to,from,next) => {
     }
     if(to.matched.some(record => record.meta.validRol)) {
         let validRoles = []
-        let menu = store.state.menu.menu.links.find(element => element.link == to.path)
+        let menu = store.state.menu.menu.links.find(element => to.path.includes(element.link))
         validRoles = menu.roles
         if(validRoles.includes(store.state.user.loginuser.rol.value)){
             next()
@@ -205,7 +225,7 @@ router.beforeEach((to,from,next) => {
         next()
     }
     if(to.matched.some(record => record.meta.isUser)) {
-        if(store.state.user.loginuser.rol.value != 'user'){
+        if(store.state.user.loginuser.rol.value != 'user' || store.state.user.loginuser.id == to.params.id){
             next()
         }else{
             next({path:"/404"})

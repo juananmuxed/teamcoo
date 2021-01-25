@@ -25,6 +25,10 @@ const questionSchema = new schema({
     active: {
         type:Boolean,
         default:true
+    },
+    common: {
+        type:Boolean,
+        default:false
     }
 })
 

@@ -6,11 +6,14 @@ import router from './router'
 import vuex from 'vuex'
 import vuetify from './plugins/vuetify'
 import store from './store/index'
+import config from './config/config.json'
+
+const urlApi = config.global.hostnameApi;
 
 Vue.use(vueaxios,axios,router,vuex)
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://localhost:3000/api'
+axios.defaults.baseURL = urlApi;
 
 new Vue({
   router,

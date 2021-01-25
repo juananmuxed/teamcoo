@@ -22,18 +22,18 @@ router.get("/all", auth, userController.getUsers);
 
 // Return data from user
 
-router.get("/user/:id", auth, userController.getUser)
+router.get("/:id", auth, userController.getUser)
 
 // Save data from user
 
-router.put("/user/:id", auth, userController.updateUser)
+router.put("/:id", auth, userController.updateUser)
 
 // Change Password
 
-router.put("/user/password/:id", auth, userController.updatePassword)
+router.put("/password/:id", auth, userController.updatePassword)
 
 // Delete Account
 
-router.delete("/user/:id", auth, userController.deleteUser)
+router.delete("/:id", auth, userController.deleteUser)
 
 module.exports = router;

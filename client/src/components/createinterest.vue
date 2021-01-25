@@ -29,7 +29,7 @@ export default {
     computed: {
         ...mapState({
             interestForm: state => state.actions.interestForm,
-            rules: state => state.user.rules
+            rules: state => state.general.rules
         })
     }
 }

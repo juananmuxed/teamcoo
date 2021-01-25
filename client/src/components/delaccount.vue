@@ -63,7 +63,7 @@ export default {
         ...mapState({
             loginuser: state => state.user.loginuser,
             del: state => state.user.del,
-            rules: state => state.user.rules
+            rules: state => state.general.rules
         })
     },
     methods: {

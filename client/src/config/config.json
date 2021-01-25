@@ -1,0 +1,13 @@
+{
+    "global": {
+        "hostnameApi": "http://localhost:3000/api/v1",
+        "versionApi": 1
+    },
+    "roles": [
+        { "name": "User", "value": "user" },
+        { "name": "Volunteer", "value": "volu" },
+        { "name": "Coordinator", "value": "coor" },
+        { "name": "Director", "value": "dire" },
+        { "name": "Admin", "value": "admin" }
+    ]
+}

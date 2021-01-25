@@ -58,7 +58,7 @@
                                         outlined
                                         :type="newuser.passshow ? 'text' : 'password'"
                                         label="Password Confirm *"
-                                        :rules="[rules.required,rules.passwordconfirm]"
+                                        :rules="[rules.required,rules.passwordconfirm(this.newuser.passwordconfirm,this.newuser.password)]"
                                     >
                                     </v-text-field>
                                 </v-col>
@@ -75,7 +75,7 @@
                                     </v-expand-transition>
                                 </v-col>
                                 <v-col cols="12">
-                                    <span class="font-weight-bold">Minimum for correct password</span>
+                                    <span class="font-weight-bold">Minimum for secure password</span>
                                     <ul>
                                         <li>Eight-characters minimun.</li>
                                         <li>Include at least 1 number.</li>
@@ -102,7 +102,7 @@
                                     <v-checkbox
                                         color="primary"
                                         v-model="newuser.accept.termsconditions"
-                                        :rules="[rules.acceptchecks]"
+                                        :rules="[rules.acceptterms]"
                                         dense
                                     >
                                         <template v-slot:label>
@@ -154,7 +154,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     computed: {
         ...mapState({
-            rules: state => state.user.rules,
+            rules: state => state.general.rules,
             newuser: state => state.user.newuser
         })
     },

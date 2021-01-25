@@ -1,8 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import menu from './modules/menu'
+import general from './modules/general'
 import user from './modules/user'
 import actions from './modules/actions'
+import users from './modules/users'
+import configuration from './modules/configuration'
 import createPersistedState from 'vuex-persistedstate'
 import SecureLS from "secure-ls";
 var ls = new SecureLS({ isCompression: false });
@@ -14,8 +17,11 @@ export default new Vuex.Store({
   name: "global",
   modules: {
     menu,
+    general,
     user,
-    actions
+    actions,
+    configuration,
+    users
   },
   plugins: [
     createPersistedState({

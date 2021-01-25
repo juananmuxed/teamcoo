@@ -52,101 +52,7 @@ const state = {
             privacycookiepolicy: false
         }
     },
-    notEditUser: {
-        firstname: '',
-        lastname: '',
-        username: '',
-        image: '',
-        imagefile: null,
-        rol: {},
-        emailconfig:[]
-    },
-    edituser: {
-        firstname: '',
-        lastname: '',
-        id: '',
-        username: '',
-        image: '',
-        imagefile: null,
-        save: false,
-        emailconfig:[],
-        rol: {},
-        roles: [
-            { name: 'User', value: 'user' },
-            { name: 'Volunteer', value: 'volu' },
-            { name: 'Coordinator', value: 'coor' },
-            { name: 'Director', value: 'dire' },
-            { name: 'Admin', value: 'admin' }
-        ]
-    },
-    usersloaded:[],
-    rules: {
-        required: v => !!v || 'Required',
-        maxSize: v => !v || v.size < 5000000 || 'Dossier size should be less than 5 MB!',
-        emailrules: v => {
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(v) || 'Invalid e-mail'
-        },
-        validlink: v => {
-            const pattern = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/
-            if (v == '') {
-                return true
-            }
-            else {
-                if (pattern.test(v)) {
-                    return true
-                }
-                else {
-                    return false || 'Invalid link'
-                }
-            }
-        },
-        zerolength: v => v.length != 0 || 'Select one at least',
-        minletter: v => v.length >= 3 || 'At least 3 letters',
-        maxletters: v => v.length <= 20 || 'Max 20 characters',
-        maxdescletters: v => v.length <= 380 || 'Max 380 characters',
-        nospaces: v => {
-            const pattern = /\s/;
-            return !pattern.test(v) || 'No spaces'
-        },
-        passwordrules: v => {
-            const pattern = /^.*(?=.{8,})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
-            return pattern.test(v) || 'Password too weak'
-        },
-        passwordconfirm: v => {
-            if (state.newuser.password == v) {
-                return true
-            }
-            else {
-                return false || 'Passwords must match'
-            }
-        },
-        changepassconfirm: v => {
-            if (state.password.newpassword == v) {
-                return true
-            }
-            else {
-                return false || 'Passwords must match'
-            }
-        },
-        notsame: v => {
-            if (state.edituser.oldpassword == v) {
-                return false || 'Passwords must not match'
-            }
-            else {
-                return true
-            }
-        },
-        acceptchecks: v => !!v || 'Check the policy.',
-        delete: v => {
-            if (v != 'DELETE') {
-                return false || 'DELETE'
-            }
-            else {
-                return true
-            }
-        }
-    },
+    usersloaded:[]
 }
 
 const mutations = {
@@ -164,30 +70,6 @@ const mutations = {
             state.loginuser.unsuscribedworkgroups = user.data.unsuscribedworkgroups,
             state.loginuser.membership = user.data.membership,
             state.loginuser.emailconfig = user.data.emailconfig
-    },
-    usertoedit: (state, user) => {
-        state.edituser.firstname = user.data.firstname,
-            state.edituser.lastname = user.data.lastname,
-            state.edituser.rol = user.data.rol,
-            state.edituser.username = user.data.username,
-            state.edituser.image = user.data.image,
-            state.edituser.emailconfig = user.data.emailconfig,
-            state.edituser.id = user.data._id,
-            state.notEditUser.firstname = user.data.firstname,
-            state.notEditUser.lastname = user.data.lastname,
-            state.notEditUser.emailconfig = user.data.emailconfig,
-            state.notEditUser.rol = user.data.rol,
-            state.notEditUser.image = user.data.image,
-            state.notEditUser.username = user.data.username
-    },
-    undoEdit: (state) => {
-        state.edituser.firstname = state.notEditUser.firstname,
-            state.edituser.lastname = state.notEditUser.lastname,
-            state.edituser.rol = state.notEditUser.rol,
-            state.edituser.emailconfig = state.notEditUser.emailconfig,
-            state.edituser.username = state.notEditUser.username,
-            state.edituser.image = state.notEditUser.image,
-            state.edituser.imagefile = null
     },
     verifiedEmailOk: (state) => { state.loginuser.verifiedemail = true },
     checkVolunteer: (state) => { state.newuser.bevolunteer = true },
@@ -221,13 +103,13 @@ const mutations = {
 }
 
 const getters = {
-    isvalid(state) {
-        if (state.user.password != '' && state.user.email != '' && !state.rules.emailrules(state.user.email)[0]) {
+    isvalid(state, getters, rootState) {
+        if (state.user.password != '' && state.user.email != '' && !rootState.general.rules.emailrules(state.user.email)[0]) {
             return false
         }
         else { return true }
     },
-    signUpIsValid(state) {
+    signUpIsValid(state, getters, rootState) {
         if (state.newuser.firstname != '' &&
             state.newuser.lastname != '' &&
             state.newuser.password != '' &&
@@ -235,8 +117,8 @@ const getters = {
             state.newuser.accept.privacycookiepolicy &&
             state.newuser.accept.termsconditions &&
             state.newuser.passwordconfirm == state.newuser.password &&
-            !state.rules.emailrules(state.newuser.email)[0] &&
-            !state.rules.nospaces(state.newuser.password)[0]) {
+            !rootState.general.rules.emailrules(state.newuser.email)[0] &&
+            !rootState.general.rules.nospaces(state.newuser.password)[0]) {
             return false
         }
         else { return true }
@@ -246,35 +128,6 @@ const getters = {
             return false
         }
         else { return true }
-    },
-    isChangeUser(state) {
-        if (
-            state.edituser.firstname == state.notEditUser.firstname &&
-            state.edituser.lastname == state.notEditUser.lastname &&
-            state.edituser.rol.value == state.notEditUser.rol.value &&
-            state.edituser.username == state.notEditUser.username &&
-            state.edituser.image == state.notEditUser.image &&
-            state.edituser.emailconfig[0] == state.notEditUser.emailconfig[0] &&
-            state.edituser.emailconfig[1] == state.notEditUser.emailconfig[1] &&
-            state.edituser.emailconfig[2] == state.notEditUser.emailconfig[2] &&
-            state.edituser.imagefile == state.notEditUser.imagefile
-        ) {
-            return false
-        }
-        else { return true }
-    },
-    isValidSave(state) {
-        if (
-            state.edituser.firstname != '' &&
-            state.edituser.lastname != '' &&
-            state.edituser.username != '' &&
-            state.edituser.username.length <= 20
-        ) {
-            return false
-        }
-        else {
-            return true
-        }
     },
     isLogged(state) {
         if (state.loginuser.logged) {
@@ -329,7 +182,7 @@ const actions = {
                 commit('menu/notification', ['error', 5, 'Error: ' + error.data.message], { root: true });
 
             } else {
-                commit('menu/notification', ['error', 5, 'Error: ' + error.data.err.message], { root: true });
+                commit('menu/notification', ['error', 5, 'Error: ' + error.data.message], { root: true });
             }
         }
     },
@@ -463,25 +316,6 @@ const actions = {
                 commit('menu/alert', [color, error.response.data.message, icon], { root: true });
             })
     },
-    async loadUserData({ commit }, user) {
-        try {
-            let token = Cookies.get("catapa-jwt");
-            let config = {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            }
-            await Axios.get("/users/user/" + user, config)
-                .then(res => {
-                    commit('usertoedit', res);
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-                })
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-        }
-    },
     async changepassword({ state, commit }) {
         try {
             let id = state.loginuser.id
@@ -496,7 +330,7 @@ const actions = {
                     Authorization: "Bearer " + token
                 }
             }
-            await Axios.put("/users/user/password/" + id, user, config)
+            await Axios.put("/users/password/" + id, user, config)
                 .then(() => {
                     commit('menu/notification', ['primary', 3, 'Changed password Succesfully'], { root: true });
                     commit('clearpass');
@@ -507,43 +341,6 @@ const actions = {
                 })
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-        }
-    },
-    async saveEditedData({ commit }, user) {
-
-        if (user.imagefile != null) {
-            let formData = new FormData()
-            const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-            formData.append('file', user.imagefile)
-            await Axios.post("/files/upload", formData, config)
-                .then(res => {
-                    user.image = 'http://localhost:3000/api/files/image/' + res.data.file.filename
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 10, error], { root: true });
-                })
-        }
-        try {
-            let id = user.id
-            let token = Cookies.get("catapa-jwt")
-            let config = {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            }
-            await Axios.put("/users/user/" + id, user, config)
-                .then(res => {
-                    commit('menu/notification', ['primary', 3, 'Changed data Succesfully'], { root: true });
-                    commit('undoEdit');
-                    commit('menu/cancelDialog', 'edituser', { root: true });
-                    commit('userStore', res)
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-                })
-        }
-        catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message]);
         }
     },
     goToSignin({ rootState }) {
@@ -575,7 +372,7 @@ const actions = {
                     password: state.del.password
                 }
             }
-            await Axios.delete("/users/user/" + id, config)
+            await Axios.delete("/users/" + id, config)
                 .then(() => {
                     commit('menu/cancelDialog', 'deleteaccount', { root: true });
                     commit('menu/notification', ['primary', 3, 'Deleted User. Bye, bye!!'], { root: true });
@@ -611,7 +408,7 @@ const actions = {
             }
             dispatch('actions/joinWG',{idWG:id,idUsers:[state.loginuser.id]},{root:true})
             user.workgroups.push(wg)
-            await Axios.put("/users/user/" + user.id, user, config)
+            await Axios.put("/users/" + user.id, user, config)
                 .then(res => {
                     dispatch('actions/loadWG', null, { root: true })
                     commit('userStore', res)
@@ -637,7 +434,7 @@ const actions = {
                 }
             }
             dispatch('actions/unjoinWG',{idWG:id,idUsers:[state.loginuser.id]},{root:true})
-            await Axios.put("/users/user/" + user.id, user, config)
+            await Axios.put("/users/" + user.id, user, config)
                 .then(res => {
                     dispatch('actions/loadWG', null, { root: true })
                     commit('userStore', res)
