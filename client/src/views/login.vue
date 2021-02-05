@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import loginVue from '../components/logintemplate.vue'
+import loginVue from '../components/users/logintemplate.vue'
 export default {
     components:{
         'login-template':loginVue

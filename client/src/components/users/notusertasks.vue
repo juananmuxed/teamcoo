@@ -234,8 +234,8 @@
 <script>
 
 import { mapState, mapActions , mapMutations } from 'vuex'
-import createtask from '../components/createtask.vue'
-import confirm from '../components/confirm.vue'
+import createtask from '../actions/createtask.vue'
+import confirm from '../general/confirm.vue'
 
 export default {
     components: {

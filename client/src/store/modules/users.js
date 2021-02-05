@@ -7,7 +7,7 @@ import globalConfig from '../../config/config.json'
 const state = {
     users: [],
     loadedUser: {},
-    loaded: false,
+    temporaluser: {},
     notEditUser: {
         firstname: '',
         lastname: '',
@@ -32,8 +32,6 @@ const state = {
 
 const mutations = {
     usersLoad: (state, users) => { state.users = users },
-    loadingstate: (state, [loader, bool]) => { state.loading[loader] = bool },
-    changeLoaded: (state, bool) => {state.loaded = bool},
     userLoad: (state, user) => { state.loadedUser = user},
     userToEdit: (state, user) => {
         state.editUser.firstname = user.firstname,
@@ -58,6 +56,15 @@ const mutations = {
             state.editUser.username = state.notEditUser.username,
             state.editUser.image = state.notEditUser.image,
             state.editUser.imagefile = null
+    },
+    temporaluser: (state,user) => {
+        state.temporaluser.id = user._id,
+        state.temporaluser.avatar = user.image,
+        state.temporaluser.firstname = user.firstname,
+        state.temporaluser.lastname = user.lastname,
+        state.temporaluser.rol = user.rol,
+        state.temporaluser.username = user.username,
+        state.temporaluser.workgroups = user.workgroups
     },
 }
 
@@ -100,7 +107,7 @@ const getters = {
 }
 
 const actions = {
-    async loadUsers({state, commit, dispatch, rootState}) {
+    async loadUsers({ commit, rootState}) {
         try {
             let token = Cookies.get('catapa-jwt');
             let config = {
@@ -108,8 +115,7 @@ const actions = {
                     Authorization: 'Bearer ' + token
                 }
             }
-            if(!state.loaded) await dispatch('menu/startLoadingBar', null, { root: true });
-            let res = await Axios.get('/users/all',config),
+            let res = await Axios.get('/users/',config),
             users = res.data,
             workgroups = rootState.actions.workgroups;
             for (let x = 0; x < users.length; x++) {
@@ -123,15 +129,33 @@ const actions = {
                 }
             }
             commit('usersLoad', users);
-            if(!state.loaded) await dispatch('menu/stopLoadingBar', null, { root: true });
-            if(state.users.length != 0) commit('changeLoaded',true);
             
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
-            await dispatch('menu/stopLoadingBarError', null, { root: true });
         }
     },
-    async searchUser({state, commit, dispatch}, userId) {
+    async loadUsersSilent({ commit, rootState, rootGetters}) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/users/',config),
+            users = res.data,
+            workgroups = rootState.actions.workgroups;
+            for (let x = 0; x < users.length; x++) {
+                for (let y = 0; y < users[x].workgroups.length; y++) {
+                    let wg = workgroups.find(v => v._id == users[x].workgroups[y]._wgId);
+                    if(wg) {
+                        users[x].workgroups[y].name = wg.name;
+                        users[x].workgroups[y].color = wg.color;
+                        users[x].workgroups[y].textcolor = wg.textcolor;
+                    }
+                }
+            }
+            commit('usersLoad', users);
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    },
+    async searchUser({ commit }, userId) {
         try {
             let token = Cookies.get('catapa-jwt');
             let config = {
@@ -139,21 +163,30 @@ const actions = {
                     Authorization: 'Bearer ' + token
                 }
             }
-            if(!state.loaded) {
-                await dispatch('menu/startLoadingBar', null, { root: true });
-                commit('menu/loadingstate', ['itembig',true], { root: true });
-            }
             let res = await Axios.get('/users/' + userId, config);
             commit('userLoad',res.data);
-            if(!state.loaded) {
-                await dispatch('menu/stopLoadingBar', null, { root: true });
-                commit('menu/loadingstate', ['itembig',false], { root: true });
-            }
-            if(Object.keys(state.loadedUser).length === 0 && state.loadedUser.constructor === Object) commit('changeLoaded',true);
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
-            await dispatch('menu/stopLoadingBarError', null, { root: true });
-            commit('menu/loadingstate', ['itembig',false], { root: true });
+        }
+    },
+    async loadUserByID({state,commit},userId){
+        try {
+            let token = Cookies.get("catapa-jwt");
+            let config = {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }
+            await Axios.get("/users/" + userId, config)
+                .then(res => {
+                    state.temporaluser = {}
+                    commit('temporaluser', res.data);
+                })
+                .catch(error => {
+                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+                })
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
     async loadUserData({ commit }, user) {

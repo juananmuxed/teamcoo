@@ -1,6 +1,6 @@
 <template>
   <v-card max-width="650" class="mx-auto pa-2">
-    <v-card-title class="headline font-weight-medium text-uppercase">Join to {{ wg.name }}</v-card-title>
+    <v-card-title class="headline font-weight-medium text-uppercase">Join to {{ workgroup.name }}</v-card-title>
     <v-card-text>
       <v-row v-if="suscribed != null">
         <v-col
@@ -11,21 +11,21 @@
       <v-row class="px-3 mb-3">
         <v-col cols="12" class="pa-2">
           <p>Please answer the question to join this Work Group.</p>
-          <p v-if="wg.dossier != null">
+          <p v-if="workgroup.dossier != null">
             <span>
               You have more information in the
-              <a target="_blank" :href="wg.dossier">
+              <a target="_blank" :href="workgroup.dossier">
                 dossier
                 <v-icon x-small color="primary">fas fa-link</v-icon>
               </a>
             </span>
           </p>
-          <p v-if="wg.linktodocuments != ''">
+          <p v-if="workgroup.linktodocuments != ''">
             <span>
               In addition you have more info in
               <a
                 target="_blank"
-                :href="wg.linktodocuments"
+                :href="workgroup.linktodocuments"
               >this Drive folder</a>
               <v-icon x-small color="primary">fas fa-link</v-icon>
             </span>
@@ -33,7 +33,7 @@
         </v-col>
       </v-row>
       <v-form ref="form" v-model="valid">
-        <v-row v-for="( question, index) in wg.questions" v-bind:key="index" class="px-3">
+        <v-row v-for="( question, index) in workgroup.questions" v-bind:key="index" class="px-3">
           <v-col cols="12" md="3">
             <v-row class="medium font-weight-bold">{{ index + 1 }}. {{ question.name }}</v-row>
             <v-row class="caption">{{ question.description }}</v-row>
@@ -116,7 +116,7 @@
             block
             color="primary"
             :disabled="!valid"
-            @click="suscribeto({id:wg._id,answers:answers})"
+            @click="joinWorkgroup({idWorkgroup:workgroup._id,idUser:loginuser.id,answers:answers}); saveMember({idWorkgroup:workgroup._id,idUser:loginuser.id,suscribe:true})"
           >Suscribe</v-btn>
         </v-col>
       </v-row>
@@ -126,11 +126,11 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import { dateToFormat } from '../utils/utils'
+import { dateToFormat } from '../../utils/utils'
 export default {
   data() {
     return {
-      wg: {},
+      workgroup: {},
       answers: [],
       rules: [],
       valid: true,
@@ -143,24 +143,23 @@ export default {
   computed: {
     ...mapState({
       menu: state => state.menu.menu,
-      wgloaded: state => state.actions.searchedWG,
+      searchedWorkgroup: state => state.workgroups.searchedWorkgroup,
       loginuser: state => state.user.loginuser
     })
   },
   methods: {
-    ...mapActions("actions", ["loadWGsuscription"]),
-    ...mapActions("user", ["suscribeto"])
+    ...mapActions("workgroups", ["joinWorkgroup","saveMember"])
   },
   async created() {
-    this.wg = this.wgloaded;
-    if (this.loginuser.unsuscribedworkgroups.some( uwg => uwg._wgId === this.wg._id)){
-        this.suscribed = this.loginuser.unsuscribedworkgroups.find( uwg => uwg._wgId === this.wg._id)
-        this.suscribed.formatedDate = dateToFormat(this.suscribed.suscribedDate)
+    this.workgroup = this.searchedWorkgroup;
+    if (this.loginuser.unsuscribedworkgroups.some( w => w._wgId === this.workgroup._id)){
+        this.suscribed = this.loginuser.unsuscribedworkgroups.find( w => w._wgId === this.workgroup._id)
+        this.suscribed.formatedDate = dateToFormat(this.suscribed.updatedDate)
     }
-    for (let i = 0; i < this.wg.questions.length; i++) {
+    for (let i = 0; i < this.workgroup.questions.length; i++) {
       let answer;
       let rule;
-      switch (this.wg.questions[i].type) {
+      switch (this.workgroup.questions[i].type) {
         case "checkbox":
           rule = v => v.length != 0 || "Select one at least";
           answer = [];
@@ -185,7 +184,7 @@ export default {
           break;
       }
       let obj = {
-        _id: this.wg.questions[i]._id,
+        _id: this.workgroup.questions[i]._id,
         answer: answer
       };
       this.rules.push(rule);

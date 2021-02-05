@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     ...mapState({
-      config: (state) => state.configuration,
+      config: (state) => state.general,
     }),
   },
 };

@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 
 const state = {
     rules: {
@@ -52,6 +53,13 @@ const state = {
             }
         }
     },
+    tab: null,
+    tabs: [
+        { name: 'General', icon: 'fas fa-cog' },
+        { name: 'Common Questions', icon: 'fas fa-question-circle' },
+        { name: 'Customization', icon: 'fas fa-paint-brush' },
+        { name: 'Mails', icon: 'fas fa-envelope' },
+    ]
 }
 
 const mutations = {
@@ -59,7 +67,13 @@ const mutations = {
 }
 
 const getters = {
-
+    cookieAuth: () => {
+        return {
+            headers: {
+                Authorization: "Bearer " + Cookies.get("catapa-jwt")
+            }
+        } 
+    }
 }
 
 const actions = {

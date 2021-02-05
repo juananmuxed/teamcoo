@@ -5,7 +5,9 @@ import general from './modules/general'
 import user from './modules/user'
 import actions from './modules/actions'
 import users from './modules/users'
-import configuration from './modules/configuration'
+import workgroups from './modules/workgroups'
+import questions from './modules/questions'
+import interests from './modules/interests'
 import createPersistedState from 'vuex-persistedstate'
 import SecureLS from "secure-ls";
 var ls = new SecureLS({ isCompression: false });
@@ -20,7 +22,9 @@ export default new Vuex.Store({
     general,
     user,
     actions,
-    configuration,
+    workgroups,
+    questions,
+    interests,
     users
   },
   plugins: [

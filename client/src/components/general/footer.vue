@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import loginVue from './logintemplate.vue'
+import loginVue from '../users/logintemplate.vue'
 import confirm from './confirm.vue'
 import { mapState , mapGetters, mapActions, mapMutations } from 'vuex'
 export default {

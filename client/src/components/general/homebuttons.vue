@@ -29,7 +29,7 @@
 
 <script>
 import { mapGetters , mapState, mapActions } from 'vuex'
-import logintemplate from './logintemplate.vue'
+import logintemplate from '../users/logintemplate.vue'
 export default {
     components:{
         'login-template': logintemplate

@@ -45,9 +45,9 @@
 <script>
 
 import { mapState } from 'vuex'
-import privatedata from '../components/privatedata.vue'
-import homebuttons from '../components/homebuttons.vue'
-import notusertasks from '../components/notusertasks.vue'
+import privatedata from '../components/users/privatedata.vue'
+import homebuttons from '../components/general/homebuttons.vue'
+import notusertasks from '../components/users/notusertasks.vue'
 
 export default {
     components:{

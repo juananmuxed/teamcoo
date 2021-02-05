@@ -3,7 +3,7 @@
         max-width="650"
         class="mx-auto pa-2"
     >
-        <v-card-title class="headline font-weight-medium text-uppercase">Edit {{ searchedWG.name }}</v-card-title>
+        <v-card-title class="headline font-weight-medium text-uppercase">Edit "{{ searchedWorkgroup.name }}"</v-card-title>
         <v-card-text>
             <v-row>
                 <v-col cols="12" class="py-1">
@@ -15,10 +15,10 @@
                     >
                     </v-text-field>
                 </v-col>
-                <v-col cols="12" class="py-1">
+                <v-col cols="10" class="py-1">
                     <v-menu :close-on-content-click="false" :nudge-height="0" offset-y transition="slide-y-transition">
                         <template v-slot:activator="{ on }">
-                            <v-btn class="custom-btn mb-3" :color="workgroupForm.color" block depressed v-on="on" :ripple="false" elevation="0"><span :class="`${workgroupForm.textcolor}--text`">{{ workgroupForm.color }}</span></v-btn>
+                            <v-btn class="custom-btn mb-3" :color="workgroupForm.color" block depressed v-on="on" :ripple="false" elevation="0"><span :class="`${textColor(workgroupForm.color)}--text`">{{ workgroupForm.color }}</span></v-btn>
                         </template>
                         <v-card :color="workgroupForm.color" elevation="0">
                             <v-color-picker
@@ -27,10 +27,12 @@
                                 mode.sync="hex"
                                 flat
                                 v-model="workgroupForm.color"
-                                v-on:update:color="idealTextColor(workgroupForm.color)"
                             ></v-color-picker>
                         </v-card>
                     </v-menu>
+                </v-col>
+                <v-col cols="2" class="py-1">
+                    <v-btn class="mb-3" :color="workgroupForm.color" block depressed :ripple="false" elevation="0" @click="randomWorkgroupColor()"><v-icon :color="textColor(workgroupForm.color)">fas fa-dice</v-icon></v-btn>
                 </v-col>
                 <v-col cols="12" class="py-1">
                     <v-textarea
@@ -77,49 +79,59 @@
                         v-model="menu.dialogs.createquestion"
                     >
                         <template v-slot:activator="{ on }">
-                            <v-btn block color="accent" class="mb-3" v-on="on">New Question</v-btn>
+                            <v-btn @click="clearquestionForm" block color="accent" class="mb-3" v-on="on">New Question</v-btn>
                         </template>
                         <create-question></create-question>
                     </v-dialog>
                 </v-col>
                 <v-col cols="12" class="py-1">
-                    <v-select
+                    <v-autocomplete
                         label="Questions"
                         v-model="workgroupForm.questionsSelected"
                         multiple
-                        chips
+                        return-object
+                        small-chips
                         outlined
                         prepend-icon="fas fa-question"
-                        :items="workgroupForm.questions"
+                        item-value="_id"
+                        item-text="name"
+                        :items="questions"
                         hint="Select at least 1"
                         :rules="[rules.zerolength]"
-                        return-object
+                        :filter="customFilter"
                     >
-                        <template v-slot:selection="{ data, item, index }">
-                            <v-chip v-if="index < 3">
-                                <span>{{ item.text }}</span>
+                        <template v-slot:selection="data">
+                            <v-chip
+                                v-bind="data.attrs"
+                                :input-value="data.selected"
+                            >
+                                <span class="pr-2">
+                                    {{ data.item.name }}
+                                </span>
+                                <v-icon
+                                    small
+                                    @click="data.parent.selectItem(data.item)"
+                                >
+                                    fas fa-times-circle
+                                </v-icon>
                             </v-chip>
-                            <span
-                                v-if="index === 3"
-                                class="grey--text caption"
-                            >(+{{ workgroupForm.questionsSelected.length - 3 }} others)</span>
                         </template>
                         <template v-slot:item="data">
                             <v-list-item-content>
-                                <v-list-item-title>{{ data.item.text }}</v-list-item-title>
+                                <v-list-item-title>{{ data.item.name }}</v-list-item-title>
                                 <v-list-item-subtitle>{{ data.item.type.toUpperCase() }}</v-list-item-subtitle>
                             </v-list-item-content>
                         </template>
-                    </v-select>
+                    </v-autocomplete>
                 </v-col>
             </v-row>
             <v-slide-y-transition origin="center center">
-                <v-btn fab right small top absolute color="primary" @click="saveEditedWG(searchedWG._id)" v-show="!editedwg() && !correctwg()" class="mt-8 mr-12">
+                <v-btn fab right small top absolute color="primary" @click="saveEditedworkgroup(searchedWorkgroup._id)" v-show="!editedWorkgroup() && !validWorkgroup()" class="mt-8 mr-12">
                     <v-icon small>fas fa-save</v-icon>
                 </v-btn>
             </v-slide-y-transition>
             <v-slide-y-transition origin="center center">
-                <v-btn fab right small top absolute color="info" @click="loadeditedwg()" v-show="!editedwg()" class="mt-8">
+                <v-btn fab right small top absolute color="info" @click="loadEditedWorkgroup()" v-show="!editedWorkgroup()" class="mt-8">
                     <v-icon small>fas fa-undo</v-icon>
                 </v-btn>
             </v-slide-y-transition>
@@ -129,30 +141,40 @@
 
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
-import createquestion from './createquestion.vue'
+import { idealTextColor } from '../../utils/utils';
+import createquestion from '../questions/createquestion.vue'
 export default {
     components:{
         'create-question': createquestion
     },
     computed: {
         ...mapState({
-            workgroupForm: state => state.actions.workgroupForm,
-            searchedWG: state => state.actions.searchedWG,
+            workgroupForm: state => state.workgroups.workgroupForm,
+            searchedWorkgroup: state => state.workgroups.searchedWorkgroup,
+            questions: state => state.questions.questions,
             loginuser: state => state.user.loginuser,
             menu: state => state.menu.menu,
-            workgroups: state => state.actions.workgroups,
-            secretworkgroups: state => state.actions.secretworkgroups,
+            workgroups: state => state.workgroups.workgroups,
+            secretWorkgroups: state => state.workgroups.secretWorkgroups,
             rules: state => state.general.rules,
             userId: state => state.user.loginuser.id
         })
     },
     methods: {
-        ...mapMutations('actions',['verifySecret','loadeditedwg']),
-        ...mapActions('actions',['idealTextColor','saveEditedWG']),
-        ...mapGetters('actions',['editedwg','correctwg'])
+        ...mapMutations('workgroups',['verifySecret','loadEditedWorkgroup','randomWorkgroupColor']),
+        ...mapGetters('workgroups',['editedWorkgroup','validWorkgroup']),
+        ...mapActions('workgroups',['saveEditedworkgroup']),
+        ...mapActions('questions',['loadQuestions']),
+        ...mapMutations('questions',['clearquestionForm']),
+        textColor(color) {
+            return idealTextColor(color);
+        },
+        customFilter (item, queryText) {
+            return item.name.toLowerCase().indexOf(queryText.toLowerCase()) > -1 
+        },
     },
     created() {
-        this.loadeditedwg()
+        this.loadQuestions();
     }
 }
 </script>

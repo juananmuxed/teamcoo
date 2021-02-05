@@ -166,8 +166,8 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import confirm from '../components/confirm.vue'
-import edituser from '../components/edituser.vue'
+import confirm from '../components/general/confirm.vue'
+import edituser from '../components/users/edituser.vue'
 export default {
     components:{
         'edit-user': edituser,

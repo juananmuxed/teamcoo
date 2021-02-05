@@ -158,7 +158,7 @@
                 <v-col>
                     <v-dialog
                         max-width="650"
-                        v-model="menu.dialogs.createwg"
+                        v-model="menu.dialogs.createworkgroup"
                     >
                         <template v-slot:activator="{ on }">
                             <v-btn v-on="on" block color="secondary" class="my-2" @click="clearwgform">
@@ -187,13 +187,13 @@
 import { mapState, mapActions , mapMutations, mapGetters } from 'vuex'
 import deleteAccount from './delaccount.vue'
 import changePassword from './changepass.vue'
-import createwg from './createwg.vue'
+import createworkgroup from '../workgroups/createworkgroup.vue'
 
 export default {
     components:{
         'delete-account': deleteAccount,
         'change-pass': changePassword,
-        'create-work-group': createwg
+        'create-work-group': createworkgroup
     },
     computed: {
         ...mapState({

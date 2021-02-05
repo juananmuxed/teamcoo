@@ -9,38 +9,69 @@
     <v-row>
       <v-col cols="12">
         <v-data-table
-          :items="questions"
+          :items="questions.filter((n) => !n.common)"
           :headers="headers"
-          :loading="loading.questions"
+          :loading="loaded"
         >
           <template v-slot:loading>
-              <span class="display-1 text-uppercase font-weight-thin ma-5">Loading Questions</span>
+            <span class="display-1 text-uppercase font-weight-thin ma-5"
+              >Loading Questions</span
+            >
           </template>
           <template v-slot:no-data>
-              <span class="display-1 text-uppercase font-weight-thin">No Questions</span>
+            <span class="display-1 text-uppercase font-weight-thin"
+              >No Questions</span
+            >
           </template>
           <template v-slot:item.description="{ item }">
             <v-tooltip bottom max-width="220" transition="slide-y-transition">
               <template v-slot:activator="{ on }">
                 <span
                   class="d-inline-block text-truncate font-italic"
-                  style="max-width: 250px;"
+                  style="max-width: 250px"
                   v-on="on"
-                >{{ item.description }}</span>
+                  >{{ item.description }}</span
+                >
               </template>
               <span class="caption font-italic">{{ item.description }}</span>
             </v-tooltip>
           </template>
-          <template v-slot:item.creator="{ item }">{{ item.creator.firstname }}</template>
+          <template v-slot:item.creator="{ item }">
+            <v-chip class="mx-1" :to="'/users/' + item._userId">
+              <v-avatar left v-if="item.creator.avatar != ''"><v-img :src="item.creator.avatar"></v-img></v-avatar>
+              <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+              {{ item.creator.username }}
+            </v-chip>
+          </template>
           <template v-slot:item.type="{ item }">
             <span class="text-uppercase">{{ item.type }}</span>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn depressed color="info" @click="searchQuestion(item._id);dialogs.editquestion = true" class="mx-1" v-if="item.creator.id == loginuser.id">
+            <v-btn
+              depressed
+              small
+              color="info"
+              @click="
+                searchQuestion(item._id);
+                dialogs.editquestion = true;
+              "
+              class="mx-1"
+              v-if="item.creator.id == loginuser.id"
+            >
               Edit
               <v-icon x-small class="ml-1">fas fa-edit</v-icon>
             </v-btn>
-            <v-btn depressed color="error" @click="searchQuestion(item._id);dialogs.confirm = true" class="mx-1" v-if="loginuser.rol.value == 'admin'">
+            <v-btn
+              depressed
+              small
+              color="error"
+              @click="
+                searchQuestion(item._id);
+                dialogs.confirm = true;
+              "
+              class="mx-1"
+              v-if="loginuser.rol.value == 'admin'"
+            >
               Delete
               <v-icon x-small class="ml-1">fas fa-trash</v-icon>
             </v-btn>
@@ -52,35 +83,35 @@
             <template v-else>
               <v-chip
                 small
-                v-for="(answer,index) in item.selections"
+                v-for="(answer, index) in item.selections"
                 v-bind:key="index"
                 class="ma-1"
-              >{{ answer }}</v-chip>
+                :color="answer.color"
+                :text-color="textColor(answer.color)"
+                >{{ answer.name }}</v-chip
+              >
             </template>
           </template>
         </v-data-table>
-        <v-dialog
-          v-model="dialogs.editquestion"
-          max-width="650"
-        >
+        <v-dialog v-model="dialogs.editquestion" max-width="650">
           <edit-question></edit-question>
         </v-dialog>
-        <v-dialog
-            max-width="400"
-            v-model="dialogs.confirm"
-        >
-          <confirmation-template 
-              :title="`Delete ${searchedQuestion.name}`" 
-              description="You are about to delete this Question. <br><br>Are you sure?" 
-              :cancelFunction="null" 
-              textButton="Delete" 
-              :actionparams="{id:searchedQuestion._id,type:'question'}" 
-              :action="delSomething"
+        <v-dialog max-width="400" v-model="dialogs.confirm">
+          <confirmation-template
+            :title="`Delete '${searchedQuestion.name}'`"
+            description="You are about to delete this Question. <br><br>Are you sure?"
+            :cancelFunction="null"
+            textButton="Delete"
+            :actionparams="{ id: searchedQuestion._id }"
+            :action="delQuestion"
           ></confirmation-template>
         </v-dialog>
       </v-col>
     </v-row>
-    <v-row class="px-3" v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'">
+    <v-row
+      class="px-3"
+      v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
+    >
       <v-col>
         <v-dialog max-width="650" v-model="dialogs.createquestion">
           <template v-slot:activator="{ on }">
@@ -103,53 +134,61 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from "vuex"
-import createquestion from "../components/createquestion.vue"
-import editquestion from "../components/editquestion.vue"
-import confirm from "../components/confirm.vue"
+import { mapActions, mapState, mapMutations } from "vuex";
+import createquestion from "../components/questions/createquestion.vue";
+import editquestion from "../components/questions/editquestion.vue";
+import confirm from "../components/general/confirm.vue";
+import { idealTextColor } from '../utils/utils';
 export default {
   data() {
     return {
       headers: [
         {
-          text: "Questions",
+          text: "Question Name",
           align: "start",
           value: "name",
-          width: 30
+          width: 30,
         },
         {
           text: "Description",
           value: "description",
           sortable: false,
-          width: 20
+          width: 20,
         },
         { text: "Type", value: "type", sortable: false, width: 20 },
         { text: "Answers", value: "selections", sortable: false, width: 100 },
         { text: "Creator", value: "creator", sortable: false, width: 30 },
-        { text: "", value: "actions", sortable: false, width: 20 }
-      ]
+        { text: "", value: "actions", sortable: false, width: 20 },
+      ],
     };
   },
   components: {
     "create-question": createquestion,
-    'edit-question': editquestion,
-    'confirmation-template': confirm
+    "edit-question": editquestion,
+    "confirmation-template": confirm,
   },
   computed: {
     ...mapState({
-      questions: state => state.actions.questions,
-      searchedQuestion: state => state.actions.searchedQuestion,
-      loginuser: state => state.user.loginuser,
-      dialogs: state => state.menu.menu.dialogs,
-      loading: state => state.actions.loading
-    })
+      questions: (state) => state.questions.questions,
+      searchedQuestion: (state) => state.questions.searchedQuestion,
+      loginuser: (state) => state.user.loginuser,
+      dialogs: (state) => state.menu.menu.dialogs,
+      loaded: (state) => state.questions.loaded,
+    }),
   },
   methods: {
-    ...mapActions("actions", ["loadQuestions", "delSomething",'searchQuestion']),
-    ...mapMutations("actions", ["clearquestionForm"])
+    ...mapActions("questions", [
+      "loadQuestions",
+      "delQuestion",
+      "searchQuestion",
+    ]),
+    ...mapMutations("questions", ["clearquestionForm"]),
+    textColor(color) {
+      return idealTextColor(color);
+    },
   },
   created() {
     this.loadQuestions();
-  }
+  },
 };
 </script>

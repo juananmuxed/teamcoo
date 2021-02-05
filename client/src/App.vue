@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import lateralmenu from './components/lateralmenu.vue'
-import toolbar from './components/toolbar.vue'
-import footer from './components/footer.vue'
+import lateralmenu from './components/general/lateralmenu.vue'
+import toolbar from './components/general/toolbar.vue'
+import footer from './components/general/footer.vue'
 import Vuetify from './plugins/vuetify'
 
 import { mapMutations, mapState } from 'vuex';

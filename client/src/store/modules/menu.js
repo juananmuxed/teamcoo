@@ -1,6 +1,5 @@
 import Vuetify from '../../plugins/vuetify'
 import router from '@/router'
-import { sleep } from '../../utils/utils'
 
 const state = {
     menu: {
@@ -11,10 +10,10 @@ const state = {
         links: [
             { name: 'Dashboard', link: '/dashboard', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-columns' },
             { name: 'Users', link: '/users', roles: ['coor','dire','admin'], icon: 'fas fa-users' },
-            { name: 'Work Groups', link: '/workgroups', roles: ['coor','dire','admin','volu'], icon: 'fas fa-network-wired' },
             { name: 'Tasks', link: '/tasks', roles: ['coor','dire','admin','volu'], icon: 'fas fa-tasks' },
-            { name: 'Interests', link: '/interests', roles: ['coor','dire','admin'], icon: 'fas fa-address-card' },
+            { name: 'Work Groups', link: '/workgroups', roles: ['coor','dire','admin','volu'], icon: 'fas fa-network-wired' },
             { name: 'Questions', link: '/questions', roles: ['coor','dire','admin'], icon: 'fas fa-question' },
+            { name: 'Interests', link: '/interests', roles: ['coor','dire','admin'], icon: 'fas fa-address-card' },
             { name: 'Membership', link: '/membership', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-star' },
             { name: 'Portal Config', link: '/config', roles: ['admin'], icon: 'fas fa-cogs' },
         ],
@@ -24,20 +23,21 @@ const state = {
             edituser: false,
             deleteaccount: false,
             changepassword: false,
-            createwg: false,
+            createworkgroup: false,
             createquestion: false,
             suscribeto: false,
-            unsuscribewg: false,
+            unsuscribeworkgroup: false,
             createtask:false,
             createinterest:false,
-            editwg:false,
+            editinterest:false,
+            editworkgroup:false,
             confirm:false,
             editmembers:false,
             editquestion:false
         },
         loader:{
-            wg:false,
-            secretwg:false,
+            workgroup:false,
+            secretworkgroup:false,
             tasks:false,
             itembig:false,
             users:false
@@ -52,7 +52,8 @@ const state = {
     snackbar: {
         active: false,
         color: 'info',
-        message: ''
+        message: '',
+        polling: null
     },
     alert: {
         message: 'Message',
@@ -75,10 +76,11 @@ const mutations = {
         }
     },
     notification: (state, [color, time, message]) => {
+        if(state.snackbar.active) clearInterval(state.snackbar.polling);
         state.snackbar.active = true;
         state.snackbar.color = color;
         state.snackbar.message = message;
-        setTimeout(() => {
+        state.snackbar.polling = setTimeout(() => {
             state.snackbar.active = false;
         }, time * 1000);
     },
@@ -122,25 +124,6 @@ const actions = {
         setTimeout(() => {
             router.go(-1)
         }, 200);
-    },
-    async startLoadingBar({commit}) {
-        commit('loadingbar', ['accent', true , 0]);
-        await sleep(800); 
-        commit('menu/loadingbar', ['success', true , 10], { root: true });
-    },
-    async stopLoadingBar({commit}) {
-        commit('loadingbar', ['info', true ,90]);
-        await sleep(800); 
-        commit('menu/loadingbar', ['success', true , 100], { root: true });
-        await sleep(400); 
-        commit('menu/loadingbar', ['success', false , 100], { root: true });
-    },
-    async stopLoadingBarError({commit}) {
-        commit('loadingbar', ['info', true ,90]);
-        await sleep(800); 
-        commit('menu/loadingbar', ['error', true , 90], { root: true });
-        await sleep(400); 
-        commit('menu/loadingbar', ['error', false , 90], { root: true });
     },
 }
 

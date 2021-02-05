@@ -10,7 +10,7 @@
       <router-link to="/">
         <v-avatar tile>
           <v-img
-            src="../../public/CATAPA_ICON.png"
+            src="../../../public/CATAPA_ICON.png"
             contain
           ></v-img>
         </v-avatar>
@@ -23,7 +23,7 @@
             <v-col cols="1">
               <router-link to="/">
                 <v-img
-                  src="../../public/CATAPA_LOGO.png"
+                  src="../../../public/CATAPA_LOGO.png"
                   style="height: inherit"
                   contain
                 ></v-img>

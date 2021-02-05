@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import homebuttons from '../components/homebuttons.vue'
+import homebuttons from '../components/general/homebuttons.vue'
 export default {
   components:{
     'home-buttons':homebuttons

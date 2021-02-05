@@ -73,7 +73,8 @@ const state = {
             { text: "Radio select", value: 'radio' },
             { text: "Open question", value: 'text' }
         ],
-        text: ''
+        text: '',
+        common: false
     },
     loadedSuscription: {}
 }
@@ -391,7 +392,7 @@ const actions = {
             .then(() => {
                 commit('menu/notification', ['info', 5, 'Work group created'], { root: true })
                 dispatch('loadWG')
-                commit('menu/cancelDialog', 'createwg', { root: true })
+                commit('menu/cancelDialog', 'createworkgroup', { root: true })
                 commit('clearwgform')
             })
         } catch (error) {
@@ -746,11 +747,6 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
         }
     },
-    async saveEditedQuestion({state,commit},id){
-        let exit = JSON.stringify(state.questionForm.selectionsSelected)
-        let exit2 = JSON.stringify(state.searchedQuestion.selections)
-        commit('menu/notification', ['primary', 5, id + ': ' + exit + ' / ' + exit2], { root: true })
-    },
     async saveEditedWG({state,commit,dispatch},id) {
         commit('menu/loadingstate', ['itembig',true], { root: true })
         try {
@@ -793,7 +789,7 @@ const actions = {
             }
             let res = await Axios.put("/wg/" + id, body, config)
             commit('menu/notification', ['info', 5, 'Work group edited'], { root: true })
-            commit('menu/cancelDialog', 'editwg', { root: true })
+            commit('menu/cancelDialog', 'editworkgroup', { root: true })
             let wg = res.data
             await dispatch('loadUserByID',wg._userId)
             let creator =  state.temporaluser
@@ -824,12 +820,12 @@ const actions = {
                 commit('menu/loadingstate', ['itembig',false], { root: true })
                 commit('menu/loadingbar', [null,false,null], { root: true })
             }, 300)
-            } catch (error) {
-                commit('menu/notification', ['error', 5, error.response.data.message], { root: true })
-                setTimeout(() => {
-                    commit('menu/loadingbar', [null,false,null], { root: true })
-                    commit('menu/loadingstate', ['itembig',false], { root: true })
-                }, 300);
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error.response.data.message], { root: true })
+            setTimeout(() => {
+                commit('menu/loadingbar', [null,false,null], { root: true })
+                commit('menu/loadingstate', ['itembig',false], { root: true })
+            }, 300);
         }
     },
     async joinWG({state,commit,dispatch},ids) {
@@ -1080,7 +1076,7 @@ const actions = {
                 await dispatch('joinWG',{idWG:idWG,idUsers:idUsersToAdd})
                 let wg = {
                     _wgId: idWG,
-                    suscribedDate: Date.now(),
+                    updatedDate: Date.now(),
                     answers: 'Added by Coordinator'
                 }
                 for (let x = 0; x < idUsersToAdd.length; x++) {

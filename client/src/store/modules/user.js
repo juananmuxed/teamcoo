@@ -386,62 +386,6 @@ const actions = {
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message]);
         }
-    },
-    async suscribeto({ state, commit, dispatch }, { id, answers }) {
-        try {
-            let user = state.loginuser
-            let isWG = user.unsuscribedworkgroups.some(wg => wg._wgId === id)
-            if (isWG) {
-                let indexExtracted = await user.unsuscribedworkgroups.findIndex(wg => wg._wgId === id)
-                user.unsuscribedworkgroups.splice(indexExtracted, 1)
-            }
-            let wg = {
-                _wgId: id,
-                suscribedDate: Date.now(),
-                answers: answers
-            }
-            let token = Cookies.get("catapa-jwt")
-            let config = {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            }
-            dispatch('actions/joinWG',{idWG:id,idUsers:[state.loginuser.id]},{root:true})
-            user.workgroups.push(wg)
-            await Axios.put("/users/" + user.id, user, config)
-                .then(res => {
-                    dispatch('actions/loadWG', null, { root: true })
-                    commit('userStore', res)
-                })
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
-        }
-    },
-    async unsuscribeto({ state, commit, dispatch }, { id }) {
-        try {
-            let isWG = state.loginuser.workgroups.some(wg => wg._wgId === id)
-            if (isWG) {
-                let extractedItem = await state.loginuser.workgroups.find(wg => wg._wgId === id)
-                let indexExtracted = await state.loginuser.workgroups.findIndex(wg => wg._wgId === id)
-                state.loginuser.unsuscribedworkgroups.push(extractedItem)
-                state.loginuser.workgroups.splice(indexExtracted, 1)
-            }
-            let user = state.loginuser
-            let token = Cookies.get("catapa-jwt")
-            let config = {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            }
-            dispatch('actions/unjoinWG',{idWG:id,idUsers:[state.loginuser.id]},{root:true})
-            await Axios.put("/users/" + user.id, user, config)
-                .then(res => {
-                    dispatch('actions/loadWG', null, { root: true })
-                    commit('userStore', res)
-                })
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
-        }
     }
 }
 

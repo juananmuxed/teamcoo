@@ -8,7 +8,7 @@
 
     <v-row>
       <v-col cols="12">
-        <v-data-table :items="workgroups" :headers="headers" :loading="loading.workgroups">
+        <v-data-table :items="workgroups" :headers="headers" :loading="loaded">
           <template v-slot:loading>
             <span class="display-1 text-uppercase font-weight-thin ma-5">Loading Work Groups</span>
           </template>
@@ -24,21 +24,25 @@
             </v-tooltip>
           </template>
           <template v-slot:item.color="{ item }">
-            <v-chip :color="item.color">{{ item.color }}</v-chip>
+            <v-chip :color="item.color" :text-color="textColor(item.color)">{{ item.color }}</v-chip>
           </template>
           <template v-slot:item.questions="{ item }">
             <v-chip small class="ma-1" v-for="(question,index) in item.questions" v-bind:key="index">{{ question.name }}</v-chip>
           </template>
           <template v-slot:item.members="{ item }">
             <span v-if="item.members.length==0">No members added</span>
-            <v-chip small class="ma-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.firstname }}</v-chip>
+            <v-chip small class="ma-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.username }}</v-chip>
           </template>
           <template v-slot:item.coordinators="{ item }">
             <span v-if="item.coordinators.length==0">No coordinators added</span>
-            <v-chip small class="ma-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.firstname }}</v-chip>
+            <v-chip small class="ma-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.username }}</v-chip>
           </template>
           <template v-slot:item.creator="{ item }">
-              {{ item.creator.firstname }}
+            <v-chip class="mx-1" :to="'/users/' + item._userId">
+              <v-avatar left v-if="item.creator.avatar != ''"><v-img :src="item.creator.avatar"></v-img></v-avatar>
+              <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+              {{ item.creator.username }}
+            </v-chip>
           </template>
           <template v-slot:item.linktodocuments="{ item }">
             <template v-if="item.linktodocuments != ''">
@@ -57,8 +61,8 @@
             </template>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn depressed color="info" :to="'/workgroups/' + item._id">
-              See more <v-icon small class="ml-3">fas fa-eye</v-icon>
+            <v-btn depressed small color="info" :to="'/workgroups/' + item._id">
+              More <v-icon small class="ml-3">fas fa-eye</v-icon>
             </v-btn>
           </template>
         </v-data-table>
@@ -73,7 +77,7 @@
 
       <v-row>
         <v-col cols="12">
-          <v-data-table :items="secretworkgroups" :headers="headers" :loading="loading.secretworkgroups">
+          <v-data-table :items="secretworkgroups" :headers="headers" :loading="loaded">
             <template v-slot:loading>
               <span class="display-1 text-uppercase font-weight-thin ma-5">Loading Work Groups</span>
             </template>
@@ -89,21 +93,25 @@
               </v-tooltip>
             </template>
             <template v-slot:item.color="{ item }">
-              <v-chip :color="item.color">{{ item.color }}</v-chip>
+              <v-chip :color="item.color" :text-color="textColor(item.color)">{{ item.color }}</v-chip>
             </template>
             <template v-slot:item.questions="{ item }">
               <v-chip small class="ma-1" v-for="(question,index) in item.questions" v-bind:key="index">{{ question.name }}</v-chip>
             </template>
             <template v-slot:item.members="{ item }">
-              <span v-if="item.members.length==0">No members added</span>
-              <v-chip small class="ma-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.firstname }}</v-chip>
+              <span v-if="item.members.length==0">No members</span>
+              <v-chip small class="ma-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.username }}</v-chip>
             </template>
             <template v-slot:item.coordinators="{ item }">
-              <span v-if="item.coordinators.length==0">No coordinators added</span>
-              <v-chip small class="ma-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.firstname }}</v-chip>
+              <span v-if="item.coordinators.length==0">No coordinators</span>
+              <v-chip small class="ma-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.username }}</v-chip>
             </template>
             <template v-slot:item.creator="{ item }">
-                {{ item.creator.firstname }}
+              <v-chip class="mx-1" :to="'/users/' + item._userId">
+                <v-avatar left v-if="item.creator.avatar != ''"><v-img :src="item.creator.avatar"></v-img></v-avatar>
+                <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+                {{ item.creator.username }}
+              </v-chip>
             </template>
             <template v-slot:item.linktodocuments="{ item }">
               <template v-if="item.linktodocuments != ''">
@@ -122,8 +130,8 @@
               </template>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-btn depressed color="info" :to="'/workgroups/' + item._id">
-                See more <v-icon small class="ml-3">fas fa-eye</v-icon>
+              <v-btn depressed small color="info" :to="'/workgroups/' + item._id">
+                More <v-icon small class="ml-3">fas fa-eye</v-icon>
               </v-btn>
             </template>
           </v-data-table>
@@ -134,10 +142,10 @@
       <v-col>
           <v-dialog
               max-width="650"
-              v-model="dialogs.createwg"
+              v-model="dialogs.createworkgroup"
           >
               <template v-slot:activator="{ on }">
-                  <v-btn height="160" v-on="on" block color="info" class="my-2" @click="clearwgform">
+                  <v-btn height="160" v-on="on" block color="info" class="my-2" @click="clearWorkgroupForm();randomWorkgroupColor()">
                       <v-icon left>fas fa-users</v-icon> Create Work Group
                   </v-btn>
               </template>
@@ -150,7 +158,8 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import createwg from '../components/createwg.vue'
+import createworkgroup from '../components/workgroups/createworkgroup.vue'
+import { idealTextColor } from '../utils/utils';
 export default {
   data() {
     return {
@@ -161,38 +170,39 @@ export default {
           value: "name",
           width: 100
         },
-        { text: "Description", value: "description", sortable: false, width: 100},
+        { text: "Description", value: "description", sortable: false},
         { text: "Link", value: "linktodocuments", sortable: false, width: 30},
         { text: "Dossier", value: "dossier", sortable: false, width: 30},
         { text: "Coordinators", value: "coordinators", sortable: false, width: 200},
         { text: "Members", value: "members", sortable: false, width: 200},
         { text: "Questions", value: "questions", sortable: false, width: 200},
-        { text: "Creator", value: "creator", sortable: false, width: 100},
-        { text: "Color", value: "color", sortable: false, width: 100},
+        { text: "Creator", value: "creator", sortable: false, width: 40},
+        { text: "Color", value: "color", sortable: false, width: 40},
         { text: "", value: "actions", sortable: false, width: 100}
       ]
     };
   },
   components:{
-      'create-work-group': createwg
+      'create-work-group': createworkgroup
   },
   computed: {
     ...mapState({
-      workgroups: state => state.actions.workgroups,
-      secretworkgroups: state => state.actions.secretworkgroups,
+      workgroups: state => state.workgroups.workgroups,
+      secretworkgroups: state => state.workgroups.secretworkgroups,
       loginuser: state => state.user.loginuser,
-      loading: state => state.actions.loading,
+      loaded: state => state.workgroups.loaded,
       dialogs: state => state.menu.menu.dialogs
     })
   },
   methods: {
-    ...mapActions('actions', ['loadWG','loadQuestions','delSomething']),
-    ...mapMutations('actions',['clearwgform'])
+    ...mapActions('workgroups', ['loadWorkgroups']),
+    ...mapMutations('workgroups',['clearWorkgroupForm','randomWorkgroupColor']),
+    textColor(color) {
+        return idealTextColor(color);
+    }
   },
   created() {
-    this.loadQuestions().then(
-      this.loadWG()
-    )
+    this.loadWorkgroups();
   }
 };
 </script>

@@ -2,52 +2,52 @@
     <v-container
         class="pa-10"
     >
-    
+    <!-- TODO: carga con errores, revisar, recarga previa -->
         <v-row>
             <v-col cols="12">
                 <v-skeleton-loader type="skeleton" :types="{skeleton:'card,article, table-tfoot'}" max-width="1080" class="mx-auto" transition="fade-transition" :loading="menu.loader.itembig">
-                    <v-card :color="searchedWG.color" :class="`${searchedWG.textcolor}--text mx-auto`" max-width="1080">
+                    <v-card :color="searchedWorkgroup.color" :class="`${textColor(searchedWorkgroup.color)}--text mx-auto`" max-width="1080">
                         <v-card-title>
                             <v-btn class="mr-n12" absolute fab top right color="info" @click="goBack()">
                                 <v-icon>fas fa-arrow-left</v-icon>
                             </v-btn>
-                            <v-tooltip right :color="loginuser.workgroups.some(wg => wg._wgId === searchedWG._id) ? 'info' : 'error'" transition="scroll-x-transition">
+                            <v-tooltip right :color="loginuser.workgroups.some(wg => wg._wgId === searchedWorkgroup._id) ? 'info' : 'error'" transition="scroll-x-transition">
                                 <template v-slot:activator="{ on }">
-                                    <span v-on="on" class="text-uppercase font-weight-thin display-1">{{ searchedWG.name }}</span>
+                                    <span v-on="on" class="text-uppercase font-weight-thin display-1">{{ searchedWorkgroup.name }}</span>
                                 </template>
-                                <span class="text-right caption font-weight-light">{{loginuser.workgroups.some(wg => wg._wgId === searchedWG._id) ? 'Joined' : 'Unjoined'}}</span>
+                                <span class="text-right caption font-weight-light">{{loginuser.workgroups.some(wg => wg._wgId === searchedWorkgroup._id) ? 'Joined' : 'Unjoined'}}</span>
                             </v-tooltip>
                             <v-spacer></v-spacer>
                             <v-dialog
-                                v-if="!loginuser.workgroups.some(wg => wg._wgId === searchedWG._id)"
+                                v-if="!loginuser.workgroups.some(wg => wg._wgId === searchedWorkgroup._id)"
                                 v-model="dialogs.suscribeto"
                                 max-width="650"
                             >
                                 <template v-slot:activator="{ on }">
-                                    <v-btn v-on="on" color="primary" rounded v-if="!searchedWG.secret">Join</v-btn>
+                                    <v-btn v-on="on" color="primary" rounded v-if="!searchedWorkgroup.secret">Join</v-btn>
                                 </template>
-                                <suscribe-to-work-group :id="searchedWG._id"></suscribe-to-work-group>
+                                <suscribe-to-work-group :id="searchedWorkgroup._id"></suscribe-to-work-group>
                             </v-dialog>
                             <v-dialog
                                 v-else
-                                v-model="dialogs.unsuscribewg"
+                                v-model="dialogs.unsuscribeworkgroup"
                                 max-width="650"
                             >
                                 <template v-slot:activator="{ on }">
                                     <v-btn rounded v-on="on" color="secondary">Unjoin</v-btn>
                                 </template>
                                 <confirmation-template 
-                                    :title="`Unjoin from <span class='${searchedWG.color}--text pl-2'>${searchedWG.name}</span>`" 
+                                    :title="`Unjoin from <span class='${searchedWorkgroup.color}--text pl-2'>${searchedWorkgroup.name}</span>`" 
                                     description="You are about to unjoin this Work Group. Your questions are saved in the Database for future stats. <br><br>Are you sure?" 
                                     :cancelFunction="null" 
                                     textButton="Unsuscribe" 
-                                    :actionparams="{id:searchedWG._id}" 
-                                    :action="unsuscribeto"
+                                    :actionparams="{idWorkgroup:searchedWorkgroup._id, idUser:loginuser.id, suscribe:false}" 
+                                    :action="unsuscribeWorkgroup"
                                 ></confirmation-template>
                             </v-dialog>
                         </v-card-title>
                         <v-divider></v-divider>
-                        <v-card-text :class="`${searchedWG.textcolor}--text`">
+                        <v-card-text :class="`${textColor(searchedWorkgroup.color)}--text`">
                             <v-dialog
                                 v-model="dialogs.editmembers"
                                 max-width="650"
@@ -58,61 +58,62 @@
                                 <v-col cols="12" class="mb-4">
                                     <span class="text-uppercase headline font-weight-light">Description<br></span>
                                     <span class="font-italic">
-                                        {{ searchedWG.description }}
+                                        {{ searchedWorkgroup.description }}
                                     </span>
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-col cols="12" md="6" v-if="searchedWG.dossier != null"><v-btn color="info" target="_blank" :href="searchedWG.dossier" block height="80">Dossier <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
-                                <v-col cols="12" md="6" v-if="searchedWG.linktodocuments != ''"><v-btn color="accent" target="_blank" :href="searchedWG.linktodocuments" block height="80">Link to Documents <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
+                                <v-col cols="12" md="6" v-if="searchedWorkgroup.dossier != null"><v-btn color="info" target="_blank" :href="searchedWorkgroup.dossier" block height="80">Dossier <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
+                                <v-col cols="12" md="6" v-if="searchedWorkgroup.linktodocuments != ''"><v-btn color="accent" target="_blank" :href="searchedWorkgroup.linktodocuments" block height="80">Link to Documents <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
                             </v-row>
                             <v-toolbar dense elevation="2" color="primary" class="my-1">
                                 <v-toolbar-title class="text-uppercase title font-weight-light">Coordinators</v-toolbar-title>
                                 <v-spacer></v-spacer>
-                                <v-btn v-if="(loginuser.rol.value == 'admin' || loginuser.id == searchedWG.creator.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id))" depressed small color="secondary" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
+                                <v-btn v-if="(loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id))" depressed small color="secondary" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
                             </v-toolbar>
-                            <v-row v-if="searchedWG.coordinators.length != 0">
+                            <v-row v-if="searchedWorkgroup.coordinators && searchedWorkgroup.coordinators.length != 0">
                                 <v-col cols="12" class="my-1">
-                                    <v-chip v-for="(coor , index) in searchedWG.coordinators" v-bind:key="index" class="mx-1">
+                                    <v-chip v-for="(coor , index) in searchedWorkgroup.coordinators" v-bind:key="index" class="mx-1">
                                         <v-avatar left v-if="coor.avatar != ''"><v-img :src="coor.avatar"></v-img></v-avatar>
                                         <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
-                                        {{ coor.firstname }}
+                                        {{ coor.username }}
                                     </v-chip>
                                 </v-col>
                             </v-row>
                             <v-row v-else>
                                 <v-col cols="12" class="my-1">
-                                    <v-btn block color="info" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
+                                    <v-btn block color="info" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}); dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
                                 </v-col>
                             </v-row>
                             <v-toolbar dense elevation="2" color="secondary" class="my-1">
                                 <v-toolbar-title class="text-uppercase title font-weight-light">Members</v-toolbar-title>
                                 <v-spacer></v-spacer>
-                                <v-btn v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWG.creator.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id)" depressed small color="primary" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
+                                <v-btn v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)" depressed small color="primary" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
                             </v-toolbar>
-                            <v-row v-if="searchedWG.members.length != 0">
+                            <v-row v-if="searchedWorkgroup.members && searchedWorkgroup.members.length != 0">
                                 <v-col cols="12" class="my-1">
-                                    <v-chip v-for="(member , index) in searchedWG.members" v-bind:key="index" class="mx-1">
+                                    <v-chip v-for="(member , index) in searchedWorkgroup.members" v-bind:key="index" class="mx-1">
                                         <v-avatar left v-if="member.avatar != ''"><v-img :src="member.avatar"></v-img></v-avatar>
                                         <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
-                                        {{ member.firstname }}
+                                        {{ member.username }}
                                     </v-chip>
                                 </v-col>
                             </v-row>
-                            <v-row v-if="searchedWG.members.length == 0 && (loginuser.rol.value == 'admin' || searchedWG.coordinators.some(coor => coor.id == loginuser.id))">
+                            <v-row v-if="searchedWorkgroup.members && searchedWorkgroup.members.length == 0 && (loginuser.rol.value == 'admin' || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id))">
                                 <v-col cols="12" class="my-1">
-                                    <v-btn block color="info" @click="loadmembers({members:searchedWG.members,coordinators:searchedWG.coordinators}), dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
+                                    <v-btn block color="info" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}), dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
                                 </v-col>
                             </v-row>
-                            
                         </v-card-text>
-                        <v-divider v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWG.creator.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id)"></v-divider>
+                        <v-divider v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)"></v-divider>
                         <v-card-actions>
-                            <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWG.creator.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id)">
+                            <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
                                 <v-row>
-                                    <v-col cols="12" class="caption font-weight-light ml-5">Created by
-                                        <v-chip x-small class="font-italic ml-2" :to="`/users/`+ searchedWG.creator.id">
-                                            {{ searchedWG.creator.firstname }}
+                                    <v-col cols="12" class="font-weight-light ml-5">Created by
+                                        <v-chip class="font-italic ml-2" :to="`/users/`+ searchedWorkgroup.creator.id">
+                                            <v-avatar left v-if="searchedWorkgroup.creator.avatar != ''"><v-img :src="searchedWorkgroup.creator.avatar"></v-img></v-avatar>
+                                            <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+                                            {{ searchedWorkgroup.creator.username }}
                                         </v-chip>
                                     </v-col>
                                 </v-row>
@@ -120,10 +121,13 @@
                             <v-spacer></v-spacer>
                             <v-dialog
                                 max-width="650"
-                                v-model="dialogs.editwg"
+                                v-model="dialogs.editworkgroup"
                             >
                                 <template v-slot:activator="{ on }">
-                                    <v-btn v-on="on" icon v-if="loginuser.rol.value == 'admin' || searchedWG.creator.id == loginuser.id || searchedWG.coordinators.some(coor => coor.id == loginuser.id)"><v-icon :color="searchedWG.textcolor" small>fas fa-edit</v-icon></v-btn>
+                                    <v-btn class="mx-1" @click="loadEditedWorkgroup" depressed small color="info" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
+                                        Edit
+                                        <v-icon x-small class="ml-1">fas fa-edit</v-icon>
+                                    </v-btn>
                                 </template>
                                 <edit-work-group></edit-work-group>
                             </v-dialog>
@@ -132,15 +136,18 @@
                                 v-model="dialogs.confirm"
                             >
                                 <template v-slot:activator="{ on }">
-                                    <v-btn v-on="on" icon v-if="loginuser.rol.value == 'admin' || searchedWG.creator.id == loginuser.id"><v-icon :color="searchedWG.textcolor" small>fas fa-trash</v-icon></v-btn>
+                                    <v-btn class="mx-1" depressed small color="error" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id">
+                                        Delete
+                                        <v-icon x-small class="ml-1">fas fa-trash</v-icon>
+                                    </v-btn>
                                 </template>
                                 <confirmation-template 
-                                    :title="`Delete ${searchedWG.name}`" 
+                                    :title="`Delete ${searchedWorkgroup.name}`" 
                                     description="You are about to delete this Work Group. <br><br>Are you sure?" 
                                     :cancelFunction="null" 
                                     textButton="Delete" 
-                                    :actionparams="{id:searchedWG._id,type:'workgroup'}" 
-                                    :action="delSomething"
+                                    :actionparams="{id:searchedWorkgroup._id,type:'workgroup'}" 
+                                    :action="delWorkgroup"
                                 ></confirmation-template>
                             </v-dialog>
                         </v-card-actions>
@@ -154,10 +161,11 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex'
-import suscribeto from '../components/suscribeto.vue'
-import confirm from '../components/confirm.vue'
-import editwg from '../components/editwg.vue'
-import editmembers from '../components/editmembers.vue'
+import suscribeto from '../components/workgroups/suscribeto.vue'
+import confirm from '../components/general/confirm.vue'
+import editworkgroup from '../components/workgroups/editworkgroup.vue'
+import editmembers from '../components/workgroups/editmembers.vue'
+import { idealTextColor } from '../utils/utils'
 export default {
     data() {
         return {
@@ -166,33 +174,35 @@ export default {
     },
     components:{
         'suscribe-to-work-group': suscribeto,
-        'edit-work-group': editwg,
+        'edit-work-group': editworkgroup,
         'confirmation-template': confirm,
         'edit-members':editmembers
     },
     computed: {
         ...mapState({
-            searchedWG: state => state.actions.searchedWG,
+            searchedWorkgroup: state => state.workgroups.searchedWorkgroup,
             loginuser: state => state.user.loginuser,
             dialogs: state => state.menu.menu.dialogs,
             menu: state => state.menu.menu
         })
     },
     methods: {
-        ...mapActions('actions',['searchWG','delSomething','loadWG','refreshingWG']),
-        ...mapActions('user',['unsuscribeto']),
+        ...mapActions('workgroups',['searchWorkgroup','searchWorkgroupSilent','delWorkgroup','unsuscribeWorkgroup']),
         ...mapActions('menu',['goBack']),
-        ...mapMutations('actions',['loadmembers']),
+        ...mapMutations('workgroups',['loadMembers','loadEditedWorkgroup']),
         refreshing() {
             this.polling = setInterval(() => {
-                this.refreshingWG(this.$route.params.id)
+                this.searchWorkgroupSilent(this.$route.params.id)
             }, 5 * 60 * 1000);
-        }
+        },
+        textColor(color) {
+            return idealTextColor(color);
+        },
     },
     created() {
         this.refreshing()
-        if(this.searchedWG == {} || this.searchedWG._id != this.$route.params.id){
-            this.searchWG(this.$route.params.id)
+        if(this.searchedWorkgroup == {} || this.searchedWorkgroup._id != this.$route.params.id){
+            this.searchWorkgroup(this.$route.params.id)
         }
     },
     beforeDestroy() {
