@@ -6,11 +6,11 @@ const workinggroupsController = require("../controllers/workinggroups")
 
 // Create working group
 
-router.post("/create", auth , workinggroupsController.createWG );
+router.post("/", auth , workinggroupsController.createWG );
 
 // Get all working groups
 
-router.get("/all", auth , workinggroupsController.getAllWG);
+router.get("/", auth , workinggroupsController.getAllWG);
 
 // Get id working group
 

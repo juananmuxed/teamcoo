@@ -13,7 +13,16 @@ const interestschema = new schema({
     color:{
         type:String,
         default:'grey'
-    }
+    },
+    _userId: {
+        type:mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
+    active: {
+        type:Boolean,
+        default:true
+    },
 })
 
 const interest = mongoose.model('Interests' , interestschema)

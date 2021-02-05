@@ -5,22 +5,22 @@ const actionsController = require("../controllers/actions");
 
 // Create action
 
-router.post("/create", auth , actionsController.createAction );
+router.post("/", auth , actionsController.createAction );
 
 // Get all actions
 
-router.get("/all", actionsController.getAllActions);
+router.get("/", actionsController.getAllActions);
 
 // Get action by id
 
-router.get("/action/:id", actionsController.getAction)
+router.get("/:id", actionsController.getAction)
 
 // Update action
 
-router.put("/action/:id", auth , actionsController.updateAction)
+router.put("/:id", auth , actionsController.updateAction)
 
 // Delete action
 
-router.delete("/action/:id", auth ,actionsController.deleteAction)
+router.delete("/:id", auth ,actionsController.deleteAction)
 
 module.exports = router;

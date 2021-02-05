@@ -53,23 +53,27 @@ const userScheme = mongoose.Schema({
         default: []
     },
     verifiedemail:{
-        type:Boolean,
+        type: Boolean,
         default: false
     },
     image:{
-        type:String,
+        type: String,
         default:''
     },
     membership:{
-        type:Object,
+        type: Object,
         default:{status:'inactive'}
     },
     emailconfig:{
-        type:Array,
+        type: Array,
         default:[]
     },
+    commonquestions: {
+        type: Array,
+        default: []
+    },
     privatecomments:{
-        type:Array,
+        type: Array,
         default:[]
     }
 });

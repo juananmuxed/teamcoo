@@ -36,7 +36,15 @@ exports.loadAllQuestions = async (req,res) => {
 }
 
 exports.updateQuestion = async (req,res) => {
+    const _id = req.params.id
+    const body = req.body
 
+    try { 
+        const questionDb = await Questions.findByIdAndUpdate(_id,body,{new:true})
+        res.json(questionDb)
+    } catch (error) {
+        return res.status(400).json({mensaje: 'An error has occurred',error})
+    }
 }
 
 exports.deleteQuestion = async (req,res) => {

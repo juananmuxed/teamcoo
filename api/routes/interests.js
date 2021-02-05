@@ -6,22 +6,22 @@ const interestsController = require("../controllers/interests")
 
 // Create Interest
 
-router.post("/create", auth , interestsController.createInterest )
+router.post("/", auth , interestsController.createInterest )
 
 // Get all Interests
 
-router.get("/all", auth , interestsController.getAllInterests)
+router.get("/", auth , interestsController.getAllInterests)
 
 // Get Interest by id
 
-router.get("/interest/:id", auth , interestsController.getInterest)
+router.get("/:id", auth , interestsController.getInterest)
 
 // Update Interest
 
-router.put("/interest/:id", auth , interestsController.updateInterest)
+router.put("/:id", auth , interestsController.updateInterest)
 
 // Delete Interest
 
-router.delete("/interest/:id", auth ,interestsController.deleteInterest)
+router.delete("/:id", auth ,interestsController.deleteInterest)
 
 module.exports = router;

@@ -6,22 +6,22 @@ const questionsController = require("../controllers/questions")
 
 // To get an question by ID
 
-router.get('/question/:id', questionsController.loadQuestion)
+router.get('/:id', questionsController.loadQuestion)
 
 // To get all questions
 
-router.get('/all', auth , questionsController.loadAllQuestions)
+router.get('/', auth , questionsController.loadAllQuestions)
 
 // Create question
 
-router.post('/create', auth, questionsController.createQuestion)
+router.post('/', auth, questionsController.createQuestion)
 
 // Update question
 
-router.put('/question/:id', auth, questionsController.updateQuestion)
+router.put('/:id', auth, questionsController.updateQuestion)
 
 // Delete question
 
-router.delete('/question/:id', auth, questionsController.deleteQuestion)
+router.delete('/:id', auth, questionsController.deleteQuestion)
 
 module.exports = router

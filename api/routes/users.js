@@ -18,7 +18,7 @@ router.get("/me", auth, userController.getUserData);
 
 // Return all users
 
-router.get("/all", auth, userController.getUsers);
+router.get("/", auth, userController.getUsers);
 
 // Return data from user
 
