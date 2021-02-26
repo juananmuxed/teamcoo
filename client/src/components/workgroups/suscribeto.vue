@@ -33,9 +33,9 @@
         </v-col>
       </v-row>
       <v-form ref="form" v-model="valid">
-        <v-row v-for="( question, index) in workgroup.questions" v-bind:key="index" class="px-3">
+        <v-row v-for="( question, i) in workgroup.questions" v-bind:key="i" class="px-3">
           <v-col cols="12" md="3">
-            <v-row class="medium font-weight-bold">{{ index + 1 }}. {{ question.name }}</v-row>
+            <v-row class="medium font-weight-bold">{{ i + 1 }}. {{ question.name }}</v-row>
             <v-row class="caption">{{ question.description }}</v-row>
           </v-col>
           <v-col cols="12" md="9">
@@ -45,8 +45,8 @@
               class="px-5"
               :label="question.text"
               color="primary"
-              v-model="answers[index].answer"
-              :rules="[rules[index]]"
+              v-model="answers[i].answer"
+              :rules="[rules[i]]"
               required
             ></v-text-field>
             <v-select
@@ -58,40 +58,39 @@
               :label="question.name"
               :hint="question.description"
               color="primary"
-              v-model="answers[index].answer"
+              v-model="answers[i].answer"
               item-value="answer"
-              :rules="[rules[index]]"
+              :rules="[rules[i]]"
               required
             ></v-select>
             <v-autocomplete
               class="px-5"
               no-data-text="No data"
               v-if="question.type == 'checkbox'"
-              v-model="answers[index].answer"
+              v-model="answers[i].answer"
               :items="question.selections"
               multiple
               :label="question.name"
               color="primary"
               chips
-              :rules="[rules[index]]"
+              :rules="[rules[i]]"
               outlined
               required
             >
-              <template v-slot:selection="{ data, item, index }">
+              <template v-slot:selection="{ item, index }">
                 <v-chip v-if="index < 3">
                   <span>{{ item }}</span>
                 </v-chip>
                 <span
                   v-if="index === 3"
                   class="grey--text caption"
-                >(+{{ answers[index].answer.length - 3 }} others)</span>
+                >(+{{ answers[i].answer.length - 3 }} others)</span>
               </template>
             </v-autocomplete>
             <v-radio-group
               row
-              v-model="answers[index].answer"
-              :rules="[rules[index]]"
-              mandatory
+              v-model="answers[i].answer"
+              :rules="[rules[i]]"
               required
               class="px-5"
               v-if="question.type == 'radio'"
@@ -108,19 +107,12 @@
           </v-col>
         </v-row>
       </v-form>
+        <v-slide-y-transition origin="center center">
+          <v-btn fab right small top absolute color="primary" @click="joinWorkgroup({idWorkgroup:workgroup._id,idUser:loginuser.id,answers:answers}); saveMember({idWorkgroup:workgroup._id,idUser:loginuser.id,suscribe:true})" v-show="valid" class="mt-8">
+            <v-icon small>fas fa-save</v-icon>
+          </v-btn>
+        </v-slide-y-transition>
     </v-card-text>
-    <v-card-actions>
-      <v-row>
-        <v-col cols="12">
-          <v-btn
-            block
-            color="primary"
-            :disabled="!valid"
-            @click="joinWorkgroup({idWorkgroup:workgroup._id,idUser:loginuser.id,answers:answers}); saveMember({idWorkgroup:workgroup._id,idUser:loginuser.id,suscribe:true})"
-          >Suscribe</v-btn>
-        </v-col>
-      </v-row>
-    </v-card-actions>
   </v-card>
 </template>
 

@@ -11,7 +11,7 @@
         <v-data-table
           :items="questions.filter((n) => !n.common)"
           :headers="headers"
-          :loading="loaded"
+          :loading="loading"
         >
           <template v-slot:loading>
             <span class="display-1 text-uppercase font-weight-thin ma-5"
@@ -173,7 +173,7 @@ export default {
       searchedQuestion: (state) => state.questions.searchedQuestion,
       loginuser: (state) => state.user.loginuser,
       dialogs: (state) => state.menu.menu.dialogs,
-      loaded: (state) => state.questions.loaded,
+      loading: (state) => state.questions.loading,
     }),
   },
   methods: {

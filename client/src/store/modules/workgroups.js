@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import router from '@/router'
 import globalConfig from '../../config/config.json'
 import { generateRandomColor, isDiferentArray, treeBuild } from '../../utils/utils'
 
@@ -24,7 +25,8 @@ const state = {
         coordinators:[],
         loading: false
     },
-    loaded: false,
+    loading: false,
+    skeleton: false,
     usersforadd:[],
     loadedSuscription: {}
 }
@@ -91,6 +93,8 @@ const mutations = {
     randomWorkgroupColor:(state) => {
         state.workgroupForm.color = generateRandomColor(30);
     },
+    changeLoading: (state, loading) => state.loading = loading,
+    changeSkeleton: (state, skeleton) => state.skeleton = skeleton
 }
 
 const getters = {
@@ -192,7 +196,9 @@ const actions = {
             let resUsers = await Axios.get('/users/', config);
             let actions = resActions.data, users = resUsers.data;
             // TODO: eliminar de acciones cuando se termine el CRUD de acciones
-            console.log(actions)
+            for (let i = 0; i < actions.length; i++) {
+                console.log('T')
+            }
             for (let i = 0; i < users.length; i++) {
                 let workgroups = users[i].workgroups;
                 if(workgroups.some(a => a._wgId == params.id)) {
@@ -200,16 +206,19 @@ const actions = {
                     await Axios.put( '/users/' + users[i].id, {workgroups:workgroupsUpdate}, config );
                 }
             }
-            // await Axios.delete('/workgroups/' + params.id, config);
+            await Axios.delete('/workgroups/' + params.id, config);
+
             await dispatch('loadWorkgroups');
-            commit('menu/notification', ['info', 3, 'Workgroup deleted'], { root: true })
-            commit('menu/cancelDialog', 'confirm', { root: true })
+            router.push('/workgroups');
+            commit('menu/notification', ['info', 3, 'Workgroup deleted'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             commit('menu/notification', ['error', 5, error.response.data], { root: true });
         }
     },
     async loadWorkgroups({ commit , dispatch, rootState, rootGetters }) {
         try {
+            commit('changeLoading', true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get("/workgroups/", config);
             let allWorkgroups = res.data;
@@ -240,12 +249,15 @@ const actions = {
             commit('secretWorkgroupLoad',secretWorkgroups);
             commit('workgroupNested', treeBuild(workgroups));
             commit('secretWorkgroupNested', treeBuild(secretWorkgroups));
+            commit('changeLoading', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true })
+            commit('menu/notification', ['error', 3, error], { root: true });
+            commit('changeLoading', false);
         }
     },
     async searchWorkgroup({ commit, dispatch, rootState, rootGetters }, id) {
         try {
+            commit('changeSkeleton', true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/workgroups/' + id, config)
             let workgroup = res.data
@@ -268,8 +280,10 @@ const actions = {
             workgroup.members = tempMembers;
             workgroup.questions = tempQuestions;
             commit('pullWorkgroup', workgroup);
+            commit('changeSkeleton', false);
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            commit('changeSkeleton', false);
         }
     },
     async searchWorkgroupSilent({ commit, dispatch, rootState, rootGetters }, workgroup) {
@@ -373,6 +387,7 @@ const actions = {
         }
     },
     async unsuscribeWorkgroup( { dispatch }, params ) {
+        await dispatch('users/searchUser', params.idUser, {root: true})
         await dispatch('unjoinWorkgroup', params);
         await dispatch('saveMember', params);
     },

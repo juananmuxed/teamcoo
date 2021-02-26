@@ -12,6 +12,7 @@ const state = {
         description: '',
         color:''
     },
+    loading:false
 }
 
 const mutations = {
@@ -31,7 +32,8 @@ const mutations = {
         state.interestForm.name = interest.name,
         state.interestForm.description = interest.description,
         state.interestForm.color = interest.color
-    }
+    },
+    changeLoading:(state, loading) => state.loading = loading
 }
 
 const getters = {
@@ -64,6 +66,7 @@ const getters = {
 const actions = {
     async loadInterests({ commit , dispatch, rootState, rootGetters }) {
         try {
+            commit('changeLoading',true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/interests/', config)
             let interests = res.data;
@@ -73,8 +76,10 @@ const actions = {
                 interests[x]['creator'] = rootState.users.temporaluser;
             }
             commit('loadInterests', interests);
+            commit('changeLoading',false);
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
+            commit('changeLoading',false);
         }
     },
     async createInterest({ commit, dispatch, rootGetters }, interest) {

@@ -8,12 +8,12 @@
 
     <v-row>
       <v-col cols="12">
-        <v-data-table :items="workgroups" :headers="headers" :loading="loaded">
+        <v-data-table :items="workgroups" :headers="headers" :loading="loading">
           <template v-slot:loading>
-            <span class="display-1 text-uppercase font-weight-thin ma-5">Loading Work Groups</span>
+            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-4">Loading Work Groups</span>
           </template>
           <template v-slot:no-data>
-            <span class="display-1 text-uppercase font-weight-thin ma-5">No Work Groups</span>
+            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-4">No Work Groups</span>
           </template>
           <template v-slot:item.description="{ item }">
             <v-tooltip bottom max-width="220" transition="slide-y-transition">
@@ -190,7 +190,7 @@ export default {
       workgroups: state => state.workgroups.workgroups,
       secretworkgroups: state => state.workgroups.secretworkgroups,
       loginuser: state => state.user.loginuser,
-      loaded: state => state.workgroups.loaded,
+      loading: state => state.workgroups.loading,
       dialogs: state => state.menu.menu.dialogs
     })
   },

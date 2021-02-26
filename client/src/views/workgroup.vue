@@ -2,11 +2,10 @@
     <v-container
         class="pa-10"
     >
-    <!-- TODO: carga con errores, revisar, recarga previa -->
         <v-row>
             <v-col cols="12">
-                <v-skeleton-loader type="skeleton" :types="{skeleton:'card,article, table-tfoot'}" max-width="1080" class="mx-auto" transition="fade-transition" :loading="menu.loader.itembig">
-                    <v-card :color="searchedWorkgroup.color" :class="`${textColor(searchedWorkgroup.color)}--text mx-auto`" max-width="1080">
+                <v-skeleton-loader type="skeleton" :types="{skeleton:'card,article, table-tfoot'}" max-width="1080" class="mx-auto" transition="fade-transition" :loading="skeleton">
+                    <v-card :color="searchedWorkgroup.color" :class="`${textColor(searchedWorkgroup.color)}--text mx-auto`" max-width="1080" v-if="searchedWorkgroup._id">
                         <v-card-title>
                             <v-btn class="mr-n12" absolute fab top right color="info" @click="goBack()">
                                 <v-icon>fas fa-arrow-left</v-icon>
@@ -104,6 +103,42 @@
                                     <v-btn block color="info" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}), dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
                                 </v-col>
                             </v-row>
+                            <template v-if="loginuser.rol.value == 'coor' || loginuser.rol.value == 'admin'">
+                                <v-col cols="12" class="text-uppercase headline font-weight-light">
+                                    Comments
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-alert
+                                        dense
+                                        color="info"
+                                        icon="fas fa-comment"
+                                        border="left"
+                                    >
+                                        <v-row align="center" no-gutters>
+                                            <v-col class="grow">
+                                                User
+                                            </v-col>
+                                            <v-spacer></v-spacer>
+                                            <v-col class="shrink">
+                                                Date
+                                            </v-col>
+                                        </v-row>
+                                        <v-divider class="my-4" color="primary"></v-divider>
+                                        <v-row align="center" no-gutters>
+                                            <v-col class="grow">
+                                                Proin magna. Vivamus in erat ut urna cursus vestibulum. Etiam imperdiet imperdiet orci.
+                                            </v-col>
+                                            <v-spacer></v-spacer>
+                                            <v-col class="shrink">
+                                                <v-btn icon>
+                                                    <v-icon small color="error">fas fa-trash</v-icon>
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                    </v-alert>
+                                    <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
+                                </v-col>
+                            </template>
                         </v-card-text>
                         <v-divider v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)"></v-divider>
                         <v-card-actions>
@@ -152,6 +187,11 @@
                             </v-dialog>
                         </v-card-actions>
                     </v-card>
+                    <invalid-static
+                        v-else
+                        item="Workgroup"
+                        goto="/workgroups"
+                    ></invalid-static>
                 </v-skeleton-loader>
             </v-col>
         </v-row>
@@ -163,6 +203,7 @@
 import { mapActions, mapState, mapMutations } from 'vuex'
 import suscribeto from '../components/workgroups/suscribeto.vue'
 import confirm from '../components/general/confirm.vue'
+import invalidstatic from '../components/general/invalid.vue'
 import editworkgroup from '../components/workgroups/editworkgroup.vue'
 import editmembers from '../components/workgroups/editmembers.vue'
 import { idealTextColor } from '../utils/utils'
@@ -176,14 +217,15 @@ export default {
         'suscribe-to-work-group': suscribeto,
         'edit-work-group': editworkgroup,
         'confirmation-template': confirm,
-        'edit-members':editmembers
+        'edit-members':editmembers,
+        'invalid-static': invalidstatic
     },
     computed: {
         ...mapState({
             searchedWorkgroup: state => state.workgroups.searchedWorkgroup,
             loginuser: state => state.user.loginuser,
             dialogs: state => state.menu.menu.dialogs,
-            menu: state => state.menu.menu
+            skeleton: state => state.workgroups.skeleton,
         })
     },
     methods: {

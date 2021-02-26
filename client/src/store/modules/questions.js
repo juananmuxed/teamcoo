@@ -19,7 +19,9 @@ const state = {
         text: '',
         common: false
     },
-    commonQuestions:[]
+    commonQuestions:[],
+    loading: false,
+    skeleton: false
 }
 
 const mutations = {
@@ -56,6 +58,8 @@ const mutations = {
     },
     checkCommonQuestion:state => state.questionForm.common = true,
     updateCommonQuestions: (state, questions) => state.commonQuestions = questions,
+    changeLoading: (state, loading) => state.loading = loading,
+    changeSkeleton: (state, skeleton) => state.skeleton = skeleton
 }
 
 const getters = {
@@ -195,6 +199,8 @@ const actions = {
     },
     async loadQuestions({ commit , dispatch, rootState , rootGetters }) {
         try {
+            commit('changeLoading',true);
+            commit('changeSkeleton',true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/questions/', config);
             let allQuestions = res.data
@@ -214,8 +220,12 @@ const actions = {
             let questionsCommon = allQuestions.filter(q => q.common);
             commit('questionsLoad', questions);
             commit('updateCommonQuestions', questionsCommon);
+            commit('changeLoading',false);
+            commit('changeSkeleton',false);
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
+            commit('changeLoading',false);
+            commit('changeSkeleton',false);
         }
     },
     async searchQuestion({state,commit,dispatch,rootState,rootGetters},id){

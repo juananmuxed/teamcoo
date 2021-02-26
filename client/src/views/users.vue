@@ -12,6 +12,7 @@
           :items="users"
           :headers="headers"
           :search="search"
+          :loading="loading"
         >
           <template v-slot:top>
             <v-text-field
@@ -22,6 +23,12 @@
           </template>
           <template v-slot:no-data>
             <span class="display-1 text-uppercase font-weight-thin">No Users</span>
+          </template>
+          <template v-slot:loading>
+            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-4">Loading Users</span>
+          </template>
+          <template v-slot:no-results>
+            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-4">No Users found</span>
           </template>
           <template v-slot:item.role="{ item }">
             <v-chip class="text-uppercase" :color="getColor(item.rol.value)" :text-color="getTextColor(item.rol.value)">{{ item.rol.name }}</v-chip>
@@ -37,7 +44,10 @@
           </template>
           <template v-slot:item.name="{ item }">{{ item.firstname }} {{ item.lastname }}</template>
           <template v-slot:item.workgroups="{ item }">
-            <v-chip small class="ma-1" v-for="(wg,index) in item.workgroups" v-bind:key="index" :color="wg.color" :text-color="wg.textcolor" :to="'/workgroups/' + wg._wgId">{{ wg.name }}</v-chip>
+            <v-chip small class="ma-1" v-for="(wg,index) in item.workgroups" v-bind:key="index" :color="wg.color" :text-color="textColor(wg.color)" :to="'/workgroups/' + wg._wgId">{{ wg.name }}</v-chip>
+          </template>
+          <template v-slot:item.interests="{ item }">
+            <v-chip small class="ma-1" v-for="(interest,index) in item.interests" v-bind:key="index"><span>{{ interest.substring(0,7) }}</span><span v-if="interest.length >= 9">...</span></v-chip>
           </template>
           <template v-slot:item.membership="{ item }">
             <v-tooltip 
@@ -48,7 +58,7 @@
               <template v-slot:activator="{ on }">
                 <v-icon v-on="on" :color="item.membership.status == 'active' ? 'info' : 'error'">{{item.membership.status == 'active' ? 'fas fa-check' : 'fas fa-times'}}</v-icon>
               </template>
-              <span class="text-right caption font-weight-light">{{item.membership.state == 'active' ? 'Member' : 'Not Member'}}</span>
+              <span class="text-right caption font-weight-light">{{item.membership.status == 'active' ? 'Member' : 'Not Member'}}</span>
             </v-tooltip>
           </template>
           <template v-slot:item.actions="{ item }">
@@ -66,7 +76,7 @@
           block
           color="success"
           class="my-2"
-          @click="changeLoaded(false);refreshUsers()"
+          @click="refreshUsers()"
         >
           <v-icon left>fas fa-sync-alt</v-icon>Refresh list 
         </v-btn>
@@ -76,7 +86,8 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
+import { idealTextColor } from '../utils/utils';
 export default {
   data() {
     return {
@@ -105,6 +116,11 @@ export default {
           width: 30
         },
         {
+          text: 'Interests',
+          value: 'interests',
+          width: 30
+        },
+        {
           text: 'Membership',
           value: 'membership',
           sortable: false,
@@ -122,13 +138,13 @@ export default {
   computed: {
     ...mapState({
       users: state => state.users.users,
-      loginuser: state => state.user.loginuser
+      loginuser: state => state.user.loginuser,
+      loading: state => state.users.loading
     })
   },
   methods: {
     ...mapActions('users', ['loadUsers']),
-    ...mapActions('actions', ['loadWG']),
-    ...mapMutations('users',['changeLoaded']),
+    ...mapActions('workgroups', ['loadWorkgroups']),
     getColor(role) {
       return this.$store.getters['users/getRoleColor'](role).color;
     },
@@ -136,10 +152,13 @@ export default {
       return this.$store.getters['users/getRoleColor'](role).textColor;
     },
     refreshUsers() {
-      this.loadWG().then(() => {
+      this.loadWorkgroups().then(() => {
         this.loadUsers();
       });
-    }
+    },
+    textColor(color) {
+      return idealTextColor(color);
+    },
   },
   created() {
     this.refreshUsers();

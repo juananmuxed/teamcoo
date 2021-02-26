@@ -33,7 +33,8 @@ const state = {
             editworkgroup:false,
             confirm:false,
             editmembers:false,
-            editquestion:false
+            editquestion:false,
+            editcommonquestion:false
         },
         loader:{
             workgroup:false,
@@ -114,10 +115,10 @@ const actions = {
     changeLight({ commit }) {
         commit('user/onOffLights', null, { root: true });
         if (Vuetify.framework.theme.dark) {
-            commit('notification', ['info', 1, 'Lights Off']);
+            commit('notification', ['info', 1, '🌚  Lights Off']);
         }
         else {
-            commit('notification', ['info', 1, 'Lights On']);
+            commit('notification', ['info', 1, '🌞  Lights On']);
         }
     },
     goBack() {

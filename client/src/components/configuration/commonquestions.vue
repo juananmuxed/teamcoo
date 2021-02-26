@@ -39,7 +39,7 @@
                         {{ question.description }}
                     </v-col>
                     <v-col cols="12" class="mt-2 headline" v-if="question.type != 'text'">Answers</v-col>
-                    <v-col cols="12" class="mt-2 headline" v-else>Question: </v-col>
+                    <v-col cols="12" class="mt-2 headline" v-else>Question</v-col>
                     <v-col cols="12" md="6" v-if="question.type == 'text'" class="py-1">
                         {{ question.selections[0] }}
                     </v-col>
@@ -68,7 +68,7 @@
                                 class="px-5"
                                 outlined
                                 :items="question.selections"
-                                item-text="answer"
+                                item-text="name"
                                 :label="question.name"
                                 :hint="question.description"
                                 color="primary"
@@ -85,7 +85,7 @@
                                 :items="question.selections"
                                 multiple
                                 :label="question.name"
-                                item-text="answer"
+                                item-text="name"
                                 color="primary"
                                 chips
                                 outlined
@@ -102,7 +102,7 @@
                                         <v-radio
                                             v-for="( radio , index) in question.selections" v-bind:key="index"
                                             outlined
-                                            :label="radio"
+                                            :label="radio.name"
                                             color="primary"
                                         ></v-radio>
                                     </v-radio-group>

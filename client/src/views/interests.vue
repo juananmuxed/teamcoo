@@ -8,14 +8,14 @@
 
     <v-row>
       <v-col cols="12">
-        <v-data-table :items="interests" :headers="headers" :loading="loaded">
+        <v-data-table :items="interests" :headers="headers" :loading="loading">
           <template v-slot:loading>
-            <span class="display-1 text-uppercase font-weight-thin ma-5"
+            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-5"
               >Loading Interests</span
             >
           </template>
           <template v-slot:no-data>
-            <span class="display-1 text-uppercase font-weight-thin"
+            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-5"
               >No Interests</span
             >
           </template>
@@ -156,7 +156,7 @@ export default {
       searchedInterest: (state) => state.interests.searchedInterest,
       loginuser: (state) => state.user.loginuser,
       dialogs: (state) => state.menu.menu.dialogs,
-      loaded: (state) => state.interests.loaded,
+      loading: (state) => state.interests.loading,
     }),
   },
   methods: {

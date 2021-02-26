@@ -19,7 +19,7 @@
                                 <v-icon>{{ !loginuser.dark ? 'fas fa-lightbulb' : 'far fa-lightbulb' }}</v-icon>
                             </v-btn>
                         </template>
-                        <span class="text-right caption font-weight-light">{{!loginuser.dark ? 'Lights off' : 'Lights on'}}</span>
+                        <span class="text-right caption font-weight-light">{{!loginuser.dark ? '🌚 Lights off' : '🌞 Lights on'}}</span>
                     </v-tooltip>
 
                     <v-dialog

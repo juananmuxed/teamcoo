@@ -141,7 +141,7 @@ exports.getUsers = async(req,res) => {
                 firstname: actionDB[x].firstname,
                 id: actionDB[x]._id,
                 workgroups: actionDB[x].workgroups,
-                verifiedemail: actionDB[x].verifiedemail,
+                commonquestions: actionDB[x].commonquestions,
                 privatecomments: actionDB[x].privatecomments,
                 username: actionDB[x].username,
                 membership: actionDB[x].membership
