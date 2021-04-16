@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const path = require('path')
 const mongoose = require('mongoose')
+const fs = require('fs');
 
 const colors = {
   black: '\u001b[30m',
@@ -42,20 +43,20 @@ const url = 'mongodb://' + database + ':27017/teamcoo'
 
 // Promises
 mongoose.connect(url, options)
-  .then(
-    () => { 
-      console.log( colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset );
-      console.log( colors.bggreen + colors.white + '[___________________________DATABASE___________________________]' + colors.reset );
-      console.log( colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset );
-      console.log('');
-      console.log( colors.green +  '💡 Mongo Connected ===> ' + colors.reset +  colors.cyan + url );
-      console.log('');
-    },
-    err => { console.log(err) }
-  )
-  .catch((err) => {
-    console.log(err)
-  })
+.then(
+  () => { 
+    console.log( colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset );
+    console.log( colors.bggreen + colors.white + '[___________________________DATABASE___________________________]' + colors.reset );
+    console.log( colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset );
+    console.log('');
+    console.log( colors.green +  '💡 Mongo Connected ===> ' + colors.reset +  colors.cyan + url );
+    console.log('');
+  },
+  err => { console.log(err) }
+)
+.catch((err) => {
+  console.log(err)
+})
 
 // Middleware
 
@@ -63,17 +64,19 @@ app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-// app.use(express.static(path.join(__dirname, 'public')))
 
-// Routes
+// Routes TODO: Change response codes correctly
 
-app.use('/api/' + version + '/actions', require('./routes/actions'))
-app.use('/api/' + version + '/users', require('./routes/users'))
-app.use('/api/' + version + '/tokens', require('./routes/tokens'))
-app.use('/api/' + version + '/workgroups', require('./routes/workgroups'))
-app.use('/api/' + version + '/interests', require('./routes/interests'))
-app.use('/api/' + version + '/files', require('./routes/files'))
-app.use('/api/' + version + '/questions', require('./routes/questions'))
+fs.readdir('./routes/', (error, files) => {
+  if (error) return console.log(err);
+
+  files.forEach(file => {
+    if(!file.endsWith('.js')) return;
+
+    const routeName = file.split('.')[0];
+    app.use(`/api/${version}/${routeName}`, require(`./routes/${file}`))
+  })
+})
 
 // Middleware for Vue.js router mode history
 

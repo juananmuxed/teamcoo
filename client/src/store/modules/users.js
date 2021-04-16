@@ -144,7 +144,7 @@ const actions = {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/',config),
             users = res.data,
-            workgroups = rootState.actions.workgroups;
+            workgroups = rootState.workgroups.workgroups;
             for (let x = 0; x < users.length; x++) {
                 for (let y = 0; y < users[x].workgroups.length; y++) {
                     let wg = workgroups.find(v => v._id == users[x].workgroups[y]._wgId);

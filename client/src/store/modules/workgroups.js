@@ -192,11 +192,11 @@ const actions = {
     async delWorkgroup({ commit, dispatch, rootGetters }, params ) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let resActions = await Axios.get('/actions/',config);
+            let resTasks = await Axios.get('/tasks/',config);
             let resUsers = await Axios.get('/users/', config);
-            let actions = resActions.data, users = resUsers.data;
+            let tasks = resTasks.data, users = resUsers.data;
             // TODO: eliminar de acciones cuando se termine el CRUD de acciones
-            for (let i = 0; i < actions.length; i++) {
+            for (let i = 0; i < tasks.length; i++) {
                 console.log('T')
             }
             for (let i = 0; i < users.length; i++) {

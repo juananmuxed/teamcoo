@@ -199,14 +199,14 @@ export default {
         ...mapState({
             menu: state => state.menu.menu,
             loginuser: state => state.user.loginuser,
-            actions: state => state.actions.actions,
-            workgroups: state => state.actions.nestedWGs,
-            secretworkgroups: state => state.actions.secretnestedWGs
+            tasks: state => state.tasks.tasks,
+            workgroups: state => state.tasks.nestedWGs,
+            secretworkgroups: state => state.tasks.secretnestedWGs
         })
     },
     methods: {
         ...mapMutations('menu',['cancelDialog']),
-        ...mapMutations('actions',['clearLoadedWG','clearwgform']),
+        ...mapMutations('tasks',['clearLoadedWG','clearwgform']),
         ...mapActions('user',['sendVerificationMail']),
         ...mapGetters('user',['isSuscribed'])
     }

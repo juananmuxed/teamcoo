@@ -6,8 +6,8 @@
         <v-col col="12" md="9">
             <v-text-field label="Search" dense outlined></v-text-field>
         </v-col>
-        <v-col cols="12" v-if="actions.length != 0"><v-divider></v-divider></v-col>
-        <v-col cols="12" md="6" xl="3" class="pa-3" v-for="(action , index) in actions" :key="index">
+        <v-col cols="12" v-if="tasks.length != 0"><v-divider></v-divider></v-col>
+        <v-col cols="12" md="6" xl="3" class="pa-3" v-for="(task , index) in tasks" :key="index">
             <v-skeleton-loader
                 transition="fade-transition"
                 :types="{skeleton:'card,article,actions'}"
@@ -16,13 +16,13 @@
             >
                 <v-card>
                     <v-img
-                        v-if="action.image != ''"
+                        v-if="task.image != ''"
                         height="200"
-                        :src="action.image"
+                        :src="task.image"
                         class="align-end"
                         gradient="to bottom, rgba(0,0,0,0), rgba(245,245,245,.7)"
                     >
-                        <v-chip small v-for="(workgroup , index) in action.workgroups" :key="index" :color="workgroup.color" class="ma-2">
+                        <v-chip small v-for="(workgroup , index) in task.workgroups" :key="index" :color="workgroup.color" class="ma-2">
                             <span :class="`${workgroup.textcolor}--text`">{{ workgroup.name }}</span>
                         </v-chip>
                     </v-img>
@@ -30,22 +30,22 @@
                         v-else
                         height="200"
                         class="align-end"
-                        :style="`background:linear-gradient(to bottom, ${action.color}, rgba(245,245,245,.2))`"
+                        :style="`background:linear-gradient(to bottom, ${task.color}, rgba(245,245,245,.2))`"
                     >
-                        <v-chip small v-for="(workgroup , index) in action.workgroups" :key="index" :color="workgroup.color" class="ma-2">
+                        <v-chip small v-for="(workgroup , index) in task.workgroups" :key="index" :color="workgroup.color" class="ma-2">
                             <span :class="`${workgroup.textcolor}--text`">{{ workgroup.name }}</span>
                         </v-chip>
                     </v-img>
-                    <v-card-title class="text-uppercase font-weight-light">{{ action.name }}</v-card-title>
+                    <v-card-title class="text-uppercase font-weight-light">{{ task.name }}</v-card-title>
                     <v-card-text>
                         By: 
                         <v-chip>
-                            <v-avatar v-if="action.creator.avatar != ''" left><v-img :src="action.creator.avatar"></v-img></v-avatar>
+                            <v-avatar v-if="task.creator.avatar != ''" left><v-img :src="task.creator.avatar"></v-img></v-avatar>
                             <v-avatar v-else left color="primary"><v-icon x-small>fas fa-user</v-icon></v-avatar>
-                            {{ action.creator.firstname }} {{ action.creator.lastname }}
+                            {{ task.creator.firstname }} {{ task.creator.lastname }}
                         </v-chip>
 
-                        <template v-if="action.interests.length != 0">
+                        <template v-if="task.interests.length != 0">
                             <v-row>
                                 <v-col cols="12" md="1">
                                     <v-tooltip
@@ -58,11 +58,11 @@
                                     </v-tooltip>
                                 </v-col>
                                 <v-col cols="12" md="11">
-                                    <v-chip small v-for="(interest , index) in action.interests" :key="index" class="ma-1">{{ interest.name }}</v-chip>
+                                    <v-chip small v-for="(interest , index) in task.interests" :key="index" class="ma-1">{{ interest.name }}</v-chip>
                                 </v-col>
                             </v-row>
                         </template>
-                        <template v-if="action.usersjoined.length != 0">
+                        <template v-if="task.usersjoined.length != 0">
                             <v-row>
                                 <v-col cols="12" md="1">
                                     <v-tooltip
@@ -75,7 +75,7 @@
                                     </v-tooltip>
                                 </v-col>
                                 <v-col cols="12" md="11">
-                                    <v-chip v-for="(user , index) in action.usersjoined" :key="index" class="ma-1">
+                                    <v-chip v-for="(user , index) in task.usersjoined" :key="index" class="ma-1">
                                         <v-avatar left><v-img src="https://i.picsum.photos/id/567/100/100.jpg"></v-img></v-avatar>{{ user.name }}
                                     </v-chip>
                                 </v-col>
@@ -91,14 +91,14 @@
                             max-width="400"
                         >
                             <template v-slot:activator="{ on }">
-                                <v-btn v-on="on" icon v-if="loginuser.rol.value == 'admin' || action.creator.id == loginuser.id"><v-icon small>fas fa-trash</v-icon></v-btn>
+                                <v-btn v-on="on" icon v-if="loginuser.rol.value == 'admin' || task.creator.id == loginuser.id"><v-icon small>fas fa-trash</v-icon></v-btn>
                             </template>
                             <confirmation-template 
-                                :title="`Delete ${action.name}`" 
+                                :title="`Delete ${task.name}`" 
                                 description="You are about to delete this task. <br><br>Are you sure?" 
                                 :cancelFunction="null" 
                                 textButton="Delete" 
-                                :actionparams="{id:action._id,type:'task'}" 
+                                :actionparams="{id:task._id,type:'task'}" 
                                 :action="delSomething"
                             ></confirmation-template>
                         </v-dialog>
@@ -111,8 +111,8 @@
             <v-col cols="12" class="title font-weight-light">
                 Your Tasks
             </v-col>
-            <template v-for="(action , index) in actions">
-                <v-col cols="12" md="6" xl="3" class="pa-3" :key="index + '-own'" v-if="action.creator.id == loginuser.id">
+            <template v-for="(task , index) in tasks">
+                <v-col cols="12" md="6" xl="3" class="pa-3" :key="index + '-own'" v-if="task.creator.id == loginuser.id">
                     <v-skeleton-loader
                         transition="fade-transition"
                         :types="{skeleton:'card,article,actions'}"
@@ -121,13 +121,13 @@
                     >
                         <v-card>
                             <v-img
-                                v-if="action.image != ''"
+                                v-if="task.image != ''"
                                 height="200"
-                                :src="action.image"
+                                :src="task.image"
                                 class="align-end"
                                 gradient="to bottom, rgba(0,0,0,0), rgba(245,245,245,.7)"
                             >
-                                <v-chip small v-for="(workgroup , index) in action.workgroups" :key="index" :color="workgroup.color" class="ma-2">
+                                <v-chip small v-for="(workgroup , index) in task.workgroups" :key="index" :color="workgroup.color" class="ma-2">
                                     <span :class="`${workgroup.textcolor}--text`">{{ workgroup.name }}</span>
                                 </v-chip>
                             </v-img>
@@ -135,23 +135,23 @@
                                 v-else
                                 height="200"
                                 class="align-end"
-                                :gradient="`to bottom, ${action.color}, ${action.color} 30%`"
-                                :style="`background:linear-gradient(to bottom, ${action.color}, rgba(245,245,245,.2))`"
+                                :gradient="`to bottom, ${task.color}, ${task.color} 30%`"
+                                :style="`background:linear-gradient(to bottom, ${task.color}, rgba(245,245,245,.2))`"
                             >
-                                <v-chip small v-for="(workgroup , index) in action.workgroups" :key="index" :color="workgroup.color" class="ma-2">
+                                <v-chip small v-for="(workgroup , index) in task.workgroups" :key="index" :color="workgroup.color" class="ma-2">
                                     <span :class="`${workgroup.textcolor}--text`">{{ workgroup.name }}</span>
                                 </v-chip>
                             </v-img>
-                            <v-card-title class="text-uppercase font-weight-light">{{ action.name }}</v-card-title>
+                            <v-card-title class="text-uppercase font-weight-light">{{ task.name }}</v-card-title>
                             <v-card-text>
                                 By: 
                                 <v-chip>
-                                    <v-avatar v-if="action.creator.avatar != ''" left><v-img :src="action.creator.avatar"></v-img></v-avatar>
+                                    <v-avatar v-if="task.creator.avatar != ''" left><v-img :src="task.creator.avatar"></v-img></v-avatar>
                                     <v-avatar v-else left color="primary"><v-icon x-small>fas fa-user</v-icon></v-avatar>
-                                    {{ action.creator.firstname }} {{ action.creator.lastname }}
+                                    {{ task.creator.firstname }} {{ task.creator.lastname }}
                                 </v-chip>
 
-                                <template v-if="action.interests.length != 0">
+                                <template v-if="task.interests.length != 0">
                                     <v-row>
                                         <v-col cols="12" md="1">
                                             <v-tooltip
@@ -164,11 +164,11 @@
                                             </v-tooltip>
                                         </v-col>
                                         <v-col cols="12" md="11">
-                                            <v-chip small v-for="(interest , index) in action.interests" :key="index" class="ma-1">{{ interest.name }}</v-chip>
+                                            <v-chip small v-for="(interest , index) in task.interests" :key="index" class="ma-1">{{ interest.name }}</v-chip>
                                         </v-col>
                                     </v-row>
                                 </template>
-                                <template v-if="action.usersjoined.length != 0">
+                                <template v-if="task.usersjoined.length != 0">
                                     <v-row>
                                         <v-col cols="12" md="1">
                                             <v-tooltip
@@ -181,7 +181,7 @@
                                             </v-tooltip>
                                         </v-col>
                                         <v-col cols="12" md="11">
-                                            <v-chip v-for="(user , index) in action.usersjoined" :key="index" class="ma-1">
+                                            <v-chip v-for="(user , index) in task.usersjoined" :key="index" class="ma-1">
                                                 <v-avatar left><v-img src="https://i.picsum.photos/id/567/100/100.jpg"></v-img></v-avatar>{{ user.name }}
                                             </v-chip>
                                         </v-col>
@@ -192,19 +192,19 @@
                                 <v-btn color="info">Read more</v-btn>
                                 <v-btn color="primary">Join</v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn icon v-if="loginuser.rol.value == 'admin' || action.creator.id == loginuser.id"><v-icon small>fas fa-edit</v-icon></v-btn>
+                                <v-btn icon v-if="loginuser.rol.value == 'admin' || task.creator.id == loginuser.id"><v-icon small>fas fa-edit</v-icon></v-btn>
                                 <v-dialog
                                     max-width="400"
                                 >
                                     <template v-slot:activator="{ on }">
-                                        <v-btn v-on="on" icon v-if="loginuser.rol.value == 'admin' || action.creator.id == loginuser.id"><v-icon small>fas fa-trash</v-icon></v-btn>
+                                        <v-btn v-on="on" icon v-if="loginuser.rol.value == 'admin' || task.creator.id == loginuser.id"><v-icon small>fas fa-trash</v-icon></v-btn>
                                     </template>
                                     <confirmation-template 
-                                        :title="`Delete ${action.name}`" 
+                                        :title="`Delete ${task.name}`" 
                                         description="You are about to delete this task. <br><br>Are you sure?" 
                                         :cancelFunction="null" 
                                         textButton="Delete" 
-                                        :actionparams="{id:action._id,type:'task'}" 
+                                        :actionparams="{id:task._id,type:'task'}" 
                                         :action="delSomething"
                                     ></confirmation-template>
                                 </v-dialog>
@@ -234,7 +234,7 @@
 <script>
 
 import { mapState, mapActions , mapMutations } from 'vuex'
-import createtask from '../actions/createtask.vue'
+import createtask from '../tasks/createtask.vue'
 import confirm from '../general/confirm.vue'
 
 export default {
@@ -244,18 +244,18 @@ export default {
     },
     computed: {
         ...mapState({
-            actions: state => state.actions.actions,
+            tasks: state => state.tasks.tasks,
             loginuser: state => state.user.loginuser,
             menu: state => state.menu.menu
         })
     },
     methods: {
         ...mapMutations('menu',['cancelDialog']),
-        ...mapActions('actions',['loadActions','delSomething'])
+        ...mapActions('tasks',['loadTasks','delSomething'])
     },
     created() {
-        if(this.actions.length == 0){
-            this.loadActions()
+        if(this.tasks.length == 0){
+            this.loadTasks()
         }
     },
 }   

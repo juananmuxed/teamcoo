@@ -1,6 +1,9 @@
 import Vuetify from '../../plugins/vuetify'
 import router from '@/router'
 
+// TODO: links in menú to configuration (DB)
+// Create a only Admin User configuration for Lateral Menu links
+
 const state = {
     menu: {
         active: true,
@@ -14,7 +17,7 @@ const state = {
             { name: 'Work Groups', link: '/workgroups', roles: ['coor','dire','admin','volu'], icon: 'fas fa-network-wired' },
             { name: 'Questions', link: '/questions', roles: ['coor','dire','admin'], icon: 'fas fa-question' },
             { name: 'Interests', link: '/interests', roles: ['coor','dire','admin'], icon: 'fas fa-address-card' },
-            { name: 'Membership', link: '/membership', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-star' },
+            /* { name: 'Membership', link: '/membership', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-star' }, */
             { name: 'Portal Config', link: '/config', roles: ['admin'], icon: 'fas fa-cogs' },
         ],
         dialogs: {

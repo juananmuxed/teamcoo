@@ -158,17 +158,17 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
     computed: {
         ...mapState({
-            tasksForm: state => state.actions.tasksForm,
-            workgroups: state => state.actions.workgroups,
+            tasksForm: state => state.tasks.tasksForm,
+            workgroups: state => state.tasks.workgroups,
             userId: state => state.user.loginuser.id,
             menu: state => state.menu.menu,
             rules: state => state.general.rules,
-            interests: state => state.actions.interests,
+            interests: state => state.tasks.interests,
         })
     },
     methods: {
-        ...mapActions('actions',['createTask']),
-        ...mapGetters('actions',['validTask'])
+        ...mapActions('tasks',['createTask']),
+        ...mapGetters('tasks',['validTask'])
     }
 }
 </script>

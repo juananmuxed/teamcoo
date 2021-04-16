@@ -131,20 +131,20 @@ exports.getUser = async(req,res) => {
 
 exports.getUsers = async(req,res) => {
     try {
-        const actionDB = await User.find()
+        const userDB = await User.find()
         let datatemp = []
-        for (let x = 0; x < actionDB.length; x++) {
+        for (let x = 0; x < userDB.length; x++) {
             let tempuser = {
-                lastname: actionDB[x].lastname,
-                rol: actionDB[x].rol,
-                avatar: actionDB[x].image,
-                firstname: actionDB[x].firstname,
-                id: actionDB[x]._id,
-                workgroups: actionDB[x].workgroups,
-                commonquestions: actionDB[x].commonquestions,
-                privatecomments: actionDB[x].privatecomments,
-                username: actionDB[x].username,
-                membership: actionDB[x].membership
+                lastname: userDB[x].lastname,
+                rol: userDB[x].rol,
+                avatar: userDB[x].image,
+                firstname: userDB[x].firstname,
+                id: userDB[x]._id,
+                workgroups: userDB[x].workgroups,
+                commonquestions: userDB[x].commonquestions,
+                privatecomments: userDB[x].privatecomments,
+                username: userDB[x].username,
+                membership: userDB[x].membership
             }
             datatemp.push(tempuser)
         }
@@ -169,8 +169,8 @@ exports.updateUser = async(req,res) => {
         delete body['email']
         delete body['password']
         
-        let actionDB = await User.findByIdAndUpdate(_id,body,{new:true})
-        res.json(actionDB)
+        let userDB = await User.findByIdAndUpdate(_id,body,{new:true})
+        res.json(userDB)
         
     } catch (error) {
         res.status(400).json({ message: 'Error finding user id:', error });
@@ -198,8 +198,8 @@ exports.updatePassword = async(req,res) => {
             password: newpassword
         }
         
-        let actionDB = await User.findByIdAndUpdate(_id,body,{new:true})
-        res.json(actionDB)
+        let userDB = await User.findByIdAndUpdate(_id,body,{new:true})
+        res.json(userDB)
         
     } catch (error) {
         res.status(400).json({ message: 'Wrong password', error })
@@ -219,13 +219,13 @@ exports.deleteUser = async(req,res) => {
             return res.status(401).json({error: "Credentials error"});
         }
         
-        let actionDB = await User.findByIdAndDelete(_id)
+        let userDB = await User.findByIdAndDelete(_id)
 
-        if(!actionDB){
+        if(!userDB){
             return res.status(401).json({error: "Incorrect ID"});
         }
 
-        res.json(actionDB)
+        res.json(userDB)
 
     } catch (error) {
         res.status(400).json({ message: 'Credentials error', error });

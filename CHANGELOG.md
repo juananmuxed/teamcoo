@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Views for Users, Workgroups, Interests and Menu.
+- Added complete functionality for Users, Workgroups, Interests and Menu (add or remove, edit, etc...)
+- Admin Menu implementation
 - Dockerify all project to easy deploy
 - Configuration files for Docker
 - ENV Variables
@@ -18,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bcrypt is replaced by Bcryptjs (errors in Docker)
 - All `imports` in the API for `require` and `export default` for compatibility with ES5 
 - DB url to adapt to Docker deployment `localhost:27017` => `datapistas-db:27017`
+- Change Actions name to Tasks name
+- Split files for modular
 
 ## [0.3-beta] - 2020-05-08
 

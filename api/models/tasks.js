@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const actionschema = new schema({
+const taskschema = new schema({
     name: {
         type: String, 
         required: [true,'Required field']
@@ -56,6 +56,6 @@ const actionschema = new schema({
     }
 })
 
-const action = mongoose.model('Actions',actionschema)
+const task = mongoose.model('Tasks',taskschema)
 
-module.exports = action
+module.exports = task

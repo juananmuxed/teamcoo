@@ -7,8 +7,8 @@ exports.createInterest = async (req,res) => {
         if (isInterest.length >= 1) {
             return res.status(409).json({message: "This interest already exist: " + body.name});
         }
-        const actionDB = await Interests.create(body)
-        res.json(actionDB)
+        const interestDB = await Interests.create(body)
+        res.json(interestDB)
     } catch (error) {
         res.status(500).json({message: 'An error has occurred: ' + error , error})
     }
@@ -16,8 +16,8 @@ exports.createInterest = async (req,res) => {
 
 exports.getAllInterests = async (req,res) => {
     try {
-        const actionDB = await Interests.find()
-        res.json(actionDB)
+        const interestDB = await Interests.find()
+        res.json(interestDB)
     } catch (error) {
         res.status(500).json({message: 'An error has occurred: ' + error , error})
     }
@@ -27,8 +27,8 @@ exports.getInterest = async (req,res) => {
     const _id = req.params.id
 
     try {
-        const actionDB = await Interests.findById(_id)
-        res.json(actionDB)
+        const interestDB = await Interests.findById(_id)
+        res.json(interestDB)
 
     } catch (error) {
         res.status(500).json({message: 'An error has occurred: ' + error , error})
@@ -40,8 +40,8 @@ exports.updateInterest = async (req,res) => {
     const body = req.body
 
     try { 
-        const actionDB = await Interests.findByIdAndUpdate(_id,body,{new:true})
-        res.json(actionDB)
+        const interestDB = await Interests.findByIdAndUpdate(_id,body,{new:true})
+        res.json(interestDB)
     } catch (error) {
         res.status(500).json({message: 'An error has occurred: ' + error , error})
     }
@@ -54,8 +54,8 @@ exports.deleteInterest = async (req,res) => {
         if (isInterest.length < 1) {
             return res.status(409).json({message: "This interest don't exist"});
         }
-        const actionDB = await Interests.findByIdAndDelete({_id})
-        res.json(actionDB)
+        const interestDB = await Interests.findByIdAndDelete({_id})
+        res.json(interestDB)
     } catch (error) {
         res.status(500).json({message: 'An error has occurred: ' + error , error})
     }

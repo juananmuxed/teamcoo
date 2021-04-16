@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import menu from './modules/menu'
 import general from './modules/general'
 import user from './modules/user'
-import actions from './modules/actions'
+import tasks from './modules/tasks'
 import users from './modules/users'
 import workgroups from './modules/workgroups'
 import questions from './modules/questions'
@@ -21,7 +21,7 @@ export default new Vuex.Store({
     menu,
     general,
     user,
-    actions,
+    tasks,
     workgroups,
     questions,
     interests,

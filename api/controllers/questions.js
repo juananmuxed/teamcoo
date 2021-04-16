@@ -54,8 +54,8 @@ exports.deleteQuestion = async (req,res) => {
         if (isQuestion.length < 1) {
             return res.status(409).json({message: "This question don't exist"});
         }
-        const actionDB = await Questions.findByIdAndDelete({_id})
-        res.json(actionDB)
+        const questionDb = await Questions.findByIdAndDelete({_id})
+        res.json(questionDb)
     } catch (error) {
         res.status(500).json({message: 'An error has occurred: ' + error , error})
     }
