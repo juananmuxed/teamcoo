@@ -74,7 +74,6 @@ const getters = {
         if (
             state.editUser.firstname == state.notEditUser.firstname &&
             state.editUser.lastname == state.notEditUser.lastname &&
-            state.editUser.rol.value == state.notEditUser.rol.value &&
             state.editUser.username == state.notEditUser.username &&
             state.editUser.image == state.notEditUser.image &&
             state.editUser.imagefile == state.notEditUser.imagefile
@@ -118,7 +117,7 @@ const actions = {
                             if( Array.isArray(users[x].workgroups[y].answers[i].answer) ) {
                                 interests = users[x].workgroups[y].answers[i].answer.concat(interests);
                             } else {
-                                interests.push( users[x].workgroups[y].answers[i].answer )
+                                if(users[x].workgroups[y].answers[i].indexOf('Joined by Coordinator/Admin:') !== -1) interests.push( users[x].workgroups[y].answers[i].answer );
                             }
                         }
                     }
@@ -212,8 +211,34 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
-    async deleteUser() {
-
+    async deleteUser({ rootState, commit, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth']; 
+            let resTasks = await Axios.get('/tasks/',config);
+            let resWorkgroups = await Axios.get('/workgroups/',config)
+            let tasks = resTasks.data, workgroups = resWorkgroups.data;
+            // TODO: eliminar de acciones cuando se termine el CRUD de acciones
+            for (let i = 0; i < tasks.length; i++) {
+                console.log('T')
+            }
+            for (let i = 0; i < workgroups.length; i++) {
+                let updatedWorkgroup = {
+                    members: workgroups[i].members.filter(a => a != params.id), 
+                    coordinators: workgroups[i].coordinators.filter(a => a != params.id)
+                };
+                await Axios.put( '/workgroups/' + workgroups[i]._id, updatedWorkgroup, config );
+            }
+            config.data = {
+                email: rootState.user.loginuser.email,
+                password: params.password
+            }
+            await Axios.delete('/users/' + params.id, config);
+            commit('menu/cancelDialog', 'confirm', { root: true });
+            commit('menu/notification', ['primary', 3, 'Deleted User. Bye, bye!!'], { root: true });
+        } catch (error) {
+            // TODO: revisar estas respuestas
+            commit('menu/notification', ['error', 3, error], {root: true});
+        }
     },
     async saveCommonQuestions( { commit, rootGetters }, params ) {
         try {

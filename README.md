@@ -14,25 +14,30 @@
 
 ---
 
-![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](https://github.com/juananmuxed/teamcoo/blob/master/LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU) 
+![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU) 
 
 # What is TeamCoo
 TeamCoo is a platform for non-profit Associations that need to manage large numbers of Volunteers. MEVN (Mongo, Express, Vue, Node) technology based.
 
 Small associations need some way to unify all the Human Resources options when it comes to gathering Volunteers to do different tasks.
 
-## Screenshots 🍩
+### 📌 Versions
+Used [SemVer](http://semver.org/) for versions. For all available version, see [tags](https://github.com/juananmuxed/muxed/tags).
+
+And here the [Changelog](CHANGELOG.md)
+
+## 🍩 Screenshots
 
 🚧 Under construction
 
-## Built with 🏗
+## 🏗 Built with
 - [Vue](https://vuejs.org/)
 - [Express](https://expressjs.com)
 - [Node](https://nodejs.org/)
 - [Mongo](https://www.mongodb.com)
 - [Docker](https://www.docker.com/)
 
-<b>Dependencies</b>
+#### Dependencies
 - [Vuex](https://github.com/vuejs/vuex)
 - [Vuetify](https://vuetifyjs.com/)
 - [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
@@ -47,10 +52,10 @@ Small associations need some way to unify all the Human Resources options when i
 - [Vue JWT Decode](https://www.npmjs.com/package/vue-jwt-decode)
 - [Vuex PersistedState](https://www.npmjs.com/package/vuex-persistedstate)
 
-## Features 🎉
+## 🎉 Features
 🚧 Under construction
 
-## Installation 🥪
+## 🥪 Installation
 We pack all the application to run in a Docker server for easy Deploy.
 
 ### **Development**
@@ -62,17 +67,17 @@ Requirements:
 - Nodemon in global `npm install nodemon -g`
 
 Clone the repo
-```
+```bash
 git clone https://github.com/juananmuxed/teamcoo.git
 ```
 
 Access to the folder
-```
+```bash
 cd teamcoo
 ```
 
 Create (or modify) the .env to Enviorement Variables
-```
+```bash
 SECRET_STRING=examplestringforhash
 EMAIL_ACCOUNT=account@domain.es
 EMAIL_PASSWORD=smtp_password
@@ -80,13 +85,13 @@ EMAIL_DOMAIN=mail.host.domain.es
 ```
 
 Then access to 2 folders (2 console prompt is easier)
-```
+```bash
 CONSOLE 1: cd api
 CONSOLE 2: cd client
 ```
 
 Run the scripts
-```
+```bash
 CONSOLE 1: npm run dev
 CONSOLE 2: npm run serve
 ```
@@ -100,17 +105,17 @@ Requirements:
 - Docker
 
 Clone the repo
-```
+```bash
 git clone https://github.com/juananmuxed/teamcoo.git
 ```
 
 Access to the folder
-```
+```bash
 cd teamcoo
 ```
 
 Create (or modify) the .env to Enviorement Variables
-```
+```bash
 SECRET_STRING=examplestringforhash
 EMAIL_ACCOUNT=account@domain.es
 EMAIL_PASSWORD=smtp_password
@@ -118,19 +123,19 @@ EMAIL_DOMAIN=mail.host.domain.es
 ```
 
 Build the Dockers with docker-compose
-```
+```bash
 docker-compose build
 ```
 
 And up the Network
-```
+```bash
 docker-compose up -d
 ```
 
-## Wiki 🥘
+## 🥘 Wiki
 🚧 Under construction
 
-# Associations in this project 💖
+# 💖 Associations in this project
   <a href="https://github.com/juananmuxed/teamcoo"><img src="https://catapa.be/wp-content/uploads/2018/05/cropped-CATAPA-NEW-LOGO-2.png" alt="Catapa" height="40"></a>
 
 [![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Web&up_color=green&up_message=Online&url=https://catapa.be)](https://catapa.be)
@@ -139,16 +144,16 @@ docker-compose up -d
 
 [![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/catapa?label=Collaborators&logo=Open-Collective)](https://opencollective.com/postwoman)
 
-## Want this App ❓
+## ❓ Want this App
 If you are an Association and want something like this. Contact via email, or any other method with me.
 
-# Contributing 🍰
+# 🍰 Contributing
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our [CODE OF CONDUCT](CODE_OF_CONDUCT.md), and the process for submitting pull requests.
 
-## Buy Me a Coffee ☕️
+## ☕️ Buy Me a Coffee
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U21M2BE)
 
-# License 📑
+## 📑 License
 
 MIT © [MuXeD](LICENSE.md)

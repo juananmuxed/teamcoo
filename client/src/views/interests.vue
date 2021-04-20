@@ -109,7 +109,7 @@
               class="my-2"
               @click="clearInterestForm();randomInterestColor()"
             >
-              <v-icon left>fas fa-question</v-icon>Create Interest
+              <v-icon left>fas fa-address-card</v-icon>Create Interest
             </v-btn>
           </template>
           <create-interest></create-interest>

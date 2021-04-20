@@ -12,11 +12,6 @@ const state = {
         newshow: false,
         confshow: false
     },
-    del: {
-        password: '',
-        show: false,
-        del: ''
-    },
     loginuser: {
         firstname: '',
         lastname: '',
@@ -31,7 +26,8 @@ const state = {
         workgroups: [],
         unsuscribedworkgroups: [],
         membership:{},
-        emailconfig:[]
+        emailconfig:[],
+        password: ''
     },
     user: {
         passshow: false,
@@ -69,6 +65,7 @@ const mutations = {
             state.loginuser.workgroups = user.data.workgroups,
             state.loginuser.unsuscribedworkgroups = user.data.unsuscribedworkgroups,
             state.loginuser.membership = user.data.membership,
+            state.loginuser.password = user.data.password,
             state.loginuser.emailconfig = user.data.emailconfig
     },
     verifiedEmailOk: (state) => { state.loginuser.verifiedemail = true },
@@ -86,7 +83,8 @@ const mutations = {
             state.loginuser.logged = false,
             state.loginuser.workgroups = [],
             state.loginuser.unsuscribedworkgroups = [],
-            state.loginuser.membership = {}
+            state.loginuser.membership = {},
+            state.loginuser.password = ''
     },
     onOffLights: (state) => {
         state.loginuser.dark = !state.loginuser.dark,
@@ -119,12 +117,6 @@ const getters = {
             state.newuser.passwordconfirm == state.newuser.password &&
             !rootState.general.rules.emailrules(state.newuser.email)[0] &&
             !rootState.general.rules.nospaces(state.newuser.password)[0]) {
-            return false
-        }
-        else { return true }
-    },
-    deleteIsValid(state) {
-        if (state.del.del == 'DELETE' && state.del.password != '') {
             return false
         }
         else { return true }
@@ -164,10 +156,10 @@ const actions = {
                 user.rol = { name: 'Volunteer', value: 'volu' }
             }
             user.username = state.newuser.firstname.toLowerCase() + '_' + state.newuser.lastname.toLowerCase()
-            let response = await Axios.post("/users/signup", user);
+            let response = await Axios.post('/users/signup', user);
             let token = response.data.token;
             if (token) {
-                Cookies.set("catapa-jwt", token, { expires: 30 });
+                Cookies.set('catapa-jwt', token, { expires: 30 });
                 await dispatch('userData');
                 router.push('/dashboard');
                 commit('menu/notification', ['success', 3, 'Correct registration. Welcome to Catapa, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
@@ -188,10 +180,10 @@ const actions = {
     },
     async login({ state, commit, dispatch }) {
         try {
-            let response = await Axios.post("/users/login", state.user)
+            let response = await Axios.post('/users/login', state.user)
             let token = response.data.token;
-            if (Cookies.get("catapa-jwt") == undefined) {
-                Cookies.set("catapa-jwt", token, { expires: 30 });
+            if (Cookies.get('catapa-jwt') == undefined) {
+                Cookies.set('catapa-jwt', token, { expires: 30 });
             }
             if (token) {
                 await dispatch('userData');
@@ -218,15 +210,10 @@ const actions = {
             commit('menu/notification', ['error', 3, 'Error: Something Went Wrong.'], { root: true })
         }
     },
-    async userData({ commit }) {
+    async userData({ commit, rootGetters }) {
         try {
-            let token = Cookies.get("catapa-jwt")
-            let config = {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            }
-            await Axios.get("/users/me", config)
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.get('/users/me', config)
                 .then(res => {
                     commit('userStore', res);
                 })
@@ -242,7 +229,7 @@ const actions = {
             token: token,
             password: state.password.confirmnewpassword
         }
-        Axios.post("/tokens/changepassexternal", data)
+        Axios.post('/tokens/changepassexternal', data)
             .then(() => {
                 commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true })
                 router.push('/login')
@@ -252,7 +239,7 @@ const actions = {
             })
     },
     sendResetPassMail({ commit }, email) {
-        Axios.post("/tokens/sendpassemail", { email: email })
+        Axios.post('/tokens/sendpassemail', { email: email })
             .then(() => {
                 commit('menu/notification', ['primary', 3, 'An email send to ' + email + '. Please check your account.'], { root: true })
                 router.push('/')
@@ -262,7 +249,7 @@ const actions = {
             })
     },
     sendVerificationMail({ commit }, email) {
-        Axios.post("/tokens/resend", { email: email })
+        Axios.post('/tokens/resend', { email: email })
             .then(() => {
                 commit('menu/notification', ['primary', 3, 'Verification email send to ' + email + '. Please check your account.'], { root: true });
             })
@@ -282,7 +269,7 @@ const actions = {
             })
     },
     verifyEmail({ commit }, token) {
-        Axios.post("/tokens/confirmation", { token: token })
+        Axios.post('/tokens/confirmation', { token: token })
             .then(() => {
                 setTimeout(() => {
                     router.push('/dashboard');
@@ -316,21 +303,15 @@ const actions = {
                 commit('menu/alert', [color, error.response.data.message, icon], { root: true });
             })
     },
-    async changepassword({ state, commit }) {
+    async changepassword({ state, commit, rootGetters }) {
         try {
-            let id = state.loginuser.id
-            let token = Cookies.get("catapa-jwt")
             let user = {
                 email: state.loginuser.email,
                 newpassword: state.password.newpassword,
                 password: state.password.oldpassword
             }
-            let config = {
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            }
-            await Axios.put("/users/password/" + id, user, config)
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.put('/users/password/' + state.loginuser.id, user, config)
                 .then(() => {
                     commit('menu/notification', ['primary', 3, 'Changed password Succesfully'], { root: true });
                     commit('clearpass');
@@ -358,34 +339,6 @@ const actions = {
     goToSignUpAsVolunteer({ commit }) {
         router.push('/signup')
         commit('checkVolunteer')
-    },
-    async deleteAccount({ state, commit }) {
-        try {
-            let id = state.loginuser.id
-            let token = Cookies.get("catapa-jwt")
-            let config = {
-                headers: {
-                    Authorization: "Bearer " + token
-                },
-                data: {
-                    email: state.loginuser.email,
-                    password: state.del.password
-                }
-            }
-            await Axios.delete("/users/" + id, config)
-                .then(() => {
-                    commit('menu/cancelDialog', 'deleteaccount', { root: true });
-                    commit('menu/notification', ['primary', 3, 'Deleted User. Bye, bye!!'], { root: true });
-                    commit('clearUser')
-                    Cookies.remove('catapa-jwt')
-                    router.push('/');
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-                })
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message]);
-        }
     }
 }
 

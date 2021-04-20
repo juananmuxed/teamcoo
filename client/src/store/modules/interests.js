@@ -157,6 +157,18 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
+    async searchInterestSilent({ commit, rootGetters }, interest){
+        try {
+            if(interest.constructor.name !== 'Object') {
+                let config = rootGetters['general/cookieAuth']
+                let res = await Axios.get('/interests/' + interest, config)
+                interest = res.data
+            }
+            commit('loadEditedInterest', interest)
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+        }
+    },
     async searchInterestByName({ commit, rootGetters },name){
         try {
             let config = rootGetters['general/cookieAuth']

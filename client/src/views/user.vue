@@ -240,7 +240,8 @@
                         description="You are about to delete this User. <br><br>Are you sure?" 
                         :cancelFunction="null" 
                         textButton="Delete" 
-                        :actionparams="{id:searchedUser._id,type:'user'}" 
+                        :actionparams="{id:searchedUser._id}"
+                        :confirmationPass="true"
                         :action="deleteUser"
                     ></confirmation-template>
                 </v-dialog>

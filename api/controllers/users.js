@@ -228,7 +228,7 @@ exports.deleteUser = async(req,res) => {
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ message: 'Credentials error', error });
+        res.status(400).json({status: 'error', error :'Invalid Credentials'});
     }
 
 }

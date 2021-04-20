@@ -146,7 +146,7 @@
           >
               <template v-slot:activator="{ on }">
                   <v-btn height="160" v-on="on" block color="info" class="my-2" @click="clearWorkgroupForm();randomWorkgroupColor()">
-                      <v-icon left>fas fa-users</v-icon> Create Work Group
+                      <v-icon left>fas fa-network-wired</v-icon> Create Work Group
                   </v-btn>
               </template>
               <create-work-group></create-work-group>

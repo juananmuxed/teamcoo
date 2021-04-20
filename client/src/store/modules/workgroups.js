@@ -162,7 +162,7 @@ const actions = {
                 let formData = new FormData()
                 const config = { headers: { 'Content-Type': 'multipart/form-data' } }
                 formData.append('file', state.workgroupForm.dossier)
-                await Axios.post("/files/upload", formData, config)
+                await Axios.post('/files/upload', formData, config)
                     .then(res => {
                         dossier = globalConfig.global.hostnameApi + '/files/upload/' + res.data.file.filename
                     })
@@ -220,7 +220,7 @@ const actions = {
         try {
             commit('changeLoading', true);
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get("/workgroups/", config);
+            let res = await Axios.get('/workgroups/', config);
             let allWorkgroups = res.data;
             for (let i = 0; i < allWorkgroups.length; i++) {
                 let workgroup = allWorkgroups[i];
@@ -288,7 +288,7 @@ const actions = {
     },
     async searchWorkgroupSilent({ commit, dispatch, rootState, rootGetters }, workgroup) {
         try {
-            if(workgroup.constructor.name !== "Object") {
+            if(workgroup.constructor.name !== 'Object') {
                 let config = rootGetters['general/cookieAuth'];
                 let res = await Axios.get('/workgroups/' + workgroup, config)
                 workgroup = res.data
@@ -319,18 +319,18 @@ const actions = {
     async saveEditedworkgroup({state,commit,dispatch, rootGetters},id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let dossier = state.workgroupForm.dossier
+            let dossier = state.workgroupForm.dossier;
             if (dossier != null) {
-                let formData = new FormData()
+                let formData = new FormData();
                 const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', state.workgroupForm.dossier)
-                await Axios.post("/files/upload", formData, config)
+                formData.append('file', state.workgroupForm.dossier);
+                await Axios.post('/files/upload', formData, config)
                 .then(res => {
-                    dossier = globalConfig.global.hostnameApi + '/files/upload/' + res.data.file.filename
+                    dossier = globalConfig.global.hostnameApi + '/files/upload/' + res.data.file.filename;
                 })
             }
             else{
-                dossier = state.workgroupForm.oldDossier
+                dossier = state.workgroupForm.oldDossier;
             }
             let body = {
                 name: state.workgroupForm.name,
@@ -341,12 +341,13 @@ const actions = {
                 dossier: dossier,
                 linktodocuments: state.workgroupForm.link
             }
-            let res = await Axios.put("/workgroups/" + id, body, config)
-            await dispatch('searchWorkgroup', res.data._id)
-            commit('menu/cancelDialog', 'editworkgroup', { root: true })
-            commit('clearWorkgroupForm')
+            let res = await Axios.put('/workgroups/' + id, body, config);
+            commit('menu/cancelDialog', 'editworkgroup', { root: true });
+            await dispatch('searchWorkgroupSilent', res.data._id);
+            commit('clearWorkgroupForm');
+            commit('menu/notification', ['success', 5, 'Workgroup edited'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data.message], { root: true })
+            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
         }
     },
     async joinWorkgroup({ commit, rootState, rootGetters}, params) {

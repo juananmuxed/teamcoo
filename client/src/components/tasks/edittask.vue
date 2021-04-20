@@ -3,9 +3,8 @@
         max-width="650"
         class="mx-auto pa-2"
     >
-        <v-card-title class="headline font-weight-medium text-uppercase">New Task</v-card-title>
+        <v-card-title class="headline font-weight-medium text-uppercase">Edit Task "{{tasksForm.name}}"</v-card-title>
         <v-card-text>
-            <p>When creating a Task, volunteers can join to colaborate.</p>
             <v-row>
                 <v-col cols="12" class="py-1">
                     <v-text-field
@@ -27,6 +26,25 @@
                         :rules="[rules.required,rules.maxdescletters]"
                     >
                     </v-textarea>
+                </v-col>
+                <v-col cols="10" class="py-1">
+                    <v-menu :close-on-content-click="false" :nudge-height="0" offset-y transition="slide-y-transition">
+                        <template v-slot:activator="{ on }">
+                            <v-btn class="custom-btn mb-3" :color="tasksForm.color" block depressed v-on="on" :ripple="false" elevation="0"><span :class="`${textColor(tasksForm.color)}--text`">{{ tasksForm.color }}</span></v-btn>
+                        </template>
+                        <v-card :color="tasksForm.color" elevation="0">
+                            <v-color-picker
+                                hide-mode-switch
+                                hide-inputs
+                                mode.sync="hex"
+                                flat
+                                v-model="tasksForm.color"
+                            ></v-color-picker>
+                        </v-card>
+                    </v-menu>
+                </v-col>
+                <v-col cols="2" class="py-1">
+                    <v-btn class="mb-3" :color="tasksForm.color" block depressed :ripple="false" elevation="0" @click="randomTaskColor()"><v-icon :color="textColor(tasksForm.color)">fas fa-dice</v-icon></v-btn>
                 </v-col>
                 <v-col cols="12" md="6" class="py-1">
                     <v-menu
@@ -70,11 +88,14 @@
                         <v-date-picker :min="tasksForm.startDate" color="secondary" v-model="tasksForm.endDate" @input="menu2 = false"></v-date-picker>
                     </v-menu>
                 </v-col>
+                <v-col cols="12" class="py-1" v-if="tasksForm.image != null && tasksForm.image != '' ">
+                    <v-img :src="tasksForm.image" height="220" contain :aspect-ratio="16/9"></v-img>
+                </v-col>
                 <v-col cols="12" class="py-1">
                     <v-file-input
                         chips
-                        v-model="tasksForm.image"
-                        label="Image"
+                        v-model="tasksForm.newimage"
+                        label="New Image"
                         accept="image/png, image/jpeg, image/bmp , image/gif"
                         :show-size="1000"
                         outlined
@@ -84,7 +105,7 @@
                     >
                         <template v-slot:append-outer>
                             <v-slide-x-transition>
-                                <v-icon color="primary" v-if="tasksForm.image != null" @click="tasksForm.image = null">fas fa-times-circle</v-icon>
+                                <v-icon color="primary" v-if="tasksForm.newimage != null" @click="tasksForm.newimage = null">fas fa-times-circle</v-icon>
                             </v-slide-x-transition>
                         </template>
                     </v-file-input>
@@ -99,7 +120,7 @@
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" class="py-1">
-                    <v-select
+                    <v-autocomplete
                         label="Workgroups"
                         v-model="tasksForm.workgroupsSelected"
                         multiple
@@ -121,10 +142,10 @@
                                 <v-list-item-title>{{ data.item.name }}</v-list-item-title>
                             </v-list-item-content>
                         </template>
-                    </v-select>
+                    </v-autocomplete>
                 </v-col>
                 <v-col cols="12" class="py-1">
-                    <v-select
+                    <v-autocomplete
                         label="Interests"
                         v-model="tasksForm.interestsSelected"
                         multiple
@@ -143,21 +164,30 @@
                                 class="grey--text caption"
                             >(+{{ tasksForm.interestsSelected.length - 3 }} others)</span>
                         </template>
-                    </v-select>
-                </v-col>
-                <v-col cols="12">
-                    <v-btn block color="primary" :disabled="validTask()" @click="createTask(userId)">Add Task</v-btn>
+                    </v-autocomplete>
                 </v-col>
             </v-row>
+            <v-slide-y-transition origin="center center">
+                <v-btn fab right small top absolute color="primary" @click="saveEditedTask(searchedTask._id)" v-show="!editedTask() && !validTask()" class="mt-8 mr-12">
+                    <v-icon small>fas fa-save</v-icon>
+                </v-btn>
+            </v-slide-y-transition>
+            <v-slide-y-transition origin="center center">
+                <v-btn fab right small top absolute color="info" @click="loadEditedTask()" v-show="!editedTask()" class="mt-8">
+                    <v-icon small>fas fa-undo</v-icon>
+                </v-btn>
+            </v-slide-y-transition>
         </v-card-text>
     </v-card>
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
+import { idealTextColor } from '../../utils/utils';
 export default {
     computed: {
         ...mapState({
+            searchedTask: state => state.tasks.searchedTask,
             tasksForm: state => state.tasks.tasksForm,
             workgroups: state => state.workgroups.workgroups,
             userId: state => state.user.loginuser.id,
@@ -167,8 +197,24 @@ export default {
         })
     },
     methods: {
-        ...mapActions('tasks',['createTask']),
-        ...mapGetters('tasks',['validTask'])
+        ...mapActions('tasks',['saveEditedTask']),
+        ...mapMutations('tasks',['loadEditedTask','randomTaskColor']),
+        ...mapGetters('tasks',['validTask','editedTask']),
+        ...mapActions('interests',['loadInterests']),
+        ...mapActions('workgroups',['loadWorkgroups']),
+        textColor(color) {
+            return idealTextColor(color);
+        },
+    },
+    created() {
+        this.loadInterests();
+        this.loadWorkgroups();
     }
 }
 </script>
+
+<style scoped>
+.custom-btn::before {
+    color: transparent
+}
+</style>

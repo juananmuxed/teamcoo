@@ -24,7 +24,6 @@ const state = {
             login: false,
             logout: false,
             edituser: false,
-            deleteaccount: false,
             changepassword: false,
             createworkgroup: false,
             createquestion: false,
@@ -37,7 +36,8 @@ const state = {
             confirm:false,
             editmembers:false,
             editquestion:false,
-            editcommonquestion:false
+            editcommonquestion:false,
+            edittask: false
         },
         loader:{
             workgroup:false,

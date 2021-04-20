@@ -16,6 +16,7 @@ import workgroups from './views/workgroups.vue'
 import workgroup from './views/workgroup.vue'
 import interests from './views/interests.vue'
 import tasks from './views/tasks.vue'
+import task from './views/task.vue'
 import questions from './views/questions.vue'
 import user from './views/user.vue'
 import configuration from './views/configuration.vue'
@@ -158,7 +159,7 @@ const router = new Router({
         },
         {
             path:'/workgroups/:id',
-            name: 'wg',
+            name: 'workgroup',
             component: workgroup,
             meta:{
                 requiresAuth: true,
@@ -169,6 +170,15 @@ const router = new Router({
             path:'/users/:id',
             name: 'user',
             component: user,
+            meta:{
+                requiresAuth: true,
+                isUser:true
+            }
+        },
+        {
+            path:'/tasks/:id',
+            name: 'task',
+            component: task,
             meta:{
                 requiresAuth: true,
                 isUser:true

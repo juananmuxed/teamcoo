@@ -43,17 +43,6 @@
                     </template>
                     <change-pass></change-pass>
                 </v-dialog>
-                <v-dialog
-                    max-width="650"
-                    v-model="menu.dialogs.deleteaccount"
-                >
-                    <template v-slot:activator="{ on }">
-                        <v-btn v-on="on" block color="error" class="my-2">
-                            <v-icon left>fas fa-trash</v-icon> Delete Account
-                        </v-btn>
-                    </template>
-                    <delete-account></delete-account>
-                </v-dialog>
             </v-col>
         </v-row>  
         <v-card elevation="5" :disabled="!loginuser.verifiedemail" v-if="loginuser.rol.value != 'user'" class="my-3">
@@ -185,13 +174,11 @@
 
 <script>
 import { mapState, mapActions , mapMutations, mapGetters } from 'vuex'
-import deleteAccount from './delaccount.vue'
 import changePassword from './changepass.vue'
 import createworkgroup from '../workgroups/createworkgroup.vue'
 
 export default {
     components:{
-        'delete-account': deleteAccount,
         'change-pass': changePassword,
         'create-work-group': createworkgroup
     },
