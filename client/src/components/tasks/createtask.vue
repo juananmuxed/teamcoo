@@ -98,6 +98,9 @@
                     >
                     </v-text-field>
                 </v-col>
+                <v-col cols="12" class="py-1" v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'">
+                    <v-switch color="primary" v-model="tasksForm.secret" label="Private Task"></v-switch>
+                </v-col>
                 <v-col cols="12" class="py-1">
                     <v-select
                         label="Workgroups"
@@ -105,7 +108,7 @@
                         multiple
                         chips
                         outlined
-                        :items="workgroups"
+                        :items="workgroups.concat(secretworkgroups)"
                         item-text="name"
                         item-value="_id"
                         hint="Select at least 1"
@@ -146,7 +149,7 @@
                     </v-select>
                 </v-col>
                 <v-col cols="12">
-                    <v-btn block color="primary" :disabled="validTask()" @click="createTask(userId)">Add Task</v-btn>
+                    <v-btn block color="primary" :disabled="validTask()" @click="createTask(loginuser.id)">Add Task</v-btn>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -160,7 +163,8 @@ export default {
         ...mapState({
             tasksForm: state => state.tasks.tasksForm,
             workgroups: state => state.workgroups.workgroups,
-            userId: state => state.user.loginuser.id,
+            secretworkgroups: state => state.workgroups.secretworkgroups,
+            loginuser: state => state.user.loginuser,
             menu: state => state.menu.menu,
             rules: state => state.general.rules,
             interests: state => state.interests.interests,

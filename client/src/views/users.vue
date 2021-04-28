@@ -17,8 +17,10 @@
           <template v-slot:top>
             <v-text-field
               v-model="search"
-              label="Search"
+              label="Search by name"
               class="mx-4"
+              append-icon="fas fa-search"
+              outlined
             ></v-text-field>
           </template>
           <template v-slot:no-data>

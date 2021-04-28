@@ -1,9 +1,6 @@
 import Vuetify from '../../plugins/vuetify'
 import router from '@/router'
 
-// TODO: links in menú to configuration (DB)
-// Create a only Admin User configuration for Lateral Menu links
-
 const state = {
     menu: {
         active: true,

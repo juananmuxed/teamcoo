@@ -172,10 +172,10 @@
                             <template v-if="loginuser.rol.value == 'coor' || loginuser.rol.value == 'admin'">
                                 <v-col cols="12" class="text-uppercase display-1 font-weight-thin">
                                     Comments
+                                    <v-chip label x-small color="secondary" class="font-weight-light">In development</v-chip>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-alert
-                                        outlined
                                         dense
                                         color="info"
                                         icon="fas fa-comment"
@@ -190,7 +190,7 @@
                                                 Date
                                             </v-col>
                                         </v-row>
-                                        <v-divider class="my-4 info"></v-divider>
+                                        <v-divider class="my-4" color="primary"></v-divider>
                                         <v-row align="center" no-gutters>
                                             <v-col class="grow">
                                                 Proin magna. Vivamus in erat ut urna cursus vestibulum. Etiam imperdiet imperdiet orci.
@@ -203,7 +203,9 @@
                                             </v-col>
                                         </v-row>
                                     </v-alert>
-                                    <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
+                                    <v-badge overlap bordered icon="fas fa-lock">
+                                        <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
+                                    </v-badge>
                                 </v-col>
                             </template>
                         </template>

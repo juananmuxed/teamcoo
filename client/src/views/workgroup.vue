@@ -7,7 +7,7 @@
                 <v-skeleton-loader type="skeleton" :types="{skeleton:'card,article, table-tfoot'}" max-width="1080" class="mx-auto" transition="fade-transition" :loading="skeleton">
                     <v-card :color="searchedWorkgroup.color" :class="`${textColor(searchedWorkgroup.color)}--text mx-auto`" max-width="1080" v-if="searchedWorkgroup._id">
                         <v-card-title>
-                            <v-btn class="mr-n12" absolute fab top right color="info" @click="goBack()">
+                            <v-btn class="ml-n12" absolute fab top left color="info" @click="goBack()">
                                 <v-icon>fas fa-arrow-left</v-icon>
                             </v-btn>
                             <v-tooltip right :color="loginuser.workgroups.some(wg => wg._wgId === searchedWorkgroup._id) ? 'info' : 'error'" transition="scroll-x-transition">
@@ -54,6 +54,11 @@
                                 <edit-members></edit-members>
                             </v-dialog>
                             <v-row>
+                                <v-col cols="12">
+                                    <v-chip color="secondary" v-if="searchedWorkgroup.secret">
+                                        Private
+                                    </v-chip>
+                                </v-col>
                                 <v-col cols="12" class="mb-4">
                                     <span class="text-uppercase headline font-weight-light">Description<br></span>
                                     <span class="font-italic">
@@ -106,6 +111,7 @@
                             <template v-if="loginuser.rol.value == 'coor' || loginuser.rol.value == 'admin'">
                                 <v-col cols="12" class="text-uppercase headline font-weight-light">
                                     Comments
+                                    <v-chip label x-small color="secondary">In development</v-chip>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-alert
@@ -136,13 +142,15 @@
                                             </v-col>
                                         </v-row>
                                     </v-alert>
-                                    <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
+                                    <v-badge overlap bordered icon="fas fa-lock">
+                                        <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
+                                    </v-badge>
                                 </v-col>
                             </template>
                         </v-card-text>
-                        <v-divider v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)"></v-divider>
-                        <v-card-actions>
-                            <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
+                        <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
+                            <v-divider></v-divider>
+                            <v-card-actions>
                                 <v-row>
                                     <v-col cols="12" class="font-weight-light ml-5">Created by
                                         <v-chip class="font-italic ml-2" :to="`/users/`+ searchedWorkgroup.creator.id">
@@ -152,40 +160,40 @@
                                         </v-chip>
                                     </v-col>
                                 </v-row>
-                            </template>
-                            <v-spacer></v-spacer>
-                            <v-dialog
-                                max-width="650"
-                                v-model="dialogs.editworkgroup"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn class="mx-1" @click="loadEditedWorkgroup" depressed small color="info" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
-                                        Edit
-                                        <v-icon x-small class="ml-1">fas fa-edit</v-icon>
-                                    </v-btn>
-                                </template>
-                                <edit-work-group></edit-work-group>
-                            </v-dialog>
-                            <v-dialog
-                                max-width="400"
-                                v-model="dialogs.confirm"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn class="mx-1" depressed small color="error" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id">
-                                        Delete
-                                        <v-icon x-small class="ml-1">fas fa-trash</v-icon>
-                                    </v-btn>
-                                </template>
-                                <confirmation-template 
-                                    :title="`Delete ${searchedWorkgroup.name}`" 
-                                    description="You are about to delete this Work Group. <br><br>Are you sure?" 
-                                    :cancelFunction="null" 
-                                    textButton="Delete" 
-                                    :actionparams="{id:searchedWorkgroup._id,type:'workgroup'}" 
-                                    :action="delWorkgroup"
-                                ></confirmation-template>
-                            </v-dialog>
-                        </v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-dialog
+                                    max-width="650"
+                                    v-model="dialogs.editworkgroup"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn class="mx-1" @click="loadEditedWorkgroup" depressed small color="info" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
+                                            Edit
+                                            <v-icon x-small class="ml-1">fas fa-edit</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <edit-work-group></edit-work-group>
+                                </v-dialog>
+                                <v-dialog
+                                    max-width="400"
+                                    v-model="dialogs.confirm"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn class="mx-1" depressed small color="error" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id">
+                                            Delete
+                                            <v-icon x-small class="ml-1">fas fa-trash</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <confirmation-template 
+                                        :title="`Delete ${searchedWorkgroup.name}`" 
+                                        description="You are about to delete this Work Group. <br><br>Are you sure?" 
+                                        :cancelFunction="null" 
+                                        textButton="Delete" 
+                                        :actionparams="{id:searchedWorkgroup._id,type:'workgroup'}" 
+                                        :action="delWorkgroup"
+                                    ></confirmation-template>
+                                </v-dialog>
+                            </v-card-actions>
+                        </template>
                     </v-card>
                     <invalid-static
                         v-else

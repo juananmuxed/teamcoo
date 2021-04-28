@@ -71,10 +71,6 @@ const userScheme = mongoose.Schema({
     commonquestions: {
         type: Array,
         default: []
-    },
-    privatecomments:{
-        type: Array,
-        default:[]
     }
 });
 

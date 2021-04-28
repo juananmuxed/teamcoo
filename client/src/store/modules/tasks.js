@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import router from '@/router'
 import globalConfig from '../../config/config.json'
 import { todayFormatToPicker , generateRandomColor, isDiferentArray } from '../../utils/utils'
 
@@ -15,7 +16,8 @@ const state = {
         startDate: todayFormatToPicker(),
         endDate: '',
         image:null,
-        imagelink:''
+        imagelink:'',
+        secret:false
     },
     loading:false,
     skeleton:false
@@ -31,7 +33,8 @@ const mutations = {
             state.tasksForm.startDate = todayFormatToPicker(),
             state.tasksForm.endDate = '',
             state.tasksForm.image = null,
-            state.tasksForm.imagelink = ''
+            state.tasksForm.imagelink = '',
+            state.tasksForm.secret = false
     },
     tasksLoad: (state, tasks) => { state.tasks = tasks },
     changeSkeleton: (state, skeleton) => state.skeleton = skeleton,
@@ -42,6 +45,7 @@ const mutations = {
         state.tasksForm.link = state.searchedTask.link,
         state.tasksForm.image = state.searchedTask.image,
         state.tasksForm.newimage = null,
+        state.tasksForm.secret = state.searchedTask.secret,
         state.tasksForm.color = state.searchedTask.color,
         state.tasksForm.startDate = todayFormatToPicker(state.searchedTask.eventStartDate),
         state.tasksForm.endDate = todayFormatToPicker(state.searchedTask.eventEndDate),
@@ -50,7 +54,8 @@ const mutations = {
     },
     randomTaskColor:(state) => {
         state.tasksForm.color = generateRandomColor(30).toUpperCase();
-    }
+    },
+    changeLoading: (state, loading) => state.loading = loading,
 }
 
 const getters = {
@@ -77,6 +82,7 @@ const getters = {
             state.tasksForm.startDate != todayFormatToPicker(state.searchedTask.eventStartDate) ||
             state.tasksForm.link != state.searchedTask.link ||
             state.tasksForm.newimage != null ||
+            state.tasksForm.secret != state.searchedTask.secret ||
             state.tasksForm.color.toUpperCase() != state.searchedTask.color.toUpperCase() ||
             isDiferentArray(state.tasksForm.workgroupsSelected,state.searchedTask.workgroups,'_id','_id') ||
             isDiferentArray(state.tasksForm.interestsSelected,state.searchedTask.interests,'_id','_id') 
@@ -114,6 +120,7 @@ const actions = {
                 eventStartDate:state.tasksForm.startDate,
                 eventEndDate:state.tasksForm.endDate,
                 image:state.tasksForm.imagelink,
+                secret:state.tasksForm.secret,
                 color:color,
                 createdBy: userId,
                 link: state.tasksForm.link
@@ -129,7 +136,7 @@ const actions = {
     },
     async loadTasks({ rootState, commit, dispatch }) {
         try {
-            commit('menu/loadingstate', ['tasks',true], { root: true });
+            commit('changeLoading', true);
             await dispatch('interests/loadInterests',null,{root:true});
             await dispatch('workgroups/loadWorkgroups',null,{root:true});
             let res = await Axios.get('/tasks/');
@@ -159,9 +166,11 @@ const actions = {
                 tasks[i].interests = tempInterests
                 tasks[i].workgroups = tempWorkgroups
             }
-            commit('tasksLoad', tasks)
+            commit('tasksLoad', tasks);
+            commit('changeLoading', false);
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
+            commit('changeLoading', false);
         }
     },
     async searchTask({ commit, dispatch, rootState, rootGetters }, id) {
@@ -246,7 +255,8 @@ const actions = {
                 color: state.tasksForm.color,
                 eventStartDate:state.tasksForm.startDate,
                 eventEndDate:state.tasksForm.endDate,
-                questions: state.tasksForm.workgroupsSelected.map(q => q._id),
+                secret:state.tasksForm.secret,
+                workgroups: state.tasksForm.workgroupsSelected.map(q => q._id),
                 interests: state.tasksForm.interestsSelected.map(q => q._id),
                 image: image,
                 link: state.tasksForm.link
@@ -258,6 +268,18 @@ const actions = {
             commit('menu/notification', ['success', 5, 'Task edited'], { root: true });
         } catch (error) {
             commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+        }
+    },
+    async delTask( { commit, dispatch, rootGetters } , params) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.delete('/tasks/' + params.id, config);
+            await dispatch('loadTasks');
+            router.push('/tasks');
+            commit('menu/notification', ['info', 3, 'Task Deleted'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error.response.data], { root: true });
         }
     },
 }

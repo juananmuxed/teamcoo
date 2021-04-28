@@ -46,7 +46,7 @@
           </template>
           <template v-slot:item.linktodocuments="{ item }">
             <template v-if="item.linktodocuments != ''">
-              <v-btn :href="item.linktodocuments" target="_blank" depressed>Link to documents <v-icon small class="ml-1">fas fa-external-link-alt</v-icon></v-btn>
+              <v-btn :href="item.linktodocuments" target="_blank" depressed>Docs <v-icon small class="ml-1">fas fa-external-link-alt</v-icon></v-btn>
             </template>
             <template v-else>
               Without link
@@ -68,16 +68,15 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <template v-if="loginuser.rol.value == 'admin' && secretworkgroups.length != 0">
+    <template v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor' && secretworkgroups.length != 0">
       <v-row class="text-center">
         <v-col>
             <p class="display-1 font-weight-thin text-uppercase">Private Workgroups</p>
         </v-col>
       </v-row>
-
       <v-row>
         <v-col cols="12">
-          <v-data-table :items="secretworkgroups" :headers="headers" :loading="loaded">
+          <v-data-table :items="secretworkgroups" :headers="headers" :loading="loading">
             <template v-slot:loading>
               <span class="display-1 text-uppercase font-weight-thin ma-5">Loading Work Groups</span>
             </template>
@@ -115,7 +114,7 @@
             </template>
             <template v-slot:item.linktodocuments="{ item }">
               <template v-if="item.linktodocuments != ''">
-                <v-btn :href="item.linktodocuments" target="_blank" depressed>Link to documents <v-icon small class="ml-1">fas fa-external-link-alt</v-icon></v-btn>
+                <v-btn :href="item.linktodocuments" target="_blank" depressed>Docs <v-icon small class="ml-1">fas fa-external-link-alt</v-icon></v-btn>
               </template>
               <template v-else>
                 Without link

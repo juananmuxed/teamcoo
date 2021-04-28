@@ -10,7 +10,7 @@
                     max-width="1080" class="mx-auto" 
                     transition="fade-transition" 
                     :loading="skeleton">
-                    <v-card class="mx-auto`" max-width="1080" v-if="searchedTask._id">
+                    <v-card class="mx-auto" max-width="1080" v-if="searchedTask._id">
                         <v-img
                             v-if="searchedTask.image != ''"
                             height="200"
@@ -18,9 +18,11 @@
                             class="align-end"
                             gradient="to bottom, rgba(0,0,0,0), rgba(245,245,245,.7)"
                         >
-                            <v-chip small v-for="(workgroup , index) in searchedTask.workgroups" :key="index" :color="workgroup.color" class="ma-2">
-                                <span :class="`${textColor(workgroup.color)}--text`">{{ workgroup.name }}</span>
-                            </v-chip>
+                            <template v-for="(workgroup , index) in searchedTask.workgroups">
+                                <v-chip small :key="index" :color="workgroup.color" class="ma-2" v-if="!workgroup.secret">
+                                    <span :class="`${textColor(workgroup.color)}--text`">{{ workgroup.name }}</span>
+                                </v-chip>
+                            </template>
                         </v-img>
                         <v-img
                             v-else
@@ -33,16 +35,21 @@
                             </v-chip>
                         </v-img>
                         <v-card-title>
-                            <v-btn class="mr-n12" absolute fab top right color="info" @click="goBack()">
+                            <v-btn class="ml-n12" absolute fab top left color="info" @click="goBack()">
                                 <v-icon>fas fa-arrow-left</v-icon>
                             </v-btn>
-                            <v-tooltip right :color="searchedTask.members.some(us => us.id === loginuser.id) ? 'info' : 'error'" transition="scroll-x-transition">
+                            <v-tooltip left :color="searchedTask.members.some(us => us.id === loginuser.id) ? 'info' : 'error'" transition="scroll-x-reverse-transition">
                                 <template v-slot:activator="{ on }">
                                     <v-list-item v-on="on">
                                         <v-list-item-content>
                                             <v-list-item-title class="text-uppercase font-weight-thin display-1" v-text="searchedTask.name"></v-list-item-title>
-                                            <v-list-item-subtitle>{{ searchedTask.eventStartDate }} - {{ searchedTask.eventEndDate }}</v-list-item-subtitle>
+                                            <v-list-item-subtitle>{{ dateFormated(searchedTask.eventStartDate) }} - {{ dateFormated(searchedTask.eventEndDate) }}</v-list-item-subtitle>
                                         </v-list-item-content>
+                                        <v-list-item-action-text>
+                                            <v-chip color="secondary" label v-if="searchedTask.secret">
+                                                Private
+                                            </v-chip>
+                                        </v-list-item-action-text>
                                     </v-list-item>
                                 </template>
                                 <span class="text-right caption font-weight-light">{{searchedTask.members.some(us => us.id === loginuser.id) ? 'Joined' : 'Unjoined'}}</span>
@@ -65,7 +72,7 @@
                                 </v-col>
                             </template>
                             <v-col cols="12" v-else>
-                                <span class="text-uppercase font-weight-thin display-1">No member</span>
+                                <span class="text-uppercase font-weight-thin display-1">No interests</span>
                             </v-col>
                             <v-col cols="12">
                                 <span class="text-uppercase headline font-weight-light">Members<br></span>
@@ -90,11 +97,12 @@
                                 </v-col>
                             </template>
                             <v-col cols="12" v-else>
-                                <span class="text-uppercase font-weight-thin display-1">No member</span>
+                                <span class="text-uppercase font-weight-thin display-1">No members</span>
                             </v-col>
                             <template v-if="loginuser.rol.value == 'coor' || loginuser.rol.value == 'admin'">
                                 <v-col cols="12" class="text-uppercase headline font-weight-light">
                                     Comments
+                                    <v-chip label x-small color="secondary">In development</v-chip>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-alert
@@ -125,56 +133,58 @@
                                             </v-col>
                                         </v-row>
                                     </v-alert>
-                                    <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
+                                    <v-badge overlap bordered icon="fas fa-lock">
+                                        <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
+                                    </v-badge>
                                 </v-col>
                             </template>
                         </v-card-text>
-                        <v-divider v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedTask.creator.id || searchedTask.coordinators.some(coor => coor.id == loginuser.id)"></v-divider>
-                        <v-card-actions>
-                            <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedTask.creator.id || searchedTask.coordinators.some(coor => coor.id == loginuser.id)">
-                                <v-row>
-                                    <v-col cols="12" class="font-weight-light ml-5">Created by
-                                        <v-chip class="font-italic ml-2" :to="`/users/`+ searchedTask.creator.id">
-                                            <v-avatar left v-if="searchedTask.creator.avatar != ''"><v-img :src="searchedTask.creator.avatar"></v-img></v-avatar>
-                                            <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
-                                            {{ searchedTask.creator.username }}
-                                        </v-chip>
-                                    </v-col>
-                                </v-row>
-                            </template>
-                            <v-spacer></v-spacer>
-                            <v-dialog
-                                max-width="650"
-                                v-model="dialogs.edittask"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn class="mx-1" @click="loadEditedTask" depressed small color="info" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedTask.creator.id == loginuser.id || searchedTask.coordinators.some(coor => coor.id == loginuser.id)">
-                                        Edit
-                                        <v-icon x-small class="ml-1">fas fa-edit</v-icon>
-                                    </v-btn>
-                                </template>
-                                <edit-task></edit-task>
-                            </v-dialog>
-                            <v-dialog
-                                max-width="400"
-                                v-model="dialogs.confirm"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn class="mx-1" depressed small color="error" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedTask.creator.id == loginuser.id">
-                                        Delete
-                                        <v-icon x-small class="ml-1">fas fa-trash</v-icon>
-                                    </v-btn>
-                                </template>
-                                <confirmation-template 
-                                    :title="`Delete ${searchedTask.name}`" 
-                                    description="You are about to delete this Task. <br><br>Are you sure?" 
-                                    :cancelFunction="null" 
-                                    textButton="Delete" 
-                                    :actionparams="{id:searchedTask._id}" 
-                                    :action="delTask"
-                                ></confirmation-template>
-                            </v-dialog>
-                        </v-card-actions>
+                        <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedTask.creator.id || searchedTask.coordinators.some(coor => coor.id == loginuser.id)">
+                            <v-divider></v-divider>
+                            <v-card-actions>
+                                    <v-row>
+                                        <v-col cols="12" class="font-weight-light ml-5">Created by
+                                            <v-chip class="font-italic ml-2" :to="`/users/`+ searchedTask.creator.id">
+                                                <v-avatar left v-if="searchedTask.creator.avatar != ''"><v-img :src="searchedTask.creator.avatar"></v-img></v-avatar>
+                                                <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+                                                {{ searchedTask.creator.username }}
+                                            </v-chip>
+                                        </v-col>
+                                    </v-row>
+                                <v-spacer></v-spacer>
+                                <v-dialog
+                                    max-width="650"
+                                    v-model="dialogs.edittask"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn class="mx-1" @click="loadEditedTask" depressed small color="info" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedTask.creator.id == loginuser.id || searchedTask.coordinators.some(coor => coor.id == loginuser.id)">
+                                            Edit
+                                            <v-icon x-small class="ml-1">fas fa-edit</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <edit-task></edit-task>
+                                </v-dialog>
+                                <v-dialog
+                                    max-width="400"
+                                    v-model="dialogs.confirm"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn class="mx-1" depressed small color="error" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedTask.creator.id == loginuser.id">
+                                            Delete
+                                            <v-icon x-small class="ml-1">fas fa-trash</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <confirmation-template 
+                                        :title="`Delete ${searchedTask.name}`" 
+                                        description="You are about to delete this Task. <br><br>Are you sure?" 
+                                        :cancelFunction="null" 
+                                        textButton="Delete" 
+                                        :actionparams="{id:searchedTask._id}" 
+                                        :action="delTask"
+                                    ></confirmation-template>
+                                </v-dialog>
+                            </v-card-actions>
+                        </template>
                     </v-card>
                     <invalid-static
                         v-else
@@ -193,7 +203,7 @@ import { mapActions, mapState, mapMutations } from 'vuex'
 import invalidstatic from '../components/general/invalid.vue'
 import confirm from '../components/general/confirm.vue'
 import edittask from '../components/tasks/edittask.vue'
-import { idealTextColor } from '../utils/utils'
+import { dateToBeauty, idealTextColor } from '../utils/utils'
 export default {
     data() {
         return {
@@ -225,6 +235,9 @@ export default {
         textColor(color) {
             return idealTextColor(color);
         },
+        dateFormated(date) {
+            return dateToBeauty(date);
+        }
     },
     created() {
         this.refreshing()

@@ -14,6 +14,14 @@ const treeBuild = (dataset) => {
     return tree;
 };
 
+const dateToBeauty = (date) => {
+    const day = new Date(date).getDate();
+    const month = new Date(date).getMonth();
+    const year = new Date(date).getFullYear();
+
+    return `${day}/${month}/${year}`;
+}
+
 const dateToFormat = (dateMilliseconds) => {
     const seconds = new Date(dateMilliseconds).getSeconds();
     const minutes = new Date(dateMilliseconds).getMinutes();
@@ -22,21 +30,7 @@ const dateToFormat = (dateMilliseconds) => {
     const month = new Date(dateMilliseconds).getMonth();
     const year = new Date(dateMilliseconds).getFullYear();
 
-    let formatedData = new String();
-    formatedData =
-        hours +
-        ":" +
-        minutes +
-        ":" +
-        seconds +
-        " - " +
-        day +
-        "/" +
-        month +
-        "/" +
-        year;
-
-    return formatedData;
+    return `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
 };
 
 const todayFormatToPicker = (date) => {
@@ -140,6 +134,7 @@ const sleep = async (ms) => {
 
 export {
     treeBuild,
+    dateToBeauty,
     dateToFormat,
     todayFormatToPicker,
     generateRandomColor,

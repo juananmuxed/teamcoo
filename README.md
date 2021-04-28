@@ -51,6 +51,7 @@ And here the [Changelog](CHANGELOG.md)
 - [Secure LS](https://www.npmjs.com/package/secure-ls)
 - [Vue JWT Decode](https://www.npmjs.com/package/vue-jwt-decode)
 - [Vuex PersistedState](https://www.npmjs.com/package/vuex-persistedstate)
+- [TipTap](https://www.tiptap.dev/)
 
 ## 🎉 Features
 🚧 Under construction

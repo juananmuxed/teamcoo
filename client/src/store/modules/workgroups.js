@@ -7,7 +7,7 @@ const state = {
     workgroups: [],
     secretworkgroups: [],
     nestedWorkgroups: [],
-    secretnestedWorkgroups: [],
+    secretNestedWorkgroups: [],
     searchedWorkgroup:{},
     workgroupForm: {
         name: '',
@@ -59,7 +59,7 @@ const mutations = {
     workgroupLoad: (state, workgroups) => { state.workgroups = workgroups },
     secretWorkgroupLoad: (state, secretworkgroups) => { state.secretworkgroups = secretworkgroups },
     workgroupNested: (state, nestedWorkgroups) => { state.nestedWorkgroups = nestedWorkgroups },
-    secretWorkgroupNested: (state, secretnestedWorkgroups) => { state.secretnestedWorkgroups = secretnestedWorkgroups },
+    secretWorkgroupNested: (state, secretNestedWorkgroups) => { state.secretNestedWorkgroups = secretNestedWorkgroups },
     workgroupSuscription: (state, workgroup) => { state.loadedSuscription = workgroup[0] },
     pullWorkgroup:(state,workgroup) => {state.searchedWorkgroup = workgroup},
     newMembers:(state,members) => {

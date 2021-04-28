@@ -150,7 +150,7 @@
                         v-model="menu.dialogs.createworkgroup"
                     >
                         <template v-slot:activator="{ on }">
-                            <v-btn v-on="on" block color="secondary" class="my-2" @click="clearwgform">
+                            <v-btn v-on="on" block color="secondary" class="my-2" @click="clearWorkgroupForm">
                                 <v-icon left>fas fa-users</v-icon> Create Work Group
                             </v-btn>
                         </template>
@@ -159,16 +159,6 @@
                 </v-col>
             </v-row>
         </v-card>
-        <v-row class="px-3">
-            <v-col>
-                <v-btn block color="info" class="my-2 headline" height="180" to="/membership" v-if="loginuser.membership.status != 'inactive'">
-                    <v-icon left>fas fa-star</v-icon> Manage your <br> Membership
-                </v-btn>
-                <v-btn block color="accent" class="my-2 headline text-center" height="180" to="/membership" v-else>
-                    <v-icon left>fas fa-star</v-icon> Be a member
-                </v-btn>
-            </v-col>
-        </v-row>
     </v-col>
 </template>
 
@@ -187,13 +177,13 @@ export default {
             menu: state => state.menu.menu,
             loginuser: state => state.user.loginuser,
             tasks: state => state.tasks.tasks,
-            workgroups: state => state.tasks.nestedWGs,
-            secretworkgroups: state => state.tasks.secretnestedWGs
+            workgroups: state => state.workgroups.nestedWorkgroups,
+            secretworkgroups: state => state.workgroups.secretNestedWorkgroups
         })
     },
     methods: {
         ...mapMutations('menu',['cancelDialog']),
-        ...mapMutations('tasks',['clearLoadedWG','clearwgform']),
+        ...mapMutations('workgroups',['clearLoadedWG','clearWorkgroupForm']),
         ...mapActions('user',['sendVerificationMail']),
         ...mapGetters('user',['isSuscribed'])
     }

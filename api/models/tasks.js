@@ -42,6 +42,10 @@ const taskschema = new schema({
         type: Array,
         default:[]
     },
+    secret: {
+        type:Boolean,
+        default:false
+    },
     eventStartDate:{
         type:Date,
         required:true
