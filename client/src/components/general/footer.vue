@@ -83,34 +83,23 @@
                         MuXeD
                     </v-btn> 
                     Catapa &copy; {{ new Date().getFullYear() }}
-                    <v-tooltip
-                        transition="slide-y-reverse-transition"
-                        open-delay="100"
-                        top
-                    >
-                        <template v-slot:activator="{ on: onTooltip}">
-                            <v-btn icon v-on="{...onTooltip}" class="mx-1" :ripple="false" to="/cookies-policy">
-                                <v-icon>fas fa-cookie-bite</v-icon>
-                            </v-btn>
-                        </template>
-                        <span class="text-right caption font-weight-light">Cookies Policy</span>
-                    </v-tooltip>
-                    <v-tooltip
-                        transition="slide-y-reverse-transition"
-                        open-delay="100"
-                        top
-                    >
-                        <template v-slot:activator="{ on: onTooltip}">
-                            <v-btn icon v-on="{...onTooltip}" class="mx-1" :ripple="false" to="/privacy-policy">
-                                <v-icon>fas fa-user-secret</v-icon>
-                            </v-btn>
-                        </template>
-                        <span class="text-right caption font-weight-light">Privacy Policy</span>
-                    </v-tooltip>
+                    <template v-for="(page , index) in menu.static">
+                        <v-tooltip
+                            :key="index"
+                            transition="slide-y-reverse-transition"
+                            open-delay="100"
+                            top
+                        >
+                            <template v-slot:activator="{ on: onTooltip}">
+                                <v-btn icon v-on="{...onTooltip}" class="mx-1" :ripple="false" :to="`/page/${page.slug}`" v-if="page.position.includes('footer')">
+                                    <v-icon>{{ page.icon }}</v-icon>
+                                </v-btn>
+                            </template>
+                            <span class="text-right caption font-weight-light">{{ page.name }}</span>
+                        </v-tooltip>
+                    </template>
                 </v-col>
-
             </v-row>
-
         </v-container>
 
     </v-footer>
@@ -138,5 +127,8 @@ export default {
         ...mapActions('menu',['changeLight']),
         ...mapActions('user',['logOut'])
     },
+    created() {
+        console.log(this.pages)
+    }
 }
 </script>

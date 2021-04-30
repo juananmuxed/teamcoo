@@ -20,9 +20,7 @@ import task from './views/task.vue'
 import questions from './views/questions.vue'
 import user from './views/user.vue'
 import configuration from './views/configuration.vue'
-import termsandcond from './views/termsandconditions.vue'
-import privacypolicy from './views/privacypolicy.vue'
-import cookiespolicy from './views/cookiespolicy.vue'
+import staticPage from './views/pages/static.vue'
 
 Vue.use(Router)
 
@@ -49,19 +47,9 @@ const router = new Router({
             component: home
         },
         {
-            path: '/cookies-policy',
-            name: 'cookiespolicy',
-            component: cookiespolicy
-        },
-        {
-            path: '/privacy-policy',
-            name: 'privacypolicy',
-            component: privacypolicy
-        },
-        {
-            path: '/terms-and-conditions',
-            name: 'termsandcond',
-            component: termsandcond
+            path: '/page/:slug',
+            name: 'page',
+            component: staticPage
         },
         {
             path: '/login',

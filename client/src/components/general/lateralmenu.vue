@@ -39,6 +39,8 @@
             </v-list-item-action>
           </v-list-item>
 
+          <v-divider class="mt-1 mb-1"></v-divider>
+
           <template v-if="menu.drawerMini">
             <v-tooltip 
               transition="slide-x-transition"
@@ -65,6 +67,32 @@
               </template>
               <span class="text-right caption font-weight-light">{{ item.name }}</span>
             </v-tooltip>
+            <v-divider class="mt-1 mb-1"></v-divider>
+            <v-tooltip 
+              transition="slide-x-transition"
+              open-delay="300"
+              right          
+              v-for="item in menu.static"
+              :key="item.name"
+            >
+              <template v-slot:activator="{ on }">
+                <v-list-item
+                  v-on="on"
+                  link
+                  :to="`/page/${item.slug}`"
+                  v-if="item.position.includes('lateral')"
+                >
+                  <v-list-item-icon>
+                    <v-icon>{{ item.icon }}</v-icon>
+                  </v-list-item-icon>
+
+                  <v-list-item-content>
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+              <span class="text-right caption font-weight-light">{{ item.name }}</span>
+            </v-tooltip>
           </template>
 
           <template v-else>
@@ -74,6 +102,23 @@
                 v-if="item.roles.includes(loginuser.rol.value)"
                 :key="item.name"
                 :to="item.link"
+              >
+                <v-list-item-icon>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-icon>
+
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+            <v-divider class="mt-1 mb-1"></v-divider>
+            <template v-for="item in menu.static">
+              <v-list-item
+                link
+                v-if="item.position.includes('lateral')"
+                :key="item.name"
+                :to="`/page/${item.slug}`"
               >
                 <v-list-item-icon>
                   <v-icon>{{ item.icon }}</v-icon>

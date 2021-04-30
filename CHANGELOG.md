@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Views for Users, Workgroups, Interests and Menu.
 - Static pages editable in config
+- Moduled Static Pages (easily add or  1 more in config.json)
 - Added complete functionality for Users, Workgroups, Interests and Menu (add or remove, edit, etc...)
 - Admin Menu implementation
 - Dockerify all project to easy deploy

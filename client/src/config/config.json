@@ -9,5 +9,19 @@
         { "name": "Coordinator", "value": "coor" },
         { "name": "Director", "value": "dire" },
         { "name": "Admin", "value": "admin" }
+    ],
+    "staticPages": [
+        { "name": "Cookies Policy", "icon": "fas fa-cookie-bite", "value": "cookie", "slug": "cookies-policy", "position": ["footer"]},
+        { "name": "Privacy Policy", "icon": "fas fa-user-secret", "value": "privacy", "slug": "privacy-policy", "position": ["footer"]},
+        { "name": "Terms and Conditions", "icon": "fas fa-file-contract", "value": "terms", "slug": "terms-and-conditions", "position": ["footer"]}
+    ],
+    "menuLinks": [
+        { "name": "Dashboard", "link": "/dashboard", "roles": ["user","volu","coor","dire","memb","admin"], "icon": "fas fa-columns" },
+        { "name": "Users", "link": "/users", "roles": ["coor","dire","admin"], "icon": "fas fa-users" },
+        { "name": "Tasks", "link": "/tasks", "roles": ["coor","dire","admin","volu"], "icon": "fas fa-tasks" },
+        { "name": "Workgroups", "link": "/workgroups", "roles": ["coor","dire","admin","volu"], "icon": "fas fa-network-wired" },
+        { "name": "Questions", "link": "/questions", "roles": ["coor","dire","admin"], "icon": "fas fa-question" },
+        { "name": "Interests", "link": "/interests", "roles": ["coor","dire","admin"], "icon": "fas fa-address-card" },
+        { "name": "Portal Config", "link": "/config", "roles": ["admin"], "icon": "fas fa-cogs" }
     ]
 }

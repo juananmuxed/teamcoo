@@ -37,7 +37,7 @@ And here the [Changelog](CHANGELOG.md)
 - [Mongo](https://www.mongodb.com)
 - [Docker](https://www.docker.com/)
 
-#### Dependencies
+### Dependencies
 - [Vuex](https://github.com/vuejs/vuex)
 - [Vuetify](https://vuetifyjs.com/)
 - [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
@@ -137,13 +137,14 @@ docker-compose up -d
 🚧 Under construction
 
 # 💖 Associations in this project
+## Catapa
   <a href="https://github.com/juananmuxed/teamcoo"><img src="https://catapa.be/wp-content/uploads/2018/05/cropped-CATAPA-NEW-LOGO-2.png" alt="Catapa" height="40"></a>
 
 [![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Web&up_color=green&up_message=Online&url=https://catapa.be)](https://catapa.be)
 
 [![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Application&up_color=green&up_message=Online&url=https://catapistas.catapa.be)](https://catapistas.catapa.be)
 
-[![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/catapa?label=Collaborators&logo=Open-Collective)](https://opencollective.com/postwoman)
+[![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/catapa?label=Collaborators&logo=Open-Collective)](https://opencollective.com/)
 
 ## ❓ Want this App
 If you are an Association and want something like this. Contact via email, or any other method with me.

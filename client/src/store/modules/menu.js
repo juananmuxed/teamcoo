@@ -1,5 +1,6 @@
 import Vuetify from '../../plugins/vuetify'
 import router from '@/router'
+import config from '../../config/config.json'
 
 const state = {
     menu: {
@@ -7,16 +8,8 @@ const state = {
         drawerMini: true,
         scroll: 0,
         upDown: false,
-        links: [
-            { name: 'Dashboard', link: '/dashboard', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-columns' },
-            { name: 'Users', link: '/users', roles: ['coor','dire','admin'], icon: 'fas fa-users' },
-            { name: 'Tasks', link: '/tasks', roles: ['coor','dire','admin','volu'], icon: 'fas fa-tasks' },
-            { name: 'Work Groups', link: '/workgroups', roles: ['coor','dire','admin','volu'], icon: 'fas fa-network-wired' },
-            { name: 'Questions', link: '/questions', roles: ['coor','dire','admin'], icon: 'fas fa-question' },
-            { name: 'Interests', link: '/interests', roles: ['coor','dire','admin'], icon: 'fas fa-address-card' },
-            /* { name: 'Membership', link: '/membership', roles: ['user','volu','coor','dire','memb','admin'], icon: 'fas fa-star' }, */
-            { name: 'Portal Config', link: '/config', roles: ['admin'], icon: 'fas fa-cogs' },
-        ],
+        links: config.menuLinks,
+        static: config.staticPages,
         dialogs: {
             login: false,
             logout: false,

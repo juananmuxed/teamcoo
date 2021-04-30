@@ -1,4 +1,3 @@
-import Axios from 'axios'
 import Cookies from 'js-cookie';
 
 const state = {
@@ -61,19 +60,10 @@ const state = {
         { name: 'Customization', icon: 'fas fa-paint-brush' },
         { name: 'Mails', icon: 'fas fa-envelope' },
     ],
-    legal: {
-        advice: '',
-        privacy: ''
-    },
-    legalnotedited: {
-        advice: '',
-        privacy: ''
-    }
 }
 
 const mutations = {
-    pullConfig:(state,config) => {state.legal[config.name] = config.value},
-    pullToEdit:(state,config) => {state.legalnotedited[config.name] = config.value}
+
 }
 
 const getters = {
@@ -82,42 +72,12 @@ const getters = {
             headers: {
                 Authorization: "Bearer " + Cookies.get("catapa-jwt")
             }
-        } 
+        }
     },
-    isEditedAdvice: state => {return state.legal.advice !== state.legalnotedited.advice},
-    isEditedPrivacy: state => {return state.legal.privacy !== state.legalnotedited.privacy}
 }
 
 const actions = {
-    async searchConfig({ commit, rootGetters }, name) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/configuration/' + name, config)
-            let data = res.data;
-            if(data) {
-                commit('pullConfig', {value:data.value,name:name});
-                commit('pullToEdit', {value:data.value,name:name});
-            }
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-        }
-    },
-    async saveConfig({ state, commit, rootGetters }, name) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/configuration/' + name, config)
-            if (res.data == undefined) {
-                res = await Axios.post('/configuration/', {name: name, value: state.legal[name]}, config)
-            } else {
-                res = await Axios.put('/configuration/' + name, {value: state.legal[name], date: new Date()}, config);
-            }
-            let data = res.data;
-            commit('pullConfig', {value:data.value,name:name});
-            commit('pullToEdit', {value:data.value,name:name});
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-        }
-    }
+
 }
 
 export default {
