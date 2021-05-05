@@ -98,9 +98,6 @@
                     >
                     </v-text-field>
                 </v-col>
-                <v-col cols="12" class="py-1" v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'">
-                    <v-switch color="primary" v-model="tasksForm.secret" label="Private Task"></v-switch>
-                </v-col>
                 <v-col cols="12" class="py-1">
                     <v-select
                         label="Workgroups"

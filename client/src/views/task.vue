@@ -30,30 +30,40 @@
                             class="align-end"
                             :style="`background:linear-gradient(to bottom, ${searchedTask.color}, rgba(245,245,245,.2))`"
                         >
-                            <v-chip small v-for="(workgroup , index) in searchedTask.workgroups" :key="index" :color="workgroup.color" class="ma-2">
-                                <span :class="`${textColor(workgroup.color)}--text`">{{ workgroup.name }}</span>
-                            </v-chip>
+                            <template v-for="(workgroup , index) in searchedTask.workgroups">
+                                <v-chip small :key="index" :color="workgroup.color" class="ma-2" v-if="!workgroup.secret">
+                                    <span :class="`${textColor(workgroup.color)}--text`">{{ workgroup.name }}</span>
+                                </v-chip>
+                            </template>
                         </v-img>
                         <v-card-title>
                             <v-btn class="ml-n12" absolute fab top left color="info" @click="goBack()">
                                 <v-icon>fas fa-arrow-left</v-icon>
                             </v-btn>
-                            <v-tooltip left :color="searchedTask.members.some(us => us.id === loginuser.id) ? 'info' : 'error'" transition="scroll-x-reverse-transition">
+                            <v-dialog
+                                v-model="dialogs.savemembertask"
+                                max-width="650"
+                            >
                                 <template v-slot:activator="{ on }">
-                                    <v-list-item v-on="on">
-                                        <v-list-item-content>
-                                            <v-list-item-title class="text-uppercase font-weight-thin display-1" v-text="searchedTask.name"></v-list-item-title>
-                                            <v-list-item-subtitle>{{ dateFormated(searchedTask.eventStartDate) }} - {{ dateFormated(searchedTask.eventEndDate) }}</v-list-item-subtitle>
-                                        </v-list-item-content>
-                                        <v-list-item-action-text>
-                                            <v-chip color="secondary" label v-if="searchedTask.secret">
-                                                Private
-                                            </v-chip>
-                                        </v-list-item-action-text>
-                                    </v-list-item>
+                                    <v-btn v-on="on" class="mr-n12" absolute fab top right :color="!searchedTask.members.some(m => m.id == loginuser.id) ? 'primary' : 'secondary'">
+                                        <v-icon>{{!searchedTask.members.some(m => m.id == loginuser.id) ? 'fas fa-user-plus' : 'fas fa-user-minus'}}</v-icon>
+                                    </v-btn>
                                 </template>
-                                <span class="text-right caption font-weight-light">{{searchedTask.members.some(us => us.id === loginuser.id) ? 'Joined' : 'Unjoined'}}</span>
-                            </v-tooltip>
+                                <confirmation-template 
+                                    :title="`${!searchedTask.members.some(m => m.id == loginuser.id) ? 'Join' : 'Unjoin'} to ${searchedTask.name}</span>`" 
+                                    :description="`You are about to ${!searchedTask.members.some(m => m.id == loginuser.id) ? 'Join' : 'Unjoin'} this Task.<br><br>Are you sure?`" 
+                                    :cancelFunction="null" 
+                                    textButton="Join" 
+                                    :actionparams="{taskId:searchedTask._id, userId:loginuser.id, suscribe:!searchedTask.members.some(m => m.id == loginuser.id)}" 
+                                    :action="saveMember"
+                                ></confirmation-template>
+                            </v-dialog>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title class="text-uppercase font-weight-thin display-1" v-text="searchedTask.name"></v-list-item-title>
+                                    <v-list-item-subtitle>{{ dateFormated(searchedTask.eventStartDate) }} - {{ dateFormated(searchedTask.eventEndDate) }}</v-list-item-subtitle>
+                                </v-list-item-content>
+                            </v-list-item>
                         </v-card-title>
                         <v-divider></v-divider>
                         <v-card-text :class="`${textColor(searchedTask.color)}--text`">
@@ -139,7 +149,7 @@
                                 </v-col>
                             </template>
                         </v-card-text>
-                        <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedTask.creator.id || searchedTask.coordinators.some(coor => coor.id == loginuser.id)">
+                        <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedTask.creator.id">
                             <v-divider></v-divider>
                             <v-card-actions>
                                     <v-row>
@@ -224,7 +234,7 @@ export default {
         })
     },
     methods: {
-        ...mapActions('tasks',['searchTask','searchTaskSilent','delTask']),
+        ...mapActions('tasks',['searchTask','searchTaskSilent','delTask','saveMember']),
         ...mapActions('menu',['goBack']),
         ...mapMutations('tasks',['loadMembers','loadEditedTask']),
         refreshing() {

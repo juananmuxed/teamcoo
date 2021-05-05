@@ -108,6 +108,63 @@
                                     <v-btn block color="info" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}), dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
                                 </v-col>
                             </v-row>
+                            <v-row>
+                                <v-col cols="12" class="mb-4">
+                                    <span class="text-uppercase headline font-weight-light">Tasks<br></span>
+                                </v-col>
+                                <v-col cols="12" class="mb-4">
+                                    <v-data-iterator
+                                        :items="searchedWorkgroup.tasks"
+                                        items-per-page.sync="6"
+                                    >
+                                        <template v-slot:default="props">
+                                            <v-row>
+                                                <v-col cols="12" md="4" xl="3" class="pa-3" v-for="(task , index) in props.items" :key="index">
+                                                    <v-hover>
+                                                        <template v-slot:default="{ hover }">
+                                                            <v-card>
+                                                                <v-img
+                                                                    v-if="task.image != ''"
+                                                                    height="100"
+                                                                    :src="task.image"
+                                                                    class="align-end"
+                                                                >
+                                                                </v-img>
+                                                                <v-img
+                                                                    v-else
+                                                                    height="100"
+                                                                    class="align-end"
+                                                                    :style="`background:${task.color}`"
+                                                                >
+                                                                </v-img>
+                                                                <v-card-title class="text-uppercase font-weight-light">
+                                                                    <v-list-item two-line>
+                                                                        <v-list-item-content>
+                                                                            <v-list-item-title>{{ task.name }}</v-list-item-title>
+                                                                            <v-list-item-subtitle>{{ dateFormated(task.eventStartDate) }} - {{ dateFormated(task.eventEndDate) }}</v-list-item-subtitle>
+                                                                        </v-list-item-content>
+                                                                    </v-list-item>
+                                                                </v-card-title>
+                                                                <v-fade-transition>
+                                                                    <v-overlay
+                                                                        v-if="hover"
+                                                                        absolute
+                                                                        color="#036358"
+                                                                    >
+                                                                        <v-btn :to="`/tasks/${task._id}`" color="primary">
+                                                                            <v-icon left>fas fa-eye</v-icon> See more
+                                                                        </v-btn>
+                                                                    </v-overlay>
+                                                                </v-fade-transition>
+                                                            </v-card>
+                                                        </template>
+                                                    </v-hover>
+                                                </v-col>
+                                            </v-row>
+                                        </template>
+                                    </v-data-iterator>
+                                </v-col>
+                            </v-row>
                             <template v-if="loginuser.rol.value == 'coor' || loginuser.rol.value == 'admin'">
                                 <v-col cols="12" class="text-uppercase headline font-weight-light">
                                     Comments
@@ -214,7 +271,7 @@ import confirm from '../components/general/confirm.vue'
 import invalidstatic from '../components/general/invalid.vue'
 import editworkgroup from '../components/workgroups/editworkgroup.vue'
 import editmembers from '../components/workgroups/editmembers.vue'
-import { idealTextColor } from '../utils/utils'
+import { dateToBeauty, idealTextColor } from '../utils/utils'
 export default {
     data() {
         return {
@@ -248,6 +305,9 @@ export default {
         textColor(color) {
             return idealTextColor(color);
         },
+        dateFormated(date) {
+            return dateToBeauty(date);
+        }
     },
     created() {
         this.refreshing()

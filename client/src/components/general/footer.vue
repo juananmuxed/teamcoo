@@ -126,9 +126,6 @@ export default {
         ...mapGetters('user',['isLogged']),
         ...mapActions('menu',['changeLight']),
         ...mapActions('user',['logOut'])
-    },
-    created() {
-        console.log(this.pages)
     }
 }
 </script>

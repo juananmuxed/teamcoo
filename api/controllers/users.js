@@ -97,21 +97,6 @@ exports.loginUser = async(req,res) => {
     }
 };
 
-// Async method to return Userdata
-
-exports.getUserData = async(req,res) => {
-    try {
-        const email = req.userData.email
-        const user = await User.findByEmail(email)
-        if(!user){
-            return res.status(401).json({message: "Login failed! Check your credentials"})
-        }
-        res.status(201).json(user)
-    } catch (error) {
-        res.status(400).json({ message: 'An error has ocurred', error });
-    }
-}
-
 // Async method to return User
 
 exports.getUser = async(req,res) => {

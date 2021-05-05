@@ -85,8 +85,8 @@ userScheme.pre('save', async function(next) {
 userScheme.methods.generateAuthToken = function() {
     const user = this;
     const token = jwt.sign({_id:user._id,name:user.name,email:user.email}, process.env.SECRET_STRING);
-    if(user.tokens.length < 5){
-        user.tokens.shift()
+    while (user.tokens.length >= 5) {
+        user.tokens.shift();
     }
     user.tokens = user.tokens.concat({ token })
     user.save();

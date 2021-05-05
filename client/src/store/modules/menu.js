@@ -27,7 +27,8 @@ const state = {
             editmembers:false,
             editquestion:false,
             editcommonquestion:false,
-            edittask: false
+            edittask: false,
+            savemembertask:false
         },
         loader:{
             workgroup:false,

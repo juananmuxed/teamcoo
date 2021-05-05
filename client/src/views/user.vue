@@ -18,7 +18,7 @@
                         <v-col cols="12">
                             <v-card class="mx-auto">
                                 <v-card-title>
-                                    <v-btn class="mr-n12" absolute fab top right color="info" @click="goBack()">
+                                    <v-btn class="ml-n12" absolute fab top left color="info" @click="goBack()">
                                         <v-icon>fas fa-arrow-left</v-icon>
                                     </v-btn>
                                     <v-avatar v-if="searchedUser.image" size="32">

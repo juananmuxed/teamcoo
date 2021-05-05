@@ -277,11 +277,27 @@ const actions = {
             await dispatch('loadTasks');
             router.push('/tasks');
             commit('menu/notification', ['info', 3, 'Task Deleted'], { root: true });
-            commit('menu/cancelDialog', 'confirm', { root: true });
+            commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true })
         } catch (error) {
             commit('menu/notification', ['error', 5, error.response.data], { root: true });
         }
     },
+    async saveMember({ commit, rootGetters, dispatch }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let userId = params.userId, taskId = params.taskId;
+            let res = await Axios.get('/tasks/' +  taskId, config);
+            let members = res.data.usersjoined; 
+            members = members.filter(m => m != userId);
+            if(params.suscribe) members.push(userId);
+            let resPut = await Axios.put('/tasks/' +  taskId, { usersjoined:members },config);
+            await dispatch('searchTaskSilent',resPut.data);
+            commit('menu/cancelDialog', 'savemembertask', { root: true });
+            commit('menu/notification', ['info', 4, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error], { root: true });
+        }
+    }
 }
 
 export default {

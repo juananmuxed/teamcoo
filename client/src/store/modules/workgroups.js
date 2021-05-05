@@ -259,7 +259,7 @@ const actions = {
         try {
             commit('changeSkeleton', true);
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/workgroups/' + id, config)
+            let res = await Axios.get('/workgroups/' + id, config);
             let workgroup = res.data
             await dispatch('users/loadUserByID',workgroup._userId,{root:true});
             workgroup['creator'] = rootState.users.temporaluser;
@@ -276,20 +276,26 @@ const actions = {
                 await dispatch('questions/searchQuestionSilent',workgroup.questions[x],{root:true});
                 tempQuestions[x] = rootState.questions.searchedQuestion;
             }
+            let resTasks = await Axios.get('/tasks/', config);
+            let tasks = resTasks.data, tempTasks = [];
+            for (let x = 0; x < tasks.length; x++) {
+                if(tasks[x].workgroups.some(v => v == id)) tempTasks.push(tasks[x]);
+            }
+            workgroup.tasks = tempTasks;
             workgroup.coordinators = tempCoordinators;
             workgroup.members = tempMembers;
             workgroup.questions = tempQuestions;
             commit('pullWorkgroup', workgroup);
             commit('changeSkeleton', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            commit('menu/notification', ['error', 3, error], { root: true });
             commit('changeSkeleton', false);
         }
     },
     async searchWorkgroupSilent({ commit, dispatch, rootState, rootGetters }, workgroup) {
         try {
+            let config = rootGetters['general/cookieAuth'];
             if(workgroup.constructor.name !== 'Object') {
-                let config = rootGetters['general/cookieAuth'];
                 let res = await Axios.get('/workgroups/' + workgroup, config)
                 workgroup = res.data
             }
@@ -308,6 +314,12 @@ const actions = {
                 await dispatch('questions/searchQuestionSilent',workgroup.questions[x],{root:true});
                 tempQuestions[x] = rootState.questions.searchedQuestion;
             }
+            let resTasks = await Axios.get('/tasks/', config);
+            let tasks = resTasks.data, tempTasks = [];
+            for (let x = 0; x < tasks.length; x++) {
+                if(tasks[x].workgroups.some(v => v == workgroup._id)) tempTasks.push(tasks[x]);
+            }
+            workgroup.tasks = tempTasks;
             workgroup.coordinators = tempCoordinators;
             workgroup.members = tempMembers;
             workgroup.questions = tempQuestions;
@@ -413,7 +425,7 @@ const actions = {
             }
             let res = await Axios.put('/workgroups/' + idWorkgroup, { members:idMembers, coordinators:idCoordinators }, config);
             await dispatch('searchWorkgroupSilent',res.data);
-            await dispatch('user/userData',null,{root:true})
+            await dispatch('user/refreshLoadedUser', null,{root:true});
             commit('menu/cancelDialog', 'editmembers', { root: true });
             commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
         } catch (error) {
@@ -430,9 +442,9 @@ const actions = {
             if(params.suscribe) members.push(userId);
             let resPut = await Axios.put('/workgroups/' + workgroupId, { members:members }, config);
             await dispatch('searchWorkgroupSilent',resPut.data);
-            await dispatch('user/userData',null,{root:true});
+            await dispatch('user/refreshLoadedUser', null,{root:true});
             commit('menu/cancelDialog', 'suscribeto', { root: true });
-            commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true })
+            commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
         } catch (error) {
             commit('menu/notification', ['info', 10, error], { root: true })
         }

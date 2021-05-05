@@ -149,7 +149,7 @@ const getters = {
 }
 
 const actions = {
-    async signup({ state, commit, dispatch }) {
+    async signup({ state, commit }) {
         try {
             let user = state.newuser
             if (state.newuser.bevolunteer) {
@@ -160,7 +160,7 @@ const actions = {
             let token = response.data.token;
             if (token) {
                 Cookies.set('catapa-jwt', token, { expires: 30 });
-                await dispatch('userData');
+                commit('userStore', {data:response.data.data});
                 router.push('/dashboard');
                 commit('menu/notification', ['success', 3, 'Correct registration. Welcome to Catapa, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
             }
@@ -178,7 +178,7 @@ const actions = {
             }
         }
     },
-    async login({ state, commit, dispatch }) {
+    async login({ state, commit }) {
         try {
             let response = await Axios.post('/users/login', state.user)
             let token = response.data.token;
@@ -186,7 +186,7 @@ const actions = {
                 Cookies.set('catapa-jwt', token, { expires: 30 });
             }
             if (token) {
-                await dispatch('userData');
+                commit('userStore', {data:response.data.user});
                 commit('menu/cancelDialog', 'login', { root: true });
                 commit('menu/notification', ['success', 3, 'Correct Login. Welcome ' + response.data.user.username], { root: true });
                 router.push('/dashboard');
@@ -196,6 +196,15 @@ const actions = {
             }
         } catch (err) {
             commit('menu/notification', ['error', 3, 'Incorrect login.'], { root: true });
+        }
+    },
+    async refreshLoadedUser({ state, commit, rootGetters}) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/users/' + state.loginuser.id, config)
+            commit('userStore', {data:res.data});
+        } catch (err) {
+            commit('menu/notification', ['error', 3, 'Error'], { root: true });
         }
     },
     async logOut({ commit }) {
@@ -208,20 +217,6 @@ const actions = {
             commit('menu/notification', ['success', 3, 'You are correctly log out.'], { root: true })
         } catch (err) {
             commit('menu/notification', ['error', 3, 'Error: Something Went Wrong.'], { root: true })
-        }
-    },
-    async userData({ commit, rootGetters }) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            await Axios.get('/users/me', config)
-                .then(res => {
-                    commit('userStore', res);
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
-                })
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
         }
     },
     changepasswordnotlogged({ state, commit }, token) {

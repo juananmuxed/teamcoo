@@ -12,10 +12,6 @@ router.post("/signup", userController.registerNewUser);
 
 router.post("/login", userController.loginUser);
 
-// Return user data
-
-router.get("/me", auth, userController.getUserData);
-
 // Return all users
 
 router.get("/", auth, userController.getUsers);
