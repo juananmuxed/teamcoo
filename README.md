@@ -28,7 +28,14 @@ And here the [Changelog](CHANGELOG.md)
 
 ## 🍩 Screenshots
 
-🚧 Under construction
+<img src="media/DASHBOARD.png" alt="Dashboard" height="200"/>
+<img src="media/COMMON_Q.png" alt="Common Questions" height="200"/>
+<img src="media/CREATE_THINGS.png" alt="Creating" height="200"/>
+<img src="media/DARK_LISTS.png" alt="Dark mode" height="200"/>
+<img src="media/STATIC_PAGE_EDITOR.png" alt="Static Pages Editor" height="200"/>
+<img src="media/WORKGROUP.png" alt="Workgroup" height="200"/>
+<img src="media/LATERAL_MENU.png" alt="Menu" height="200"/>
+<img src="media/EDIT_ALL.png" alt="CRUD" height="200"/>
 
 ## 🏗 Built with
 - [Vue](https://vuejs.org/)
@@ -37,7 +44,7 @@ And here the [Changelog](CHANGELOG.md)
 - [Mongo](https://www.mongodb.com)
 - [Docker](https://www.docker.com/)
 
-### Dependencies
+## Dependencies
 - [Vuex](https://github.com/vuejs/vuex)
 - [Vuetify](https://vuetifyjs.com/)
 - [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
@@ -54,7 +61,12 @@ And here the [Changelog](CHANGELOG.md)
 - [TipTap](https://www.tiptap.dev/)
 
 ## 🎉 Features
-🚧 Under construction
+- Create roles and admin Users
+- Add Work Groups to group people and start to join this Work Groups
+- Add Common or Specific question for Users to join Work Groups
+- Add Tasks for the Work Groups to start to work in it and control members
+- Add new Static Pages or configure the basics (CMS)
+- Edit and delete all from the database
 
 ## 🥪 Installation
 We pack all the application to run in a Docker server for easy Deploy.
