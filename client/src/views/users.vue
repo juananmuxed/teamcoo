@@ -49,19 +49,11 @@
             <v-chip small class="ma-1" v-for="(wg,index) in item.workgroups" v-bind:key="index" :color="wg.color" :text-color="textColor(wg.color)" :to="'/workgroups/' + wg._wgId">{{ wg.name }}</v-chip>
           </template>
           <template v-slot:item.interests="{ item }">
-            <v-chip small class="ma-1" v-for="(interest,index) in item.interests" v-bind:key="index"><span>{{ interest.substring(0,7) }}</span><span v-if="interest.length >= 9">...</span></v-chip>
-          </template>
-          <template v-slot:item.membership="{ item }">
-            <v-tooltip 
-              transition="slide-x-transition"
-              open-delay="100"
-              right
-            >
-              <template v-slot:activator="{ on }">
-                <v-icon v-on="on" :color="item.membership.status == 'active' ? 'info' : 'error'">{{item.membership.status == 'active' ? 'fas fa-check' : 'fas fa-times'}}</v-icon>
+            <v-chip small class="ma-1" v-for="(interest,index) in item.interests" v-bind:key="index">
+              <template v-if="interest">
+                <span>{{ interest.substring(0,7) }}</span><span v-if="interest.length >= 9">...</span>
               </template>
-              <span class="text-right caption font-weight-light">{{item.membership.status == 'active' ? 'Member' : 'Not Member'}}</span>
-            </v-tooltip>
+            </v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-btn depressed color="info" :to="'/users/' + item.id">
@@ -121,12 +113,6 @@ export default {
           text: 'Interests',
           value: 'interests',
           width: 30
-        },
-        {
-          text: 'Membership',
-          value: 'membership',
-          sortable: false,
-          width: 10
         },
         {
           text: '',

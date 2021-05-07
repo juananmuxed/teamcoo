@@ -115,9 +115,6 @@
                                 <v-btn small color="info" :to="`/tasks/${task._id}`">
                                     <v-icon left>fas fa-eye</v-icon> See
                                 </v-btn>
-                                <v-btn small color="primary">
-                                    <v-icon left>fas fa-user-plus</v-icon> Join
-                                </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
@@ -224,9 +221,6 @@
                                             <v-spacer></v-spacer>
                                             <v-btn small color="info" :to="`/tasks/${task._id}`">
                                                 <v-icon left>fas fa-eye</v-icon> See
-                                            </v-btn>
-                                            <v-btn small color="primary">
-                                                <v-icon left>fas fa-user-plus</v-icon> Join
                                             </v-btn>
                                         </v-card-actions>
                                     </v-card>
@@ -351,9 +345,6 @@
                                             <v-btn small color="info" :to="`/tasks/${task._id}`">
                                                 <v-icon left>fas fa-eye</v-icon> See
                                             </v-btn>
-                                            <v-btn small color="primary">
-                                                <v-icon left>fas fa-user-plus</v-icon> Join
-                                            </v-btn>
                                         </v-card-actions>
                                     </v-card>
                                 </v-col>
@@ -403,9 +394,7 @@ export default {
         },
     },
     created() {
-        if(this.tasks.length == 0){
-            this.loadTasks()
-        }
+        this.loadTasks();
     },
 }   
 </script>

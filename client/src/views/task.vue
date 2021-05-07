@@ -53,7 +53,7 @@
                                     :title="`${!searchedTask.members.some(m => m.id == loginuser.id) ? 'Join' : 'Unjoin'} to ${searchedTask.name}</span>`" 
                                     :description="`You are about to ${!searchedTask.members.some(m => m.id == loginuser.id) ? 'Join' : 'Unjoin'} this Task.<br><br>Are you sure?`" 
                                     :cancelFunction="null" 
-                                    textButton="Join" 
+                                    :textButton="!searchedTask.members.some(m => m.id == loginuser.id) ? 'Join' : 'Unjoin'" 
                                     :actionparams="{taskId:searchedTask._id, userId:loginuser.id, suscribe:!searchedTask.members.some(m => m.id == loginuser.id)}" 
                                     :action="saveMember"
                                 ></confirmation-template>
@@ -66,15 +66,15 @@
                             </v-list-item>
                         </v-card-title>
                         <v-divider></v-divider>
-                        <v-card-text :class="`${textColor(searchedTask.color)}--text`">
+                        <v-card-text>
                             <v-col cols="12" class="mb-4">
-                                <span class="text-uppercase headline font-weight-light">Description<br></span>
-                                <span class="font-italic">
+                                <span class="text-uppercase headline font-weight-light">Description</span>
+                                <p class="font-italic">
                                     {{ searchedTask.description }}
-                                </span>
+                                </p>
                             </v-col>
                             <v-col cols="12">
-                                <span class="text-uppercase headline font-weight-light">Interests<br></span>
+                                <span class="text-uppercase headline font-weight-light">Interests</span>
                             </v-col>
                             <template v-if="searchedTask.interests.length != 0">
                                 <v-col cols="12">
@@ -85,7 +85,18 @@
                                 <span class="text-uppercase font-weight-thin display-1">No interests</span>
                             </v-col>
                             <v-col cols="12">
-                                <span class="text-uppercase headline font-weight-light">Members<br></span>
+                                <span class="text-uppercase headline font-weight-light">
+                                    Members
+                                    <v-dialog
+                                        v-model="dialogs.editmembers"
+                                        max-width="650"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                            <v-btn v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedTask.creator.id" @click="loadMembers({members:searchedTask.members})" v-on="on" small class="ml-2" color="primary"><v-icon left x-small>fas fa-edit</v-icon>Edit</v-btn>
+                                        </template>
+                                        <edit-members></edit-members>
+                                    </v-dialog>
+                                </span>
                             </v-col>
                             <template v-if="searchedTask.members.length != 0">
                                 <v-col cols="12">
@@ -98,10 +109,10 @@
                                                     <v-img :src="user.avatar" v-on="on"></v-img>
                                                 </template>
                                                 <template v-else>
-                                                    <v-icon small color="info" v-on="on">fas fa-user</v-icon>
+                                                    <v-icon color="primary" v-on="on">fas fa-user</v-icon>
                                                 </template>
                                             </template>
-                                            <span class="text-right caption font-weight-light">{{user.username}}</span>
+                                            <span class="text-right caption font-weight-light">{{ user.username }}</span>
                                         </v-tooltip>
                                     </v-avatar>
                                 </v-col>
@@ -213,6 +224,7 @@ import { mapActions, mapState, mapMutations } from 'vuex'
 import invalidstatic from '../components/general/invalid.vue'
 import confirm from '../components/general/confirm.vue'
 import edittask from '../components/tasks/edittask.vue'
+import editmembers from '../components/tasks/editmembers.vue'
 import { dateToBeauty, idealTextColor } from '../utils/utils'
 export default {
     data() {
@@ -223,7 +235,8 @@ export default {
     components:{
         'invalid-static': invalidstatic,
         'confirmation-template': confirm,
-        'edit-task': edittask
+        'edit-task': edittask,
+        'edit-members': editmembers
     },
     computed: {
         ...mapState({

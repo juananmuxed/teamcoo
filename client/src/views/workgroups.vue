@@ -30,12 +30,44 @@
             <v-chip small class="ma-1" v-for="(question,index) in item.questions" v-bind:key="index">{{ question.name }}</v-chip>
           </template>
           <template v-slot:item.members="{ item }">
-            <span v-if="item.members.length==0">No members added</span>
-            <v-chip small class="ma-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.username }}</v-chip>
+            <span v-if="item.members.length==0">No members</span>
+            <template v-else>
+              <v-avatar size="24px" left v-for="(user , index) in item.members" :key="index" class="ma-1">
+                <v-tooltip
+                    top
+                >
+                    <template v-slot:activator="{ on }">                                                    
+                        <template v-if="user.avatar != ''">
+                            <v-img :src="user.avatar" v-on="on"></v-img>
+                        </template>
+                        <template v-else>
+                            <v-icon small color="primary" v-on="on">fas fa-user</v-icon>
+                        </template>
+                    </template>
+                    <span class="text-right caption font-weight-light">{{user.username}}</span>
+                </v-tooltip>
+              </v-avatar>
+            </template>
           </template>
           <template v-slot:item.coordinators="{ item }">
-            <span v-if="item.coordinators.length==0">No coordinators added</span>
-            <v-chip small class="ma-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.username }}</v-chip>
+            <span v-if="item.coordinators.length==0">No coordinators</span>
+            <template v-else>
+              <v-avatar size="24px" left v-for="(user , index) in item.coordinators" :key="index" class="ma-1">
+                <v-tooltip
+                    top
+                >
+                    <template v-slot:activator="{ on }">                                                    
+                        <template v-if="user.avatar != ''">
+                            <v-img :src="user.avatar" v-on="on"></v-img>
+                        </template>
+                        <template v-else>
+                            <v-icon small color="primary" v-on="on">fas fa-user</v-icon>
+                        </template>
+                    </template>
+                    <span class="text-right caption font-weight-light">{{user.username}}</span>
+                </v-tooltip>
+              </v-avatar>
+            </template>
           </template>
           <template v-slot:item.creator="{ item }">
             <v-chip class="mx-1" :to="'/users/' + item._userId">
@@ -99,11 +131,43 @@
             </template>
             <template v-slot:item.members="{ item }">
               <span v-if="item.members.length==0">No members</span>
-              <v-chip small class="ma-1" v-for="(member,index) in item.members" v-bind:key="index">{{ member.username }}</v-chip>
+              <template v-else>
+                <v-avatar size="24px" left v-for="(user , index) in item.coordinators" :key="index" class="ma-1">
+                  <v-tooltip
+                      top
+                  >
+                      <template v-slot:activator="{ on }">                                                    
+                          <template v-if="user.avatar != ''">
+                              <v-img :src="user.avatar" v-on="on"></v-img>
+                          </template>
+                          <template v-else>
+                              <v-icon small color="primary" v-on="on">fas fa-user</v-icon>
+                          </template>
+                      </template>
+                      <span class="text-right caption font-weight-light">{{user.username}}</span>
+                  </v-tooltip>
+                </v-avatar>
+              </template>
             </template>
             <template v-slot:item.coordinators="{ item }">
               <span v-if="item.coordinators.length==0">No coordinators</span>
-              <v-chip small class="ma-1" v-for="(coor,index) in item.coordinators" v-bind:key="index">{{ coor.username }}</v-chip>
+              <template v-else>
+                <v-avatar size="24px" left v-for="(user , index) in item.coordinators" :key="index" class="ma-1">
+                  <v-tooltip
+                      top
+                  >
+                      <template v-slot:activator="{ on }">                                                    
+                          <template v-if="user.avatar != ''">
+                              <v-img :src="user.avatar" v-on="on"></v-img>
+                          </template>
+                          <template v-else>
+                              <v-icon small color="primary" v-on="on">fas fa-user</v-icon>
+                          </template>
+                      </template>
+                      <span class="text-right caption font-weight-light">{{user.username}}</span>
+                  </v-tooltip>
+                </v-avatar>
+              </template>
             </template>
             <template v-slot:item.creator="{ item }">
               <v-chip class="mx-1" :to="'/users/' + item._userId">

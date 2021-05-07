@@ -117,7 +117,8 @@ const actions = {
                             if( Array.isArray(users[x].workgroups[y].answers[i].answer) ) {
                                 interests = users[x].workgroups[y].answers[i].answer.concat(interests);
                             } else {
-                                if(users[x].workgroups[y].answers[i].indexOf('Joined by Coordinator/Admin:') !== -1) interests.push( users[x].workgroups[y].answers[i].answer );
+                                console.log(users[x].workgroups[y].answers[i])
+                                if(!users[x].workgroups[y].answers.includes('Joined by Coordinator/Admin:')) interests.push( users[x].workgroups[y].answers[i].answer );
                             }
                         }
                     }

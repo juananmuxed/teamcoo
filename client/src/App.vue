@@ -29,6 +29,13 @@
         :timeout="0"
         multi-line
       >{{ snackbar.message }}
+      <v-btn
+        color="error"
+        icon
+        @click="snackbar.active = false"
+      >
+        <v-icon>fas fa-times</v-icon>
+      </v-btn>
       </v-snackbar>
   </v-app>
 </template>

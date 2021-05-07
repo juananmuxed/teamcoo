@@ -157,13 +157,63 @@
                                                 </v-row>
                                                 <v-row v-if="wg.members && wg.members.length != 0">
                                                     <v-col cols="12" class="my-1">
-                                                        <v-chip v-for="(member , index) in wg.members" v-bind:key="index" class="mx-1">
-                                                            <v-avatar left v-if="member.avatar != ''"><v-img :src="member.avatar"></v-img></v-avatar>
-                                                            <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
-                                                            {{ member.username }}
-                                                        </v-chip>
+                                                        <v-avatar left v-for="(user , index) in wg.members" :key="index" class="ma-1">
+                                                            <v-tooltip
+                                                                top
+                                                            >
+                                                                <template v-slot:activator="{ on }">                                                    
+                                                                    <template v-if="user.avatar != ''">
+                                                                        <v-img :src="user.avatar" v-on="on"></v-img>
+                                                                    </template>
+                                                                    <template v-else>
+                                                                        <v-icon color="primary" v-on="on">fas fa-user</v-icon>
+                                                                    </template>
+                                                                </template>
+                                                                <span class="text-right caption font-weight-light">{{ user.username }}</span>
+                                                            </v-tooltip>
+                                                        </v-avatar>
                                                     </v-col>
                                                 </v-row>
+                                                <v-row>
+                                                    <v-col cols="12">
+                                                        <span class="text-uppercase title font-weight-light">Answers</span>
+                                                    </v-col>
+                                                </v-row>
+                                                <template v-for="(answer, i) in searchedUser.workgroups">
+                                                    <v-row v-bind:key="i" v-if="answer._wgId == wg._id">
+                                                        <template v-if="!answer.answers.includes('Joined by Coordinator/Admin:')">
+                                                            <v-list-item v-for="(ans, index) in wg.questions" v-bind:key="index">
+                                                                <v-list-item-content>
+                                                                    <v-list-item-title :class="`${textColor(wg.color)}--text`">{{ ans.name }}</v-list-item-title>
+                                                                    <v-list-item-subtitle>
+                                                                        <v-chip-group column :class="`${textColor(wg.color)}--text`">
+                                                                            <template v-for="(select, x) in ans.selections">
+                                                                                <template v-if="ans.type != 'text'">
+                                                                                    <template v-if="Array.isArray(answer.answers[index].answer)">
+                                                                                        <v-chip x-small v-bind:key="x" v-if="answer.answers[index].answer.some(a => a == select)">
+                                                                                            {{ select }}
+                                                                                        </v-chip>
+                                                                                    </template>
+                                                                                    <template v-else>
+                                                                                        <v-chip x-small v-bind:key="x" v-if="answer.answers[index].answer == select">
+                                                                                            {{ select }}
+                                                                                        </v-chip>
+                                                                                    </template>
+                                                                                </template>
+                                                                                <span v-bind:key="x" v-else :class="`${textColor(wg.color)}--text`">{{ answer.answers[index].answer }}</span>
+                                                                            </template>
+                                                                        </v-chip-group>
+                                                                    </v-list-item-subtitle>
+                                                                </v-list-item-content>
+                                                            </v-list-item>
+                                                        </template>
+                                                        <v-list-item v-else>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title :class="`${textColor(wg.color)}--text`">{{ answer.answers }}</v-list-item-title>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-row>
+                                                </template>
                                             </v-card-text>
                                         </v-card>
                                     </v-col>

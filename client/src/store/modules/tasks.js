@@ -19,6 +19,10 @@ const state = {
         imagelink:'',
         secret:false
     },
+    editmemberform:{
+        members:[],
+        loading: false
+    },
     loading:false,
     skeleton:false
 }
@@ -54,6 +58,12 @@ const mutations = {
     },
     randomTaskColor:(state) => {
         state.tasksForm.color = generateRandomColor(30).toUpperCase();
+    },
+    loadMembers:(state,members) => {
+        state.editmemberform.members = Array(members.members.length)
+        for (let x = 0; x < members.members.length; x++) {
+            state.editmemberform.members[x] = members.members[x];
+        }
     },
     changeLoading: (state, loading) => state.loading = loading,
 }
@@ -92,6 +102,9 @@ const getters = {
         else {
             return true
         }
+    },
+    editedMembers:(state) => {
+        return !isDiferentArray(state.searchedTask.members,state.editmemberform.members,'id','id')
     },
 }
 
@@ -204,13 +217,11 @@ const actions = {
             commit('changeSkeleton', false);
         }
     },
-    async searchTaskSilent({ commit, dispatch, rootState, rootGetters }, task) {
+    async searchTaskSilent({ commit, dispatch, rootState, rootGetters }, id) {
         try {
-            if(task.constructor.name !== 'Object') {
-                let config = rootGetters['general/cookieAuth'];
-                let res = await Axios.get('/tasks/' + task, config)
-                task = res.data
-            }
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/tasks/' + id, config);
+            let task = res.data;
             await dispatch('users/loadUserByID',task.createdBy,{root:true});
             task['creator'] = rootState.users.temporaluser;
             let tempMembers = Array(task.usersjoined.length), tempWorkgroups = Array(task.workgroups.length), tempInterests = Array(task.interests.length);
@@ -291,11 +302,25 @@ const actions = {
             members = members.filter(m => m != userId);
             if(params.suscribe) members.push(userId);
             let resPut = await Axios.put('/tasks/' +  taskId, { usersjoined:members },config);
-            await dispatch('searchTaskSilent',resPut.data);
             commit('menu/cancelDialog', 'savemembertask', { root: true });
             commit('menu/notification', ['info', 4, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
+            await dispatch('searchTask',resPut.data._id);
         } catch (error) {
             commit('menu/notification', ['error', 5, error], { root: true });
+        }
+    },
+    async saveMembers({ state, commit, dispatch, rootGetters }) {
+        try {
+            let idTask = state.searchedTask._id;
+            let idMembers = state.editmemberform.members.map(m => m.id);
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.put('/tasks/' + idTask, { usersjoined:idMembers}, config);
+            await dispatch('user/refreshLoadedUser', null,{root:true});
+            commit('menu/cancelDialog', 'editmembers', { root: true });
+            commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
+            await dispatch('searchTask',res.data._id);
+        } catch (error) {
+            commit('menu/notification', ['info', 10, error], { root: true });
         }
     }
 }
