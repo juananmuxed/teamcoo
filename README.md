@@ -42,6 +42,7 @@ And here the [Changelog](CHANGELOG.md)
 - [Express](https://expressjs.com)
 - [Node](https://nodejs.org/)
 - [Mongo](https://www.mongodb.com)
+- [Mongo-express](https://github.com/mongo-express/mongo-express)
 - [Docker](https://www.docker.com/)
 
 ## Dependencies
@@ -127,12 +128,23 @@ Access to the folder
 cd teamcoo
 ```
 
-Create (or modify) the .env to Enviorement Variables
+Create (or modify example.env) the .env to Enviorement Variables
 ```bash
-SECRET_STRING=examplestringforhash
-EMAIL_ACCOUNT=account@domain.es
-EMAIL_PASSWORD=smtp_password
-EMAIL_DOMAIN=mail.host.domain.es
+WEB_NAME=name_ong
+MONGO_ROOT_USER=rootname
+MONGO_ROOT_PASSWORD=rootpass
+MONGOEXPRESS_LOGIN=teamcoo
+MONGOEXPRESS_PASSWORD=pass
+SECRET_STRING=verysecret
+API_VERSION=1
+DATABASE_HOST=localhost
+DATABASE_NAME=teamcoo
+DATABASE_PORT=27017
+API_PORT=3000
+EMAIL_ACCOUNT=account@domain.es // Temporally here - Next update in Config
+EMAIL_PASSWORD=smtp_password // Temporally here - Next update in Config
+EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
+NODE_ENV=development
 ```
 
 Build the Dockers with docker-compose
@@ -144,6 +156,12 @@ And up the Network
 ```bash
 docker-compose up -d
 ```
+
+The ports are the next by default:
+- API: 3000
+- APP: 8080
+- DB-Admin: 8081
+- Database: 27017
 
 ## 🥘 Wiki
 🚧 Under construction

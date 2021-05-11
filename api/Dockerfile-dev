@@ -2,9 +2,9 @@ FROM node:12-alpine as builder
 
 RUN npm install nodemon -g
 
-RUN mkdir -p /datapistas/v1
+RUN mkdir -p /teamcoo/v1
 
-WORKDIR /datapistas/v1
+WORKDIR /teamcoo/v1
 
 COPY . .
 

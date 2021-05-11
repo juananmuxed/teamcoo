@@ -3,9 +3,10 @@ const Token = require('../models/tokens')
 const nodemailer = require('nodemailer')
 const ejs = require('ejs')
 const bcrypt = require('bcryptjs');
-require('dotenv').config();
+require('dotenv').config({ path: require('find-config')('.env') });
 
 const transporter = nodemailer.createTransport({
+    // TODO: send to config in backoffice
     host: process.env.EMAIL_DOMAIN,
     port: 465,
     secure: true,
@@ -76,6 +77,7 @@ exports.registerNewUser = async(req,res) => {
         })
         res.status(201).json({ data, token });
     } catch (error) {
+        console.log(error)
         res.status(400).json({ message: 'An error has ocurred', error });
     }
 };

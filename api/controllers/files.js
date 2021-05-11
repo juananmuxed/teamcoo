@@ -1,15 +1,28 @@
 const mongoose = require('mongoose')
+require('dotenv').config({ path: require('find-config')('.env') });
 const Grid = require('gridfs-stream')
 
+const {
+    DATABASE_NAME,
+    DATABASE_HOST,
+    DATABASE_PORT,
+    NODE_ENV,
+    WEB_NAME
+} = process.env;
+  
 // Connection mongo
-
-const options = {
+let options = {
     useNewUrlParser: true,
     useFindAndModify: false,
     useCreateIndex: true,
     useUnifiedTopology: true
 }
-const url = 'mongodb://localhost:27017/teamcoo'
+  
+if(NODE_ENV == 'production') options.user = process.env.MONGO_ROOT_USER;
+if(NODE_ENV == 'production') options.pass = process.env.MONGO_ROOT_PASSWORD;
+if(NODE_ENV == 'production') options.auth = {authSource:'admin'};
+  
+const url = `mongodb://${NODE_ENV == 'production' ? WEB_NAME + '-db' : DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
 
 // Promises
 
