@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2021-05-11
+
 ### Added
 
 - Views for Users, Workgroups, Interests and Menu.
@@ -67,7 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Duplicated README in public folder
 
-[Unreleased]: https://github.com/juananmuxed/teamcoo/compare/v0.3-beta...HEAD
+[Unreleased]: https://github.com/juananmuxed/teamcoo/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.9.0
 [0.3-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.3-beta
 [0.2-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.2-beta
 [0.1-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.1-beta

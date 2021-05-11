@@ -92,10 +92,21 @@ cd teamcoo
 
 Create (or modify) the .env to Enviorement Variables
 ```bash
-SECRET_STRING=examplestringforhash
-EMAIL_ACCOUNT=account@domain.es
-EMAIL_PASSWORD=smtp_password
-EMAIL_DOMAIN=mail.host.domain.es
+WEB_NAME=name_ong
+MONGO_ROOT_USER=rootname
+MONGO_ROOT_PASSWORD=rootpass
+MONGOEXPRESS_LOGIN=teamcoo
+MONGOEXPRESS_PASSWORD=pass
+SECRET_STRING=verysecret
+API_VERSION=1
+DATABASE_HOST=localhost
+DATABASE_NAME=teamcoo
+DATABASE_PORT=27017
+API_PORT=3000
+EMAIL_ACCOUNT=account@domain.es // Temporally here - Next update in Config
+EMAIL_PASSWORD=smtp_password // Temporally here - Next update in Config
+EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
+NODE_ENV=development
 ```
 
 Then access to 2 folders (2 console prompt is easier)
