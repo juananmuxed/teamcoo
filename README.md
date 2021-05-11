@@ -45,7 +45,7 @@ And here the [Changelog](CHANGELOG.md)
 - [Mongo-express](https://github.com/mongo-express/mongo-express)
 - [Docker](https://www.docker.com/)
 
-## Dependencies
+### 🪃 Dependencies
 - [Vuex](https://github.com/vuejs/vuex)
 - [Vuetify](https://vuetifyjs.com/)
 - [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
@@ -59,6 +59,7 @@ And here the [Changelog](CHANGELOG.md)
 - [Secure LS](https://www.npmjs.com/package/secure-ls)
 - [Vue JWT Decode](https://www.npmjs.com/package/vue-jwt-decode)
 - [Vuex PersistedState](https://www.npmjs.com/package/vuex-persistedstate)
+- [Find Config](https://www.npmjs.com/package/find-config)
 - [TipTap](https://www.tiptap.dev/)
 
 ## 🎉 Features
