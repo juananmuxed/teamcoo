@@ -1,63 +1,66 @@
-version: '3.7'
+version: "3.7"
 services:
-    api:
-        build: 
-            context: ./api
-            dockerfile: Dockerfile-dev
-        networks: 
-            - teamcoo
-        ports:
-            - "3000:3000"
-        container_name: ${WEB_NAME}-api
-        volumes: 
-            - ./api:/teamcoo/v1
-            - /teamcoo/v1/node_modules
-        depends_on: 
-            - db
-        env_file: 
-            - .env
-        environment: 
-            - NODE_ENV=production
-    web:
-        build: 
-            context: ./client
-            dockerfile: Dockerfile-dev
-        networks: 
-            - teamcoo
-        ports: 
-            - "8080:8080"
-        container_name: ${WEB_NAME}-web
-        volumes: 
-            - ./client:/teamcoo
-            - /teamcoo/node_modules
-    db:
-        image: mongo
-        networks: 
-            - teamcoo
-        ports: 
-            - "27017:27017"
-        container_name: ${WEB_NAME}-db
-        environment:
-            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
-            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
-            - MONGO_INITDB_DATABASE=${DATABASE_NAME}
-    mongo-express:
-        image: mongo-express
-        container_name: ${WEB_NAME}-admin-db
-        environment:
-            - ME_CONFIG_MONGODB_SERVER=${WEB_NAME}-db
-            - ME_CONFIG_MONGODB_PORT=${DATABASE_PORT}
-            - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_ROOT_USER}
-            - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_ROOT_PASSWORD}
-            - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
-            - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
-        depends_on:
-            - db
-        ports:
-            - "8081:8081"
-        networks: 
-            - teamcoo
-networks: 
-    teamcoo:
-        name: ${WEB_NAME}
-        driver: bridge
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile-dev
+    networks:
+      - teamcoo
+    ports:
+      - "3000:3000"
+    container_name: ${WEB_NAME}-api
+    volumes:
+      - ./api:/teamcoo/v1
+      - /teamcoo/v1/node_modules
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+  web:
+    build:
+      context: ./client
+      dockerfile: Dockerfile-dev
+    networks:
+      - teamcoo
+    ports:
+      - "8080:8080"
+    container_name: ${WEB_NAME}-web
+    volumes:
+      - ./client:/teamcoo
+      - /teamcoo/node_modules
+  db:
+    image: mongo
+    networks:
+      - teamcoo
+    ports:
+      - "27017:27017"
+    container_name: ${WEB_NAME}-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DATABASE_NAME}
+    volumes:
+      - /db/config:/data/configdb
+      - /db:/data/db
+  mongo-express:
+    image: mongo-express
+    container_name: ${WEB_NAME}-admin-db
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=${WEB_NAME}-db
+      - ME_CONFIG_MONGODB_PORT=${DATABASE_PORT}
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_ROOT_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_ROOT_PASSWORD}
+      - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+    networks:
+      - teamcoo
+networks:
+  teamcoo:
+    name: ${WEB_NAME}
+    driver: bridge
