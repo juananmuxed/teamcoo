@@ -1,3 +1,4 @@
+require('dotenv').config()
 import Vue from 'vue'
 import App from './App.vue'
 import axios from 'axios'
@@ -6,12 +7,13 @@ import router from './router'
 import vuex from 'vuex'
 import vuetify from './plugins/vuetify'
 import store from './store/index'
-import config from './config/config.json'
+import globalConfig from './config/config.json'
 
-const urlApi = config.global.hostnameApi;
+const host = process.env.NODE_ENV == 'development' ? globalConfig.global.development.hostApi : globalConfig.global.production.hostApi;
+const urlApi = `${host}/api/v${globalConfig.global.versionApi}/`;
 
-Vue.use(vueaxios,axios,router,vuex)
-Vue.config.productionTip = false
+Vue.use(vueaxios, axios, router, vuex)
+Vue.config.productionTip = false;
 
 axios.defaults.baseURL = urlApi;
 

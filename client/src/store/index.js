@@ -11,10 +11,16 @@ import interests from './modules/interests'
 import createPersistedState from 'vuex-persistedstate'
 import SecureLS from "secure-ls";
 var ls = new SecureLS({ isCompression: false });
+import globalConfig from './../config/config.json'
+
+const host = process.env.NODE_ENV == 'development' ? globalConfig.global.development.hostApi : globalConfig.global.production.hostApi;
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  state: {
+    urlApi: host
+  },
   namespaced: true,
   name: "global",
   modules: {

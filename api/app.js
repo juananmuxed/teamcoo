@@ -1,7 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const path = require('path')
 const mongoose = require('mongoose')
 const fs = require('fs');
 require('dotenv').config({ path: require('find-config')('.env') });
@@ -47,9 +46,9 @@ let options = {
   useUnifiedTopology: true
 }
 
-if(NODE_ENV == 'production') options.user = process.env.MONGO_ROOT_USER;
-if(NODE_ENV == 'production') options.pass = process.env.MONGO_ROOT_PASSWORD;
-if(NODE_ENV == 'production') options.auth = {authSource:'admin'};
+if (NODE_ENV == 'production') options.user = process.env.MONGO_ROOT_USER;
+if (NODE_ENV == 'production') options.pass = process.env.MONGO_ROOT_PASSWORD;
+if (NODE_ENV == 'production') options.auth = { authSource: 'admin' };
 
 const url = `mongodb://${NODE_ENV == 'production' ? WEB_NAME + '-db' : DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
 
@@ -58,19 +57,20 @@ mongoose.connect(url, options);
 const db = mongoose.connection;
 
 db.on('error', err => {
-  console.error( 'Mongodb Connection Error:' + err);
+  console.error('Mongodb Connection Error:' + err);
 });
 db.once('open', () => {
-  console.log( colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset );
-  console.log( colors.bggreen + colors.white + '[___________________________DATABASE___________________________]' + colors.reset );
-  console.log( colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset );
+  console.log(colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset);
+  console.log(colors.bggreen + colors.white + '[___________________________DATABASE___________________________]' + colors.reset);
+  console.log(colors.bggreen + colors.white + '[______________________________________________________________]' + colors.reset);
   console.log('');
-  console.log( colors.green +  '💡 Mongo Connected ===> ' + colors.reset +  colors.cyan + url );
+  console.log(colors.green + '💡 Mongo Connected ===> ' + colors.reset + colors.cyan + url);
   console.log('');
 });
 
 // Middleware
 app.use(morgan('dev'))
+app.use('/uploads', express.static('uploads'))
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -80,7 +80,7 @@ fs.readdir('./routes/', (error, files) => {
   if (error) return console.log(err);
 
   files.forEach(file => {
-    if(!file.endsWith('.js')) return;
+    if (!file.endsWith('.js')) return;
 
     const routeName = file.split('.')[0];
     app.use(`/api/${version}/${routeName}`, require(`./routes/${file}`))
@@ -90,15 +90,14 @@ fs.readdir('./routes/', (error, files) => {
 // Middleware for Vue.js router mode history
 const history = require('connect-history-api-fallback')
 app.use(history());
-app.use(express.static(path.join(__dirname, 'public')))
 
 app.set('port', process.env.API_PORT || 3000)
 app.set('host', NODE_ENV == 'production' ? process.env.WEB_NAME + '-api' : 'localhost')
-app.listen(app.get('port'),app.get('host') , () => {
-  console.log( colors.bgmagenta + colors.white + '[______________________________________________________________]' + colors.reset );
-  console.log( colors.bgmagenta + colors.white + '[________________________________API___________________________]' + colors.reset );
-  console.log( colors.bgmagenta + colors.white + '[______________________________________________________________]' + colors.reset );
+app.listen(app.get('port'), app.get('host'), () => {
+  console.log(colors.bgmagenta + colors.white + '[______________________________________________________________]' + colors.reset);
+  console.log(colors.bgmagenta + colors.white + '[________________________________API___________________________]' + colors.reset);
+  console.log(colors.bgmagenta + colors.white + '[______________________________________________________________]' + colors.reset);
   console.log('');
-  console.log( colors.green + '💻 Server Start ===> ' + colors.reset +  colors.blue + app.get('host') + colors.reset + colors.magenta + ':' + app.get('port') + colors.reset );
+  console.log(colors.green + '💻 Server Start ===> ' + colors.reset + colors.blue + app.get('host') + colors.reset + colors.magenta + ':' + app.get('port') + colors.reset);
   console.log('');
 })

@@ -25,8 +25,8 @@ const state = {
         dark: false,
         workgroups: [],
         unsuscribedworkgroups: [],
-        membership:{},
-        emailconfig:[],
+        membership: {},
+        emailconfig: [],
         password: ''
     },
     user: {
@@ -48,7 +48,7 @@ const state = {
             privacycookiepolicy: false
         }
     },
-    usersloaded:[]
+    usersloaded: []
 }
 
 const mutations = {
@@ -160,7 +160,7 @@ const actions = {
             let token = response.data.token;
             if (token) {
                 Cookies.set('catapa-jwt', token, { expires: 30 });
-                commit('userStore', {data:response.data.data});
+                commit('userStore', { data: response.data.data });
                 router.push('/dashboard');
                 commit('menu/notification', ['success', 3, 'Correct registration. Welcome to Catapa, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
             }
@@ -178,7 +178,7 @@ const actions = {
             }
         }
     },
-    async login({ state, commit }) {
+    async login({ commit }) {
         try {
             let response = await Axios.post('/users/login', state.user)
             let token = response.data.token;
@@ -186,7 +186,7 @@ const actions = {
                 Cookies.set('catapa-jwt', token, { expires: 30 });
             }
             if (token) {
-                commit('userStore', {data:response.data.user});
+                commit('userStore', { data: response.data.user });
                 commit('menu/cancelDialog', 'login', { root: true });
                 commit('menu/notification', ['success', 3, 'Correct Login. Welcome ' + response.data.user.username], { root: true });
                 router.push('/dashboard');
@@ -198,11 +198,11 @@ const actions = {
             commit('menu/notification', ['error', 3, 'Incorrect login.'], { root: true });
         }
     },
-    async refreshLoadedUser({ state, commit, rootGetters}) {
+    async refreshLoadedUser({ state, commit, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/' + state.loginuser.id, config)
-            commit('userStore', {data:res.data});
+            commit('userStore', { data: res.data });
         } catch (err) {
             commit('menu/notification', ['error', 3, 'Error'], { root: true });
         }

@@ -1,11 +1,10 @@
 import Axios from 'axios'
 import router from '@/router'
-import globalConfig from '../../config/config.json'
-import { todayFormatToPicker , generateRandomColor, isDiferentArray } from '../../utils/utils'
+import { todayFormatToPicker, generateRandomColor, isDiferentArray } from '../../utils/utils'
 
 const state = {
     tasks: [],
-    searchedTask:{},
+    searchedTask: {},
     tasksForm: {
         name: '',
         description: '',
@@ -15,16 +14,16 @@ const state = {
         interestsSelected: [],
         startDate: todayFormatToPicker(),
         endDate: '',
-        image:null,
-        imagelink:'',
-        secret:false
+        image: null,
+        imagelink: '',
+        secret: false
     },
-    editmemberform:{
-        members:[],
+    editmemberform: {
+        members: [],
         loading: false
     },
-    loading:false,
-    skeleton:false
+    loading: false,
+    skeleton: false
 }
 
 const mutations = {
@@ -42,24 +41,24 @@ const mutations = {
     },
     tasksLoad: (state, tasks) => { state.tasks = tasks },
     changeSkeleton: (state, skeleton) => state.skeleton = skeleton,
-    pullTask:(state,task) => {state.searchedTask = task},
-    loadEditedTask:(state) => {
+    pullTask: (state, task) => { state.searchedTask = task },
+    loadEditedTask: (state) => {
         state.tasksForm.name = state.searchedTask.name,
-        state.tasksForm.description = state.searchedTask.description,
-        state.tasksForm.link = state.searchedTask.link,
-        state.tasksForm.image = state.searchedTask.image,
-        state.tasksForm.newimage = null,
-        state.tasksForm.secret = state.searchedTask.secret,
-        state.tasksForm.color = state.searchedTask.color,
-        state.tasksForm.startDate = todayFormatToPicker(state.searchedTask.eventStartDate),
-        state.tasksForm.endDate = todayFormatToPicker(state.searchedTask.eventEndDate),
-        state.tasksForm.workgroupsSelected = state.searchedTask.workgroups,
-        state.tasksForm.interestsSelected = state.searchedTask.interests
+            state.tasksForm.description = state.searchedTask.description,
+            state.tasksForm.link = state.searchedTask.link,
+            state.tasksForm.image = state.searchedTask.image,
+            state.tasksForm.newimage = null,
+            state.tasksForm.secret = state.searchedTask.secret,
+            state.tasksForm.color = state.searchedTask.color,
+            state.tasksForm.startDate = todayFormatToPicker(state.searchedTask.eventStartDate),
+            state.tasksForm.endDate = todayFormatToPicker(state.searchedTask.eventEndDate),
+            state.tasksForm.workgroupsSelected = state.searchedTask.workgroups,
+            state.tasksForm.interestsSelected = state.searchedTask.interests
     },
-    randomTaskColor:(state) => {
+    randomTaskColor: (state) => {
         state.tasksForm.color = generateRandomColor(30).toUpperCase();
     },
-    loadMembers:(state,members) => {
+    loadMembers: (state, members) => {
         state.editmemberform.members = Array(members.members.length)
         for (let x = 0; x < members.members.length; x++) {
             state.editmemberform.members[x] = members.members[x];
@@ -84,7 +83,7 @@ const getters = {
             return true
         }
     },
-    editedTask:(state) =>{
+    editedTask: (state) => {
         if (
             state.tasksForm.name != state.searchedTask.name ||
             state.tasksForm.description != state.searchedTask.description ||
@@ -94,8 +93,8 @@ const getters = {
             state.tasksForm.newimage != null ||
             state.tasksForm.secret != state.searchedTask.secret ||
             state.tasksForm.color.toUpperCase() != state.searchedTask.color.toUpperCase() ||
-            isDiferentArray(state.tasksForm.workgroupsSelected,state.searchedTask.workgroups,'_id','_id') ||
-            isDiferentArray(state.tasksForm.interestsSelected,state.searchedTask.interests,'_id','_id') 
+            isDiferentArray(state.tasksForm.workgroupsSelected, state.searchedTask.workgroups, '_id', '_id') ||
+            isDiferentArray(state.tasksForm.interestsSelected, state.searchedTask.interests, '_id', '_id')
         ) {
             return false
         }
@@ -103,13 +102,13 @@ const getters = {
             return true
         }
     },
-    editedMembers:(state) => {
-        return !isDiferentArray(state.searchedTask.members,state.editmemberform.members,'id','id')
+    editedMembers: (state) => {
+        return !isDiferentArray(state.searchedTask.members, state.editmemberform.members, 'id', 'id')
     },
 }
 
 const actions = {
-    async createTask({ state, commit, dispatch, rootGetters }, userId){
+    async createTask({ state, commit, dispatch, rootState, rootGetters }, userId) {
         try {
             if (state.tasksForm.image != null) {
                 let formData = new FormData()
@@ -117,10 +116,10 @@ const actions = {
                 formData.append('file', state.tasksForm.image)
                 await Axios.post('/files/upload', formData, config)
                     .then(res => {
-                        state.tasksForm.imagelink = globalConfig.global.hostnameApi + '/files/image/' + res.data.file.filename
+                        state.tasksForm.imagelink = rootState.urlApi + '/uploads/' + res.data.file.filename
                     });
             }
-            else{
+            else {
                 state.tasksForm.imagelink = state.tasksForm.link
             }
             let color = generateRandomColor(135)
@@ -130,11 +129,11 @@ const actions = {
                 description: state.tasksForm.description,
                 interests: state.tasksForm.interestsSelected,
                 workgroups: state.tasksForm.workgroupsSelected,
-                eventStartDate:state.tasksForm.startDate,
-                eventEndDate:state.tasksForm.endDate,
-                image:state.tasksForm.imagelink,
-                secret:state.tasksForm.secret,
-                color:color,
+                eventStartDate: state.tasksForm.startDate,
+                eventEndDate: state.tasksForm.endDate,
+                image: state.tasksForm.imagelink,
+                secret: state.tasksForm.secret,
+                color: color,
                 createdBy: userId,
                 link: state.tasksForm.link
             }
@@ -150,8 +149,8 @@ const actions = {
     async loadTasks({ rootState, commit, dispatch }) {
         try {
             commit('changeLoading', true);
-            await dispatch('interests/loadInterests',null,{root:true});
-            await dispatch('workgroups/loadWorkgroups',null,{root:true});
+            await dispatch('interests/loadInterests', null, { root: true });
+            await dispatch('workgroups/loadWorkgroups', null, { root: true });
             let res = await Axios.get('/tasks/');
             let tasks = res.data;
             for (let i = 0; i < tasks.length; i++) {
@@ -171,10 +170,10 @@ const actions = {
                     }
                 }
                 for (let y = 0; y < tasks[i].usersjoined.length; y++) {
-                    await dispatch('users/loadUserByID',tasks[i].usersjoined[y], {root:true});
+                    await dispatch('users/loadUserByID', tasks[i].usersjoined[y], { root: true });
                     tasks[i].usersjoined[y] = rootState.users.temporaluser;
                 }
-                await dispatch('users/loadUserByID',tasks[i].createdBy, {root:true})
+                await dispatch('users/loadUserByID', tasks[i].createdBy, { root: true })
                 tasks[i].creator = rootState.users.temporaluser
                 tasks[i].interests = tempInterests
                 tasks[i].workgroups = tempWorkgroups
@@ -192,19 +191,19 @@ const actions = {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/tasks/' + id, config)
             let task = res.data
-            await dispatch('users/loadUserByID',task.createdBy,{root:true});
+            await dispatch('users/loadUserByID', task.createdBy, { root: true });
             task['creator'] = rootState.users.temporaluser;
             let tempMembers = Array(task.usersjoined.length), tempWorkgroups = Array(task.workgroups.length), tempInterests = Array(task.interests.length);
             for (let x = 0; x < task.usersjoined.length; x++) {
-                await dispatch('users/loadUserByID',task.usersjoined[x],{root:true});
+                await dispatch('users/loadUserByID', task.usersjoined[x], { root: true });
                 tempMembers[x] = rootState.users.temporaluser;
             }
             for (let x = 0; x < task.workgroups.length; x++) {
-                await dispatch('workgroups/searchWorkgroupSilent',task.workgroups[x],{root:true});
+                await dispatch('workgroups/searchWorkgroupSilent', task.workgroups[x], { root: true });
                 tempWorkgroups[x] = rootState.workgroups.searchedWorkgroup;
             }
             for (let x = 0; x < task.interests.length; x++) {
-                await dispatch('interests/searchInterestSilent',task.interests[x],{root:true});
+                await dispatch('interests/searchInterestSilent', task.interests[x], { root: true });
                 tempInterests[x] = rootState.interests.searchedInterest;
             }
             task.members = tempMembers;
@@ -222,19 +221,19 @@ const actions = {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/tasks/' + id, config);
             let task = res.data;
-            await dispatch('users/loadUserByID',task.createdBy,{root:true});
+            await dispatch('users/loadUserByID', task.createdBy, { root: true });
             task['creator'] = rootState.users.temporaluser;
             let tempMembers = Array(task.usersjoined.length), tempWorkgroups = Array(task.workgroups.length), tempInterests = Array(task.interests.length);
             for (let x = 0; x < task.usersjoined.length; x++) {
-                await dispatch('users/loadUserByID',task.usersjoined[x],{root:true});
+                await dispatch('users/loadUserByID', task.usersjoined[x], { root: true });
                 tempMembers[x] = rootState.users.temporaluser;
             }
             for (let x = 0; x < task.workgroups.length; x++) {
-                await dispatch('workgroups/searchWorkgroupSilent',task.workgroups[x],{root:true});
+                await dispatch('workgroups/searchWorkgroupSilent', task.workgroups[x], { root: true });
                 tempWorkgroups[x] = rootState.workgroups.searchedWorkgroup;
             }
             for (let x = 0; x < task.interests.length; x++) {
-                await dispatch('interests/searchInterestSilent',task.interests[x],{root:true});
+                await dispatch('interests/searchInterestSilent', task.interests[x], { root: true });
                 tempInterests[x] = rootState.interests.searchedInterest;
             }
             task.members = tempMembers;
@@ -245,7 +244,7 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
-    async saveEditedTask({state,commit,dispatch, rootGetters},id) {
+    async saveEditedTask({ state, commit, dispatch, rootState, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'], image = state.tasksForm.newimage;
             if (image != null) {
@@ -253,20 +252,20 @@ const actions = {
                 const config = { headers: { 'Content-Type': 'multipart/form-data' } }
                 formData.append('file', state.tasksForm.newimage);
                 await Axios.post('/files/upload', formData, config)
-                .then(res => {
-                    image = globalConfig.global.hostnameApi + '/files/upload/' + res.data.file.filename
-                })
+                    .then(res => {
+                        image = rootState.urlApi + '/uploads/' + res.data.file.filename
+                    })
             }
-            else{
+            else {
                 image = state.tasksForm.image;
             }
             let body = {
                 name: state.tasksForm.name,
                 description: state.tasksForm.description,
                 color: state.tasksForm.color,
-                eventStartDate:state.tasksForm.startDate,
-                eventEndDate:state.tasksForm.endDate,
-                secret:state.tasksForm.secret,
+                eventStartDate: state.tasksForm.startDate,
+                eventEndDate: state.tasksForm.endDate,
+                secret: state.tasksForm.secret,
                 workgroups: state.tasksForm.workgroupsSelected.map(q => q._id),
                 interests: state.tasksForm.interestsSelected.map(q => q._id),
                 image: image,
@@ -281,7 +280,7 @@ const actions = {
             commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
         }
     },
-    async delTask( { commit, dispatch, rootGetters } , params) {
+    async delTask({ commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
             await Axios.delete('/tasks/' + params.id, config);
@@ -297,14 +296,14 @@ const actions = {
         try {
             let config = rootGetters['general/cookieAuth'];
             let userId = params.userId, taskId = params.taskId;
-            let res = await Axios.get('/tasks/' +  taskId, config);
-            let members = res.data.usersjoined; 
+            let res = await Axios.get('/tasks/' + taskId, config);
+            let members = res.data.usersjoined;
             members = members.filter(m => m != userId);
-            if(params.suscribe) members.push(userId);
-            let resPut = await Axios.put('/tasks/' +  taskId, { usersjoined:members },config);
+            if (params.suscribe) members.push(userId);
+            let resPut = await Axios.put('/tasks/' + taskId, { usersjoined: members }, config);
             commit('menu/cancelDialog', 'savemembertask', { root: true });
             commit('menu/notification', ['info', 4, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
-            await dispatch('searchTask',resPut.data._id);
+            await dispatch('searchTask', resPut.data._id);
         } catch (error) {
             commit('menu/notification', ['error', 5, error], { root: true });
         }
@@ -314,11 +313,11 @@ const actions = {
             let idTask = state.searchedTask._id;
             let idMembers = state.editmemberform.members.map(m => m.id);
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.put('/tasks/' + idTask, { usersjoined:idMembers}, config);
-            await dispatch('user/refreshLoadedUser', null,{root:true});
+            let res = await Axios.put('/tasks/' + idTask, { usersjoined: idMembers }, config);
+            await dispatch('user/refreshLoadedUser', null, { root: true });
             commit('menu/cancelDialog', 'editmembers', { root: true });
             commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
-            await dispatch('searchTask',res.data._id);
+            await dispatch('searchTask', res.data._id);
         } catch (error) {
             commit('menu/notification', ['info', 10, error], { root: true });
         }
