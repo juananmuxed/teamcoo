@@ -121,22 +121,6 @@ EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
 NODE_ENV=development
 ```
 
-Change the "production" urls to API
-
-```json
-  "global": {
-    "versionApi": 1,
-    "development": {
-      "hostnameApi": "http://localhost:3000/api/v1",
-      "hostApi": "http://localhost:3000"
-    },
-    "production": { // This
-      "hostnameApi": "http://localhost:3000/api/v1",
-      "hostApi": "http://localhost:3000"
-    }
-  },
-```
-
 Then access to 2 folders (2 console prompt is easier)
 
 ```bash
@@ -192,6 +176,39 @@ EMAIL_PASSWORD=smtp_password // Temporally here - Next update in Config
 EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
 NODE_ENV=development
 ```
+
+Change the "production" urls to API
+
+```json
+  "global": {
+    "versionApi": 1,
+    "development": {
+      "hostnameApi": "http://localhost:3000/api/v1",
+      "hostApi": "http://localhost:3000"
+    },
+    "production": { // This
+      "hostnameApi": "http://localhost:3000/api/v1",
+      "hostApi": "http://localhost:3000"
+    }
+  },
+```
+
+I prefer build de vue app with the `npm run build` command and create a `.htaccess` file in the `.dist` folder with this content (just Apache):
+
+```
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+```
+
+Use this for other config files: [History mode Vue](https://router.vuejs.org/guide/essentials/history-mode.html)
+
+And point the web to `.dist` folder
 
 Build the Dockers with docker-compose
 
