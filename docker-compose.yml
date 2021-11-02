@@ -43,8 +43,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${DATABASE_NAME}
     volumes:
-      - /db/config:/data/configdb
-      - /db:/data/db
+      - ./db/config:/data/configdb
+      - ./db:/data/db
   mongo-express:
     image: mongo-express
     container_name: ${WEB_NAME}-admin-db
