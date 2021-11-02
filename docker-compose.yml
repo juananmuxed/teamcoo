@@ -12,6 +12,7 @@ services:
     volumes:
       - ./api:/teamcoo/v1
       - /teamcoo/v1/node_modules
+      - ./uploads:/teamcoo/v1/uploads
     depends_on:
       - db
     env_file:
