@@ -188,6 +188,6 @@ $RECYCLE.BIN/
 *.psd
 
 ## uploads ###
-uploads
+api/uploads/*
 
 # End of https://www.gitignore.io/api/git,vue,node,vuejs,windows,visualstudiocode
