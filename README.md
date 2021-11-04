@@ -14,9 +14,13 @@
 
 ---
 
-![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) [![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU)
+[![License](https://img.shields.io/github/license/juananmuxed/teamcoo?label=License)](LICENSE) [![Discord](https://img.shields.io/discord/324463341819133953?color=purple&label=Discord&logo=discord)](https://discord.gg/88rzwfU)
 
-# What is TeamCoo
+### GitHub Status
+
+![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) ![GitHub issues by-label](https://img.shields.io/github/issues/juananmuxed/teamcoo/bug?label=Bugs%20Opened&logo=github) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/juananmuxed/teamcoo/v0.9.0/master?color=green&label=Commits%20since%20v0.9.0&logo=github) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/juananmuxed/teamcoo?label=Activity&logo=github)
+
+# What is TeamCoo :
 
 TeamCoo is a platform for non-profit Associations that need to manage large numbers of Volunteers. MEVN (Mongo, Express, Vue, Node) technology based.
 
@@ -241,9 +245,7 @@ The ports are the next by default:
 
 [![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Web&up_color=green&up_message=Online&url=https://catapa.be)](https://catapa.be)
 
-[![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Application&up_color=green&up_message=Online&url=https://catapistas.catapa.be)](https://catapistas.catapa.be)
-
-[![Open Collective backers and sponsors](https://img.shields.io/opencollective/all/catapa?label=Collaborators&logo=Open-Collective)](https://opencollective.com/)
+[![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Application&up_color=green&up_message=Online&url=https://datapistas.catapa.be)](https://datapistas.catapa.be)
 
 ## ❓ Want this App
 
@@ -256,6 +258,7 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our [CODE OF CONDUCT]
 ## ☕️ Buy Me a Coffee
 
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U21M2BE)
+[![Liberapay patrons](https://img.shields.io/liberapay/patrons/MuXeD?color=green&label=Donors&logo=liberapay)](https://liberapay.com/MuXeD/)
 
 ## 📑 License
 
