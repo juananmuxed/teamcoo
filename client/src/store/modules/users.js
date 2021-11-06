@@ -206,6 +206,9 @@ const actions = {
             let id = user.id
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.put('/users/' + id, user, config);
+            if (rootState.user.loginuser.id == id) {
+                commit('user/userStore', { data: res.data }, { root: true });
+            }
             commit('menu/notification', ['primary', 3, 'Changed data Succesfully'], { root: true });
             commit('undoEdit');
             commit('menu/cancelDialog', 'edituser', { root: true });
