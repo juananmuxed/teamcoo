@@ -13,13 +13,13 @@ import SecureLS from "secure-ls";
 var ls = new SecureLS({ isCompression: false });
 import globalConfig from './../config/config.json'
 
-const host = process.env.NODE_ENV == 'development' ? globalConfig.global.development.hostApi : globalConfig.global.production.hostApi;
+const apiHost = process.env.NODE_ENV == 'development' ? globalConfig.global.development.hostApi : globalConfig.global.production.hostApi;
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    urlApi: host
+    urlApi: apiHost
   },
   namespaced: true,
   name: "global",

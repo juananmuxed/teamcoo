@@ -19,29 +19,29 @@ const state = {
             createquestion: false,
             suscribeto: false,
             unsuscribeworkgroup: false,
-            createtask:false,
-            createinterest:false,
-            editinterest:false,
-            editworkgroup:false,
-            confirm:false,
-            editmembers:false,
-            editquestion:false,
-            editcommonquestion:false,
+            createtask: false,
+            createinterest: false,
+            editinterest: false,
+            editworkgroup: false,
+            confirm: false,
+            editmembers: false,
+            editquestion: false,
+            editcommonquestion: false,
             edittask: false,
-            savemembertask:false
+            savemembertask: false
         },
-        loader:{
-            workgroup:false,
-            secretworkgroup:false,
-            tasks:false,
-            itembig:false,
-            users:false
+        loader: {
+            workgroup: false,
+            secretworkgroup: false,
+            tasks: false,
+            itembig: false,
+            users: false
         },
         cookie: false,
-        progressbar:{
-            active:false,
-            color:'info',
-            value:0
+        progressbar: {
+            active: false,
+            color: 'info',
+            value: 0
         }
     },
     snackbar: {
@@ -71,7 +71,7 @@ const mutations = {
         }
     },
     notification: (state, [color, time, message]) => {
-        if(state.snackbar.active) clearInterval(state.snackbar.polling);
+        if (state.snackbar.active) clearInterval(state.snackbar.polling);
         state.snackbar.active = true;
         state.snackbar.color = color;
         state.snackbar.message = message;
@@ -87,10 +87,10 @@ const mutations = {
     cancelDialog: (state, dialog) => { state.menu.dialogs[dialog] = false },
     loadingstate: (state, [loader, bool]) => { state.menu.loader[loader] = bool },
     cookieChange: (state) => { state.menu.cookie = !state.menu.cookie },
-    loadingbar:(state, [color, active , value]) => {
-        if(color != null){state.menu.progressbar.color = color}
-        if(active != null){state.menu.progressbar.active = active}
-        if(value != null){state.menu.progressbar.value = value}
+    loadingbar: (state, [color, active, value]) => {
+        if (color != null) { state.menu.progressbar.color = color }
+        if (active != null) { state.menu.progressbar.active = active }
+        if (value != null) { state.menu.progressbar.value = value }
     }
 }
 
