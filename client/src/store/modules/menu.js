@@ -1,6 +1,9 @@
 import Vuetify from '../../plugins/vuetify'
+import Axios from 'axios'
 import router from '@/router'
 import config from '../../config/config.json'
+
+const apiHost = process.env.NODE_ENV == 'development' ? config.global.development.hostApi : config.global.production.hostApi;
 
 const state = {
     menu: {
@@ -54,7 +57,13 @@ const state = {
         message: 'Message',
         color: 'primary',
         icon: 'fas fa-user'
-    }
+    },
+    logos: {
+        icon: '',
+        logo: '',
+        favicon: ''
+    },
+    colors: {}
 }
 
 const mutations = {
@@ -91,6 +100,29 @@ const mutations = {
         if (color != null) { state.menu.progressbar.color = color }
         if (active != null) { state.menu.progressbar.active = active }
         if (value != null) { state.menu.progressbar.value = value }
+    },
+    setLogosPage: (state, logos) => {
+        state.logos.icon = logos.icon;
+        state.logos.logo = logos.logo;
+        state.logos.favicon = logos.favicon;
+    },
+    setColorsPage: (state, themes) => {
+        Vuetify.framework.theme.themes.light.primary = themes.light.primary;
+        Vuetify.framework.theme.themes.light.secondary = themes.light.secondary;
+        Vuetify.framework.theme.themes.light.error = themes.light.error;
+        Vuetify.framework.theme.themes.light.info = themes.light.info;
+        Vuetify.framework.theme.themes.light.success = themes.light.success;
+        Vuetify.framework.theme.themes.light.warning = themes.light.warning;
+        Vuetify.framework.theme.themes.dark.primary = themes.dark.primary;
+        Vuetify.framework.theme.themes.dark.secondary = themes.dark.secondary;
+        Vuetify.framework.theme.themes.dark.error = themes.dark.error;
+        Vuetify.framework.theme.themes.dark.info = themes.dark.info;
+        Vuetify.framework.theme.themes.dark.success = themes.dark.success;
+        Vuetify.framework.theme.themes.dark.warning = themes.dark.warning;
+    },
+    setWebName: (state, web) => {
+        const title = document.getElementById("webTitle");
+        title.innerHTML = web.name;
     }
 }
 
@@ -119,6 +151,68 @@ const actions = {
         setTimeout(() => {
             router.go(-1)
         }, 200);
+    },
+    async getLogosPage({ state, commit, rootGetters }) {
+        try {
+            let configCookie = rootGetters['general/cookieAuth'];
+            let res = await Axios.get("/configuration/menu", configCookie);
+            if (res.data) {
+                commit('setLogosPage', res.data.values)
+            } else {
+                commit('setLogosPage', {
+                    icon: apiHost + '/uploads/TEAMCOO_ICON.png',
+                    logo: apiHost + '/uploads/TEAMCOO_LOGO.png',
+                    favicon: apiHost + '/uploads/FAVICON.png'
+                })
+            }
+            const favicon = document.getElementById("favicon");
+            favicon.href = state.logos.favicon;
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    },
+    async setThemeColors({ commit, rootGetters }) {
+        try {
+            let configCookie = rootGetters['general/cookieAuth'];
+            let res = await Axios.get("/configuration/colors", configCookie);
+            if (res.data) {
+                commit('setColorsPage', res.data.values)
+            } else {
+                commit('setColorsPage', {
+                    light: {
+                        primary: '#3271cf',
+                        secondary: '#179246',
+                        error: '#c12828',
+                        info: '#4fa098',
+                        success: '#4a9f41',
+                        warning: '#e4a953',
+                    },
+                    dark: {
+                        primary: '#179246',
+                        secondary: '#3271cf',
+                        error: '#ce4949',
+                        info: '#80cbc4',
+                        success: '#7dc975',
+                        warning: '#ecbd77',
+                    }
+                })
+            }
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    },
+    async setWebName({ commit, rootGetters }) {
+        try {
+            let configCookie = rootGetters['general/cookieAuth'];
+            let res = await Axios.get("/configuration/web", configCookie);
+            if (res.data) {
+                commit('setWebName', res.data.values)
+            } else {
+                commit('setWebName', { name: 'TeamCoo' })
+            }
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
     },
 }
 

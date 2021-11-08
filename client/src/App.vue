@@ -52,7 +52,7 @@ import toolbar from "./components/general/toolbar.vue";
 import footer from "./components/general/footer.vue";
 import Vuetify from "./plugins/vuetify";
 
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   name: "App",
@@ -71,11 +71,14 @@ export default {
   },
 
   created() {
+    this.setThemeColors();
     Vuetify.framework.theme.dark = this.loginuser.dark;
+    this.setWebName();
   },
 
   methods: {
     ...mapMutations("menu", ["onScroll"]),
+    ...mapActions("menu", ["setThemeColors", "setWebName"]),
   },
 };
 </script>

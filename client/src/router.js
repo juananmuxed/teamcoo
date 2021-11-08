@@ -25,26 +25,29 @@ import staticPage from './views/pages/static.vue'
 Vue.use(Router)
 
 const router = new Router({
-    mode:'history',
-    routes:[
+    mode: 'history',
+    routes: [
         {
             path: '*',
             redirect: '/404'
         },
         {
             path: '/404',
-            name:'404',
-            component: notexist
+            name: '404',
+            component: notexist,
+            meta: { title: 'Not Found' }
         },
         {
             path: '/validation/:token',
             name: 'validation',
-            component: validation
+            component: validation,
+            meta: { title: 'Validation Email' }
         },
         {
             path: '/',
             name: 'home',
-            component: home
+            component: home,
+            meta: { title: 'Home' }
         },
         {
             path: '/page/:slug',
@@ -53,138 +56,153 @@ const router = new Router({
         },
         {
             path: '/login',
-            name:'login',
+            name: 'login',
             component: login,
-            meta:{
+            meta: {
                 withoutAuth: true,
+                title: 'Login'
             }
         },
         {
-            path:'/signup',
+            path: '/signup',
             name: 'signup',
             component: signup,
-            meta:{
+            meta: {
                 withoutAuth: true,
+                title: 'Sign Up'
             }
         },
         {
-            path:'/reset/password/:token',
+            path: '/reset/password/:token',
             name: 'resetpass',
             component: resetpass,
-            meta:{
+            meta: {
                 withoutAuth: true,
+                title: 'Reset Password'
             }
         },
         {
-            path:'/sendreset',
+            path: '/sendreset',
             name: 'sendreset',
             component: sendreset,
-            meta:{
+            meta: {
                 withoutAuth: true,
+                title: 'Password recovery'
             }
         },
         {
-            path:'/dashboard',
+            path: '/dashboard',
             name: 'dashboard',
             component: dashboard,
-            meta:{
-                requiresAuth: true
+            meta: {
+                requiresAuth: true,
+                title: 'Dashboard'
             }
         },
         {
-            path:'/membership',
+            path: '/membership',
             name: 'membership',
             component: membership,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                validRol:true
+                validRol: true,
+                title: 'Membership'
             }
         },
         {
-            path:'/users',
+            path: '/users',
             name: 'users',
             component: users,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                validRol:true
+                validRol: true,
+                title: 'Users'
             }
         },
         {
-            path:'/workgroups',
+            path: '/workgroups',
             name: 'workgroups',
             component: workgroups,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                validRol:true
+                validRol: true,
+                title: 'Workgroups'
             }
         },
         {
-            path:'/tasks',
+            path: '/tasks',
             name: 'tasks',
             component: tasks,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                validRol:true
+                validRol: true,
+                title: 'Tasks'
             }
         },
         {
-            path:'/interests',
+            path: '/interests',
             name: 'interests',
             component: interests,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                validRol:true
+                validRol: true,
+                title: 'Interests'
             }
         },
         {
-            path:'/questions',
+            path: '/questions',
             name: 'questions',
             component: questions,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                validRol:true
+                validRol: true,
+                title: 'Questions'
             }
         },
         {
-            path:'/workgroups/:id',
+            path: '/workgroups/:id',
             name: 'workgroup',
             component: workgroup,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                isUser:true
+                isUser: true,
+                title: 'Workgroup'
             }
         },
         {
-            path:'/users/:id',
+            path: '/users/:id',
             name: 'user',
             component: user,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                isUser:true
+                isUser: true,
+                title: 'User'
             }
         },
         {
-            path:'/tasks/:id',
+            path: '/tasks/:id',
             name: 'task',
             component: task,
-            meta:{
+            meta: {
                 requiresAuth: true,
-                isUser:true
+                isUser: true,
+                title: 'Task'
             }
         },
         {
-            path:'/config',
-            name:'config',
+            path: '/config',
+            name: 'config',
             component: configuration,
             meta: {
                 requiresAuth: true,
-                validRol: true
+                validRol: true,
+                title: 'Configuration'
             }
         }
     ]
 });
 
-router.beforeEach((to,from,next) => {
+router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (Cookies.get('catapa-jwt') == undefined) {
             next({
@@ -196,10 +214,10 @@ router.beforeEach((to,from,next) => {
     } else {
         next()
     }
-    if(to.matched.some(record => record.meta.withoutAuth)) {
-        if(Cookies.get('catapa-jwt') != undefined) {
+    if (to.matched.some(record => record.meta.withoutAuth)) {
+        if (Cookies.get('catapa-jwt') != undefined) {
             next({
-                path:"/dashboard"
+                path: "/dashboard"
             })
         } else {
             next()
@@ -207,28 +225,43 @@ router.beforeEach((to,from,next) => {
     } else {
         next()
     }
-    if(to.matched.some(record => record.meta.validRol)) {
+    if (to.matched.some(record => record.meta.validRol)) {
         let validRoles = []
         let menu = store.state.menu.menu.links.find(element => to.path.includes(element.link))
         validRoles = menu.roles
-        if(validRoles.includes(store.state.user.loginuser.rol.value)){
+        if (validRoles.includes(store.state.user.loginuser.rol.value)) {
             next()
-        }else {
+        } else {
             next({
-                path:"/404"
+                path: "/404"
             })
         }
     }
     else {
         next()
     }
-    if(to.matched.some(record => record.meta.isUser)) {
-        if(store.state.user.loginuser.rol.value != 'user' || store.state.user.loginuser.id == to.params.id){
+    if (to.matched.some(record => record.meta.isUser)) {
+        if (store.state.user.loginuser.rol.value != 'user' || store.state.user.loginuser.id == to.params.id) {
             next()
-        }else{
-            next({path:"/404"})
+        } else {
+            next({ path: "/404" })
         }
     }
 })
+
+const DEFAULT_TITLE = document.title;
+router.afterEach((to) => {
+    Vue.nextTick(() => {
+        let title = DEFAULT_TITLE + ' |';
+        if (to.meta.title) {
+            title += ' ' + to.meta.title
+        }
+        if (to.params.slug) {
+            let slugTitle = to.params.slug.split('-').join(' ')
+            title += ' ' + slugTitle.charAt(0).toUpperCase() + slugTitle.slice(1)
+        }
+        document.title = title;
+    });
+});
 
 export default router
