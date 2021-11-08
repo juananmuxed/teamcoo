@@ -34,14 +34,7 @@ And here the [Changelog](CHANGELOG.md)
 
 ## 🍩 Screenshots
 
-<img src="media/DASHBOARD.png" alt="Dashboard" height="200"/>
-<img src="media/COMMON_Q.png" alt="Common Questions" height="200"/>
-<img src="media/CREATE_THINGS.png" alt="Creating" height="200"/>
-<img src="media/DARK_LISTS.png" alt="Dark mode" height="200"/>
-<img src="media/STATIC_PAGE_EDITOR.png" alt="Static Pages Editor" height="200"/>
-<img src="media/WORKGROUP.png" alt="Workgroup" height="200"/>
-<img src="media/LATERAL_MENU.png" alt="Menu" height="200"/>
-<img src="media/EDIT_ALL.png" alt="CRUD" height="200"/>
+Deleted until standards
 
 ## 🏗 Built with
 
@@ -119,9 +112,6 @@ DATABASE_NAME=teamcoo
 DATABASE_PORT=27017
 API_PORT=3000
 API_DOMAIN=http://localhost
-EMAIL_ACCOUNT=account@domain.es // Temporally here - Next update in Config
-EMAIL_PASSWORD=smtp_password // Temporally here - Next update in Config
-EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
 NODE_ENV=development
 ```
 
@@ -175,9 +165,6 @@ DATABASE_HOST=localhost
 DATABASE_NAME=teamcoo
 DATABASE_PORT=27017
 API_PORT=3000
-EMAIL_ACCOUNT=account@domain.es // Temporally here - Next update in Config
-EMAIL_PASSWORD=smtp_password // Temporally here - Next update in Config
-EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
 NODE_ENV=development
 ```
 
@@ -185,6 +172,7 @@ Change the "production" urls to API
 
 ```json
   "global": {
+    "versionApp": "0.10.0",
     "versionApi": 1,
     "development": {
       "hostnameApi": "http://localhost:3000/api/v1",
