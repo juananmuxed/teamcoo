@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app tile clipped-left elevation="1" collapse-on-scroll>
+  <v-app-bar app tile clipped-left elevation="1">
     <router-link to="/">
       <v-avatar tile>
         <v-img :src="`${logos.icon}`" contain></v-img>
