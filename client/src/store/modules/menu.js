@@ -106,7 +106,7 @@ const mutations = {
         state.logos.logo = logos.logo;
         state.logos.favicon = logos.favicon;
     },
-    setColorsPage: (state, themes) => {
+    setThemeColors: (state, themes) => {
         Vuetify.framework.theme.themes.light.primary = themes.light.primary;
         Vuetify.framework.theme.themes.light.secondary = themes.light.secondary;
         Vuetify.framework.theme.themes.light.error = themes.light.error;
@@ -171,14 +171,14 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
-    async setThemeColors({ commit, rootGetters }) {
+    async getThemeColors({ commit, rootGetters }) {
         try {
             let configCookie = rootGetters['general/cookieAuth'];
             let res = await Axios.get("/configuration/colors", configCookie);
             if (res.data) {
-                commit('setColorsPage', res.data.values)
+                commit('setThemeColors', res.data.values)
             } else {
-                commit('setColorsPage', {
+                commit('setThemeColors', {
                     light: {
                         primary: '#3271cf',
                         secondary: '#179246',
@@ -201,7 +201,7 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
-    async setWebName({ commit, rootGetters }) {
+    async getWebName({ commit, rootGetters }) {
         try {
             let configCookie = rootGetters['general/cookieAuth'];
             let res = await Axios.get("/configuration/web", configCookie);

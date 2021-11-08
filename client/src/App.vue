@@ -71,14 +71,14 @@ export default {
   },
 
   created() {
-    this.setThemeColors();
+    this.getThemeColors();
     Vuetify.framework.theme.dark = this.loginuser.dark;
-    this.setWebName();
+    this.getWebName();
   },
 
   methods: {
     ...mapMutations("menu", ["onScroll"]),
-    ...mapActions("menu", ["setThemeColors", "setWebName"]),
+    ...mapActions("menu", ["getThemeColors", "getWebName"]),
   },
 };
 </script>
