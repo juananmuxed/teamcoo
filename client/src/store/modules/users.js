@@ -195,13 +195,14 @@ const actions = {
     },
     async saveEditedData({ commit, rootState, rootGetters }, user) {
         try {
-            commit('menu/notification', ['primary', 3, user], { root: true });
             if (user.imagefile != null) {
                 let formData = new FormData()
                 const config = { headers: { 'Content-Type': 'multipart/form-data' } }
                 formData.append('file', user.imagefile)
                 let resImg = await Axios.post('/files/upload', formData, config)
-                user.image = rootState.urlApi + '/uploads/' + resImg.data.file.filename
+                let destination = resImg.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
+                let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
+                user.image = rootState.urlApi + '/uploads/' + date + resImg.data.file.filename
             }
             let id = user.id
             let config = rootGetters['general/cookieAuth'];

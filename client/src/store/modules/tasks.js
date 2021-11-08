@@ -116,7 +116,9 @@ const actions = {
                 formData.append('file', state.tasksForm.image)
                 await Axios.post('/files/upload', formData, config)
                     .then(res => {
-                        state.tasksForm.imagelink = rootState.urlApi + '/uploads/' + res.data.file.filename
+                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
+                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
+                        state.tasksForm.imagelink = rootState.urlApi + '/uploads/' + date + res.data.file.filename
                     });
             }
             else {
@@ -253,7 +255,9 @@ const actions = {
                 formData.append('file', state.tasksForm.newimage);
                 await Axios.post('/files/upload', formData, config)
                     .then(res => {
-                        image = rootState.urlApi + '/uploads/' + res.data.file.filename
+                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
+                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
+                        image = rootState.urlApi + '/uploads/' + date + res.data.file.filename
                     })
             }
             else {

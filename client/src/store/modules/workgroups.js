@@ -153,7 +153,7 @@ const getters = {
 }
 
 const actions = {
-    async createWorkGroup({ state, commit, dispatch, rootGetters }, userId) {
+    async createWorkGroup({ state, commit, dispatch, rootState, rootGetters }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let dossier = state.workgroupForm.dossier
@@ -163,7 +163,9 @@ const actions = {
                 formData.append('file', state.workgroupForm.dossier)
                 await Axios.post('/files/upload', formData, config)
                     .then(res => {
-                        dossier = this.urlApi + '/uploads/' + res.data.file.filename
+                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
+                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
+                        dossier = rootState.urlApi + '/uploads/' + date + res.data.file.filename
                     })
             }
             let body = {
@@ -337,7 +339,9 @@ const actions = {
                 formData.append('file', state.workgroupForm.dossier);
                 await Axios.post('/files/upload', formData, config)
                     .then(res => {
-                        dossier = rootState.urlApi + '/uploads/' + res.data.file.filename;
+                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
+                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
+                        dossier = rootState.urlApi + '/uploads/' + date + res.data.file.filename;
                     })
             }
             else {
