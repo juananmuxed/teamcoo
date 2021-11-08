@@ -3,8 +3,6 @@ import Axios from 'axios'
 import router from '@/router'
 import config from '../../config/config.json'
 
-const apiHost = process.env.NODE_ENV == 'development' ? config.global.development.hostApi : config.global.production.hostApi;
-
 const state = {
     menu: {
         active: true,
@@ -152,7 +150,7 @@ const actions = {
             router.go(-1)
         }, 200);
     },
-    async getLogosPage({ state, commit, rootGetters }) {
+    async getLogosPage({ state, commit, rootState, rootGetters }) {
         try {
             let configCookie = rootGetters['general/cookieAuth'];
             let res = await Axios.get("/configuration/menu", configCookie);
@@ -160,9 +158,9 @@ const actions = {
                 commit('setLogosPage', res.data.values)
             } else {
                 commit('setLogosPage', {
-                    icon: apiHost + '/uploads/TEAMCOO_ICON.png',
-                    logo: apiHost + '/uploads/TEAMCOO_LOGO.png',
-                    favicon: apiHost + '/uploads/FAVICON.png'
+                    icon: rootState.urlApi + '/uploads/TEAMCOO_ICON.png',
+                    logo: rootState.urlApi + '/uploads/TEAMCOO_LOGO.png',
+                    favicon: rootState.urlApi + '/uploads/FAVICON.png'
                 })
             }
             const favicon = document.getElementById("favicon");
