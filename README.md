@@ -99,7 +99,7 @@ cd teamcoo
 
 Create (or modify) the .env to Enviorement Variables
 
-```bash
+```js
 WEB_NAME=name_ong
 MONGO_ROOT_USER=rootname
 MONGO_ROOT_PASSWORD=rootpass
@@ -111,7 +111,7 @@ DATABASE_HOST=localhost
 DATABASE_NAME=teamcoo
 DATABASE_PORT=27017
 API_PORT=3000
-API_DOMAIN=http://localhost
+API_URL=http://localhost:3000
 NODE_ENV=development
 ```
 
@@ -133,6 +133,8 @@ And you can access to the application via web browswer in http://localhost:8080
 
 ### **Production**
 
+#### Start
+
 Easy, you need Docker in the Deploy server or machine
 
 Requirements:
@@ -151,9 +153,11 @@ Access to the folder
 cd teamcoo
 ```
 
+#### Config
+
 Create (or modify example.env) the .env to Enviorement Variables
 
-```bash
+```js
 WEB_NAME=name_ong
 MONGO_ROOT_USER=rootname
 MONGO_ROOT_PASSWORD=rootpass
@@ -165,12 +169,14 @@ DATABASE_HOST=localhost
 DATABASE_NAME=teamcoo
 DATABASE_PORT=27017
 API_PORT=3000
+API_DOMAIN=http://localhost:3000
 NODE_ENV=development
 ```
 
 Change the "production" urls to API
 
 ```json
+  // client/src/config/config.json
   "global": {
     "versionApp": "0.10.0",
     "versionApi": 1,
@@ -184,6 +190,15 @@ Change the "production" urls to API
     }
   },
 ```
+
+```js
+// .env -> example.env
+API_DOMAIN=http://localhost:3000 // For example https://api.teamcooapp.com
+```
+
+This is just for external use like Emails or other next features (for example Share)
+
+#### Build
 
 I prefer build de vue app with the `npm run build` command and create a `.htaccess` file in the `.dist` folder with this content (just Apache):
 
@@ -214,10 +229,12 @@ And up the Network
 docker-compose up -d
 ```
 
-The ports are the next by default:
+#### Next
+
+The ports by default:
 
 - API: 3000
-- APP: 8080
+- APP: 8080 -> Just in case you use the Dockerized version
 - DB-Admin: 8081
 - Database: 27017
 

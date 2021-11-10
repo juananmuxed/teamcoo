@@ -195,9 +195,13 @@ const actions = {
         try {
             let config = getters.cookieAuth;
             commit('changeSending');
-            let res = await Axios.get('/configuration/web', config)
-            let webname = res.data ? res.data.values.name : 'TeamCoo'
-            await Axios.post("/mail/send", { sendTo: state.config.testEmail, user: rootState.user.loginuser.firstname, template: 'test', subject: 'Test email', variables: { webpage: webname, webpageurl: window.location.origin } }, config);
+            await Axios.post("/mail/send", {
+                sendTo: state.config.testEmail,
+                user: rootState.user.loginuser.firstname,
+                template: 'test',
+                subject: 'Test email',
+                variables: { webpageurl: window.location.origin }
+            }, config);
             commit('menu/notification', ['primary', 3, 'Test mail sended'], { root: true });
             commit('changeSending');
         } catch (error) {

@@ -153,7 +153,7 @@ const actions = {
     async getLogosPage({ state, commit, rootState, rootGetters }) {
         try {
             let configCookie = rootGetters['general/cookieAuth'];
-            let res = await Axios.get("/configuration/menu", configCookie);
+            let res = await Axios.get("/configuration/logos", configCookie);
             if (res.data) {
                 commit('setLogosPage', res.data.values)
             } else {

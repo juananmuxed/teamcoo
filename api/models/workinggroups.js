@@ -3,64 +3,64 @@ const schema = mongoose.Schema
 
 const workingGroupSchema = new schema({
     name: {
-        type: String, 
-        required: [true,'Required field']
-    },
-    description: {
-        type: String, 
+        type: String,
         required: [true, 'Required field']
     },
-    color:{
-        type:String,
-        default:'grey'
+    description: {
+        type: String,
+        required: [true, 'Required field']
     },
-    textcolor:{
-        type:String,
-        default:'white'
+    color: {
+        type: String,
+        default: 'grey'
+    },
+    textcolor: {
+        type: String,
+        default: 'white'
     },
     parent: {
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         default: null
     },
     _userId: {
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     },
     active: {
-        type:Boolean,
-        default:true
+        type: Boolean,
+        default: true
     },
-    creaDate:{
+    creaDate: {
         type: Date,
-        default:Date.now
+        default: Date.now
     },
-    questions:{
-        type:Array,
-        required:true
+    questions: {
+        type: Array,
+        required: true
     },
-    dossier:{
-        type:String,
-        default:null
+    dossier: {
+        type: String,
+        default: null
     },
-    linktodocuments:{
-        type:String,
-        default:null
+    linktodocuments: {
+        type: String,
+        default: null
     },
-    secret:{
-        type:Boolean,
-        default:false
+    secret: {
+        type: Boolean,
+        default: false
     },
-    coordinators:{
-        type:Array,
-        default:[]
+    coordinators: {
+        type: Array,
+        default: []
     },
-    members:{
-        type:Array,
-        default:[]
+    members: {
+        type: Array,
+        default: []
     }
 })
 
-const wg = mongoose.model('wg',workingGroupSchema)
+const wg = mongoose.model('wg', workingGroupSchema)
 
 module.exports = wg

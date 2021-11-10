@@ -4,6 +4,8 @@ const path = require("path");
 const nodemailer = require('nodemailer');
 const hdb = require('handlebars');
 const mjml2html = require('mjml');
+const Mail = require('../models/mail');
+require('dotenv').config({ path: require('find-config')('.env') });
 
 exports.sendMail = async (req, res) => {
     try {
@@ -17,10 +19,33 @@ exports.sendMail = async (req, res) => {
         let body = req.body;
 
         if (!body.template) {
-            throw new Error('No template selected');
+            throw new Error('Template required');
         }
 
+        if (!body.sendTo) {
+            throw new Error('Mail to send required');
+        }
+
+        if (!body.subject) {
+            throw new Error('Subject required');
+        }
+
+        if (!body.user) {
+            body.user = ''
+        }
+
+
         const context = body.variables;
+
+        const configColors = await Config.findOne({ name: "colors" });
+        context.primary = !configColors ? '#3271cf' : configColors.values.light.primary;
+        context.secondary = !configColors ? '#179246' : configColors.values.light.secondary;
+
+        const configWeb = await Config.findOne({ name: "web" });
+        context.webpage = !configWeb ? 'TeamCoo' : configWeb.values.name;
+
+        const configLogo = await Config.findOne({ name: "logos" });
+        context.logoUrl = !configLogo ? process.env.API_URL + '/uploads/TEAMCOO_LOGO.png' : configWeb.values.logo;
 
         const template = fs.readFileSync(path.join(__dirname, '../templates/emails/' + body.template + '.mjml'));
         const templatePlain = fs.readFileSync(path.join(__dirname, '../templates/emails/' + body.template + '.txt'));
@@ -57,9 +82,21 @@ exports.sendMail = async (req, res) => {
             text: plainTemplate
         };
 
-        transporter.sendMail(mailOptions, function (error, info) {
+        let mailObj = {
+            sendTo: body.user,
+            sendFrom: data.email,
+            sendToName: body.sendTo,
+            sendFromName: data.name,
+            subject: body.subject,
+            template: body.template,
+            html: html,
+            text: plainTemplate
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log('Error: ' + error);
+                mailObj.responseError = error.response
                 if (error.responseCode) {
                     res.status(error.responseCode).json({ message: error.response, responseCode: error.responseCode, code: error.code });
                 } else {
@@ -67,12 +104,27 @@ exports.sendMail = async (req, res) => {
                 }
             } else {
                 console.log('Email sent: ' + info.response);
+                mailObj.response = info.response;
+                mailObj.sended = true;
                 res.status(200).json({ info });
             }
+            Mail.create(mailObj);
         });
 
     } catch (error) {
         console.log(error)
         res.status(400).json({ message: error.message | 'An error has ocurred', error });
+    }
+}
+
+exports.updateMailLog = async (req, res) => {
+    const _id = req.params.id
+    const body = req.body
+
+    try {
+        const interestDB = await Mail.findByIdAndUpdate(_id, body, { new: true })
+        res.json(interestDB)
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred: ' + error, error })
     }
 }

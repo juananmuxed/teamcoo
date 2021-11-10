@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../controllers/auth")
-const mailer = require("../services/mailer")
+const mailer = require("../controllers/mail")
 
-// Post a mail
+// Send a mail and create new log
 
 router.post("/send", auth, mailer.sendMail)
 

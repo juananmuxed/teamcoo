@@ -159,6 +159,7 @@ const actions = {
             let response = await Axios.post('/users/signup', user);
             let token = response.data.token;
             if (token) {
+                //TODO: send mail
                 Cookies.set('catapa-jwt', token, { expires: 30 });
                 commit('userStore', { data: response.data.data });
                 router.push('/dashboard');
@@ -219,6 +220,7 @@ const actions = {
             commit('menu/notification', ['error', 3, 'Error: Something Went Wrong.'], { root: true })
         }
     },
+    //TODO: refactoring needed
     changepasswordnotlogged({ state, commit }, token) {
         let data = {
             token: token,
@@ -226,8 +228,9 @@ const actions = {
         }
         Axios.post('/tokens/changepassexternal', data)
             .then(() => {
-                commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true })
-                router.push('/login')
+                //TODO: send mail
+                commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true });
+                router.push('/login');
             })
             .catch(error => {
                 commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
@@ -236,6 +239,7 @@ const actions = {
     sendResetPassMail({ commit }, email) {
         Axios.post('/tokens/sendpassemail', { email: email })
             .then(() => {
+                //TODO: send mail
                 commit('menu/notification', ['primary', 3, 'An email send to ' + email + '. Please check your account.'], { root: true })
                 router.push('/')
             })
@@ -246,6 +250,7 @@ const actions = {
     sendVerificationMail({ commit }, email) {
         Axios.post('/tokens/resend', { email: email })
             .then(() => {
+                //TODO: send mail
                 commit('menu/notification', ['primary', 3, 'Verification email send to ' + email + '. Please check your account.'], { root: true });
             })
             .catch(error => {

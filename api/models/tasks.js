@@ -3,63 +3,63 @@ const schema = mongoose.Schema
 
 const taskschema = new schema({
     name: {
-        type: String, 
-        required: [true,'Required field']
+        type: String,
+        required: [true, 'Required field']
     },
     description: {
-        type: String, 
+        type: String,
         required: [true, 'Required field']
     },
     createdBy: {
-        type:mongoose.Schema.Types.ObjectId,
-        required:true,
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
     },
-    interests:{
-        type:Array,
-        required:true
+    interests: {
+        type: Array,
+        required: true
     },
     workgroups: {
-        type:Array,
-        required:true
+        type: Array,
+        required: true
     },
     active: {
-        type:Boolean,
-        default:true
+        type: Boolean,
+        default: true
     },
-    creaDate:{
+    creaDate: {
         type: Date,
-        default:Date.now
+        default: Date.now
     },
-    link:{
+    link: {
         type: String,
-        default:''
+        default: ''
     },
-    image:{
+    image: {
         type: String,
-        default:''
+        default: ''
     },
-    usersjoined:{
+    usersjoined: {
         type: Array,
-        default:[]
+        default: []
     },
     secret: {
-        type:Boolean,
-        default:false
+        type: Boolean,
+        default: false
     },
-    eventStartDate:{
-        type:Date,
-        required:true
+    eventStartDate: {
+        type: Date,
+        required: true
     },
-    eventEndDate:{
-        type:Date,
-        required:true
+    eventEndDate: {
+        type: Date,
+        required: true
     },
-    color:{
-        type:String,
-        default:''
+    color: {
+        type: String,
+        default: ''
     }
 })
 
-const task = mongoose.model('Tasks',taskschema)
+const task = mongoose.model('Tasks', taskschema)
 
 module.exports = task
