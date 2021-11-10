@@ -34,7 +34,6 @@ exports.sendMail = async (req, res) => {
             body.user = ''
         }
 
-
         const context = body.variables;
 
         const configColors = await Config.findOne({ name: "colors" });
@@ -46,6 +45,8 @@ exports.sendMail = async (req, res) => {
 
         const configLogo = await Config.findOne({ name: "logos" });
         context.logoUrl = !configLogo ? process.env.API_URL + '/uploads/TEAMCOO_LOGO.png' : configWeb.values.logo;
+
+        context.legalText = !data.legalText ? 'Legal Text not added' : data.legalText
 
         const template = fs.readFileSync(path.join(__dirname, '../templates/emails/' + body.template + '.mjml'));
         const templatePlain = fs.readFileSync(path.join(__dirname, '../templates/emails/' + body.template + '.txt'));

@@ -81,7 +81,8 @@ const state = {
             user: "",
             pass: "",
             email: "",
-            name: ""
+            name: "",
+            legalText: ""
         },
         testEmail: '',
         sendingEmail: false,

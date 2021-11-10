@@ -35,7 +35,7 @@
     <mj-section background-color="#fafafa">
       <mj-column>
         <mj-text font-size="9px" font-family="Roboto" color="#525252">
-          Legal text
+          {{ legalText }}
         </mj-text>
       </mj-column>
     </mj-section>

@@ -75,6 +75,15 @@
                 >
                 </v-text-field>
               </v-col>
+              <v-col cols="12" class="py-1">
+                <v-textarea
+                  outlined
+                  auto-grow
+                  label="Legal Text"
+                  v-model="config.email.legalText"
+                >
+                </v-textarea>
+              </v-col>
             </v-row>
           </v-col>
           <v-col cols="12" sm="6">
