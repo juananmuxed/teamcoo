@@ -1,7 +1,6 @@
 import Axios from 'axios'
 import Vuetify from '../../plugins/vuetify'
 import { generatePalette } from '../../utils/utils'
-import globalConfig from '../../config/config.json'
 
 const state = {
     users: [],
@@ -65,7 +64,13 @@ const mutations = {
 const getters = {
     getRoleColor: () => (role) => {
         let primary = Vuetify.framework.theme.dark ? Vuetify.framework.theme.themes.dark.primary : Vuetify.framework.theme.themes.light.primary;
-        let roles = globalConfig.roles;
+        let roles = [
+            { name: "User", value: "user" },
+            { name: "Volunteer", value: "volu" },
+            { name: "Coordinator", value: "coor" },
+            { name: "Director", value: "dire" },
+            { name: "Admin", value: "admin" }
+        ];
         let colors = generatePalette(primary, roles.length, 10, 'down');
         return {
             color: colors.colors[roles.findIndex(a => a.value === role)],

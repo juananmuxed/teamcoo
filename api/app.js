@@ -75,7 +75,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Routes TODO: Change response codes correctly
+// Routes 
 fs.readdir('./routes/', (error, files) => {
   if (error) return console.log(err);
 

@@ -28,6 +28,23 @@ exports.getConfig = async (req, res) => {
 
     try {
         const configDB = await Config.findOne({ name: name })
+        if (configDB && configDB.protected) {
+            return res.status(401).json({
+                message: "Authentification Failed"
+            });
+        }
+        res.json(configDB)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+    }
+}
+
+exports.getConfigProtected = async (req, res) => {
+    const name = req.params.name
+
+    try {
+        const configDB = await Config.findOne({ name: name })
         res.json(configDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred: ' + error, error })

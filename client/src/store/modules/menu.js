@@ -10,7 +10,9 @@ const state = {
         scroll: 0,
         upDown: false,
         links: config.menuLinks,
-        static: config.staticPages,
+        version: config.global.versionApp,
+        staticFooter: [],
+        staticLateral: [],
         dialogs: {
             login: false,
             logout: false,
@@ -29,7 +31,8 @@ const state = {
             editquestion: false,
             editcommonquestion: false,
             edittask: false,
-            savemembertask: false
+            savemembertask: false,
+            deletePage: false
         },
         loader: {
             workgroup: false,
@@ -121,7 +124,13 @@ const mutations = {
     setWebName: (state, web) => {
         const title = document.getElementById("webTitle");
         title.innerHTML = web.name;
-    }
+    },
+    setPagesFooter: (state, pages) => {
+        state.menu.staticFooter = pages;
+    },
+    setPagesLateral: (state, pages) => {
+        state.menu.staticLateral = pages;
+    },
 }
 
 const getters = {
@@ -150,10 +159,9 @@ const actions = {
             router.go(-1)
         }, 200);
     },
-    async getLogosPage({ state, commit, rootState, rootGetters }) {
+    async getLogosPage({ state, commit, rootState }) {
         try {
-            let configCookie = rootGetters['general/cookieAuth'];
-            let res = await Axios.get("/configuration/logos", configCookie);
+            let res = await Axios.get("/configuration/logos");
             if (res.data) {
                 commit('setLogosPage', res.data.values)
             } else {
@@ -169,10 +177,9 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
-    async getThemeColors({ commit, rootGetters }) {
+    async getThemeColors({ commit }) {
         try {
-            let configCookie = rootGetters['general/cookieAuth'];
-            let res = await Axios.get("/configuration/colors", configCookie);
+            let res = await Axios.get("/configuration/colors");
             if (res.data) {
                 commit('setThemeColors', res.data.values)
             } else {
@@ -199,10 +206,9 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
-    async getWebName({ commit, rootGetters }) {
+    async getWebName({ commit }) {
         try {
-            let configCookie = rootGetters['general/cookieAuth'];
-            let res = await Axios.get("/configuration/web", configCookie);
+            let res = await Axios.get("/configuration/web");
             if (res.data) {
                 commit('setWebName', res.data.values)
             } else {
@@ -212,6 +218,34 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
+
+    async getFooterPages({ commit }) {
+        try {
+            let res = await Axios.get("/pages/");
+            if (res.data) {
+                let filteredByPosition = res.data.filter(page => page.position == 'footer')
+                commit('setPagesFooter', filteredByPosition)
+            } else {
+                commit('setPagesFooter', [])
+            }
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    },
+
+    async getLateralPages({ commit }) {
+        try {
+            let res = await Axios.get("/pages/");
+            if (res.data) {
+                let filteredByPosition = res.data.filter(page => page.position == 'lateral')
+                commit('setPagesLateral', filteredByPosition)
+            } else {
+                commit('setPagesLateral', [])
+            }
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    }
 }
 
 export default {

@@ -42,9 +42,10 @@ exports.sendMail = async (req, res) => {
 
         const configWeb = await Config.findOne({ name: "web" });
         context.webpage = !configWeb ? 'TeamCoo' : configWeb.values.name;
+        context.url = !configWeb ? 'http://localhost:3000' : configWeb.values.url;
 
         const configLogo = await Config.findOne({ name: "logos" });
-        context.logoUrl = !configLogo ? process.env.API_URL + '/uploads/TEAMCOO_LOGO.png' : configWeb.values.logo;
+        context.logoUrl = !configLogo ? url + '/uploads/TEAMCOO_LOGO.png' : configLogo.values.logo;
 
         context.legalText = !data.legalText ? 'Legal Text not added' : data.legalText
 

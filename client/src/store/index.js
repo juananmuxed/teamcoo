@@ -19,7 +19,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    urlApi: apiHost
+    urlApi: apiHost,
+    roles: globalConfig.roles
   },
   namespaced: true,
   name: "global",

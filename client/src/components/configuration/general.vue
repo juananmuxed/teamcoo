@@ -8,54 +8,123 @@
   >
     <v-card flat>
       <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
-        >Static Pages</v-card-title
+        >Pages</v-card-title
       >
       <v-card flat class="pa-6" v-for="(page, index) in pages" :key="index">
         <v-card-title>
           <v-icon>{{ page.icon }}</v-icon>
-          <span class="display-1 text-uppercase font-weight-thin ml-4">{{
-            `${page.name} page`
-          }}</span>
+          <span
+            class="display-1 text-uppercase font-weight-thin ml-4"
+            v-text="page.title"
+          ></span>
         </v-card-title>
-        <textarea-editor v-model="pagesValues[page.value]"></textarea-editor>
+        <v-row>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-text-field
+              outlined
+              label="Title"
+              v-model="page.title"
+              :rules="[rules.required]"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-text-field outlined label="Icon" v-model="page.icon">
+            </v-text-field>
+          </v-col>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-select
+              v-model="page.position"
+              :items="positions"
+              outlined
+              label="Position"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-checkbox v-model="page.protected" label="Protected"></v-checkbox>
+          </v-col>
+        </v-row>
+        <textarea-editor v-model="page.value"></textarea-editor>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn fab small color="primary" @click="saveConfig(page)">
+          <v-btn class="ma-2" fab small color="primary" @click="savePage(page)">
             <v-icon small>fas fa-save</v-icon>
+          </v-btn>
+          <v-btn class="ma-2" fab small color="error">
+            <v-icon small>fas fa-trash</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
+      <v-dialog v-model="menu.dialogs.deletePage" max-width="400">
+        <confirmation-template
+          title="Delete static page"
+          description="You are about to delete this page. Are you sure?"
+          dialog="deletePage"
+          :cancelFunction="cancelDialog"
+          textButton="Delete"
+          :action="deletePage"
+        >
+        </confirmation-template>
+      </v-dialog>
+      <v-row class="px-3">
+        <v-col>
+          <v-btn
+            height="160"
+            block
+            color="success"
+            class="my-2"
+            @click="addPageBlank()"
+          >
+            Add Page
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-card>
   </v-skeleton-loader>
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import textareaeditorVue from "./textareaeditor.vue";
+import confirm from "../general/confirm.vue";
 
 export default {
   data() {
     return {
       skeleton: false,
+      positions: [
+        { text: "Home", value: "home" },
+        { text: "Registration page", value: "register" },
+        { text: "Footer", value: "footer" },
+        { text: "Lateral Menu", value: "lateral" },
+      ],
     };
   },
   components: {
     "textarea-editor": textareaeditorVue,
+    "confirmation-template": confirm,
   },
   computed: {
-    ...mapState("general", ["pages", "pagesValues", "pagesValuesNotEdited"]),
+    ...mapState({
+      pages: (state) => state.general.config.pages,
+      rules: (state) => state.general.rules,
+      menu: (state) => state.menu.menu,
+    }),
   },
   methods: {
-    ...mapActions("general", ["searchConfig", "saveConfig"]),
+    ...mapActions("general", [
+      "savePage",
+      "createPage",
+      "getStaticPages",
+      "deletePage",
+    ]),
+    ...mapMutations("general", ["addPageBlank"]),
+    ...mapMutations("menu", ["cancelDialog"]),
   },
   created() {
     this.skeleton = true;
-    this.pages.forEach((page, i) => {
-      this.searchConfig(page).finally(() => {
-        if (this.pages.length - 1 == i) {
-          this.skeleton = false;
-        }
-      });
+    this.getStaticPages().finally(() => {
+      this.skeleton = false;
     });
   },
 };

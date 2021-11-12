@@ -100,19 +100,18 @@ cd teamcoo
 Create (or modify) the .env to Enviorement Variables
 
 ```js
-WEB_NAME=name_ong
-MONGO_ROOT_USER=rootname
-MONGO_ROOT_PASSWORD=rootpass
-MONGOEXPRESS_LOGIN=teamcoo
-MONGOEXPRESS_PASSWORD=pass
-SECRET_STRING=verysecret
-API_VERSION=1
-DATABASE_HOST=localhost
-DATABASE_NAME=teamcoo
-DATABASE_PORT=27017
-API_PORT=3000
-API_URL=http://localhost:3000
-NODE_ENV=development
+WEB_NAME = name_ong;
+MONGO_ROOT_USER = rootname;
+MONGO_ROOT_PASSWORD = rootpass;
+MONGOEXPRESS_LOGIN = teamcoo;
+MONGOEXPRESS_PASSWORD = pass;
+SECRET_STRING = verysecret;
+API_VERSION = 1;
+DATABASE_HOST = localhost;
+DATABASE_NAME = teamcoo;
+DATABASE_PORT = 27017;
+API_PORT = 3000;
+NODE_ENV = development;
 ```
 
 Then access to 2 folders (2 console prompt is easier)
@@ -125,7 +124,9 @@ CONSOLE 2: cd client
 Run the scripts
 
 ```bash
+CONSOLE 1: npm i
 CONSOLE 1: npm run dev
+CONSOLE 2: npm i
 CONSOLE 2: npm run serve
 ```
 
@@ -158,24 +159,23 @@ cd teamcoo
 Create (or modify example.env) the .env to Enviorement Variables
 
 ```js
-WEB_NAME=name_ong
-MONGO_ROOT_USER=rootname
-MONGO_ROOT_PASSWORD=rootpass
-MONGOEXPRESS_LOGIN=teamcoo
-MONGOEXPRESS_PASSWORD=pass
-SECRET_STRING=verysecret
-API_VERSION=1
-DATABASE_HOST=localhost
-DATABASE_NAME=teamcoo
-DATABASE_PORT=27017
-API_PORT=3000
-API_DOMAIN=http://localhost:3000
-NODE_ENV=development
+WEB_NAME = name_ong;
+MONGO_ROOT_USER = rootname;
+MONGO_ROOT_PASSWORD = rootpass;
+MONGOEXPRESS_LOGIN = teamcoo;
+MONGOEXPRESS_PASSWORD = pass;
+SECRET_STRING = verysecret;
+API_VERSION = 1;
+DATABASE_HOST = localhost;
+DATABASE_NAME = teamcoo;
+DATABASE_PORT = 27017;
+API_PORT = 3000;
+NODE_ENV = development;
 ```
 
 Change the "production" urls to API
 
-```json
+```js
   // client/src/config/config.json
   "global": {
     "versionApp": "0.10.0",
@@ -189,11 +189,6 @@ Change the "production" urls to API
       "hostApi": "http://localhost:3000"
     }
   },
-```
-
-```js
-// .env -> example.env
-API_DOMAIN=http://localhost:3000 // For example https://api.teamcooapp.com
 ```
 
 This is just for external use like Emails or other next features (for example Share)

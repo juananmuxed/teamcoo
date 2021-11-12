@@ -10,13 +10,13 @@ const configschema = new schema({
         type: Date,
         default: Date.now
     },
-    value: {
-        type: String,
-        default: ''
-    },
     values: {
         type: Object,
         default: {}
+    },
+    protected: {
+        type: Boolean,
+        default: false
     }
 })
 
