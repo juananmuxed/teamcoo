@@ -2,6 +2,8 @@ import Vuetify from '../../plugins/vuetify'
 import Axios from 'axios'
 import router from '@/router'
 import config from '../../config/config.json'
+import { generateRandomColor } from '../../utils/utils'
+import Vue from 'vue'
 
 const state = {
     menu: {
@@ -64,7 +66,16 @@ const state = {
         logo: '',
         favicon: ''
     },
-    colors: {}
+    newLogos: {
+        icon: null,
+        logo: null,
+        favicon: null
+    },
+    colors: {
+        primary: '',
+        secondary: ''
+    },
+    webName: ''
 }
 
 const mutations = {
@@ -120,10 +131,10 @@ const mutations = {
         Vuetify.framework.theme.themes.dark.info = themes.dark.info;
         Vuetify.framework.theme.themes.dark.success = themes.dark.success;
         Vuetify.framework.theme.themes.dark.warning = themes.dark.warning;
+        Vue.set(state, 'colors', themes);
     },
     setWebName: (state, web) => {
-        const title = document.getElementById("webTitle");
-        title.innerHTML = web.name;
+        state.webName = web.name;
     },
     setPagesFooter: (state, pages) => {
         state.menu.staticFooter = pages;
@@ -131,6 +142,9 @@ const mutations = {
     setPagesLateral: (state, pages) => {
         state.menu.staticLateral = pages;
     },
+    randomColor: (state, themeColor) => {
+        state.colors[themeColor.theme][themeColor.color] = generateRandomColor(30);
+    }
 }
 
 const getters = {

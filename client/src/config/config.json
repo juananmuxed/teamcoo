@@ -3,10 +3,10 @@
     "versionApp": "0.11.0",
     "versionApi": 1,
     "development": {
-      "hostnameApi": "http://localhost:3000/api/v1"
+      "hostApi": "http://localhost:3000"
     },
     "production": {
-      "hostnameApi": "http://localhost:3000/api/v1"
+      "hostApi": "http://localhost:3000"
     }
   },
   "roles": [

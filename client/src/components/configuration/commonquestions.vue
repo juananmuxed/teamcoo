@@ -3,26 +3,6 @@
     <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
       >Common questions</v-card-title
     >
-    <v-row>
-      <v-dialog max-width="650" v-model="dialogs.createquestion">
-        <template v-slot:activator="{ on }">
-          <v-btn
-            height="160"
-            v-on="on"
-            block
-            color="info"
-            class="my-2"
-            @click="
-              clearquestionForm();
-              checkCommonQuestion();
-            "
-          >
-            <v-icon left>fas fa-question</v-icon>Create Common Question
-          </v-btn>
-        </template>
-        <create-question></create-question>
-      </v-dialog>
-    </v-row>
     <v-row v-for="(question, index) in commonQuestions" v-bind:key="index">
       <v-col
         class="display-1 text-uppercase font-weight-thin"
@@ -169,6 +149,26 @@
         </v-row>
       </v-col>
       <v-divider inset v-if="index < commonQuestions.length - 1"></v-divider>
+    </v-row>
+    <v-row>
+      <v-dialog max-width="650" v-model="dialogs.createquestion">
+        <template v-slot:activator="{ on }">
+          <v-btn
+            height="160"
+            v-on="on"
+            block
+            color="primary"
+            class="my-2"
+            @click="
+              clearquestionForm();
+              checkCommonQuestion();
+            "
+          >
+            <v-icon left>fas fa-question</v-icon>Create Common Question
+          </v-btn>
+        </template>
+        <create-question></create-question>
+      </v-dialog>
     </v-row>
     <v-dialog v-model="dialogs.editquestion" max-width="650">
       <edit-question></edit-question>

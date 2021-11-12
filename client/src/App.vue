@@ -73,7 +73,6 @@ export default {
   created() {
     this.getThemeColors();
     Vuetify.framework.theme.dark = this.loginuser.dark;
-    this.getWebName();
   },
 
   methods: {

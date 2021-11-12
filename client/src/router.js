@@ -247,21 +247,21 @@ router.beforeEach((to, from, next) => {
             next({ path: "/404" })
         }
     }
-})
-
-const DEFAULT_TITLE = document.title;
-router.afterEach((to) => {
-    Vue.nextTick(() => {
-        let title = DEFAULT_TITLE + ' |';
-        if (to.meta.title) {
-            title += ' ' + to.meta.title
-        }
-        if (to.params.slug) {
-            let slugTitle = to.params.slug.split('-').join(' ')
-            title += ' ' + slugTitle.charAt(0).toUpperCase() + slugTitle.slice(1)
-        }
-        document.title = title;
-    });
 });
+
+router.afterEach(async (to, from) => {
+    if (!from.name) {
+        await store.dispatch('menu/getWebName')
+    }
+    let title = store.state.menu.webName + ' |';
+    if (to.meta.title) {
+        title += ' ' + to.meta.title
+    }
+    if (to.params.slug) {
+        let slugTitle = to.params.slug.split('-').join(' ')
+        title += ' ' + slugTitle.charAt(0).toUpperCase() + slugTitle.slice(1)
+    }
+    document.title = title;
+})
 
 export default router

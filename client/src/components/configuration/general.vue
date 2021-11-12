@@ -2,7 +2,7 @@
   <v-skeleton-loader
     type="skeleton"
     :types="{ skeleton: 'card,article, table-tfoot' }"
-    class="mx-auto"
+    class="mx-auto pa-6"
     transition="fade-transition"
     :loading="skeleton"
   >
@@ -71,10 +71,11 @@
           <v-btn
             height="160"
             block
-            color="success"
+            color="primary"
             class="my-2"
             @click="addPageBlank()"
           >
+            <v-icon left>fas fa-plus</v-icon>
             Add Page
           </v-btn>
         </v-col>

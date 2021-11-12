@@ -2,7 +2,7 @@
   <v-skeleton-loader
     type="skeleton"
     :types="{ skeleton: 'card,article, table-tfoot' }"
-    class="mx-auto"
+    class="mx-auto pa-6"
     transition="fade-transition"
     :loading="skeleton"
   >
@@ -107,19 +107,21 @@
                   >Send test email</v-btn
                 >
               </v-col>
-              <v-col cols="12" class="py-1">
-                <v-btn
-                  block
-                  color="primary"
-                  @click="saveEmailConfig()"
-                  :disabled="!isValidEmailConfig()"
-                  ><v-icon left>fas fa-save</v-icon> Save email config</v-btn
-                >
-              </v-col>
             </v-row>
           </v-col>
         </v-row>
       </v-card-text>
+      <v-col cols="12" class="py-1">
+        <v-btn
+          height="160"
+          class="my-2"
+          block
+          color="primary"
+          @click="saveEmailConfig()"
+          :disabled="!isValidEmailConfig()"
+          ><v-icon left>fas fa-save</v-icon> Save email config</v-btn
+        >
+      </v-col>
     </v-card>
   </v-skeleton-loader>
 </template>

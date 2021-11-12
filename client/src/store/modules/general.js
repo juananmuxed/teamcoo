@@ -14,7 +14,7 @@ const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const state = {
     rules: {
         required: v => !!v || 'Required',
-        maxSize: v => !v || v.size < 5000000 || 'Dossier size should be less than 5 MB!',
+        maxSize: v => !v || v.size < 5 * 1024 * 1024 || 'Dossier size should be less than 5 MB!',
         emailrules: v => {
             return emailPattern.test(v) || 'Invalid e-mail'
         },
@@ -68,7 +68,8 @@ const state = {
             else {
                 return true
             }
-        }
+        },
+        imageSize: v => !v || v.size < 1 * 1024 * 1024 || 'Image size should be less than 1MB'
     },
     tab: null,
     tabs: [
@@ -237,8 +238,6 @@ const actions = {
         }
     },
 
-    //DELETE PAGE
-
     async sendTestEmail({ state, commit, getters, rootState }) {
         try {
             let config = getters.cookieAuth;
@@ -286,6 +285,9 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     }
+
+    //TODO: save theme configuration
+    //TODO: delete page with modal
 }
 
 export default {
