@@ -181,11 +181,9 @@ Change the "production" urls to API
     "versionApp": "0.10.0",
     "versionApi": 1,
     "development": {
-      "hostnameApi": "http://localhost:3000/api/v1",
       "hostApi": "http://localhost:3000"
     },
     "production": { // This
-      "hostnameApi": "http://localhost:3000/api/v1",
       "hostApi": "http://localhost:3000"
     }
   },
