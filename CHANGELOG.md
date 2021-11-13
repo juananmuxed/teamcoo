@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Configuration in the backoffice for Web customization and mails #55 FEATURE
+- Mail Endpoint
+- Static Pages Creation #38 FEATURE
+
+### Changed
+
+- MJML and Handlebars for template the mails
+
+### Fixed
+
+- Verification mail with localhost url #47 BUG
+
 ## [0.10.0] - 2021-11-04
 
 ### Added

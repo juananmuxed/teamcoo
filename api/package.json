@@ -1,7 +1,6 @@
 {
   "name": "teamcoo",
-  "version": "0.10.0",
-  "releaseversion": "0.10.0",
+  "version": "0.12.0",
   "description": "🎩 A HR Collaborative team manager for Non-profit Associations",
   "main": "index.js",
   "scripts": {
@@ -27,7 +26,9 @@
     "ejs": "^3.0.2",
     "express": "^4.17.1",
     "find-config": "^1.0.0",
+    "handlebars": "^4.7.7",
     "jsonwebtoken": "^8.5.1",
+    "mjml": "^4.10.4",
     "mongoose": "^5.9.7",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",

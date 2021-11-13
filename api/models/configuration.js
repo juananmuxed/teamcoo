@@ -3,19 +3,23 @@ const schema = mongoose.Schema
 
 const configschema = new schema({
     name: {
-        type: String, 
-        required: [true,'Required field']
+        type: String,
+        required: [true, 'Required field']
     },
     _lastEdit: {
-        type:Date,
+        type: Date,
         default: Date.now
     },
-    value: {
-        type:String,
-        default:''
+    values: {
+        type: Object,
+        default: {}
     },
+    protected: {
+        type: Boolean,
+        default: false
+    }
 })
 
-const config = mongoose.model('Config' , configschema)
+const config = mongoose.model('Config', configschema)
 
 module.exports = config

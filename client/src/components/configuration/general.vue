@@ -1,74 +1,141 @@
 <template>
-  <v-skeleton-loader type="skeleton" :types="{skeleton: 'card,article, table-tfoot'}" class="mx-auto" transition="fade-transition" :loading="skeleton">
+  <v-skeleton-loader
+    type="skeleton"
+    :types="{ skeleton: 'card,article, table-tfoot' }"
+    class="mx-auto pa-6"
+    transition="fade-transition"
+    :loading="skeleton"
+  >
     <v-card flat>
-      <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3">Static Pages</v-card-title>
-      <v-card flat class="pa-6" v-for="(page , index) in pages" :key="index">
+      <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
+        >Pages</v-card-title
+      >
+      <v-card flat class="pa-6" v-for="(page, index) in pages" :key="index">
         <v-card-title>
           <v-icon>{{ page.icon }}</v-icon>
-          <span class="display-1 text-uppercase font-weight-thin ml-4">{{ `${page.name} page` }}</span>
+          <span
+            class="display-1 text-uppercase font-weight-thin ml-4"
+            v-text="page.title"
+          ></span>
         </v-card-title>
-        <textarea-editor v-model="pagesValues[page.value]"></textarea-editor>
+        <v-row>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-text-field
+              outlined
+              label="Title"
+              v-model="page.title"
+              :rules="[rules.required]"
+            >
+            </v-text-field>
+          </v-col>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-text-field outlined label="Icon" v-model="page.icon">
+            </v-text-field>
+          </v-col>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-select
+              v-model="page.position"
+              :items="positions"
+              outlined
+              label="Position"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="4" class="py-1">
+            <v-checkbox v-model="page.protected" label="Protected"></v-checkbox>
+          </v-col>
+        </v-row>
+        <textarea-editor v-model="page.value"></textarea-editor>
         <v-card-actions>
           <v-spacer></v-spacer>
-            <v-btn fab small color="primary" @click="saveConfig(page)" :disabled="!isEdited(page)">
-                <v-icon small>fas fa-save</v-icon>
-            </v-btn>
+          <v-btn class="ma-2" fab small color="primary" @click="savePage(page)">
+            <v-icon small>fas fa-save</v-icon>
+          </v-btn>
+          <v-btn
+            class="ma-2"
+            fab
+            small
+            color="error"
+            @click="
+              setTemporalPage(page);
+              menu.dialogs.confirm = true;
+            "
+          >
+            <v-icon small>fas fa-trash</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-card>
+      <v-dialog v-model="menu.dialogs.confirm" max-width="400">
+        <confirmation-template
+          title="Delete static page"
+          description="You are about to delete this Static Page. <br><br>Are you sure?"
+          :cancelFunction="null"
+          textButton="Delete"
+          :action="deletePage"
+          :actionparams="searchedPage"
+        >
+        </confirmation-template>
+      </v-dialog>
+      <v-row class="px-3">
+        <v-col>
+          <v-btn
+            height="160"
+            block
+            color="primary"
+            class="my-2"
+            @click="addPageBlank()"
+          >
+            <v-icon left>fas fa-plus</v-icon>
+            Add Page
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-card>
   </v-skeleton-loader>
 </template>
 
 <script>
-import Axios from 'axios'
-import Vue from 'vue'
-import Cookies from 'js-cookie';
-import config from '../../config/config.json'
-import textareaeditorVue from './textareaeditor.vue'
+import { mapActions, mapMutations, mapState } from "vuex";
+import textareaeditorVue from "./textareaeditor.vue";
+import confirm from "../general/confirm.vue";
 
 export default {
   data() {
-    return{
-      pages: config.staticPages,
-      pagesValues: {},
-      pagesValuesNotEdited: {},
+    return {
       skeleton: false,
-      config: {
-        headers: {Authorization: "Bearer " + Cookies.get("catapa-jwt")}
-      }
-    }
+      positions: [
+        { text: "Home", value: "home" },
+        { text: "Registration page", value: "register" },
+        { text: "Footer", value: "footer" },
+        { text: "Lateral Menu", value: "lateral" },
+      ],
+    };
   },
   components: {
-    'textarea-editor':textareaeditorVue,
+    "textarea-editor": textareaeditorVue,
+    "confirmation-template": confirm,
+  },
+  computed: {
+    ...mapState({
+      pages: (state) => state.general.config.pages,
+      searchedPage: (state) => state.general.config.searchedPage,
+      rules: (state) => state.general.rules,
+      menu: (state) => state.menu.menu,
+    }),
   },
   methods: {
-    async searchConfig(page) {
-      let res = await Axios.get('/configuration/' + page.value, this.config)
-      Vue.set(this.pagesValues, res.data.name,res.data.value);
-      Vue.set(this.pagesValuesNotEdited, res.data.name,res.data.value);
-    },
-    isEdited(page) {
-      return this.pagesValues[page.value] != this.pagesValuesNotEdited[page.value];
-    },
-    async saveConfig(page) {
-        let res = await Axios.get('/configuration/' + page.value, this.config)
-        if (res.data == undefined) {
-            res = await Axios.post('/configuration/', {name:  page.value, value: this.pagesValues[page.value]}, this.config)
-        } else {
-            res = await Axios.put('/configuration/' + page.value, { value: this.pagesValues[page.value], date: new Date()}, this.config);
-        }
-        Vue.set(this.pagesValues, res.data.name,res.data.value);
-        Vue.set(this.pagesValuesNotEdited, res.data.name,res.data.value);
-    }
+    ...mapActions("general", [
+      "savePage",
+      "createPage",
+      "getStaticPages",
+      "deletePage",
+    ]),
+    ...mapMutations("general", ["addPageBlank", "setTemporalPage"]),
   },
   created() {
     this.skeleton = true;
-    this.pages.forEach(async page => {
-      await this.searchConfig(page);
-    });      
-    setTimeout(() => {
-      this.skeleton = false
-    }, 600);
-  }
-}
+    this.getStaticPages().finally(() => {
+      this.skeleton = false;
+    });
+  },
+};
 </script>

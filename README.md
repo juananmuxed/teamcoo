@@ -34,14 +34,7 @@ And here the [Changelog](CHANGELOG.md)
 
 ## 🍩 Screenshots
 
-<img src="media/DASHBOARD.png" alt="Dashboard" height="200"/>
-<img src="media/COMMON_Q.png" alt="Common Questions" height="200"/>
-<img src="media/CREATE_THINGS.png" alt="Creating" height="200"/>
-<img src="media/DARK_LISTS.png" alt="Dark mode" height="200"/>
-<img src="media/STATIC_PAGE_EDITOR.png" alt="Static Pages Editor" height="200"/>
-<img src="media/WORKGROUP.png" alt="Workgroup" height="200"/>
-<img src="media/LATERAL_MENU.png" alt="Menu" height="200"/>
-<img src="media/EDIT_ALL.png" alt="CRUD" height="200"/>
+Deleted until standards
 
 ## 🏗 Built with
 
@@ -106,23 +99,19 @@ cd teamcoo
 
 Create (or modify) the .env to Enviorement Variables
 
-```bash
-WEB_NAME=name_ong
-MONGO_ROOT_USER=rootname
-MONGO_ROOT_PASSWORD=rootpass
-MONGOEXPRESS_LOGIN=teamcoo
-MONGOEXPRESS_PASSWORD=pass
-SECRET_STRING=verysecret
-API_VERSION=1
-DATABASE_HOST=localhost
-DATABASE_NAME=teamcoo
-DATABASE_PORT=27017
-API_PORT=3000
-API_DOMAIN=http://localhost
-EMAIL_ACCOUNT=account@domain.es // Temporally here - Next update in Config
-EMAIL_PASSWORD=smtp_password // Temporally here - Next update in Config
-EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
-NODE_ENV=development
+```js
+WEB_NAME = name_ong;
+MONGO_ROOT_USER = rootname;
+MONGO_ROOT_PASSWORD = rootpass;
+MONGOEXPRESS_LOGIN = teamcoo;
+MONGOEXPRESS_PASSWORD = pass;
+SECRET_STRING = verysecret;
+API_VERSION = 1;
+DATABASE_HOST = localhost;
+DATABASE_NAME = teamcoo;
+DATABASE_PORT = 27017;
+API_PORT = 3000;
+NODE_ENV = development;
 ```
 
 Then access to 2 folders (2 console prompt is easier)
@@ -135,13 +124,17 @@ CONSOLE 2: cd client
 Run the scripts
 
 ```bash
+CONSOLE 1: npm i
 CONSOLE 1: npm run dev
+CONSOLE 2: npm i
 CONSOLE 2: npm run serve
 ```
 
 And you can access to the application via web browswer in http://localhost:8080
 
 ### **Production**
+
+#### Start
 
 Easy, you need Docker in the Deploy server or machine
 
@@ -161,41 +154,44 @@ Access to the folder
 cd teamcoo
 ```
 
+#### Config
+
 Create (or modify example.env) the .env to Enviorement Variables
 
-```bash
-WEB_NAME=name_ong
-MONGO_ROOT_USER=rootname
-MONGO_ROOT_PASSWORD=rootpass
-MONGOEXPRESS_LOGIN=teamcoo
-MONGOEXPRESS_PASSWORD=pass
-SECRET_STRING=verysecret
-API_VERSION=1
-DATABASE_HOST=localhost
-DATABASE_NAME=teamcoo
-DATABASE_PORT=27017
-API_PORT=3000
-EMAIL_ACCOUNT=account@domain.es // Temporally here - Next update in Config
-EMAIL_PASSWORD=smtp_password // Temporally here - Next update in Config
-EMAIL_DOMAIN=mail.host.domain.es // Temporally here - Next update in Config
-NODE_ENV=development
+```js
+WEB_NAME = name_ong;
+MONGO_ROOT_USER = rootname;
+MONGO_ROOT_PASSWORD = rootpass;
+MONGOEXPRESS_LOGIN = teamcoo;
+MONGOEXPRESS_PASSWORD = pass;
+SECRET_STRING = verysecret;
+API_VERSION = 1;
+DATABASE_HOST = localhost;
+DATABASE_NAME = teamcoo;
+DATABASE_PORT = 27017;
+API_PORT = 3000;
+NODE_ENV = development;
 ```
 
 Change the "production" urls to API
 
-```json
+```js
+  // client/src/config/config.json
   "global": {
+    "versionApp": "0.10.0",
     "versionApi": 1,
     "development": {
-      "hostnameApi": "http://localhost:3000/api/v1",
       "hostApi": "http://localhost:3000"
     },
     "production": { // This
-      "hostnameApi": "http://localhost:3000/api/v1",
       "hostApi": "http://localhost:3000"
     }
   },
 ```
+
+This is just for external use like Emails or other next features (for example Share)
+
+#### Build
 
 I prefer build de vue app with the `npm run build` command and create a `.htaccess` file in the `.dist` folder with this content (just Apache):
 
@@ -226,10 +222,12 @@ And up the Network
 docker-compose up -d
 ```
 
-The ports are the next by default:
+#### Next
+
+The ports by default:
 
 - API: 3000
-- APP: 8080
+- APP: 8080 -> Just in case you use the Dockerized version
 - DB-Admin: 8081
 - Database: 27017
 

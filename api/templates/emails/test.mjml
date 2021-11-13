@@ -1,0 +1,43 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto" />
+  </mj-head>
+  <mj-body>
+    <mj-section background-color="#fff">
+      <mj-column>
+        <mj-image width="120px" src="{{ logoUrl }}" />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="{{ primary }}">
+      <mj-column width="600px">
+        <mj-text align="center" color="#fff" font-size="28px" font-family="Roboto">Email Test from {{ webpage }}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#fafafa">
+      <mj-column width="400px">
+        <mj-text font-family="Roboto" font-style="italic" font-size="20px" color="#626262">This is a email Test</mj-text>
+        <mj-text color="#525252" font-family="Roboto">This mail is a test from {{ webpage }}</mj-text>
+        <mj-button background-color="{{ secondary }}" href="{{ webpageurl }}">Go to</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="{{ secondary }}">
+      <mj-column>
+        <mj-social font-size="15px" icon-size="30px" mode="horizontal">
+          <mj-social-element name="facebook" href="{{ webpageurl }}">
+          </mj-social-element>
+          <mj-social-element name="google" href="{{ webpageurl }}">
+          </mj-social-element>
+          <mj-social-element name="twitter" href="{{ webpageurl }}">
+          </mj-social-element>
+        </mj-social>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#fafafa">
+      <mj-column>
+        <mj-text font-size="9px" font-family="Roboto" color="#525252">
+          {{ legalText }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

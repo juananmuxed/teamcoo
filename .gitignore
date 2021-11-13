@@ -189,5 +189,8 @@ $RECYCLE.BIN/
 
 ## uploads ###
 api/uploads/*
+!api/uploads/TEAMCOO_LOGO.png
+!api/uploads/TEAMCOO_ICON.png
+!api/uploads/FAVICON.png
 
 # End of https://www.gitignore.io/api/git,vue,node,vuejs,windows,visualstudiocode

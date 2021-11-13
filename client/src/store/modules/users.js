@@ -1,7 +1,6 @@
 import Axios from 'axios'
 import Vuetify from '../../plugins/vuetify'
 import { generatePalette } from '../../utils/utils'
-import globalConfig from '../../config/config.json'
 
 const state = {
     users: [],
@@ -65,7 +64,13 @@ const mutations = {
 const getters = {
     getRoleColor: () => (role) => {
         let primary = Vuetify.framework.theme.dark ? Vuetify.framework.theme.themes.dark.primary : Vuetify.framework.theme.themes.light.primary;
-        let roles = globalConfig.roles;
+        let roles = [
+            { name: "User", value: "user" },
+            { name: "Volunteer", value: "volu" },
+            { name: "Coordinator", value: "coor" },
+            { name: "Director", value: "dire" },
+            { name: "Admin", value: "admin" }
+        ];
         let colors = generatePalette(primary, roles.length, 10, 'down');
         return {
             color: colors.colors[roles.findIndex(a => a.value === role)],
@@ -193,19 +198,17 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
-    async saveEditedData({ commit, rootState, rootGetters }, user) {
+    async saveEditedData({ commit, rootState, rootGetters, dispatch }, user) {
         try {
-            commit('menu/notification', ['primary', 3, user], { root: true });
             if (user.imagefile != null) {
-                let formData = new FormData()
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', user.imagefile)
-                let resImg = await Axios.post('/files/upload', formData, config)
-                user.image = rootState.urlApi + '/uploads/' + resImg.data.file.filename
+                user.image = await dispatch('general/saveFile', user.imagefile, { root: true });
             }
             let id = user.id
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.put('/users/' + id, user, config);
+            if (rootState.user.loginuser.id == id) {
+                commit('user/userStore', { data: res.data }, { root: true });
+            }
             commit('menu/notification', ['primary', 3, 'Changed data Succesfully'], { root: true });
             commit('undoEdit');
             commit('menu/cancelDialog', 'edituser', { root: true });

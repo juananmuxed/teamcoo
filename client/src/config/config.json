@@ -1,13 +1,11 @@
 {
   "global": {
-    "versionApp": "0.10.0",
+    "versionApp": "0.12.0",
     "versionApi": 1,
     "development": {
-      "hostnameApi": "http://localhost:3000/api/v1",
       "hostApi": "http://localhost:3000"
     },
     "production": {
-      "hostnameApi": "http://localhost:3000/api/v1",
       "hostApi": "http://localhost:3000"
     }
   },
@@ -17,29 +15,6 @@
     { "name": "Coordinator", "value": "coor" },
     { "name": "Director", "value": "dire" },
     { "name": "Admin", "value": "admin" }
-  ],
-  "staticPages": [
-    {
-      "name": "Cookies Policy",
-      "icon": "fas fa-cookie-bite",
-      "value": "cookie",
-      "slug": "cookies-policy",
-      "position": ["footer"]
-    },
-    {
-      "name": "Privacy Policy",
-      "icon": "fas fa-user-secret",
-      "value": "privacy",
-      "slug": "privacy-policy",
-      "position": ["footer"]
-    },
-    {
-      "name": "Terms and Conditions",
-      "icon": "fas fa-file-contract",
-      "value": "terms",
-      "slug": "terms-and-conditions",
-      "position": ["footer"]
-    }
   ],
   "menuLinks": [
     {

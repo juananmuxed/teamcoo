@@ -2,16 +2,16 @@ const mongoose = require('mongoose')
 
 const tokenScheme = mongoose.Schema({
     _userId: {
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     },
-    token:{
-        type:String,
-        required:true
+    token: {
+        type: String,
+        required: true
     },
-    createdDate:{
-        type:Date,
+    createdDate: {
+        type: Date,
         required: true,
         default: Date.now,
         expires: 60 * 60

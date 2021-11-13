@@ -158,13 +158,7 @@ const actions = {
             let config = rootGetters['general/cookieAuth'];
             let dossier = state.workgroupForm.dossier
             if (dossier != null) {
-                let formData = new FormData()
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', state.workgroupForm.dossier)
-                await Axios.post('/files/upload', formData, config)
-                    .then(res => {
-                        dossier = this.urlApi + '/uploads/' + res.data.file.filename
-                    })
+                dossier = await dispatch('general/saveFile', dossier, { root: true });
             }
             let body = {
                 name: state.workgroupForm.name,
@@ -327,18 +321,12 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
-    async saveEditedworkgroup({ state, commit, dispatch, rootState, rootGetters }, id) {
+    async saveEditedworkgroup({ state, commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let dossier = state.workgroupForm.dossier;
             if (dossier != null) {
-                let formData = new FormData();
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', state.workgroupForm.dossier);
-                await Axios.post('/files/upload', formData, config)
-                    .then(res => {
-                        dossier = rootState.urlApi + '/uploads/' + res.data.file.filename;
-                    })
+                dossier = await dispatch('general/saveFile', dossier, { root: true });
             }
             else {
                 dossier = state.workgroupForm.oldDossier;
