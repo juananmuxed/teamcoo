@@ -214,17 +214,17 @@ export default {
     ...mapState({
       rules: (state) => state.general.rules,
       newuser: (state) => state.user.newuser,
-      registerPage: (state) => state.general.registerPage,
+      registerPage: (state) => state.general.pagesSpecials.register,
     }),
   },
   methods: {
     ...mapGetters("user", ["signUpIsValid"]),
     ...mapActions("user", ["signup"]),
-    ...mapActions("general", ["getRegisterPage"]),
+    ...mapActions("general", ["getPage"]),
   },
   async created() {
     this.skeleton = true;
-    await this.getRegisterPage();
+    await this.getPage("register");
     await sleep(400);
     this.skeleton = false;
   },

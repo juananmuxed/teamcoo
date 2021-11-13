@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import Vue from 'vue';
 import Axios from 'axios'
 import { camelize, kebabize } from '../../utils/utils';
+import icons from '../../config/fas.json';
 
 const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const ipPattern = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
@@ -96,13 +97,27 @@ const state = {
         searchedPage: {}
     },
     page: {},
-    homePage: {},
-    registerPage: {},
+    pagesSpecials: {
+        home: {},
+        register: {},
+        membership: {},
+    },
     notConfiguredPage: {
         icon: 'fas fa-hamburger',
         title: 'Page not configured',
         value: '<h2>Set in the config options or contact with the administrator.</h2>'
-    }
+    },
+    notFoundPage: {
+        icon: 'fas fa-coffee',
+        title: 'Page not found',
+        value: '<h2>This page is invalid. Try other.</h2>'
+    },
+    notPermitedPage: {
+        icon: 'fas fa-lock',
+        title: 'This page is not for you',
+        value: '<h2>This pages is protected for login users, please login or register</h2>'
+    },
+    icons: icons
 }
 
 const mutations = {
@@ -133,11 +148,8 @@ const mutations = {
     setPage: (state, page) => {
         Vue.set(state, 'page', page)
     },
-    setHomePage: (state, page) => {
-        Vue.set(state, 'homePage', page)
-    },
-    setRegisterPage: (state, page) => {
-        Vue.set(state, 'registerPage', page)
+    setPageSpecial: (state, page) => {
+        Vue.set(state.pagesSpecials, page.position, page.page)
     },
     setTemporalPage: (state, page) => {
         Vue.set(state.config, 'searchedPage', page)
@@ -326,16 +338,12 @@ const actions = {
         }
     },
 
-    async searchPage({ commit }, slug) {
+    async searchPage({ state, commit }, slug) {
         try {
             let res = await Axios.get("/pages/");
             let page = res.data.find((page) => page.slug == slug)
             if (!page) {
-                page = {
-                    icon: 'fas fa-coffee',
-                    title: 'Page not found',
-                    value: '<h2>This page is invalid. Try other.</h2>'
-                }
+                page = state.notFoundPage
             }
             commit('setPage', page)
         } catch (error) {
@@ -355,27 +363,17 @@ const actions = {
         }
     },
 
-    async getHomePage({ state, commit }) {
+    async getPage({ state, commit }, position) {
         try {
             let res = await Axios.get("/pages/");
-            let page = res.data.find((page) => page.position == 'home')
+            let page = res.data.find((page) => page.position == position)
             if (!page) {
-                page = state.notConfiguredPage
+                page = state.notConfiguredPage;
             }
-            commit('setHomePage', page)
-        } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
-        }
-    },
-
-    async getRegisterPage({ state, commit }) {
-        try {
-            let res = await Axios.get("/pages/");
-            let page = res.data.find((page) => page.position == 'register')
-            if (!page) {
-                page = state.notConfiguredPage
+            if (page.protected) {
+                page = state.notPermitedPage;
             }
-            commit('setRegisterPage', page)
+            commit('setPageSpecial', { position: position, page: page })
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
