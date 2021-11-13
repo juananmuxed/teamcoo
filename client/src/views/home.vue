@@ -1,11 +1,24 @@
 <template>
   <v-container class="pa-12" fluid>
-    <v-row class="text-center">
-      <v-col cols="12" class="pa-6">
-        <p class="display-3 font-weight-thin text-uppercase">Title 1</p>
-        <p class="subtitle-1 font-weight-light">
-          Text by presentation of the platform
-        </p>
+    <v-row v-if="homePage">
+      <v-col>
+        <v-skeleton-loader
+          type="article"
+          max-width="1080"
+          class="mx-auto"
+          transition="fade-transition"
+          :loading="skeleton"
+        >
+          <v-card flat max-width="1080" class="mx-auto pa-4">
+            <v-card-title class="mb-3">
+              <v-icon size="60" color="primary">{{ homePage.icon }}</v-icon>
+              <span class="display-2 font-weight-medium ml-6">{{
+                homePage.title
+              }}</span>
+            </v-card-title>
+            <v-card-text v-html="homePage.value"></v-card-text>
+          </v-card>
+        </v-skeleton-loader>
       </v-col>
     </v-row>
     <home-buttons></home-buttons>
@@ -13,10 +26,31 @@
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
 import homebuttons from "../components/general/homebuttons.vue";
+import { sleep } from "../utils/utils";
 export default {
+  data() {
+    return {
+      skeleton: true,
+    };
+  },
   components: {
     "home-buttons": homebuttons,
+  },
+  computed: {
+    ...mapState({
+      homePage: (state) => state.general.homePage,
+    }),
+  },
+  methods: {
+    ...mapActions("general", ["getHomePage"]),
+  },
+  async created() {
+    this.skeleton = true;
+    await this.getHomePage();
+    await sleep(400);
+    this.skeleton = false;
   },
 };
 </script>

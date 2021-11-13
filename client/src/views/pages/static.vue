@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     ...mapState({
-      page: (state) => state.general.config.page,
+      page: (state) => state.general.page,
     }),
   },
   methods: {

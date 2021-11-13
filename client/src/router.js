@@ -253,7 +253,7 @@ router.afterEach(async (to, from) => {
     if (!from.name) {
         await store.dispatch('menu/getWebName')
     }
-    let title = store.state.menu.webName + ' |';
+    let title = store.state.menu.web.name + ' |';
     if (to.meta.title) {
         title += ' ' + to.meta.title
     }

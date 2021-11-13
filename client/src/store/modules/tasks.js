@@ -108,18 +108,10 @@ const getters = {
 }
 
 const actions = {
-    async createTask({ state, commit, dispatch, rootState, rootGetters }, userId) {
+    async createTask({ state, commit, dispatch, rootGetters }, userId) {
         try {
             if (state.tasksForm.image != null) {
-                let formData = new FormData()
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', state.tasksForm.image)
-                await Axios.post('/files/upload', formData, config)
-                    .then(res => {
-                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
-                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
-                        state.tasksForm.imagelink = rootState.urlApi + '/uploads/' + date + res.data.file.filename
-                    });
+                state.tasksForm.imagelink = await dispatch('general/saveFile', state.tasksForm.image, { root: true });
             }
             else {
                 state.tasksForm.imagelink = state.tasksForm.link
@@ -246,19 +238,11 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
-    async saveEditedTask({ state, commit, dispatch, rootState, rootGetters }, id) {
+    async saveEditedTask({ state, commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'], image = state.tasksForm.newimage;
             if (image != null) {
-                let formData = new FormData();
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', state.tasksForm.newimage);
-                await Axios.post('/files/upload', formData, config)
-                    .then(res => {
-                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
-                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
-                        image = rootState.urlApi + '/uploads/' + date + res.data.file.filename
-                    })
+                image = await dispatch('general/saveFile', image, { root: true });
             }
             else {
                 image = state.tasksForm.image;

@@ -50,19 +50,28 @@
           <v-btn class="ma-2" fab small color="primary" @click="savePage(page)">
             <v-icon small>fas fa-save</v-icon>
           </v-btn>
-          <v-btn class="ma-2" fab small color="error">
+          <v-btn
+            class="ma-2"
+            fab
+            small
+            color="error"
+            @click="
+              setTemporalPage(page);
+              menu.dialogs.confirm = true;
+            "
+          >
             <v-icon small>fas fa-trash</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
-      <v-dialog v-model="menu.dialogs.deletePage" max-width="400">
+      <v-dialog v-model="menu.dialogs.confirm" max-width="400">
         <confirmation-template
           title="Delete static page"
-          description="You are about to delete this page. Are you sure?"
-          dialog="deletePage"
-          :cancelFunction="cancelDialog"
+          description="You are about to delete this Static Page. <br><br>Are you sure?"
+          :cancelFunction="null"
           textButton="Delete"
           :action="deletePage"
+          :actionparams="searchedPage"
         >
         </confirmation-template>
       </v-dialog>
@@ -108,6 +117,7 @@ export default {
   computed: {
     ...mapState({
       pages: (state) => state.general.config.pages,
+      searchedPage: (state) => state.general.config.searchedPage,
       rules: (state) => state.general.rules,
       menu: (state) => state.menu.menu,
     }),
@@ -119,8 +129,7 @@ export default {
       "getStaticPages",
       "deletePage",
     ]),
-    ...mapMutations("general", ["addPageBlank"]),
-    ...mapMutations("menu", ["cancelDialog"]),
+    ...mapMutations("general", ["addPageBlank", "setTemporalPage"]),
   },
   created() {
     this.skeleton = true;

@@ -79,7 +79,7 @@ exports.deletePage = async (req, res) => {
         if (isPage.length < 1) {
             return res.status(409).json({ message: "This page don't exist" });
         }
-        const pageDB = await Page.findOneAndUpdate({ _id })
+        const pageDB = await Page.findOneAndDelete({ name: name })
         res.json(pageDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred: ' + error, error })

@@ -1,15 +1,15 @@
 <template>
   <v-app-bar app tile clipped-left hide-on-scroll>
     <router-link to="/">
-      <v-avatar tile>
+      <v-avatar tile class="pa-1">
         <v-img :src="`${logos.icon}`" contain></v-img>
       </v-avatar>
     </router-link>
 
     <v-container fluid>
       <v-row align-content="center" justify="center" no-gutters>
-        <v-col cols="12">
-          <v-img height="60" :src="`${logos.logo}`" contain></v-img>
+        <v-col cols="12" class="pa-3">
+          <v-img height="40" :src="`${logos.logo}`" contain></v-img>
         </v-col>
       </v-row>
     </v-container>

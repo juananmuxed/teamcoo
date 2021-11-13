@@ -71,11 +71,8 @@ const state = {
         logo: null,
         favicon: null
     },
-    colors: {
-        primary: '',
-        secondary: ''
-    },
-    webName: ''
+    colors: {},
+    web: {}
 }
 
 const mutations = {
@@ -114,9 +111,7 @@ const mutations = {
         if (value != null) { state.menu.progressbar.value = value }
     },
     setLogosPage: (state, logos) => {
-        state.logos.icon = logos.icon;
-        state.logos.logo = logos.logo;
-        state.logos.favicon = logos.favicon;
+        Vue.set(state, 'logos', logos);
     },
     setThemeColors: (state, themes) => {
         Vuetify.framework.theme.themes.light.primary = themes.light.primary;
@@ -134,7 +129,7 @@ const mutations = {
         Vue.set(state, 'colors', themes);
     },
     setWebName: (state, web) => {
-        state.webName = web.name;
+        Vue.set(state, 'web', web);
     },
     setPagesFooter: (state, pages) => {
         state.menu.staticFooter = pages;
@@ -144,6 +139,11 @@ const mutations = {
     },
     randomColor: (state, themeColor) => {
         state.colors[themeColor.theme][themeColor.color] = generateRandomColor(30);
+    },
+    clearLogos: (state) => {
+        state.newLogos.icon = null;
+        state.newLogos.favicon = null;
+        state.newLogos.logo = null;
     }
 }
 
@@ -168,11 +168,13 @@ const actions = {
             commit('notification', ['info', 1, '🌞  Lights On']);
         }
     },
+
     goBack() {
         setTimeout(() => {
             router.go(-1)
         }, 200);
     },
+
     async getLogosPage({ state, commit, rootState }) {
         try {
             let res = await Axios.get("/configuration/logos");
@@ -191,6 +193,7 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
+
     async getThemeColors({ commit }) {
         try {
             let res = await Axios.get("/configuration/colors");
@@ -220,6 +223,7 @@ const actions = {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
     },
+
     async getWebName({ commit }) {
         try {
             let res = await Axios.get("/configuration/web");

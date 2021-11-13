@@ -153,20 +153,12 @@ const getters = {
 }
 
 const actions = {
-    async createWorkGroup({ state, commit, dispatch, rootState, rootGetters }, userId) {
+    async createWorkGroup({ state, commit, dispatch, rootGetters }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let dossier = state.workgroupForm.dossier
             if (dossier != null) {
-                let formData = new FormData()
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', state.workgroupForm.dossier)
-                await Axios.post('/files/upload', formData, config)
-                    .then(res => {
-                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
-                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
-                        dossier = rootState.urlApi + '/uploads/' + date + res.data.file.filename
-                    })
+                dossier = await dispatch('general/saveFile', dossier, { root: true });
             }
             let body = {
                 name: state.workgroupForm.name,
@@ -329,20 +321,12 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
-    async saveEditedworkgroup({ state, commit, dispatch, rootState, rootGetters }, id) {
+    async saveEditedworkgroup({ state, commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let dossier = state.workgroupForm.dossier;
             if (dossier != null) {
-                let formData = new FormData();
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                formData.append('file', state.workgroupForm.dossier);
-                await Axios.post('/files/upload', formData, config)
-                    .then(res => {
-                        let destination = res.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
-                        let date = destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
-                        dossier = rootState.urlApi + '/uploads/' + date + res.data.file.filename;
-                    })
+                dossier = await dispatch('general/saveFile', dossier, { root: true });
             }
             else {
                 dossier = state.workgroupForm.oldDossier;

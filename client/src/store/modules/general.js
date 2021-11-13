@@ -92,8 +92,17 @@ const state = {
         testEmail: '',
         sendingEmail: false,
         ports: [587, 2525, 465, 25],
-        pages: []
+        pages: [],
+        searchedPage: {}
     },
+    page: {},
+    homePage: {},
+    registerPage: {},
+    notConfiguredPage: {
+        icon: 'fas fa-hamburger',
+        title: 'Page not configured',
+        value: '<h2>Set in the config options or contact with the administrator.</h2>'
+    }
 }
 
 const mutations = {
@@ -122,7 +131,16 @@ const mutations = {
         state.config.pages = pages;
     },
     setPage: (state, page) => {
-        Vue.set(state.config, 'page', page)
+        Vue.set(state, 'page', page)
+    },
+    setHomePage: (state, page) => {
+        Vue.set(state, 'homePage', page)
+    },
+    setRegisterPage: (state, page) => {
+        Vue.set(state, 'registerPage', page)
+    },
+    setTemporalPage: (state, page) => {
+        Vue.set(state.config, 'searchedPage', page)
     }
 }
 
@@ -150,6 +168,20 @@ const getters = {
 }
 
 const actions = {
+    async saveFile({ rootState }, file) {
+        try {
+            let formData = new FormData()
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+            formData.append('file', file)
+            let resImg = await Axios.post('/files/upload', formData, config)
+            let destination = resImg.data.file.destination.replaceAll('\\', '|').replaceAll('/', '|').split('|');
+            let date = destination[destination.length - 4] + '/' + destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
+            return rootState.urlApi + '/uploads/' + date + resImg.data.file.filename;
+        } catch (error) {
+            return error;
+        }
+    },
+
     async searchEmailConfig({ commit, getters }) {
         try {
             let config = getters.cookieAuth;
@@ -170,7 +202,7 @@ const actions = {
             let config = getters.cookieAuth;
             let res = await Axios.get('/configuration/emails', config)
             if (!res.data) {
-                res = await Axios.post('/configuration/', { name: 'emails', values: state.config.email }, config)
+                res = await Axios.post('/configuration/', { name: 'emails', values: state.config.email, protected: true }, config)
             } else {
                 res = await Axios.put('/configuration/emails', { values: state.config.email, date: new Date() }, config);
             }
@@ -196,17 +228,42 @@ const actions = {
         }
     },
 
-    async saveConfig({ state, commit, getters }, page) {
+    async saveConfig({ commit, getters }, configuration) {
         try {
             let config = getters.cookieAuth;
-            let res = await Axios.get("/configuration/" + page.value, config);
+            let res = await Axios.get("/configuration/" + configuration.name, config);
             if (!res.data) {
-                res = await Axios.post('/configuration/', { name: page.value, value: state.pagesValues[page.value] }, config)
+                res = await Axios.post('/configuration/', { name: configuration.name, values: configuration.values }, config);
             } else {
-                res = await Axios.put('/configuration/' + page.value, { value: state.pagesValues[page.value], date: new Date() }, config)
+                res = await Axios.put('/configuration/' + configuration.name, { values: configuration.values, date: new Date() }, config);
             }
-            Vue.set(state.pagesValues, res.data.name, res.data.value);
-            commit('menu/notification', ['success', 3, 'Static page ' + res.data.name.toUpperCase() + ' saved'], { root: true });
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    },
+
+    async saveThemeConfig({ commit, dispatch, rootState }) {
+        try {
+            let iconUrl = rootState.menu.logos.icon;
+            let faviconUrl = rootState.menu.logos.favicon;
+            let logoUrl = rootState.menu.logos.logo;
+            if (rootState.menu.newLogos.icon != null) {
+                iconUrl = await dispatch('saveFile', rootState.menu.newLogos.icon);
+            }
+            if (rootState.menu.newLogos.favicon != null) {
+                faviconUrl = await dispatch('saveFile', rootState.menu.newLogos.favicon);
+            }
+            if (rootState.menu.newLogos.logo != null) {
+                logoUrl = await dispatch('saveFile', rootState.menu.newLogos.logo);
+            }
+            await dispatch('saveConfig', { name: 'web', values: rootState.menu.web });
+            await dispatch('saveConfig', { name: 'logos', values: { icon: iconUrl, favicon: faviconUrl, logo: logoUrl } });
+            await dispatch('saveConfig', { name: 'colors', values: rootState.menu.colors });
+            commit('menu/setWebName', rootState.menu.web, { root: true });
+            commit('menu/setThemeColors', rootState.menu.colors, { root: true });
+            commit('menu/setLogosPage', { icon: iconUrl, favicon: faviconUrl, logo: logoUrl }, { root: true });
+            commit('menu/clearLogos', null, { root: true });
+            commit('menu/notification', ['success', 3, 'Configuration saved successfully'], { root: true });
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
@@ -284,10 +341,45 @@ const actions = {
         } catch (error) {
             commit('menu/notification', ['error', 3, error], { root: true });
         }
-    }
+    },
 
-    //TODO: save theme configuration
-    //TODO: delete page with modal
+    async deletePage({ commit, getters, dispatch }, page) {
+        try {
+            let config = getters.cookieAuth;
+            await Axios.delete('/pages/' + page.name, config);
+            await dispatch('getStaticPages');
+            commit('menu/cancelDialog', 'confirm', { root: true });
+            commit('menu/notification', ['success', 3, 'Static page deleted'], { root: true });
+        } catch (error) {
+            commit('menu/notification', ['error', 5, error.response.data], { root: true });
+        }
+    },
+
+    async getHomePage({ state, commit }) {
+        try {
+            let res = await Axios.get("/pages/");
+            let page = res.data.find((page) => page.position == 'home')
+            if (!page) {
+                page = state.notConfiguredPage
+            }
+            commit('setHomePage', page)
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    },
+
+    async getRegisterPage({ state, commit }) {
+        try {
+            let res = await Axios.get("/pages/");
+            let page = res.data.find((page) => page.position == 'register')
+            if (!page) {
+                page = state.notConfiguredPage
+            }
+            commit('setRegisterPage', page)
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error], { root: true });
+        }
+    },
 }
 
 export default {

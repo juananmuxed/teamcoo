@@ -10,14 +10,14 @@ const path = require('path');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let date = new Date();
-        let url = path.join(__dirname, '../uploads/', date.getFullYear().toString(), '/', date.getDate().toString(), '/')
+        let url = path.join(__dirname, '../uploads/', date.getFullYear().toString(), '/', date.getMonth().toString(), '/', date.getDate().toString(), '/')
         if (!fs.existsSync(url)) {
             fs.mkdirSync(url, { recursive: true });
         }
         cb(null, url)
     },
     filename: function (req, file, cb) {
-        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+        cb(null, file.originalname);
     }
 });
 

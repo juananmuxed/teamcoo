@@ -12,7 +12,8 @@
       >
       <v-row>
         <v-col cols="12" sm="4" class="py-1">
-          <v-text-field outlined label="Name" v-model="webName"> </v-text-field>
+          <v-text-field outlined label="Name" v-model="web.name">
+          </v-text-field>
         </v-col>
       </v-row>
       <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
@@ -99,18 +100,22 @@
         >Theme colors</v-card-title
       >
       <v-row>
-        <v-col cols="12" sm="6">
-          <v-row
+        <v-col cols="12">
+          <v-card
             v-for="(theme, index) in Object.keys(colors).map((key) => [
               key,
               colors[key],
             ])"
             :key="index"
+            :dark="theme[0] == 'dark'"
+            :light="theme[0] == 'light'"
+            flat
           >
-            <v-col class="headline text-uppercase font-weight-thin" cols="12">
-              <h2>{{ theme[0] }}</h2>
-            </v-col>
-            <v-col cols="12">
+            <v-card-title
+              class="text-uppercase"
+              v-text="theme[0]"
+            ></v-card-title>
+            <v-card-text>
               <v-row
                 v-for="(color, i) in Object.keys(theme[1]).map((key) => [
                   key,
@@ -125,7 +130,16 @@
                         {{ color[0] }}
                       </h3>
                     </v-col>
-                    <v-col cols="10" sm="7" class="py-0">
+                    <v-col cols="4" sm="3" class="py-0">
+                      <v-text-field
+                        outlined
+                        dense
+                        hide-details
+                        :color="colors[theme[0]][color[0]]"
+                        v-model="colors[theme[0]][color[0]]"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="6" sm="4" class="py-0">
                       <v-menu
                         :close-on-content-click="false"
                         :nudge-height="0"
@@ -181,49 +195,17 @@
                   </v-row>
                 </v-col>
               </v-row>
-            </v-col>
-          </v-row>
-        </v-col>
-        <v-col
-          class="headline text-uppercase font-weight-thin"
-          cols="12"
-          sm="6"
-        >
-          <v-card
-            v-for="(theme, index) in Object.keys(colors).map((key) => [
-              key,
-              colors[key],
-            ])"
-            :key="index"
-            :dark="theme[0] == 'dark'"
-            :light="theme[0] == 'light'"
-            flat
-          >
-            <v-card-title v-text="theme[0]"></v-card-title>
-            <v-card-text>
-              <v-row>
-                <v-col
-                  class="py-1"
-                  v-for="(color, i) in Object.keys(theme[1]).map((key) => [
-                    key,
-                    colors[key],
-                  ])"
-                  :key="index + '-' + i"
-                  cols="12"
-                >
-                  <v-btn
-                    :color="colors[theme[0]][color[0]]"
-                    block
-                    v-text="color[0]"
-                  ></v-btn>
-                </v-col>
-              </v-row>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
       <v-col cols="12" class="py-1">
-        <v-btn height="160" class="my-2" block color="primary"
+        <v-btn
+          height="160"
+          class="my-2"
+          block
+          color="primary"
+          @click="saveThemeConfig"
           ><v-icon left>fas fa-save</v-icon>Save theme config</v-btn
         >
       </v-col>
@@ -232,7 +214,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import { idealTextColor } from "../../utils/utils";
 
 export default {
@@ -244,7 +226,7 @@ export default {
   computed: {
     ...mapState({
       colors: (state) => state.menu.colors,
-      webName: (state) => state.menu.webName,
+      web: (state) => state.menu.web,
       logos: (state) => state.menu.logos,
       newLogos: (state) => state.menu.newLogos,
       rules: (state) => state.general.rules,
@@ -252,6 +234,7 @@ export default {
   },
   methods: {
     ...mapMutations("menu", ["randomColor"]),
+    ...mapActions("general", ["saveThemeConfig"]),
     textColor(color) {
       return idealTextColor(color);
     },
@@ -263,3 +246,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.custom-btn::before {
+  color: transparent;
+}
+</style>
