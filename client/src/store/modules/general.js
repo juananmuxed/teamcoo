@@ -307,13 +307,12 @@ const actions = {
         }
     },
 
-    async sendTestEmail({ state, commit, getters, rootState }) {
+    async sendTestEmail({ state, commit, getters }) {
         try {
             let config = getters.cookieAuth;
             commit('changeSending');
             await Axios.post("/mail/send", {
                 sendTo: state.config.testEmail,
-                user: rootState.user.loginuser.firstname,
                 template: 'test',
                 subject: 'Test email',
                 variables: { webpageurl: window.location.origin }

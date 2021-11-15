@@ -175,6 +175,7 @@
                 </v-col>
                 <v-col cols="12">
                   <v-btn
+                    :loading="sendingEmail"
                     block
                     depressed
                     color="primary"
@@ -214,6 +215,7 @@ export default {
     ...mapState({
       rules: (state) => state.general.rules,
       newuser: (state) => state.user.newuser,
+      sendingEmail: (state) => state.user.sendingEmail,
       registerPage: (state) => state.general.pagesSpecials.register,
     }),
   },

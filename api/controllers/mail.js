@@ -30,8 +30,16 @@ exports.sendMail = async (req, res) => {
             throw new Error('Subject required');
         }
 
-        if (!body.user) {
-            body.user = ''
+        if (!body.sendFrom) {
+            body.sendFrom = data.email;
+        }
+
+        if (!body.userTo) {
+            body.userTo = ''
+        }
+
+        if (!body.userFrom) {
+            body.userFrom = data.name;
         }
 
         const context = body.variables;
@@ -72,11 +80,11 @@ exports.sendMail = async (req, res) => {
 
         let mailOptions = {
             from: {
-                name: data.name,
-                address: data.email,
+                name: body.userFrom,
+                address: body.sendFrom,
             },
             to: {
-                name: body.user,
+                name: body.userTo,
                 address: body.sendTo
             },
             subject: body.subject,
@@ -85,20 +93,24 @@ exports.sendMail = async (req, res) => {
         };
 
         let mailObj = {
-            sendTo: body.user,
-            sendFrom: data.email,
-            sendToName: body.sendTo,
-            sendFromName: data.name,
+            sendTo: body.sendTo,
+            sendFrom: body.sendFrom,
+            sendToName: body.userTo,
+            sendFromName: body.userFrom,
             subject: body.subject,
             template: body.template,
             html: html,
-            text: plainTemplate
+            text: plainTemplate,
+            sended: false,
+            response: '',
+            responseError: ''
         }
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log('Error: ' + error);
                 mailObj.responseError = error.response
+                Mail.create(mailObj);
                 if (error.responseCode) {
                     res.status(error.responseCode).json({ message: error.response, responseCode: error.responseCode, code: error.code });
                 } else {
@@ -108,9 +120,9 @@ exports.sendMail = async (req, res) => {
                 console.log('Email sent: ' + info.response);
                 mailObj.response = info.response;
                 mailObj.sended = true;
+                Mail.create(mailObj);
                 res.status(200).json({ info });
             }
-            Mail.create(mailObj);
         });
 
     } catch (error) {

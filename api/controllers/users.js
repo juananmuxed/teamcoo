@@ -1,6 +1,7 @@
 const User = require('../models/users')
 const Token = require('../models/tokens')
 const bcrypt = require('bcryptjs');
+const mailer = require("../controllers/mail");
 
 // Async method to register
 
@@ -236,29 +237,38 @@ exports.changepassexternal = async (req, res) => {
 
 // Function to send a change for pass
 
-exports.sendPassEmail = (req, res) => {
-    User.findOne({ email: req.body.email }, (e, user) => {
-
+exports.sendPassEmail = async (req, res) => {
+    try {
+        let user = await User.findOne({ email: req.body.email })
         if (!user) {
             return res.status(400).json({ message: 'We were unable to find the user with this E-mail.', type: "not-user" })
         }
 
         let generatedToken = user.generateAuthToken()
-
         let token = new Token({ _userId: user._id, token: generatedToken })
-        token.save((error) => {
-            if (error) { res.status(500).json({ message: 'An error has ocurred', error }) }
-            return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.', token: token });
+        await token.save();
+        await mailer.sendMail({
+            body: {
+                sendTo: req.body.email,
+                userTo: user.firstname,
+                template: 'user/changePass',
+                subject: 'Change your password',
+                variables: {
+                    recoveryUrlPass: req.body.url + '/reset/password/' + generatedToken
+                }
+            }
         })
-    })
+        return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.', token: token });
+    } catch (error) {
+        res.status(500).json({ message: 'An error has ocurred', error })
+    }
 }
 
 // Function to resend token
 
-exports.reSendConfirmation = (req, res) => {
-
-    User.findOne({ email: req.body.email }, (e, user) => {
-
+exports.reSendConfirmation = async (req, res) => {
+    try {
+        let user = await User.findOne({ email: req.body.email });
         if (!user) {
             return res.status(400).json({ message: 'We were unable to find the user with this E-mail.', type: "not-user" })
         }
@@ -266,12 +276,25 @@ exports.reSendConfirmation = (req, res) => {
             return res.status(400).json({ message: 'This account has already been verified.', type: "already-verified" })
         }
 
-        let generatedToken = user.generateAuthToken()
+        let generatedToken = await user.generateAuthToken()
 
         let token = new Token({ _userId: user._id, token: generatedToken })
-        token.save((error) => {
-            if (error) { res.status(500).json({ message: 'An error has ocurred', error }) }
-            return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.' });
+        await token.save();
+        await mailer.sendMail({
+            body: {
+                sendTo: req.body.email,
+                userTo: user.firstname,
+                template: 'user/validationResend',
+                subject: 'Welcome ' + user.firstname,
+                variables: {
+                    recoveryUrlPass: req.body.url + generatedToken,
+                    name: user.firstname + ' ' + user.lastname
+                }
+            }
         })
-    })
+        return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.' });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'An error has ocurred', error })
+    }
 }

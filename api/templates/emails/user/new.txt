@@ -1,0 +1,8 @@
+Welcome, {{ name }}!
+
+
+Your account is succesfully created but now you need <a href="{{ recoveryUrlPass }}">Verify your email</a> by copy this link in your web browser:
+{{ recoveryUrlPass }}
+
+-----
+{{ legalText }}
