@@ -1,1 +1,4 @@
 <p>This mail is a test from {{ webpage }}.</p>
+
+-----
+{{ legalText }}

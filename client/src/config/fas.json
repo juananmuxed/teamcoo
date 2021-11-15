@@ -1,0 +1,3998 @@
+[
+  {
+    "value": "fas fa-address-book",
+    "name": "Address Book"
+  },
+  {
+    "value": "fas fa-address-card",
+    "name": "Address Card"
+  },
+  {
+    "value": "fas fa-adjust",
+    "name": "adjust"
+  },
+  {
+    "value": "fas fa-air-freshener",
+    "name": "Air Freshener"
+  },
+  {
+    "value": "fas fa-align-center",
+    "name": "align-center"
+  },
+  {
+    "value": "fas fa-align-justify",
+    "name": "align-justify"
+  },
+  {
+    "value": "fas fa-align-left",
+    "name": "align-left"
+  },
+  {
+    "value": "fas fa-align-right",
+    "name": "align-right"
+  },
+  {
+    "value": "fas fa-allergies",
+    "name": "Allergies"
+  },
+  {
+    "value": "fas fa-ambulance",
+    "name": "ambulance"
+  },
+  {
+    "value": "fas fa-american-sign-language-interpreting",
+    "name": "American Sign Language Interpreting"
+  },
+  {
+    "value": "fas fa-anchor",
+    "name": "Anchor"
+  },
+  {
+    "value": "fas fa-angle-double-down",
+    "name": "Angle Double Down"
+  },
+  {
+    "value": "fas fa-angle-double-left",
+    "name": "Angle Double Left"
+  },
+  {
+    "value": "fas fa-angle-double-right",
+    "name": "Angle Double Right"
+  },
+  {
+    "value": "fas fa-angle-double-up",
+    "name": "Angle Double Up"
+  },
+  {
+    "value": "fas fa-angle-down",
+    "name": "angle-down"
+  },
+  {
+    "value": "fas fa-angle-left",
+    "name": "angle-left"
+  },
+  {
+    "value": "fas fa-angle-right",
+    "name": "angle-right"
+  },
+  {
+    "value": "fas fa-angle-up",
+    "name": "angle-up"
+  },
+  {
+    "value": "fas fa-angry",
+    "name": "Angry Face"
+  },
+  {
+    "value": "fas fa-ankh",
+    "name": "Ankh"
+  },
+  {
+    "value": "fas fa-apple-alt",
+    "name": "Fruit Apple"
+  },
+  {
+    "value": "fas fa-archive",
+    "name": "Archive"
+  },
+  {
+    "value": "fas fa-archway",
+    "name": "Archway"
+  },
+  {
+    "value": "fas fa-arrow-alt-circle-down",
+    "name": "Alternate Arrow Circle Down"
+  },
+  {
+    "value": "fas fa-arrow-alt-circle-left",
+    "name": "Alternate Arrow Circle Left"
+  },
+  {
+    "value": "fas fa-arrow-alt-circle-right",
+    "name": "Alternate Arrow Circle Right"
+  },
+  {
+    "value": "fas fa-arrow-alt-circle-up",
+    "name": "Alternate Arrow Circle Up"
+  },
+  {
+    "value": "fas fa-arrow-circle-down",
+    "name": "Arrow Circle Down"
+  },
+  {
+    "value": "fas fa-arrow-circle-left",
+    "name": "Arrow Circle Left"
+  },
+  {
+    "value": "fas fa-arrow-circle-right",
+    "name": "Arrow Circle Right"
+  },
+  {
+    "value": "fas fa-arrow-circle-up",
+    "name": "Arrow Circle Up"
+  },
+  {
+    "value": "fas fa-arrow-down",
+    "name": "arrow-down"
+  },
+  {
+    "value": "fas fa-arrow-left",
+    "name": "arrow-left"
+  },
+  {
+    "value": "fas fa-arrow-right",
+    "name": "arrow-right"
+  },
+  {
+    "value": "fas fa-arrow-up",
+    "name": "arrow-up"
+  },
+  {
+    "value": "fas fa-arrows-alt",
+    "name": "Alternate Arrows"
+  },
+  {
+    "value": "fas fa-arrows-alt-h",
+    "name": "Alternate Arrows Horizontal"
+  },
+  {
+    "value": "fas fa-arrows-alt-v",
+    "name": "Alternate Arrows Vertical"
+  },
+  {
+    "value": "fas fa-assistive-listening-systems",
+    "name": "Assistive Listening Systems"
+  },
+  {
+    "value": "fas fa-asterisk",
+    "name": "asterisk"
+  },
+  {
+    "value": "fas fa-at",
+    "name": "At"
+  },
+  {
+    "value": "fas fa-atlas",
+    "name": "Atlas"
+  },
+  {
+    "value": "fas fa-atom",
+    "name": "Atom"
+  },
+  {
+    "value": "fas fa-audio-description",
+    "name": "Audio Description"
+  },
+  {
+    "value": "fas fa-award",
+    "name": "Award"
+  },
+  {
+    "value": "fas fa-baby",
+    "name": "Baby"
+  },
+  {
+    "value": "fas fa-baby-carriage",
+    "name": "Baby Carriage"
+  },
+  {
+    "value": "fas fa-backspace",
+    "name": "Backspace"
+  },
+  {
+    "value": "fas fa-backward",
+    "name": "backward"
+  },
+  {
+    "value": "fas fa-bacon",
+    "name": "Bacon"
+  },
+  {
+    "value": "fas fa-bahai",
+    "name": "Bahá'í"
+  },
+  {
+    "value": "fas fa-balance-scale",
+    "name": "Balance Scale"
+  },
+  {
+    "value": "fas fa-balance-scale-left",
+    "name": "Balance Scale (Left-Weighted)"
+  },
+  {
+    "value": "fas fa-balance-scale-right",
+    "name": "Balance Scale (Right-Weighted)"
+  },
+  {
+    "value": "fas fa-ban",
+    "name": "ban"
+  },
+  {
+    "value": "fas fa-band-aid",
+    "name": "Band-Aid"
+  },
+  {
+    "value": "fas fa-barcode",
+    "name": "barcode"
+  },
+  {
+    "value": "fas fa-bars",
+    "name": "Bars"
+  },
+  {
+    "value": "fas fa-baseball-ball",
+    "name": "Baseball Ball"
+  },
+  {
+    "value": "fas fa-basketball-ball",
+    "name": "Basketball Ball"
+  },
+  {
+    "value": "fas fa-bath",
+    "name": "Bath"
+  },
+  {
+    "value": "fas fa-battery-empty",
+    "name": "Battery Empty"
+  },
+  {
+    "value": "fas fa-battery-full",
+    "name": "Battery Full"
+  },
+  {
+    "value": "fas fa-battery-half",
+    "name": "Battery 1/2 Full"
+  },
+  {
+    "value": "fas fa-battery-quarter",
+    "name": "Battery 1/4 Full"
+  },
+  {
+    "value": "fas fa-battery-three-quarters",
+    "name": "Battery 3/4 Full"
+  },
+  {
+    "value": "fas fa-bed",
+    "name": "Bed"
+  },
+  {
+    "value": "fas fa-beer",
+    "name": "beer"
+  },
+  {
+    "value": "fas fa-bell",
+    "name": "bell"
+  },
+  {
+    "value": "fas fa-bell-slash",
+    "name": "Bell Slash"
+  },
+  {
+    "value": "fas fa-bezier-curve",
+    "name": "Bezier Curve"
+  },
+  {
+    "value": "fas fa-bible",
+    "name": "Bible"
+  },
+  {
+    "value": "fas fa-bicycle",
+    "name": "Bicycle"
+  },
+  {
+    "value": "fas fa-biking",
+    "name": "Biking"
+  },
+  {
+    "value": "fas fa-binoculars",
+    "name": "Binoculars"
+  },
+  {
+    "value": "fas fa-biohazard",
+    "name": "Biohazard"
+  },
+  {
+    "value": "fas fa-birthday-cake",
+    "name": "Birthday Cake"
+  },
+  {
+    "value": "fas fa-blender",
+    "name": "Blender"
+  },
+  {
+    "value": "fas fa-blender-phone",
+    "name": "Blender Phone"
+  },
+  {
+    "value": "fas fa-blind",
+    "name": "Blind"
+  },
+  {
+    "value": "fas fa-blog",
+    "name": "Blog"
+  },
+  {
+    "value": "fas fa-bold",
+    "name": "bold"
+  },
+  {
+    "value": "fas fa-bolt",
+    "name": "Lightning Bolt"
+  },
+  {
+    "value": "fas fa-bomb",
+    "name": "Bomb"
+  },
+  {
+    "value": "fas fa-bone",
+    "name": "Bone"
+  },
+  {
+    "value": "fas fa-bong",
+    "name": "Bong"
+  },
+  {
+    "value": "fas fa-book",
+    "name": "book"
+  },
+  {
+    "value": "fas fa-book-dead",
+    "name": "Book of the Dead"
+  },
+  {
+    "value": "fas fa-book-medical",
+    "name": "Medical Book"
+  },
+  {
+    "value": "fas fa-book-open",
+    "name": "Book Open"
+  },
+  {
+    "value": "fas fa-book-reader",
+    "name": "Book Reader"
+  },
+  {
+    "value": "fas fa-bookmark",
+    "name": "bookmark"
+  },
+  {
+    "value": "fas fa-border-all",
+    "name": "Border All"
+  },
+  {
+    "value": "fas fa-border-none",
+    "name": "Border None"
+  },
+  {
+    "value": "fas fa-border-style",
+    "name": "Border Style"
+  },
+  {
+    "value": "fas fa-bowling-ball",
+    "name": "Bowling Ball"
+  },
+  {
+    "value": "fas fa-box",
+    "name": "Box"
+  },
+  {
+    "value": "fas fa-box-open",
+    "name": "Box Open"
+  },
+  {
+    "value": "fas fa-box-tissue",
+    "name": "Tissue Box"
+  },
+  {
+    "value": "fas fa-boxes",
+    "name": "Boxes"
+  },
+  {
+    "value": "fas fa-braille",
+    "name": "Braille"
+  },
+  {
+    "value": "fas fa-brain",
+    "name": "Brain"
+  },
+  {
+    "value": "fas fa-bread-slice",
+    "name": "Bread Slice"
+  },
+  {
+    "value": "fas fa-briefcase",
+    "name": "Briefcase"
+  },
+  {
+    "value": "fas fa-briefcase-medical",
+    "name": "Medical Briefcase"
+  },
+  {
+    "value": "fas fa-broadcast-tower",
+    "name": "Broadcast Tower"
+  },
+  {
+    "value": "fas fa-broom",
+    "name": "Broom"
+  },
+  {
+    "value": "fas fa-brush",
+    "name": "Brush"
+  },
+  {
+    "value": "fas fa-bug",
+    "name": "Bug"
+  },
+  {
+    "value": "fas fa-building",
+    "name": "Building"
+  },
+  {
+    "value": "fas fa-bullhorn",
+    "name": "bullhorn"
+  },
+  {
+    "value": "fas fa-bullseye",
+    "name": "Bullseye"
+  },
+  {
+    "value": "fas fa-burn",
+    "name": "Burn"
+  },
+  {
+    "value": "fas fa-bus",
+    "name": "Bus"
+  },
+  {
+    "value": "fas fa-bus-alt",
+    "name": "Bus Alt"
+  },
+  {
+    "value": "fas fa-business-time",
+    "name": "Business Time"
+  },
+  {
+    "value": "fas fa-calculator",
+    "name": "Calculator"
+  },
+  {
+    "value": "fas fa-calendar",
+    "name": "Calendar"
+  },
+  {
+    "value": "fas fa-calendar-alt",
+    "name": "Alternate Calendar"
+  },
+  {
+    "value": "fas fa-calendar-check",
+    "name": "Calendar Check"
+  },
+  {
+    "value": "fas fa-calendar-day",
+    "name": "Calendar with Day Focus"
+  },
+  {
+    "value": "fas fa-calendar-minus",
+    "name": "Calendar Minus"
+  },
+  {
+    "value": "fas fa-calendar-plus",
+    "name": "Calendar Plus"
+  },
+  {
+    "value": "fas fa-calendar-times",
+    "name": "Calendar Times"
+  },
+  {
+    "value": "fas fa-calendar-week",
+    "name": "Calendar with Week Focus"
+  },
+  {
+    "value": "fas fa-camera",
+    "name": "camera"
+  },
+  {
+    "value": "fas fa-camera-retro",
+    "name": "Retro Camera"
+  },
+  {
+    "value": "fas fa-campground",
+    "name": "Campground"
+  },
+  {
+    "value": "fas fa-candy-cane",
+    "name": "Candy Cane"
+  },
+  {
+    "value": "fas fa-cannabis",
+    "name": "Cannabis"
+  },
+  {
+    "value": "fas fa-capsules",
+    "name": "Capsules"
+  },
+  {
+    "value": "fas fa-car",
+    "name": "Car"
+  },
+  {
+    "value": "fas fa-car-alt",
+    "name": "Alternate Car"
+  },
+  {
+    "value": "fas fa-car-battery",
+    "name": "Car Battery"
+  },
+  {
+    "value": "fas fa-car-crash",
+    "name": "Car Crash"
+  },
+  {
+    "value": "fas fa-car-side",
+    "name": "Car Side"
+  },
+  {
+    "value": "fas fa-caravan",
+    "name": "Caravan"
+  },
+  {
+    "value": "fas fa-caret-down",
+    "name": "Caret Down"
+  },
+  {
+    "value": "fas fa-caret-left",
+    "name": "Caret Left"
+  },
+  {
+    "value": "fas fa-caret-right",
+    "name": "Caret Right"
+  },
+  {
+    "value": "fas fa-caret-square-down",
+    "name": "Caret Square Down"
+  },
+  {
+    "value": "fas fa-caret-square-left",
+    "name": "Caret Square Left"
+  },
+  {
+    "value": "fas fa-caret-square-right",
+    "name": "Caret Square Right"
+  },
+  {
+    "value": "fas fa-caret-square-up",
+    "name": "Caret Square Up"
+  },
+  {
+    "value": "fas fa-caret-up",
+    "name": "Caret Up"
+  },
+  {
+    "value": "fas fa-carrot",
+    "name": "Carrot"
+  },
+  {
+    "value": "fas fa-cart-arrow-down",
+    "name": "Shopping Cart Arrow Down"
+  },
+  {
+    "value": "fas fa-cart-plus",
+    "name": "Add to Shopping Cart"
+  },
+  {
+    "value": "fas fa-cash-register",
+    "name": "Cash Register"
+  },
+  {
+    "value": "fas fa-cat",
+    "name": "Cat"
+  },
+  {
+    "value": "fas fa-certificate",
+    "name": "certificate"
+  },
+  {
+    "value": "fas fa-chair",
+    "name": "Chair"
+  },
+  {
+    "value": "fas fa-chalkboard",
+    "name": "Chalkboard"
+  },
+  {
+    "value": "fas fa-chalkboard-teacher",
+    "name": "Chalkboard Teacher"
+  },
+  {
+    "value": "fas fa-charging-station",
+    "name": "Charging Station"
+  },
+  {
+    "value": "fas fa-chart-area",
+    "name": "Area Chart"
+  },
+  {
+    "value": "fas fa-chart-bar",
+    "name": "Bar Chart"
+  },
+  {
+    "value": "fas fa-chart-line",
+    "name": "Line Chart"
+  },
+  {
+    "value": "fas fa-chart-pie",
+    "name": "Pie Chart"
+  },
+  {
+    "value": "fas fa-check",
+    "name": "Check"
+  },
+  {
+    "value": "fas fa-check-circle",
+    "name": "Check Circle"
+  },
+  {
+    "value": "fas fa-check-double",
+    "name": "Double Check"
+  },
+  {
+    "value": "fas fa-check-square",
+    "name": "Check Square"
+  },
+  {
+    "value": "fas fa-cheese",
+    "name": "Cheese"
+  },
+  {
+    "value": "fas fa-chess",
+    "name": "Chess"
+  },
+  {
+    "value": "fas fa-chess-bishop",
+    "name": "Chess Bishop"
+  },
+  {
+    "value": "fas fa-chess-board",
+    "name": "Chess Board"
+  },
+  {
+    "value": "fas fa-chess-king",
+    "name": "Chess King"
+  },
+  {
+    "value": "fas fa-chess-knight",
+    "name": "Chess Knight"
+  },
+  {
+    "value": "fas fa-chess-pawn",
+    "name": "Chess Pawn"
+  },
+  {
+    "value": "fas fa-chess-queen",
+    "name": "Chess Queen"
+  },
+  {
+    "value": "fas fa-chess-rook",
+    "name": "Chess Rook"
+  },
+  {
+    "value": "fas fa-chevron-circle-down",
+    "name": "Chevron Circle Down"
+  },
+  {
+    "value": "fas fa-chevron-circle-left",
+    "name": "Chevron Circle Left"
+  },
+  {
+    "value": "fas fa-chevron-circle-right",
+    "name": "Chevron Circle Right"
+  },
+  {
+    "value": "fas fa-chevron-circle-up",
+    "name": "Chevron Circle Up"
+  },
+  {
+    "value": "fas fa-chevron-down",
+    "name": "chevron-down"
+  },
+  {
+    "value": "fas fa-chevron-left",
+    "name": "chevron-left"
+  },
+  {
+    "value": "fas fa-chevron-right",
+    "name": "chevron-right"
+  },
+  {
+    "value": "fas fa-chevron-up",
+    "name": "chevron-up"
+  },
+  {
+    "value": "fas fa-child",
+    "name": "Child"
+  },
+  {
+    "value": "fas fa-church",
+    "name": "Church"
+  },
+  {
+    "value": "fas fa-circle",
+    "name": "Circle"
+  },
+  {
+    "value": "fas fa-circle-notch",
+    "name": "Circle Notched"
+  },
+  {
+    "value": "fas fa-city",
+    "name": "City"
+  },
+  {
+    "value": "fas fa-clinic-medical",
+    "name": "Medical Clinic"
+  },
+  {
+    "value": "fas fa-clipboard",
+    "name": "Clipboard"
+  },
+  {
+    "value": "fas fa-clipboard-check",
+    "name": "Clipboard with Check"
+  },
+  {
+    "value": "fas fa-clipboard-list",
+    "name": "Clipboard List"
+  },
+  {
+    "value": "fas fa-clock",
+    "name": "Clock"
+  },
+  {
+    "value": "fas fa-clone",
+    "name": "Clone"
+  },
+  {
+    "value": "fas fa-closed-captioning",
+    "name": "Closed Captioning"
+  },
+  {
+    "value": "fas fa-cloud",
+    "name": "Cloud"
+  },
+  {
+    "value": "fas fa-cloud-download-alt",
+    "name": "Alternate Cloud Download"
+  },
+  {
+    "value": "fas fa-cloud-meatball",
+    "name": "Cloud with (a chance of) Meatball"
+  },
+  {
+    "value": "fas fa-cloud-moon",
+    "name": "Cloud with Moon"
+  },
+  {
+    "value": "fas fa-cloud-moon-rain",
+    "name": "Cloud with Moon and Rain"
+  },
+  {
+    "value": "fas fa-cloud-rain",
+    "name": "Cloud with Rain"
+  },
+  {
+    "value": "fas fa-cloud-showers-heavy",
+    "name": "Cloud with Heavy Showers"
+  },
+  {
+    "value": "fas fa-cloud-sun",
+    "name": "Cloud with Sun"
+  },
+  {
+    "value": "fas fa-cloud-sun-rain",
+    "name": "Cloud with Sun and Rain"
+  },
+  {
+    "value": "fas fa-cloud-upload-alt",
+    "name": "Alternate Cloud Upload"
+  },
+  {
+    "value": "fas fa-cocktail",
+    "name": "Cocktail"
+  },
+  {
+    "value": "fas fa-code",
+    "name": "Code"
+  },
+  {
+    "value": "fas fa-code-branch",
+    "name": "Code Branch"
+  },
+  {
+    "value": "fas fa-coffee",
+    "name": "Coffee"
+  },
+  {
+    "value": "fas fa-cog",
+    "name": "cog"
+  },
+  {
+    "value": "fas fa-cogs",
+    "name": "cogs"
+  },
+  {
+    "value": "fas fa-coins",
+    "name": "Coins"
+  },
+  {
+    "value": "fas fa-columns",
+    "name": "Columns"
+  },
+  {
+    "value": "fas fa-comment",
+    "name": "comment"
+  },
+  {
+    "value": "fas fa-comment-alt",
+    "name": "Alternate Comment"
+  },
+  {
+    "value": "fas fa-comment-dollar",
+    "name": "Comment Dollar"
+  },
+  {
+    "value": "fas fa-comment-dots",
+    "name": "Comment Dots"
+  },
+  {
+    "value": "fas fa-comment-medical",
+    "name": "Alternate Medical Chat"
+  },
+  {
+    "value": "fas fa-comment-slash",
+    "name": "Comment Slash"
+  },
+  {
+    "value": "fas fa-comments",
+    "name": "comments"
+  },
+  {
+    "value": "fas fa-comments-dollar",
+    "name": "Comments Dollar"
+  },
+  {
+    "value": "fas fa-compact-disc",
+    "name": "Compact Disc"
+  },
+  {
+    "value": "fas fa-compass",
+    "name": "Compass"
+  },
+  {
+    "value": "fas fa-compress",
+    "name": "Compress"
+  },
+  {
+    "value": "fas fa-compress-alt",
+    "name": "Alternate Compress"
+  },
+  {
+    "value": "fas fa-compress-arrows-alt",
+    "name": "Alternate Compress Arrows"
+  },
+  {
+    "value": "fas fa-concierge-bell",
+    "name": "Concierge Bell"
+  },
+  {
+    "value": "fas fa-cookie",
+    "name": "Cookie"
+  },
+  {
+    "value": "fas fa-cookie-bite",
+    "name": "Cookie Bite"
+  },
+  {
+    "value": "fas fa-copy",
+    "name": "Copy"
+  },
+  {
+    "value": "fas fa-copyright",
+    "name": "Copyright"
+  },
+  {
+    "value": "fas fa-couch",
+    "name": "Couch"
+  },
+  {
+    "value": "fas fa-credit-card",
+    "name": "Credit Card"
+  },
+  {
+    "value": "fas fa-crop",
+    "name": "crop"
+  },
+  {
+    "value": "fas fa-crop-alt",
+    "name": "Alternate Crop"
+  },
+  {
+    "value": "fas fa-cross",
+    "name": "Cross"
+  },
+  {
+    "value": "fas fa-crosshairs",
+    "name": "Crosshairs"
+  },
+  {
+    "value": "fas fa-crow",
+    "name": "Crow"
+  },
+  {
+    "value": "fas fa-crown",
+    "name": "Crown"
+  },
+  {
+    "value": "fas fa-crutch",
+    "name": "Crutch"
+  },
+  {
+    "value": "fas fa-cube",
+    "name": "Cube"
+  },
+  {
+    "value": "fas fa-cubes",
+    "name": "Cubes"
+  },
+  {
+    "value": "fas fa-cut",
+    "name": "Cut"
+  },
+  {
+    "value": "fas fa-database",
+    "name": "Database"
+  },
+  {
+    "value": "fas fa-deaf",
+    "name": "Deaf"
+  },
+  {
+    "value": "fas fa-democrat",
+    "name": "Democrat"
+  },
+  {
+    "value": "fas fa-desktop",
+    "name": "Desktop"
+  },
+  {
+    "value": "fas fa-dharmachakra",
+    "name": "Dharmachakra"
+  },
+  {
+    "value": "fas fa-diagnoses",
+    "name": "Diagnoses"
+  },
+  {
+    "value": "fas fa-dice",
+    "name": "Dice"
+  },
+  {
+    "value": "fas fa-dice-d20",
+    "name": "Dice D20"
+  },
+  {
+    "value": "fas fa-dice-d6",
+    "name": "Dice D6"
+  },
+  {
+    "value": "fas fa-dice-five",
+    "name": "Dice Five"
+  },
+  {
+    "value": "fas fa-dice-four",
+    "name": "Dice Four"
+  },
+  {
+    "value": "fas fa-dice-one",
+    "name": "Dice One"
+  },
+  {
+    "value": "fas fa-dice-six",
+    "name": "Dice Six"
+  },
+  {
+    "value": "fas fa-dice-three",
+    "name": "Dice Three"
+  },
+  {
+    "value": "fas fa-dice-two",
+    "name": "Dice Two"
+  },
+  {
+    "value": "fas fa-digital-tachograph",
+    "name": "Digital Tachograph"
+  },
+  {
+    "value": "fas fa-directions",
+    "name": "Directions"
+  },
+  {
+    "value": "fas fa-disease",
+    "name": "Disease"
+  },
+  {
+    "value": "fas fa-divide",
+    "name": "Divide"
+  },
+  {
+    "value": "fas fa-dizzy",
+    "name": "Dizzy Face"
+  },
+  {
+    "value": "fas fa-dna",
+    "name": "DNA"
+  },
+  {
+    "value": "fas fa-dog",
+    "name": "Dog"
+  },
+  {
+    "value": "fas fa-dollar-sign",
+    "name": "Dollar Sign"
+  },
+  {
+    "value": "fas fa-dolly",
+    "name": "Dolly"
+  },
+  {
+    "value": "fas fa-dolly-flatbed",
+    "name": "Dolly Flatbed"
+  },
+  {
+    "value": "fas fa-donate",
+    "name": "Donate"
+  },
+  {
+    "value": "fas fa-door-closed",
+    "name": "Door Closed"
+  },
+  {
+    "value": "fas fa-door-open",
+    "name": "Door Open"
+  },
+  {
+    "value": "fas fa-dot-circle",
+    "name": "Dot Circle"
+  },
+  {
+    "value": "fas fa-dove",
+    "name": "Dove"
+  },
+  {
+    "value": "fas fa-download",
+    "name": "Download"
+  },
+  {
+    "value": "fas fa-drafting-compass",
+    "name": "Drafting Compass"
+  },
+  {
+    "value": "fas fa-dragon",
+    "name": "Dragon"
+  },
+  {
+    "value": "fas fa-draw-polygon",
+    "name": "Draw Polygon"
+  },
+  {
+    "value": "fas fa-drum",
+    "name": "Drum"
+  },
+  {
+    "value": "fas fa-drum-steelpan",
+    "name": "Drum Steelpan"
+  },
+  {
+    "value": "fas fa-drumstick-bite",
+    "name": "Drumstick with Bite Taken Out"
+  },
+  {
+    "value": "fas fa-dumbbell",
+    "name": "Dumbbell"
+  },
+  {
+    "value": "fas fa-dumpster",
+    "name": "Dumpster"
+  },
+  {
+    "value": "fas fa-dumpster-fire",
+    "name": "Dumpster Fire"
+  },
+  {
+    "value": "fas fa-dungeon",
+    "name": "Dungeon"
+  },
+  {
+    "value": "fas fa-edit",
+    "name": "Edit"
+  },
+  {
+    "value": "fas fa-egg",
+    "name": "Egg"
+  },
+  {
+    "value": "fas fa-eject",
+    "name": "eject"
+  },
+  {
+    "value": "fas fa-ellipsis-h",
+    "name": "Horizontal Ellipsis"
+  },
+  {
+    "value": "fas fa-ellipsis-v",
+    "name": "Vertical Ellipsis"
+  },
+  {
+    "value": "fas fa-envelope",
+    "name": "Envelope"
+  },
+  {
+    "value": "fas fa-envelope-open",
+    "name": "Envelope Open"
+  },
+  {
+    "value": "fas fa-envelope-open-text",
+    "name": "Envelope Open-text"
+  },
+  {
+    "value": "fas fa-envelope-square",
+    "name": "Envelope Square"
+  },
+  {
+    "value": "fas fa-equals",
+    "name": "Equals"
+  },
+  {
+    "value": "fas fa-eraser",
+    "name": "eraser"
+  },
+  {
+    "value": "fas fa-ethernet",
+    "name": "Ethernet"
+  },
+  {
+    "value": "fas fa-euro-sign",
+    "name": "Euro Sign"
+  },
+  {
+    "value": "fas fa-exchange-alt",
+    "name": "Alternate Exchange"
+  },
+  {
+    "value": "fas fa-exclamation",
+    "name": "exclamation"
+  },
+  {
+    "value": "fas fa-exclamation-circle",
+    "name": "Exclamation Circle"
+  },
+  {
+    "value": "fas fa-exclamation-triangle",
+    "name": "Exclamation Triangle"
+  },
+  {
+    "value": "fas fa-expand",
+    "name": "Expand"
+  },
+  {
+    "value": "fas fa-expand-alt",
+    "name": "Alternate Expand"
+  },
+  {
+    "value": "fas fa-expand-arrows-alt",
+    "name": "Alternate Expand Arrows"
+  },
+  {
+    "value": "fas fa-external-link-alt",
+    "name": "Alternate External Link"
+  },
+  {
+    "value": "fas fa-external-link-square-alt",
+    "name": "Alternate External Link Square"
+  },
+  {
+    "value": "fas fa-eye",
+    "name": "Eye"
+  },
+  {
+    "value": "fas fa-eye-dropper",
+    "name": "Eye Dropper"
+  },
+  {
+    "value": "fas fa-eye-slash",
+    "name": "Eye Slash"
+  },
+  {
+    "value": "fas fa-fan",
+    "name": "Fan"
+  },
+  {
+    "value": "fas fa-fast-backward",
+    "name": "fast-backward"
+  },
+  {
+    "value": "fas fa-fast-forward",
+    "name": "fast-forward"
+  },
+  {
+    "value": "fas fa-faucet",
+    "name": "Faucet"
+  },
+  {
+    "value": "fas fa-fax",
+    "name": "Fax"
+  },
+  {
+    "value": "fas fa-feather",
+    "name": "Feather"
+  },
+  {
+    "value": "fas fa-feather-alt",
+    "name": "Alternate Feather"
+  },
+  {
+    "value": "fas fa-female",
+    "name": "Female"
+  },
+  {
+    "value": "fas fa-fighter-jet",
+    "name": "fighter-jet"
+  },
+  {
+    "value": "fas fa-file",
+    "name": "File"
+  },
+  {
+    "value": "fas fa-file-alt",
+    "name": "Alternate File"
+  },
+  {
+    "value": "fas fa-file-archive",
+    "name": "Archive File"
+  },
+  {
+    "value": "fas fa-file-audio",
+    "name": "Audio File"
+  },
+  {
+    "value": "fas fa-file-code",
+    "name": "Code File"
+  },
+  {
+    "value": "fas fa-file-contract",
+    "name": "File Contract"
+  },
+  {
+    "value": "fas fa-file-csv",
+    "name": "File CSV"
+  },
+  {
+    "value": "fas fa-file-download",
+    "name": "File Download"
+  },
+  {
+    "value": "fas fa-file-excel",
+    "name": "Excel File"
+  },
+  {
+    "value": "fas fa-file-export",
+    "name": "File Export"
+  },
+  {
+    "value": "fas fa-file-image",
+    "name": "Image File"
+  },
+  {
+    "value": "fas fa-file-import",
+    "name": "File Import"
+  },
+  {
+    "value": "fas fa-file-invoice",
+    "name": "File Invoice"
+  },
+  {
+    "value": "fas fa-file-invoice-dollar",
+    "name": "File Invoice with US Dollar"
+  },
+  {
+    "value": "fas fa-file-medical",
+    "name": "Medical File"
+  },
+  {
+    "value": "fas fa-file-medical-alt",
+    "name": "Alternate Medical File"
+  },
+  {
+    "value": "fas fa-file-pdf",
+    "name": "PDF File"
+  },
+  {
+    "value": "fas fa-file-powerpoint",
+    "name": "Powerpoint File"
+  },
+  {
+    "value": "fas fa-file-prescription",
+    "name": "File Prescription"
+  },
+  {
+    "value": "fas fa-file-signature",
+    "name": "File Signature"
+  },
+  {
+    "value": "fas fa-file-upload",
+    "name": "File Upload"
+  },
+  {
+    "value": "fas fa-file-video",
+    "name": "Video File"
+  },
+  {
+    "value": "fas fa-file-word",
+    "name": "Word File"
+  },
+  {
+    "value": "fas fa-fill",
+    "name": "Fill"
+  },
+  {
+    "value": "fas fa-fill-drip",
+    "name": "Fill Drip"
+  },
+  {
+    "value": "fas fa-film",
+    "name": "Film"
+  },
+  {
+    "value": "fas fa-filter",
+    "name": "Filter"
+  },
+  {
+    "value": "fas fa-fingerprint",
+    "name": "Fingerprint"
+  },
+  {
+    "value": "fas fa-fire",
+    "name": "fire"
+  },
+  {
+    "value": "fas fa-fire-alt",
+    "name": "Alternate Fire"
+  },
+  {
+    "value": "fas fa-fire-extinguisher",
+    "name": "fire-extinguisher"
+  },
+  {
+    "value": "fas fa-first-aid",
+    "name": "First Aid"
+  },
+  {
+    "value": "fas fa-fish",
+    "name": "Fish"
+  },
+  {
+    "value": "fas fa-fist-raised",
+    "name": "Raised Fist"
+  },
+  {
+    "value": "fas fa-flag",
+    "name": "flag"
+  },
+  {
+    "value": "fas fa-flag-checkered",
+    "name": "flag-checkered"
+  },
+  {
+    "value": "fas fa-flag-usa",
+    "name": "United States of America Flag"
+  },
+  {
+    "value": "fas fa-flask",
+    "name": "Flask"
+  },
+  {
+    "value": "fas fa-flushed",
+    "name": "Flushed Face"
+  },
+  {
+    "value": "fas fa-folder",
+    "name": "Folder"
+  },
+  {
+    "value": "fas fa-folder-minus",
+    "name": "Folder Minus"
+  },
+  {
+    "value": "fas fa-folder-open",
+    "name": "Folder Open"
+  },
+  {
+    "value": "fas fa-folder-plus",
+    "name": "Folder Plus"
+  },
+  {
+    "value": "fas fa-font",
+    "name": "font"
+  },
+  {
+    "value": "fas fa-font-awesome-logo-full",
+    "name": "Font Awesome Full Logo"
+  },
+  {
+    "value": "fas fa-football-ball",
+    "name": "Football Ball"
+  },
+  {
+    "value": "fas fa-forward",
+    "name": "forward"
+  },
+  {
+    "value": "fas fa-frog",
+    "name": "Frog"
+  },
+  {
+    "value": "fas fa-frown",
+    "name": "Frowning Face"
+  },
+  {
+    "value": "fas fa-frown-open",
+    "name": "Frowning Face With Open Mouth"
+  },
+  {
+    "value": "fas fa-funnel-dollar",
+    "name": "Funnel Dollar"
+  },
+  {
+    "value": "fas fa-futbol",
+    "name": "Futbol"
+  },
+  {
+    "value": "fas fa-gamepad",
+    "name": "Gamepad"
+  },
+  {
+    "value": "fas fa-gas-pump",
+    "name": "Gas Pump"
+  },
+  {
+    "value": "fas fa-gavel",
+    "name": "Gavel"
+  },
+  {
+    "value": "fas fa-gem",
+    "name": "Gem"
+  },
+  {
+    "value": "fas fa-genderless",
+    "name": "Genderless"
+  },
+  {
+    "value": "fas fa-ghost",
+    "name": "Ghost"
+  },
+  {
+    "value": "fas fa-gift",
+    "name": "gift"
+  },
+  {
+    "value": "fas fa-gifts",
+    "name": "Gifts"
+  },
+  {
+    "value": "fas fa-glass-cheers",
+    "name": "Glass Cheers"
+  },
+  {
+    "value": "fas fa-glass-martini",
+    "name": "Martini Glass"
+  },
+  {
+    "value": "fas fa-glass-martini-alt",
+    "name": "Alternate Glass Martini"
+  },
+  {
+    "value": "fas fa-glass-whiskey",
+    "name": "Glass Whiskey"
+  },
+  {
+    "value": "fas fa-glasses",
+    "name": "Glasses"
+  },
+  {
+    "value": "fas fa-globe",
+    "name": "Globe"
+  },
+  {
+    "value": "fas fa-globe-africa",
+    "name": "Globe with Africa shown"
+  },
+  {
+    "value": "fas fa-globe-americas",
+    "name": "Globe with Americas shown"
+  },
+  {
+    "value": "fas fa-globe-asia",
+    "name": "Globe with Asia shown"
+  },
+  {
+    "value": "fas fa-globe-europe",
+    "name": "Globe with Europe shown"
+  },
+  {
+    "value": "fas fa-golf-ball",
+    "name": "Golf Ball"
+  },
+  {
+    "value": "fas fa-gopuram",
+    "name": "Gopuram"
+  },
+  {
+    "value": "fas fa-graduation-cap",
+    "name": "Graduation Cap"
+  },
+  {
+    "value": "fas fa-greater-than",
+    "name": "Greater Than"
+  },
+  {
+    "value": "fas fa-greater-than-equal",
+    "name": "Greater Than Equal To"
+  },
+  {
+    "value": "fas fa-grimace",
+    "name": "Grimacing Face"
+  },
+  {
+    "value": "fas fa-grin",
+    "name": "Grinning Face"
+  },
+  {
+    "value": "fas fa-grin-alt",
+    "name": "Alternate Grinning Face"
+  },
+  {
+    "value": "fas fa-grin-beam",
+    "name": "Grinning Face With Smiling Eyes"
+  },
+  {
+    "value": "fas fa-grin-beam-sweat",
+    "name": "Grinning Face With Sweat"
+  },
+  {
+    "value": "fas fa-grin-hearts",
+    "name": "Smiling Face With Heart-Eyes"
+  },
+  {
+    "value": "fas fa-grin-squint",
+    "name": "Grinning Squinting Face"
+  },
+  {
+    "value": "fas fa-grin-squint-tears",
+    "name": "Rolling on the Floor Laughing"
+  },
+  {
+    "value": "fas fa-grin-stars",
+    "name": "Star-Struck"
+  },
+  {
+    "value": "fas fa-grin-tears",
+    "name": "Face With Tears of Joy"
+  },
+  {
+    "value": "fas fa-grin-tongue",
+    "name": "Face With Tongue"
+  },
+  {
+    "value": "fas fa-grin-tongue-squint",
+    "name": "Squinting Face With Tongue"
+  },
+  {
+    "value": "fas fa-grin-tongue-wink",
+    "name": "Winking Face With Tongue"
+  },
+  {
+    "value": "fas fa-grin-wink",
+    "name": "Grinning Winking Face"
+  },
+  {
+    "value": "fas fa-grip-horizontal",
+    "name": "Grip Horizontal"
+  },
+  {
+    "value": "fas fa-grip-lines",
+    "name": "Grip Lines"
+  },
+  {
+    "value": "fas fa-grip-lines-vertical",
+    "name": "Grip Lines Vertical"
+  },
+  {
+    "value": "fas fa-grip-vertical",
+    "name": "Grip Vertical"
+  },
+  {
+    "value": "fas fa-guitar",
+    "name": "Guitar"
+  },
+  {
+    "value": "fas fa-h-square",
+    "name": "H Square"
+  },
+  {
+    "value": "fas fa-hamburger",
+    "name": "Hamburger"
+  },
+  {
+    "value": "fas fa-hammer",
+    "name": "Hammer"
+  },
+  {
+    "value": "fas fa-hamsa",
+    "name": "Hamsa"
+  },
+  {
+    "value": "fas fa-hand-holding",
+    "name": "Hand Holding"
+  },
+  {
+    "value": "fas fa-hand-holding-heart",
+    "name": "Hand Holding Heart"
+  },
+  {
+    "value": "fas fa-hand-holding-medical",
+    "name": "Hand Holding Medical Cross"
+  },
+  {
+    "value": "fas fa-hand-holding-usd",
+    "name": "Hand Holding US Dollar"
+  },
+  {
+    "value": "fas fa-hand-holding-water",
+    "name": "Hand Holding Water"
+  },
+  {
+    "value": "fas fa-hand-lizard",
+    "name": "Lizard (Hand)"
+  },
+  {
+    "value": "fas fa-hand-middle-finger",
+    "name": "Hand with Middle Finger Raised"
+  },
+  {
+    "value": "fas fa-hand-paper",
+    "name": "Paper (Hand)"
+  },
+  {
+    "value": "fas fa-hand-peace",
+    "name": "Peace (Hand)"
+  },
+  {
+    "value": "fas fa-hand-point-down",
+    "name": "Hand Pointing Down"
+  },
+  {
+    "value": "fas fa-hand-point-left",
+    "name": "Hand Pointing Left"
+  },
+  {
+    "value": "fas fa-hand-point-right",
+    "name": "Hand Pointing Right"
+  },
+  {
+    "value": "fas fa-hand-point-up",
+    "name": "Hand Pointing Up"
+  },
+  {
+    "value": "fas fa-hand-pointer",
+    "name": "Pointer (Hand)"
+  },
+  {
+    "value": "fas fa-hand-rock",
+    "name": "Rock (Hand)"
+  },
+  {
+    "value": "fas fa-hand-scissors",
+    "name": "Scissors (Hand)"
+  },
+  {
+    "value": "fas fa-hand-sparkles",
+    "name": "Hand Sparkles"
+  },
+  {
+    "value": "fas fa-hand-spock",
+    "name": "Spock (Hand)"
+  },
+  {
+    "value": "fas fa-hands",
+    "name": "Hands"
+  },
+  {
+    "value": "fas fa-hands-helping",
+    "name": "Helping Hands"
+  },
+  {
+    "value": "fas fa-hands-wash",
+    "name": "Hands Wash"
+  },
+  {
+    "value": "fas fa-handshake",
+    "name": "Handshake"
+  },
+  {
+    "value": "fas fa-handshake-alt-slash",
+    "name": "Handshake Alternate Slash"
+  },
+  {
+    "value": "fas fa-handshake-slash",
+    "name": "Handshake Slash"
+  },
+  {
+    "value": "fas fa-hanukiah",
+    "name": "Hanukiah"
+  },
+  {
+    "value": "fas fa-hard-hat",
+    "name": "Hard Hat"
+  },
+  {
+    "value": "fas fa-hashtag",
+    "name": "Hashtag"
+  },
+  {
+    "value": "fas fa-hat-cowboy",
+    "name": "Cowboy Hat"
+  },
+  {
+    "value": "fas fa-hat-cowboy-side",
+    "name": "Cowboy Hat Side"
+  },
+  {
+    "value": "fas fa-hat-wizard",
+    "name": "Wizard's Hat"
+  },
+  {
+    "value": "fas fa-hdd",
+    "name": "HDD"
+  },
+  {
+    "value": "fas fa-head-side-cough",
+    "name": "Head Side Cough"
+  },
+  {
+    "value": "fas fa-head-side-cough-slash",
+    "name": "Head Side-cough-slash"
+  },
+  {
+    "value": "fas fa-head-side-mask",
+    "name": "Head Side Mask"
+  },
+  {
+    "value": "fas fa-head-side-virus",
+    "name": "Head Side Virus"
+  },
+  {
+    "value": "fas fa-heading",
+    "name": "heading"
+  },
+  {
+    "value": "fas fa-headphones",
+    "name": "headphones"
+  },
+  {
+    "value": "fas fa-headphones-alt",
+    "name": "Alternate Headphones"
+  },
+  {
+    "value": "fas fa-headset",
+    "name": "Headset"
+  },
+  {
+    "value": "fas fa-heart",
+    "name": "Heart"
+  },
+  {
+    "value": "fas fa-heart-broken",
+    "name": "Heart Broken"
+  },
+  {
+    "value": "fas fa-heartbeat",
+    "name": "Heartbeat"
+  },
+  {
+    "value": "fas fa-helicopter",
+    "name": "Helicopter"
+  },
+  {
+    "value": "fas fa-highlighter",
+    "name": "Highlighter"
+  },
+  {
+    "value": "fas fa-hiking",
+    "name": "Hiking"
+  },
+  {
+    "value": "fas fa-hippo",
+    "name": "Hippo"
+  },
+  {
+    "value": "fas fa-history",
+    "name": "History"
+  },
+  {
+    "value": "fas fa-hockey-puck",
+    "name": "Hockey Puck"
+  },
+  {
+    "value": "fas fa-holly-berry",
+    "name": "Holly Berry"
+  },
+  {
+    "value": "fas fa-home",
+    "name": "home"
+  },
+  {
+    "value": "fas fa-horse",
+    "name": "Horse"
+  },
+  {
+    "value": "fas fa-horse-head",
+    "name": "Horse Head"
+  },
+  {
+    "value": "fas fa-hospital",
+    "name": "hospital"
+  },
+  {
+    "value": "fas fa-hospital-alt",
+    "name": "Alternate Hospital"
+  },
+  {
+    "value": "fas fa-hospital-symbol",
+    "name": "Hospital Symbol"
+  },
+  {
+    "value": "fas fa-hospital-user",
+    "name": "Hospital with User"
+  },
+  {
+    "value": "fas fa-hot-tub",
+    "name": "Hot Tub"
+  },
+  {
+    "value": "fas fa-hotdog",
+    "name": "Hot Dog"
+  },
+  {
+    "value": "fas fa-hotel",
+    "name": "Hotel"
+  },
+  {
+    "value": "fas fa-hourglass",
+    "name": "Hourglass"
+  },
+  {
+    "value": "fas fa-hourglass-end",
+    "name": "Hourglass End"
+  },
+  {
+    "value": "fas fa-hourglass-half",
+    "name": "Hourglass Half"
+  },
+  {
+    "value": "fas fa-hourglass-start",
+    "name": "Hourglass Start"
+  },
+  {
+    "value": "fas fa-house-damage",
+    "name": "Damaged House"
+  },
+  {
+    "value": "fas fa-house-user",
+    "name": "House User"
+  },
+  {
+    "value": "fas fa-hryvnia",
+    "name": "Hryvnia"
+  },
+  {
+    "value": "fas fa-i-cursor",
+    "name": "I Beam Cursor"
+  },
+  {
+    "value": "fas fa-ice-cream",
+    "name": "Ice Cream"
+  },
+  {
+    "value": "fas fa-icicles",
+    "name": "Icicles"
+  },
+  {
+    "value": "fas fa-icons",
+    "name": "Icons"
+  },
+  {
+    "value": "fas fa-id-badge",
+    "name": "Identification Badge"
+  },
+  {
+    "value": "fas fa-id-card",
+    "name": "Identification Card"
+  },
+  {
+    "value": "fas fa-id-card-alt",
+    "name": "Alternate Identification Card"
+  },
+  {
+    "value": "fas fa-igloo",
+    "name": "Igloo"
+  },
+  {
+    "value": "fas fa-image",
+    "name": "Image"
+  },
+  {
+    "value": "fas fa-images",
+    "name": "Images"
+  },
+  {
+    "value": "fas fa-inbox",
+    "name": "inbox"
+  },
+  {
+    "value": "fas fa-indent",
+    "name": "Indent"
+  },
+  {
+    "value": "fas fa-industry",
+    "name": "Industry"
+  },
+  {
+    "value": "fas fa-infinity",
+    "name": "Infinity"
+  },
+  {
+    "value": "fas fa-info",
+    "name": "Info"
+  },
+  {
+    "value": "fas fa-info-circle",
+    "name": "Info Circle"
+  },
+  {
+    "value": "fas fa-italic",
+    "name": "italic"
+  },
+  {
+    "value": "fas fa-jedi",
+    "name": "Jedi"
+  },
+  {
+    "value": "fas fa-joint",
+    "name": "Joint"
+  },
+  {
+    "value": "fas fa-journal-whills",
+    "name": "Journal of the Whills"
+  },
+  {
+    "value": "fas fa-kaaba",
+    "name": "Kaaba"
+  },
+  {
+    "value": "fas fa-key",
+    "name": "key"
+  },
+  {
+    "value": "fas fa-keyboard",
+    "name": "Keyboard"
+  },
+  {
+    "value": "fas fa-khanda",
+    "name": "Khanda"
+  },
+  {
+    "value": "fas fa-kiss",
+    "name": "Kissing Face"
+  },
+  {
+    "value": "fas fa-kiss-beam",
+    "name": "Kissing Face With Smiling Eyes"
+  },
+  {
+    "value": "fas fa-kiss-wink-heart",
+    "name": "Face Blowing a Kiss"
+  },
+  {
+    "value": "fas fa-kiwi-bird",
+    "name": "Kiwi Bird"
+  },
+  {
+    "value": "fas fa-landmark",
+    "name": "Landmark"
+  },
+  {
+    "value": "fas fa-language",
+    "name": "Language"
+  },
+  {
+    "value": "fas fa-laptop",
+    "name": "Laptop"
+  },
+  {
+    "value": "fas fa-laptop-code",
+    "name": "Laptop Code"
+  },
+  {
+    "value": "fas fa-laptop-house",
+    "name": "Laptop House"
+  },
+  {
+    "value": "fas fa-laptop-medical",
+    "name": "Laptop Medical"
+  },
+  {
+    "value": "fas fa-laugh",
+    "name": "Grinning Face With Big Eyes"
+  },
+  {
+    "value": "fas fa-laugh-beam",
+    "name": "Laugh Face with Beaming Eyes"
+  },
+  {
+    "value": "fas fa-laugh-squint",
+    "name": "Laughing Squinting Face"
+  },
+  {
+    "value": "fas fa-laugh-wink",
+    "name": "Laughing Winking Face"
+  },
+  {
+    "value": "fas fa-layer-group",
+    "name": "Layer Group"
+  },
+  {
+    "value": "fas fa-leaf",
+    "name": "leaf"
+  },
+  {
+    "value": "fas fa-lemon",
+    "name": "Lemon"
+  },
+  {
+    "value": "fas fa-less-than",
+    "name": "Less Than"
+  },
+  {
+    "value": "fas fa-less-than-equal",
+    "name": "Less Than Equal To"
+  },
+  {
+    "value": "fas fa-level-down-alt",
+    "name": "Alternate Level Down"
+  },
+  {
+    "value": "fas fa-level-up-alt",
+    "name": "Alternate Level Up"
+  },
+  {
+    "value": "fas fa-life-ring",
+    "name": "Life Ring"
+  },
+  {
+    "value": "fas fa-lightbulb",
+    "name": "Lightbulb"
+  },
+  {
+    "value": "fas fa-link",
+    "name": "Link"
+  },
+  {
+    "value": "fas fa-lira-sign",
+    "name": "Turkish Lira Sign"
+  },
+  {
+    "value": "fas fa-list",
+    "name": "List"
+  },
+  {
+    "value": "fas fa-list-alt",
+    "name": "Alternate List"
+  },
+  {
+    "value": "fas fa-list-ol",
+    "name": "list-ol"
+  },
+  {
+    "value": "fas fa-list-ul",
+    "name": "list-ul"
+  },
+  {
+    "value": "fas fa-location-arrow",
+    "name": "location-arrow"
+  },
+  {
+    "value": "fas fa-lock",
+    "name": "lock"
+  },
+  {
+    "value": "fas fa-lock-open",
+    "name": "Lock Open"
+  },
+  {
+    "value": "fas fa-long-arrow-alt-down",
+    "name": "Alternate Long Arrow Down"
+  },
+  {
+    "value": "fas fa-long-arrow-alt-left",
+    "name": "Alternate Long Arrow Left"
+  },
+  {
+    "value": "fas fa-long-arrow-alt-right",
+    "name": "Alternate Long Arrow Right"
+  },
+  {
+    "value": "fas fa-long-arrow-alt-up",
+    "name": "Alternate Long Arrow Up"
+  },
+  {
+    "value": "fas fa-low-vision",
+    "name": "Low Vision"
+  },
+  {
+    "value": "fas fa-luggage-cart",
+    "name": "Luggage Cart"
+  },
+  {
+    "value": "fas fa-lungs",
+    "name": "Lungs"
+  },
+  {
+    "value": "fas fa-lungs-virus",
+    "name": "Lungs Virus"
+  },
+  {
+    "value": "fas fa-magic",
+    "name": "magic"
+  },
+  {
+    "value": "fas fa-magnet",
+    "name": "magnet"
+  },
+  {
+    "value": "fas fa-mail-bulk",
+    "name": "Mail Bulk"
+  },
+  {
+    "value": "fas fa-male",
+    "name": "Male"
+  },
+  {
+    "value": "fas fa-map",
+    "name": "Map"
+  },
+  {
+    "value": "fas fa-map-marked",
+    "name": "Map Marked"
+  },
+  {
+    "value": "fas fa-map-marked-alt",
+    "name": "Alternate Map Marked"
+  },
+  {
+    "value": "fas fa-map-marker",
+    "name": "map-marker"
+  },
+  {
+    "value": "fas fa-map-marker-alt",
+    "name": "Alternate Map Marker"
+  },
+  {
+    "value": "fas fa-map-pin",
+    "name": "Map Pin"
+  },
+  {
+    "value": "fas fa-map-signs",
+    "name": "Map Signs"
+  },
+  {
+    "value": "fas fa-marker",
+    "name": "Marker"
+  },
+  {
+    "value": "fas fa-mars",
+    "name": "Mars"
+  },
+  {
+    "value": "fas fa-mars-double",
+    "name": "Mars Double"
+  },
+  {
+    "value": "fas fa-mars-stroke",
+    "name": "Mars Stroke"
+  },
+  {
+    "value": "fas fa-mars-stroke-h",
+    "name": "Mars Stroke Horizontal"
+  },
+  {
+    "value": "fas fa-mars-stroke-v",
+    "name": "Mars Stroke Vertical"
+  },
+  {
+    "value": "fas fa-mask",
+    "name": "Mask"
+  },
+  {
+    "value": "fas fa-medal",
+    "name": "Medal"
+  },
+  {
+    "value": "fas fa-medkit",
+    "name": "medkit"
+  },
+  {
+    "value": "fas fa-meh",
+    "name": "Neutral Face"
+  },
+  {
+    "value": "fas fa-meh-blank",
+    "name": "Face Without Mouth"
+  },
+  {
+    "value": "fas fa-meh-rolling-eyes",
+    "name": "Face With Rolling Eyes"
+  },
+  {
+    "value": "fas fa-memory",
+    "name": "Memory"
+  },
+  {
+    "value": "fas fa-menorah",
+    "name": "Menorah"
+  },
+  {
+    "value": "fas fa-mercury",
+    "name": "Mercury"
+  },
+  {
+    "value": "fas fa-meteor",
+    "name": "Meteor"
+  },
+  {
+    "value": "fas fa-microchip",
+    "name": "Microchip"
+  },
+  {
+    "value": "fas fa-microphone",
+    "name": "microphone"
+  },
+  {
+    "value": "fas fa-microphone-alt",
+    "name": "Alternate Microphone"
+  },
+  {
+    "value": "fas fa-microphone-alt-slash",
+    "name": "Alternate Microphone Slash"
+  },
+  {
+    "value": "fas fa-microphone-slash",
+    "name": "Microphone Slash"
+  },
+  {
+    "value": "fas fa-microscope",
+    "name": "Microscope"
+  },
+  {
+    "value": "fas fa-minus",
+    "name": "minus"
+  },
+  {
+    "value": "fas fa-minus-circle",
+    "name": "Minus Circle"
+  },
+  {
+    "value": "fas fa-minus-square",
+    "name": "Minus Square"
+  },
+  {
+    "value": "fas fa-mitten",
+    "name": "Mitten"
+  },
+  {
+    "value": "fas fa-mobile",
+    "name": "Mobile Phone"
+  },
+  {
+    "value": "fas fa-mobile-alt",
+    "name": "Alternate Mobile"
+  },
+  {
+    "value": "fas fa-money-bill",
+    "name": "Money Bill"
+  },
+  {
+    "value": "fas fa-money-bill-alt",
+    "name": "Alternate Money Bill"
+  },
+  {
+    "value": "fas fa-money-bill-wave",
+    "name": "Wavy Money Bill"
+  },
+  {
+    "value": "fas fa-money-bill-wave-alt",
+    "name": "Alternate Wavy Money Bill"
+  },
+  {
+    "value": "fas fa-money-check",
+    "name": "Money Check"
+  },
+  {
+    "value": "fas fa-money-check-alt",
+    "name": "Alternate Money Check"
+  },
+  {
+    "value": "fas fa-monument",
+    "name": "Monument"
+  },
+  {
+    "value": "fas fa-moon",
+    "name": "Moon"
+  },
+  {
+    "value": "fas fa-mortar-pestle",
+    "name": "Mortar Pestle"
+  },
+  {
+    "value": "fas fa-mosque",
+    "name": "Mosque"
+  },
+  {
+    "value": "fas fa-motorcycle",
+    "name": "Motorcycle"
+  },
+  {
+    "value": "fas fa-mountain",
+    "name": "Mountain"
+  },
+  {
+    "value": "fas fa-mouse",
+    "name": "Mouse"
+  },
+  {
+    "value": "fas fa-mouse-pointer",
+    "name": "Mouse Pointer"
+  },
+  {
+    "value": "fas fa-mug-hot",
+    "name": "Mug Hot"
+  },
+  {
+    "value": "fas fa-music",
+    "name": "Music"
+  },
+  {
+    "value": "fas fa-network-wired",
+    "name": "Wired Network"
+  },
+  {
+    "value": "fas fa-neuter",
+    "name": "Neuter"
+  },
+  {
+    "value": "fas fa-newspaper",
+    "name": "Newspaper"
+  },
+  {
+    "value": "fas fa-not-equal",
+    "name": "Not Equal"
+  },
+  {
+    "value": "fas fa-notes-medical",
+    "name": "Medical Notes"
+  },
+  {
+    "value": "fas fa-object-group",
+    "name": "Object Group"
+  },
+  {
+    "value": "fas fa-object-ungroup",
+    "name": "Object Ungroup"
+  },
+  {
+    "value": "fas fa-oil-can",
+    "name": "Oil Can"
+  },
+  {
+    "value": "fas fa-om",
+    "name": "Om"
+  },
+  {
+    "value": "fas fa-otter",
+    "name": "Otter"
+  },
+  {
+    "value": "fas fa-outdent",
+    "name": "Outdent"
+  },
+  {
+    "value": "fas fa-pager",
+    "name": "Pager"
+  },
+  {
+    "value": "fas fa-paint-brush",
+    "name": "Paint Brush"
+  },
+  {
+    "value": "fas fa-paint-roller",
+    "name": "Paint Roller"
+  },
+  {
+    "value": "fas fa-palette",
+    "name": "Palette"
+  },
+  {
+    "value": "fas fa-pallet",
+    "name": "Pallet"
+  },
+  {
+    "value": "fas fa-paper-plane",
+    "name": "Paper Plane"
+  },
+  {
+    "value": "fas fa-paperclip",
+    "name": "Paperclip"
+  },
+  {
+    "value": "fas fa-parachute-box",
+    "name": "Parachute Box"
+  },
+  {
+    "value": "fas fa-paragraph",
+    "name": "paragraph"
+  },
+  {
+    "value": "fas fa-parking",
+    "name": "Parking"
+  },
+  {
+    "value": "fas fa-passport",
+    "name": "Passport"
+  },
+  {
+    "value": "fas fa-pastafarianism",
+    "name": "Pastafarianism"
+  },
+  {
+    "value": "fas fa-paste",
+    "name": "Paste"
+  },
+  {
+    "value": "fas fa-pause",
+    "name": "pause"
+  },
+  {
+    "value": "fas fa-pause-circle",
+    "name": "Pause Circle"
+  },
+  {
+    "value": "fas fa-paw",
+    "name": "Paw"
+  },
+  {
+    "value": "fas fa-peace",
+    "name": "Peace"
+  },
+  {
+    "value": "fas fa-pen",
+    "name": "Pen"
+  },
+  {
+    "value": "fas fa-pen-alt",
+    "name": "Alternate Pen"
+  },
+  {
+    "value": "fas fa-pen-fancy",
+    "name": "Pen Fancy"
+  },
+  {
+    "value": "fas fa-pen-nib",
+    "name": "Pen Nib"
+  },
+  {
+    "value": "fas fa-pen-square",
+    "name": "Pen Square"
+  },
+  {
+    "value": "fas fa-pencil-alt",
+    "name": "Alternate Pencil"
+  },
+  {
+    "value": "fas fa-pencil-ruler",
+    "name": "Pencil Ruler"
+  },
+  {
+    "value": "fas fa-people-arrows",
+    "name": "People Arrows"
+  },
+  {
+    "value": "fas fa-people-carry",
+    "name": "People Carry"
+  },
+  {
+    "value": "fas fa-pepper-hot",
+    "name": "Hot Pepper"
+  },
+  {
+    "value": "fas fa-percent",
+    "name": "Percent"
+  },
+  {
+    "value": "fas fa-percentage",
+    "name": "Percentage"
+  },
+  {
+    "value": "fas fa-person-booth",
+    "name": "Person Entering Booth"
+  },
+  {
+    "value": "fas fa-phone",
+    "name": "Phone"
+  },
+  {
+    "value": "fas fa-phone-alt",
+    "name": "Alternate Phone"
+  },
+  {
+    "value": "fas fa-phone-slash",
+    "name": "Phone Slash"
+  },
+  {
+    "value": "fas fa-phone-square",
+    "name": "Phone Square"
+  },
+  {
+    "value": "fas fa-phone-square-alt",
+    "name": "Alternate Phone Square"
+  },
+  {
+    "value": "fas fa-phone-volume",
+    "name": "Phone Volume"
+  },
+  {
+    "value": "fas fa-photo-video",
+    "name": "Photo Video"
+  },
+  {
+    "value": "fas fa-piggy-bank",
+    "name": "Piggy Bank"
+  },
+  {
+    "value": "fas fa-pills",
+    "name": "Pills"
+  },
+  {
+    "value": "fas fa-pizza-slice",
+    "name": "Pizza Slice"
+  },
+  {
+    "value": "fas fa-place-of-worship",
+    "name": "Place of Worship"
+  },
+  {
+    "value": "fas fa-plane",
+    "name": "plane"
+  },
+  {
+    "value": "fas fa-plane-arrival",
+    "name": "Plane Arrival"
+  },
+  {
+    "value": "fas fa-plane-departure",
+    "name": "Plane Departure"
+  },
+  {
+    "value": "fas fa-plane-slash",
+    "name": "Plane Slash"
+  },
+  {
+    "value": "fas fa-play",
+    "name": "play"
+  },
+  {
+    "value": "fas fa-play-circle",
+    "name": "Play Circle"
+  },
+  {
+    "value": "fas fa-plug",
+    "name": "Plug"
+  },
+  {
+    "value": "fas fa-plus",
+    "name": "plus"
+  },
+  {
+    "value": "fas fa-plus-circle",
+    "name": "Plus Circle"
+  },
+  {
+    "value": "fas fa-plus-square",
+    "name": "Plus Square"
+  },
+  {
+    "value": "fas fa-podcast",
+    "name": "Podcast"
+  },
+  {
+    "value": "fas fa-poll",
+    "name": "Poll"
+  },
+  {
+    "value": "fas fa-poll-h",
+    "name": "Poll H"
+  },
+  {
+    "value": "fas fa-poo",
+    "name": "Poo"
+  },
+  {
+    "value": "fas fa-poo-storm",
+    "name": "Poo Storm"
+  },
+  {
+    "value": "fas fa-poop",
+    "name": "Poop"
+  },
+  {
+    "value": "fas fa-portrait",
+    "name": "Portrait"
+  },
+  {
+    "value": "fas fa-pound-sign",
+    "name": "Pound Sign"
+  },
+  {
+    "value": "fas fa-power-off",
+    "name": "Power Off"
+  },
+  {
+    "value": "fas fa-pray",
+    "name": "Pray"
+  },
+  {
+    "value": "fas fa-praying-hands",
+    "name": "Praying Hands"
+  },
+  {
+    "value": "fas fa-prescription",
+    "name": "Prescription"
+  },
+  {
+    "value": "fas fa-prescription-bottle",
+    "name": "Prescription Bottle"
+  },
+  {
+    "value": "fas fa-prescription-bottle-alt",
+    "name": "Alternate Prescription Bottle"
+  },
+  {
+    "value": "fas fa-print",
+    "name": "print"
+  },
+  {
+    "value": "fas fa-procedures",
+    "name": "Procedures"
+  },
+  {
+    "value": "fas fa-project-diagram",
+    "name": "Project Diagram"
+  },
+  {
+    "value": "fas fa-pump-medical",
+    "name": "Pump Medical"
+  },
+  {
+    "value": "fas fa-pump-soap",
+    "name": "Pump Soap"
+  },
+  {
+    "value": "fas fa-puzzle-piece",
+    "name": "Puzzle Piece"
+  },
+  {
+    "value": "fas fa-qrcode",
+    "name": "qrcode"
+  },
+  {
+    "value": "fas fa-question",
+    "name": "Question"
+  },
+  {
+    "value": "fas fa-question-circle",
+    "name": "Question Circle"
+  },
+  {
+    "value": "fas fa-quidditch",
+    "name": "Quidditch"
+  },
+  {
+    "value": "fas fa-quote-left",
+    "name": "quote-left"
+  },
+  {
+    "value": "fas fa-quote-right",
+    "name": "quote-right"
+  },
+  {
+    "value": "fas fa-quran",
+    "name": "Quran"
+  },
+  {
+    "value": "fas fa-radiation",
+    "name": "Radiation"
+  },
+  {
+    "value": "fas fa-radiation-alt",
+    "name": "Alternate Radiation"
+  },
+  {
+    "value": "fas fa-rainbow",
+    "name": "Rainbow"
+  },
+  {
+    "value": "fas fa-random",
+    "name": "random"
+  },
+  {
+    "value": "fas fa-receipt",
+    "name": "Receipt"
+  },
+  {
+    "value": "fas fa-record-vinyl",
+    "name": "Record Vinyl"
+  },
+  {
+    "value": "fas fa-recycle",
+    "name": "Recycle"
+  },
+  {
+    "value": "fas fa-redo",
+    "name": "Redo"
+  },
+  {
+    "value": "fas fa-redo-alt",
+    "name": "Alternate Redo"
+  },
+  {
+    "value": "fas fa-registered",
+    "name": "Registered Trademark"
+  },
+  {
+    "value": "fas fa-remove-format",
+    "name": "Remove Format"
+  },
+  {
+    "value": "fas fa-reply",
+    "name": "Reply"
+  },
+  {
+    "value": "fas fa-reply-all",
+    "name": "reply-all"
+  },
+  {
+    "value": "fas fa-republican",
+    "name": "Republican"
+  },
+  {
+    "value": "fas fa-restroom",
+    "name": "Restroom"
+  },
+  {
+    "value": "fas fa-retweet",
+    "name": "Retweet"
+  },
+  {
+    "value": "fas fa-ribbon",
+    "name": "Ribbon"
+  },
+  {
+    "value": "fas fa-ring",
+    "name": "Ring"
+  },
+  {
+    "value": "fas fa-road",
+    "name": "road"
+  },
+  {
+    "value": "fas fa-robot",
+    "name": "Robot"
+  },
+  {
+    "value": "fas fa-rocket",
+    "name": "rocket"
+  },
+  {
+    "value": "fas fa-route",
+    "name": "Route"
+  },
+  {
+    "value": "fas fa-rss",
+    "name": "rss"
+  },
+  {
+    "value": "fas fa-rss-square",
+    "name": "RSS Square"
+  },
+  {
+    "value": "fas fa-ruble-sign",
+    "name": "Ruble Sign"
+  },
+  {
+    "value": "fas fa-ruler",
+    "name": "Ruler"
+  },
+  {
+    "value": "fas fa-ruler-combined",
+    "name": "Ruler Combined"
+  },
+  {
+    "value": "fas fa-ruler-horizontal",
+    "name": "Ruler Horizontal"
+  },
+  {
+    "value": "fas fa-ruler-vertical",
+    "name": "Ruler Vertical"
+  },
+  {
+    "value": "fas fa-running",
+    "name": "Running"
+  },
+  {
+    "value": "fas fa-rupee-sign",
+    "name": "Indian Rupee Sign"
+  },
+  {
+    "value": "fas fa-sad-cry",
+    "name": "Crying Face"
+  },
+  {
+    "value": "fas fa-sad-tear",
+    "name": "Loudly Crying Face"
+  },
+  {
+    "value": "fas fa-satellite",
+    "name": "Satellite"
+  },
+  {
+    "value": "fas fa-satellite-dish",
+    "name": "Satellite Dish"
+  },
+  {
+    "value": "fas fa-save",
+    "name": "Save"
+  },
+  {
+    "value": "fas fa-school",
+    "name": "School"
+  },
+  {
+    "value": "fas fa-screwdriver",
+    "name": "Screwdriver"
+  },
+  {
+    "value": "fas fa-scroll",
+    "name": "Scroll"
+  },
+  {
+    "value": "fas fa-sd-card",
+    "name": "Sd Card"
+  },
+  {
+    "value": "fas fa-search",
+    "name": "Search"
+  },
+  {
+    "value": "fas fa-search-dollar",
+    "name": "Search Dollar"
+  },
+  {
+    "value": "fas fa-search-location",
+    "name": "Search Location"
+  },
+  {
+    "value": "fas fa-search-minus",
+    "name": "Search Minus"
+  },
+  {
+    "value": "fas fa-search-plus",
+    "name": "Search Plus"
+  },
+  {
+    "value": "fas fa-seedling",
+    "name": "Seedling"
+  },
+  {
+    "value": "fas fa-server",
+    "name": "Server"
+  },
+  {
+    "value": "fas fa-shapes",
+    "name": "Shapes"
+  },
+  {
+    "value": "fas fa-share",
+    "name": "Share"
+  },
+  {
+    "value": "fas fa-share-alt",
+    "name": "Alternate Share"
+  },
+  {
+    "value": "fas fa-share-alt-square",
+    "name": "Alternate Share Square"
+  },
+  {
+    "value": "fas fa-share-square",
+    "name": "Share Square"
+  },
+  {
+    "value": "fas fa-shekel-sign",
+    "name": "Shekel Sign"
+  },
+  {
+    "value": "fas fa-shield-alt",
+    "name": "Alternate Shield"
+  },
+  {
+    "value": "fas fa-shield-virus",
+    "name": "Shield Virus"
+  },
+  {
+    "value": "fas fa-ship",
+    "name": "Ship"
+  },
+  {
+    "value": "fas fa-shipping-fast",
+    "name": "Shipping Fast"
+  },
+  {
+    "value": "fas fa-shoe-prints",
+    "name": "Shoe Prints"
+  },
+  {
+    "value": "fas fa-shopping-bag",
+    "name": "Shopping Bag"
+  },
+  {
+    "value": "fas fa-shopping-basket",
+    "name": "Shopping Basket"
+  },
+  {
+    "value": "fas fa-shopping-cart",
+    "name": "shopping-cart"
+  },
+  {
+    "value": "fas fa-shower",
+    "name": "Shower"
+  },
+  {
+    "value": "fas fa-shuttle-van",
+    "name": "Shuttle Van"
+  },
+  {
+    "value": "fas fa-sign",
+    "name": "Sign"
+  },
+  {
+    "value": "fas fa-sign-in-alt",
+    "name": "Alternate Sign In"
+  },
+  {
+    "value": "fas fa-sign-language",
+    "name": "Sign Language"
+  },
+  {
+    "value": "fas fa-sign-out-alt",
+    "name": "Alternate Sign Out"
+  },
+  {
+    "value": "fas fa-signal",
+    "name": "signal"
+  },
+  {
+    "value": "fas fa-signature",
+    "name": "Signature"
+  },
+  {
+    "value": "fas fa-sim-card",
+    "name": "SIM Card"
+  },
+  {
+    "value": "fas fa-sink",
+    "name": "Sink"
+  },
+  {
+    "value": "fas fa-sitemap",
+    "name": "Sitemap"
+  },
+  {
+    "value": "fas fa-skating",
+    "name": "Skating"
+  },
+  {
+    "value": "fas fa-skiing",
+    "name": "Skiing"
+  },
+  {
+    "value": "fas fa-skiing-nordic",
+    "name": "Skiing Nordic"
+  },
+  {
+    "value": "fas fa-skull",
+    "name": "Skull"
+  },
+  {
+    "value": "fas fa-skull-crossbones",
+    "name": "Skull & Crossbones"
+  },
+  {
+    "value": "fas fa-slash",
+    "name": "Slash"
+  },
+  {
+    "value": "fas fa-sleigh",
+    "name": "Sleigh"
+  },
+  {
+    "value": "fas fa-sliders-h",
+    "name": "Horizontal Sliders"
+  },
+  {
+    "value": "fas fa-smile",
+    "name": "Smiling Face"
+  },
+  {
+    "value": "fas fa-smile-beam",
+    "name": "Beaming Face With Smiling Eyes"
+  },
+  {
+    "value": "fas fa-smile-wink",
+    "name": "Winking Face"
+  },
+  {
+    "value": "fas fa-smog",
+    "name": "Smog"
+  },
+  {
+    "value": "fas fa-smoking",
+    "name": "Smoking"
+  },
+  {
+    "value": "fas fa-smoking-ban",
+    "name": "Smoking Ban"
+  },
+  {
+    "value": "fas fa-sms",
+    "name": "SMS"
+  },
+  {
+    "value": "fas fa-snowboarding",
+    "name": "Snowboarding"
+  },
+  {
+    "value": "fas fa-snowflake",
+    "name": "Snowflake"
+  },
+  {
+    "value": "fas fa-snowman",
+    "name": "Snowman"
+  },
+  {
+    "value": "fas fa-snowplow",
+    "name": "Snowplow"
+  },
+  {
+    "value": "fas fa-soap",
+    "name": "Soap"
+  },
+  {
+    "value": "fas fa-socks",
+    "name": "Socks"
+  },
+  {
+    "value": "fas fa-solar-panel",
+    "name": "Solar Panel"
+  },
+  {
+    "value": "fas fa-sort",
+    "name": "Sort"
+  },
+  {
+    "value": "fas fa-sort-alpha-down",
+    "name": "Sort Alphabetical Down"
+  },
+  {
+    "value": "fas fa-sort-alpha-down-alt",
+    "name": "Alternate Sort Alphabetical Down"
+  },
+  {
+    "value": "fas fa-sort-alpha-up",
+    "name": "Sort Alphabetical Up"
+  },
+  {
+    "value": "fas fa-sort-alpha-up-alt",
+    "name": "Alternate Sort Alphabetical Up"
+  },
+  {
+    "value": "fas fa-sort-amount-down",
+    "name": "Sort Amount Down"
+  },
+  {
+    "value": "fas fa-sort-amount-down-alt",
+    "name": "Alternate Sort Amount Down"
+  },
+  {
+    "value": "fas fa-sort-amount-up",
+    "name": "Sort Amount Up"
+  },
+  {
+    "value": "fas fa-sort-amount-up-alt",
+    "name": "Alternate Sort Amount Up"
+  },
+  {
+    "value": "fas fa-sort-down",
+    "name": "Sort Down (Descending)"
+  },
+  {
+    "value": "fas fa-sort-numeric-down",
+    "name": "Sort Numeric Down"
+  },
+  {
+    "value": "fas fa-sort-numeric-down-alt",
+    "name": "Alternate Sort Numeric Down"
+  },
+  {
+    "value": "fas fa-sort-numeric-up",
+    "name": "Sort Numeric Up"
+  },
+  {
+    "value": "fas fa-sort-numeric-up-alt",
+    "name": "Alternate Sort Numeric Up"
+  },
+  {
+    "value": "fas fa-sort-up",
+    "name": "Sort Up (Ascending)"
+  },
+  {
+    "value": "fas fa-spa",
+    "name": "Spa"
+  },
+  {
+    "value": "fas fa-space-shuttle",
+    "name": "Space Shuttle"
+  },
+  {
+    "value": "fas fa-spell-check",
+    "name": "Spell Check"
+  },
+  {
+    "value": "fas fa-spider",
+    "name": "Spider"
+  },
+  {
+    "value": "fas fa-spinner",
+    "name": "Spinner"
+  },
+  {
+    "value": "fas fa-splotch",
+    "name": "Splotch"
+  },
+  {
+    "value": "fas fa-spray-can",
+    "name": "Spray Can"
+  },
+  {
+    "value": "fas fa-square",
+    "name": "Square"
+  },
+  {
+    "value": "fas fa-square-full",
+    "name": "Square Full"
+  },
+  {
+    "value": "fas fa-square-root-alt",
+    "name": "Alternate Square Root"
+  },
+  {
+    "value": "fas fa-stamp",
+    "name": "Stamp"
+  },
+  {
+    "value": "fas fa-star",
+    "name": "Star"
+  },
+  {
+    "value": "fas fa-star-and-crescent",
+    "name": "Star and Crescent"
+  },
+  {
+    "value": "fas fa-star-half",
+    "name": "star-half"
+  },
+  {
+    "value": "fas fa-star-half-alt",
+    "name": "Alternate Star Half"
+  },
+  {
+    "value": "fas fa-star-of-david",
+    "name": "Star of David"
+  },
+  {
+    "value": "fas fa-star-of-life",
+    "name": "Star of Life"
+  },
+  {
+    "value": "fas fa-step-backward",
+    "name": "step-backward"
+  },
+  {
+    "value": "fas fa-step-forward",
+    "name": "step-forward"
+  },
+  {
+    "value": "fas fa-stethoscope",
+    "name": "Stethoscope"
+  },
+  {
+    "value": "fas fa-sticky-note",
+    "name": "Sticky Note"
+  },
+  {
+    "value": "fas fa-stop",
+    "name": "stop"
+  },
+  {
+    "value": "fas fa-stop-circle",
+    "name": "Stop Circle"
+  },
+  {
+    "value": "fas fa-stopwatch",
+    "name": "Stopwatch"
+  },
+  {
+    "value": "fas fa-stopwatch-20",
+    "name": "Stopwatch 20"
+  },
+  {
+    "value": "fas fa-store",
+    "name": "Store"
+  },
+  {
+    "value": "fas fa-store-alt",
+    "name": "Alternate Store"
+  },
+  {
+    "value": "fas fa-store-alt-slash",
+    "name": "Alternate Store Slash"
+  },
+  {
+    "value": "fas fa-store-slash",
+    "name": "Store Slash"
+  },
+  {
+    "value": "fas fa-stream",
+    "name": "Stream"
+  },
+  {
+    "value": "fas fa-street-view",
+    "name": "Street View"
+  },
+  {
+    "value": "fas fa-strikethrough",
+    "name": "Strikethrough"
+  },
+  {
+    "value": "fas fa-stroopwafel",
+    "name": "Stroopwafel"
+  },
+  {
+    "value": "fas fa-subscript",
+    "name": "subscript"
+  },
+  {
+    "value": "fas fa-subway",
+    "name": "Subway"
+  },
+  {
+    "value": "fas fa-suitcase",
+    "name": "Suitcase"
+  },
+  {
+    "value": "fas fa-suitcase-rolling",
+    "name": "Suitcase Rolling"
+  },
+  {
+    "value": "fas fa-sun",
+    "name": "Sun"
+  },
+  {
+    "value": "fas fa-superscript",
+    "name": "superscript"
+  },
+  {
+    "value": "fas fa-surprise",
+    "name": "Hushed Face"
+  },
+  {
+    "value": "fas fa-swatchbook",
+    "name": "Swatchbook"
+  },
+  {
+    "value": "fas fa-swimmer",
+    "name": "Swimmer"
+  },
+  {
+    "value": "fas fa-swimming-pool",
+    "name": "Swimming Pool"
+  },
+  {
+    "value": "fas fa-synagogue",
+    "name": "Synagogue"
+  },
+  {
+    "value": "fas fa-sync",
+    "name": "Sync"
+  },
+  {
+    "value": "fas fa-sync-alt",
+    "name": "Alternate Sync"
+  },
+  {
+    "value": "fas fa-syringe",
+    "name": "Syringe"
+  },
+  {
+    "value": "fas fa-table",
+    "name": "table"
+  },
+  {
+    "value": "fas fa-table-tennis",
+    "name": "Table Tennis"
+  },
+  {
+    "value": "fas fa-tablet",
+    "name": "tablet"
+  },
+  {
+    "value": "fas fa-tablet-alt",
+    "name": "Alternate Tablet"
+  },
+  {
+    "value": "fas fa-tablets",
+    "name": "Tablets"
+  },
+  {
+    "value": "fas fa-tachometer-alt",
+    "name": "Alternate Tachometer"
+  },
+  {
+    "value": "fas fa-tag",
+    "name": "tag"
+  },
+  {
+    "value": "fas fa-tags",
+    "name": "tags"
+  },
+  {
+    "value": "fas fa-tape",
+    "name": "Tape"
+  },
+  {
+    "value": "fas fa-tasks",
+    "name": "Tasks"
+  },
+  {
+    "value": "fas fa-taxi",
+    "name": "Taxi"
+  },
+  {
+    "value": "fas fa-teeth",
+    "name": "Teeth"
+  },
+  {
+    "value": "fas fa-teeth-open",
+    "name": "Teeth Open"
+  },
+  {
+    "value": "fas fa-temperature-high",
+    "name": "High Temperature"
+  },
+  {
+    "value": "fas fa-temperature-low",
+    "name": "Low Temperature"
+  },
+  {
+    "value": "fas fa-tenge",
+    "name": "Tenge"
+  },
+  {
+    "value": "fas fa-terminal",
+    "name": "Terminal"
+  },
+  {
+    "value": "fas fa-text-height",
+    "name": "text-height"
+  },
+  {
+    "value": "fas fa-text-width",
+    "name": "Text Width"
+  },
+  {
+    "value": "fas fa-th",
+    "name": "th"
+  },
+  {
+    "value": "fas fa-th-large",
+    "name": "th-large"
+  },
+  {
+    "value": "fas fa-th-list",
+    "name": "th-list"
+  },
+  {
+    "value": "fas fa-theater-masks",
+    "name": "Theater Masks"
+  },
+  {
+    "value": "fas fa-thermometer",
+    "name": "Thermometer"
+  },
+  {
+    "value": "fas fa-thermometer-empty",
+    "name": "Thermometer Empty"
+  },
+  {
+    "value": "fas fa-thermometer-full",
+    "name": "Thermometer Full"
+  },
+  {
+    "value": "fas fa-thermometer-half",
+    "name": "Thermometer 1/2 Full"
+  },
+  {
+    "value": "fas fa-thermometer-quarter",
+    "name": "Thermometer 1/4 Full"
+  },
+  {
+    "value": "fas fa-thermometer-three-quarters",
+    "name": "Thermometer 3/4 Full"
+  },
+  {
+    "value": "fas fa-thumbs-down",
+    "name": "thumbs-down"
+  },
+  {
+    "value": "fas fa-thumbs-up",
+    "name": "thumbs-up"
+  },
+  {
+    "value": "fas fa-thumbtack",
+    "name": "Thumbtack"
+  },
+  {
+    "value": "fas fa-ticket-alt",
+    "name": "Alternate Ticket"
+  },
+  {
+    "value": "fas fa-times",
+    "name": "Times"
+  },
+  {
+    "value": "fas fa-times-circle",
+    "name": "Times Circle"
+  },
+  {
+    "value": "fas fa-tint",
+    "name": "tint"
+  },
+  {
+    "value": "fas fa-tint-slash",
+    "name": "Tint Slash"
+  },
+  {
+    "value": "fas fa-tired",
+    "name": "Tired Face"
+  },
+  {
+    "value": "fas fa-toggle-off",
+    "name": "Toggle Off"
+  },
+  {
+    "value": "fas fa-toggle-on",
+    "name": "Toggle On"
+  },
+  {
+    "value": "fas fa-toilet",
+    "name": "Toilet"
+  },
+  {
+    "value": "fas fa-toilet-paper",
+    "name": "Toilet Paper"
+  },
+  {
+    "value": "fas fa-toilet-paper-slash",
+    "name": "Toilet Paper Slash"
+  },
+  {
+    "value": "fas fa-toolbox",
+    "name": "Toolbox"
+  },
+  {
+    "value": "fas fa-tools",
+    "name": "Tools"
+  },
+  {
+    "value": "fas fa-tooth",
+    "name": "Tooth"
+  },
+  {
+    "value": "fas fa-torah",
+    "name": "Torah"
+  },
+  {
+    "value": "fas fa-torii-gate",
+    "name": "Torii Gate"
+  },
+  {
+    "value": "fas fa-tractor",
+    "name": "Tractor"
+  },
+  {
+    "value": "fas fa-trademark",
+    "name": "Trademark"
+  },
+  {
+    "value": "fas fa-traffic-light",
+    "name": "Traffic Light"
+  },
+  {
+    "value": "fas fa-trailer",
+    "name": "Trailer"
+  },
+  {
+    "value": "fas fa-train",
+    "name": "Train"
+  },
+  {
+    "value": "fas fa-tram",
+    "name": "Tram"
+  },
+  {
+    "value": "fas fa-transgender",
+    "name": "Transgender"
+  },
+  {
+    "value": "fas fa-transgender-alt",
+    "name": "Alternate Transgender"
+  },
+  {
+    "value": "fas fa-trash",
+    "name": "Trash"
+  },
+  {
+    "value": "fas fa-trash-alt",
+    "name": "Alternate Trash"
+  },
+  {
+    "value": "fas fa-trash-restore",
+    "name": "Trash Restore"
+  },
+  {
+    "value": "fas fa-trash-restore-alt",
+    "name": "Alternative Trash Restore"
+  },
+  {
+    "value": "fas fa-tree",
+    "name": "Tree"
+  },
+  {
+    "value": "fas fa-trophy",
+    "name": "trophy"
+  },
+  {
+    "value": "fas fa-truck",
+    "name": "truck"
+  },
+  {
+    "value": "fas fa-truck-loading",
+    "name": "Truck Loading"
+  },
+  {
+    "value": "fas fa-truck-monster",
+    "name": "Truck Monster"
+  },
+  {
+    "value": "fas fa-truck-moving",
+    "name": "Truck Moving"
+  },
+  {
+    "value": "fas fa-truck-pickup",
+    "name": "Truck Side"
+  },
+  {
+    "value": "fas fa-tshirt",
+    "name": "T-Shirt"
+  },
+  {
+    "value": "fas fa-tty",
+    "name": "TTY"
+  },
+  {
+    "value": "fas fa-tv",
+    "name": "Television"
+  },
+  {
+    "value": "fas fa-umbrella",
+    "name": "Umbrella"
+  },
+  {
+    "value": "fas fa-umbrella-beach",
+    "name": "Umbrella Beach"
+  },
+  {
+    "value": "fas fa-underline",
+    "name": "Underline"
+  },
+  {
+    "value": "fas fa-undo",
+    "name": "Undo"
+  },
+  {
+    "value": "fas fa-undo-alt",
+    "name": "Alternate Undo"
+  },
+  {
+    "value": "fas fa-universal-access",
+    "name": "Universal Access"
+  },
+  {
+    "value": "fas fa-university",
+    "name": "University"
+  },
+  {
+    "value": "fas fa-unlink",
+    "name": "unlink"
+  },
+  {
+    "value": "fas fa-unlock",
+    "name": "unlock"
+  },
+  {
+    "value": "fas fa-unlock-alt",
+    "name": "Alternate Unlock"
+  },
+  {
+    "value": "fas fa-upload",
+    "name": "Upload"
+  },
+  {
+    "value": "fas fa-user",
+    "name": "User"
+  },
+  {
+    "value": "fas fa-user-alt",
+    "name": "Alternate User"
+  },
+  {
+    "value": "fas fa-user-alt-slash",
+    "name": "Alternate User Slash"
+  },
+  {
+    "value": "fas fa-user-astronaut",
+    "name": "User Astronaut"
+  },
+  {
+    "value": "fas fa-user-check",
+    "name": "User Check"
+  },
+  {
+    "value": "fas fa-user-circle",
+    "name": "User Circle"
+  },
+  {
+    "value": "fas fa-user-clock",
+    "name": "User Clock"
+  },
+  {
+    "value": "fas fa-user-cog",
+    "name": "User Cog"
+  },
+  {
+    "value": "fas fa-user-edit",
+    "name": "User Edit"
+  },
+  {
+    "value": "fas fa-user-friends",
+    "name": "User Friends"
+  },
+  {
+    "value": "fas fa-user-graduate",
+    "name": "User Graduate"
+  },
+  {
+    "value": "fas fa-user-injured",
+    "name": "User Injured"
+  },
+  {
+    "value": "fas fa-user-lock",
+    "name": "User Lock"
+  },
+  {
+    "value": "fas fa-user-md",
+    "name": "Doctor"
+  },
+  {
+    "value": "fas fa-user-minus",
+    "name": "User Minus"
+  },
+  {
+    "value": "fas fa-user-ninja",
+    "name": "User Ninja"
+  },
+  {
+    "value": "fas fa-user-nurse",
+    "name": "Nurse"
+  },
+  {
+    "value": "fas fa-user-plus",
+    "name": "User Plus"
+  },
+  {
+    "value": "fas fa-user-secret",
+    "name": "User Secret"
+  },
+  {
+    "value": "fas fa-user-shield",
+    "name": "User Shield"
+  },
+  {
+    "value": "fas fa-user-slash",
+    "name": "User Slash"
+  },
+  {
+    "value": "fas fa-user-tag",
+    "name": "User Tag"
+  },
+  {
+    "value": "fas fa-user-tie",
+    "name": "User Tie"
+  },
+  {
+    "value": "fas fa-user-times",
+    "name": "Remove User"
+  },
+  {
+    "value": "fas fa-users",
+    "name": "Users"
+  },
+  {
+    "value": "fas fa-users-cog",
+    "name": "Users Cog"
+  },
+  {
+    "value": "fas fa-users-slash",
+    "name": "Users Slash"
+  },
+  {
+    "value": "fas fa-utensil-spoon",
+    "name": "Utensil Spoon"
+  },
+  {
+    "value": "fas fa-utensils",
+    "name": "Utensils"
+  },
+  {
+    "value": "fas fa-vector-square",
+    "name": "Vector Square"
+  },
+  {
+    "value": "fas fa-venus",
+    "name": "Venus"
+  },
+  {
+    "value": "fas fa-venus-double",
+    "name": "Venus Double"
+  },
+  {
+    "value": "fas fa-venus-mars",
+    "name": "Venus Mars"
+  },
+  {
+    "value": "fas fa-vest",
+    "name": "vest"
+  },
+  {
+    "value": "fas fa-vest-patches",
+    "name": "vest-patches"
+  },
+  {
+    "value": "fas fa-vial",
+    "name": "Vial"
+  },
+  {
+    "value": "fas fa-vials",
+    "name": "Vials"
+  },
+  {
+    "value": "fas fa-video",
+    "name": "Video"
+  },
+  {
+    "value": "fas fa-video-slash",
+    "name": "Video Slash"
+  },
+  {
+    "value": "fas fa-vihara",
+    "name": "Vihara"
+  },
+  {
+    "value": "fas fa-virus",
+    "name": "Virus"
+  },
+  {
+    "value": "fas fa-virus-slash",
+    "name": "Virus Slash"
+  },
+  {
+    "value": "fas fa-viruses",
+    "name": "Viruses"
+  },
+  {
+    "value": "fas fa-voicemail",
+    "name": "Voicemail"
+  },
+  {
+    "value": "fas fa-volleyball-ball",
+    "name": "Volleyball Ball"
+  },
+  {
+    "value": "fas fa-volume-down",
+    "name": "Volume Down"
+  },
+  {
+    "value": "fas fa-volume-mute",
+    "name": "Volume Mute"
+  },
+  {
+    "value": "fas fa-volume-off",
+    "name": "Volume Off"
+  },
+  {
+    "value": "fas fa-volume-up",
+    "name": "Volume Up"
+  },
+  {
+    "value": "fas fa-vote-yea",
+    "name": "Vote Yea"
+  },
+  {
+    "value": "fas fa-vr-cardboard",
+    "name": "Cardboard VR"
+  },
+  {
+    "value": "fas fa-walking",
+    "name": "Walking"
+  },
+  {
+    "value": "fas fa-wallet",
+    "name": "Wallet"
+  },
+  {
+    "value": "fas fa-warehouse",
+    "name": "Warehouse"
+  },
+  {
+    "value": "fas fa-water",
+    "name": "Water"
+  },
+  {
+    "value": "fas fa-wave-square",
+    "name": "Square Wave"
+  },
+  {
+    "value": "fas fa-weight",
+    "name": "Weight"
+  },
+  {
+    "value": "fas fa-weight-hanging",
+    "name": "Hanging Weight"
+  },
+  {
+    "value": "fas fa-wheelchair",
+    "name": "Wheelchair"
+  },
+  {
+    "value": "fas fa-wifi",
+    "name": "WiFi"
+  },
+  {
+    "value": "fas fa-wind",
+    "name": "Wind"
+  },
+  {
+    "value": "fas fa-window-close",
+    "name": "Window Close"
+  },
+  {
+    "value": "fas fa-window-maximize",
+    "name": "Window Maximize"
+  },
+  {
+    "value": "fas fa-window-minimize",
+    "name": "Window Minimize"
+  },
+  {
+    "value": "fas fa-window-restore",
+    "name": "Window Restore"
+  },
+  {
+    "value": "fas fa-wine-bottle",
+    "name": "Wine Bottle"
+  },
+  {
+    "value": "fas fa-wine-glass",
+    "name": "Wine Glass"
+  },
+  {
+    "value": "fas fa-wine-glass-alt",
+    "name": "Alternate Wine Glas"
+  },
+  {
+    "value": "fas fa-won-sign",
+    "name": "Won Sign"
+  },
+  {
+    "value": "fas fa-wrench",
+    "name": "Wrench"
+  },
+  {
+    "value": "fas fa-x-ray",
+    "name": "X-Ray"
+  },
+  {
+    "value": "fas fa-yen-sign",
+    "name": "Yen Sign"
+  },
+  {
+    "value": "fas fa-yin-yang",
+    "name": "Yin Yang"
+  }
+]

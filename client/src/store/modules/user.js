@@ -46,8 +46,9 @@ const state = {
         accept: {
             termsconditions: false,
             privacycookiepolicy: false
-        }
+        },
     },
+    sendingEmail: false,
     usersloaded: []
 }
 
@@ -97,7 +98,10 @@ const mutations = {
             state.password.oldshow = false,
             state.password.newshow = false,
             state.password.confshow = false
-    }
+    },
+    changeSending: (state) => {
+        state.sendingEmail = !state.sendingEmail
+    },
 }
 
 const getters = {
@@ -149,8 +153,9 @@ const getters = {
 }
 
 const actions = {
-    async signup({ state, commit }) {
+    async signup({ state, commit, rootGetters }) {
         try {
+            commit('changeSending');
             let user = state.newuser
             if (state.newuser.bevolunteer) {
                 user.rol = { name: 'Volunteer', value: 'volu' }
@@ -159,24 +164,25 @@ const actions = {
             let response = await Axios.post('/users/signup', user);
             let token = response.data.token;
             if (token) {
-                //TODO: send mail
                 Cookies.set('catapa-jwt', token, { expires: 30 });
+                let config = rootGetters['general/cookieAuth'];
+                await Axios.post("/mail/send", {
+                    sendTo: response.data.data.email,
+                    userTo: response.data.data.firstname,
+                    template: 'user/new',
+                    subject: 'Welcome ' + response.data.data.firstname,
+                    variables: { recoveryUrlPass: window.location.origin + '/validation/' + token, name: response.data.data.firstname + ' ' + response.data.data.lastname }
+                }, config);
+
                 commit('userStore', { data: response.data.data });
+                commit('changeSending');
                 router.push('/dashboard');
                 commit('menu/notification', ['success', 3, 'Correct registration. Welcome to Catapa, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
             }
-            else {
-                commit('menu/notification', ['error', 5, 'Error: Something Went Wrong'], { root: true });
-            }
         }
-        catch (err) {
-            let error = err.response;
-            if (error.status == 409) {
-                commit('menu/notification', ['error', 5, 'Error: ' + error.data.message], { root: true });
-
-            } else {
-                commit('menu/notification', ['error', 5, 'Error: ' + error.data.message], { root: true });
-            }
+        catch (error) {
+            commit('changeSending');
+            commit('menu/notification', ['error', 5, 'Error: ' + error], { root: true });
         }
     },
     async login({ commit }) {
@@ -220,88 +226,86 @@ const actions = {
             commit('menu/notification', ['error', 3, 'Error: Something Went Wrong.'], { root: true })
         }
     },
-    //TODO: refactoring needed
-    changepasswordnotlogged({ state, commit }, token) {
-        let data = {
-            token: token,
-            password: state.password.confirmnewpassword
+    async changePasswordNotLogged({ state, commit }, token) {
+        try {
+            let data = {
+                token: token,
+                password: state.password.confirmnewpassword
+            }
+            await Axios.post('/tokens/changepassexternal', data);
+            commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true });
+            router.push('/login');
+        } catch (error) {
+            commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
         }
-        Axios.post('/tokens/changepassexternal', data)
-            .then(() => {
-                //TODO: send mail
-                commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true });
-                router.push('/login');
-            })
-            .catch(error => {
-                commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
-            })
     },
-    sendResetPassMail({ commit }, email) {
-        Axios.post('/tokens/sendpassemail', { email: email })
-            .then(() => {
-                //TODO: send mail
-                commit('menu/notification', ['primary', 3, 'An email send to ' + email + '. Please check your account.'], { root: true })
-                router.push('/')
+    async sendResetPassMail({ commit }, email) {
+        try {
+            await Axios.post('/tokens/sendpassemail', {
+                email: email,
+                url: window.location.origin
             })
-            .catch(error => {
-                commit('menu/notification', ['error', 3, 'Something Went Wrong: ' + error.response.data.message], { root: true })
-            })
+            commit('menu/notification', ['primary', 3, 'An email send to ' + email + '. Please check your account.'], { root: true })
+            router.push('/')
+        } catch (error) {
+            commit('menu/notification', ['error', 3, 'Something Went Wrong: ' + error.response.data.message], { root: true })
+        }
     },
-    sendVerificationMail({ commit }, email) {
-        Axios.post('/tokens/resend', { email: email })
-            .then(() => {
-                //TODO: send mail
-                commit('menu/notification', ['primary', 3, 'Verification email send to ' + email + '. Please check your account.'], { root: true });
-            })
-            .catch(error => {
-                let color = ''
-                switch (error.response.data.type) {
-                    case 'not-verified':
-                        color = 'error'
-                        break;
-                    case 'not-user':
-                        color = 'error'
-                        break;
-                    default:
-                        break;
-                }
-                commit('menu/notification', [color, 3, 'Something Went Wrong: ' + error.response.data.message], { root: true });
-            })
+    async sendVerificationMail({ commit }, email) {
+        try {
+            commit('changeSending');
+            await Axios.post('/tokens/resend', { email: email, name: state.loginuser.firstname, url: window.location.origin + '/validation/' })
+            commit('changeSending');
+            commit('menu/notification', ['primary', 3, 'Verification email send to ' + email + '. Please check your account.'], { root: true });
+        } catch (error) {
+            let color = ''
+            switch (error.response.data.type) {
+                case 'not-verified':
+                    color = 'error'
+                    break;
+                case 'not-user':
+                    color = 'error'
+                    break;
+                default:
+                    break;
+            }
+            commit('changeSending');
+            commit('menu/notification', [color, 3, 'Something Went Wrong: ' + error.response.data.message], { root: true });
+        }
     },
-    verifyEmail({ commit }, token) {
-        Axios.post('/tokens/confirmation', { token: token })
-            .then(() => {
-                setTimeout(() => {
-                    router.push('/dashboard');
-                }, 6000);
-                commit('verifiedEmailOk')
-                commit('menu/alert', ['primary', 'Your email is now verified. Thanks a lot. In a few seconds you are redirected to your Dashboard or Login.', 'fas fa-smile-wink'], { root: true })
-            })
-            .catch(error => {
-                let icon = 'fas fa-frown-open'
-                let color = ''
-                switch (error.response.data.type) {
-                    case 'not-verified':
-                        icon = 'fas fa-angry'
-                        color = 'error'
-                        break;
+    async verifyEmail({ commit }, token) {
+        try {
+            await Axios.post('/tokens/confirmation', { token: token })
+            setTimeout(() => {
+                router.push('/dashboard');
+            }, 6000);
+            commit('verifiedEmailOk')
+            commit('menu/alert', ['primary', 'Your email is now verified. Thanks a lot. In a few seconds you are redirected to your Dashboard or Login.', 'fas fa-smile-wink'], { root: true })
+        } catch (error) {
+            let icon = 'fas fa-frown-open'
+            let color = ''
+            switch (error.response.data.type) {
+                case 'not-verified':
+                    icon = 'fas fa-angry'
+                    color = 'error'
+                    break;
 
-                    case 'not-user':
+                case 'not-user':
 
-                        icon = 'fas fa-sad-tear'
-                        color = 'error'
-                        break;
+                    icon = 'fas fa-sad-tear'
+                    color = 'error'
+                    break;
 
-                    case 'already-verified':
+                case 'already-verified':
 
-                        icon = 'fas fa-laugh-wink'
-                        break;
+                    icon = 'fas fa-laugh-wink'
+                    break;
 
-                    default:
-                        break;
-                }
-                commit('menu/alert', [color, error.response.data.message, icon], { root: true });
-            })
+                default:
+                    break;
+            }
+            commit('menu/alert', [color, error.response.data.message, icon], { root: true });
+        }
     },
     async changepassword({ state, commit, rootGetters }) {
         try {
@@ -312,14 +316,9 @@ const actions = {
             }
             let config = rootGetters['general/cookieAuth'];
             await Axios.put('/users/password/' + state.loginuser.id, user, config)
-                .then(() => {
-                    commit('menu/notification', ['primary', 3, 'Changed password Succesfully'], { root: true });
-                    commit('clearpass');
-                    commit('menu/cancelDialog', 'changepassword', { root: true });
-                })
-                .catch(error => {
-                    commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
-                })
+            commit('menu/notification', ['primary', 3, 'Changed password Succesfully'], { root: true });
+            commit('clearpass');
+            commit('menu/cancelDialog', 'changepassword', { root: true });
         } catch (error) {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }

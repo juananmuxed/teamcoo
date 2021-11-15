@@ -1,0 +1,6 @@
+Password problems? 
+
+You lose your Password and need other? No problem, click <a href="{{ recoveryUrlPass }}">here</a> or copy the next link in your Web Browser:{{ recoveryUrlPass }}
+
+-----
+{{ legalText }}

@@ -40,15 +40,15 @@ export default {
   },
   computed: {
     ...mapState({
-      homePage: (state) => state.general.homePage,
+      homePage: (state) => state.general.pagesSpecials.home,
     }),
   },
   methods: {
-    ...mapActions("general", ["getHomePage"]),
+    ...mapActions("general", ["getPage"]),
   },
   async created() {
     this.skeleton = true;
-    await this.getHomePage();
+    await this.getPage("home");
     await sleep(400);
     this.skeleton = false;
   },

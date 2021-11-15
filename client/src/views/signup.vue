@@ -175,6 +175,7 @@
                 </v-col>
                 <v-col cols="12">
                   <v-btn
+                    :loading="sendingEmail"
                     block
                     depressed
                     color="primary"
@@ -214,17 +215,18 @@ export default {
     ...mapState({
       rules: (state) => state.general.rules,
       newuser: (state) => state.user.newuser,
-      registerPage: (state) => state.general.registerPage,
+      sendingEmail: (state) => state.user.sendingEmail,
+      registerPage: (state) => state.general.pagesSpecials.register,
     }),
   },
   methods: {
     ...mapGetters("user", ["signUpIsValid"]),
     ...mapActions("user", ["signup"]),
-    ...mapActions("general", ["getRegisterPage"]),
+    ...mapActions("general", ["getPage"]),
   },
   async created() {
     this.skeleton = true;
-    await this.getRegisterPage();
+    await this.getPage("register");
     await sleep(400);
     this.skeleton = false;
   },

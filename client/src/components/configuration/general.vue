@@ -29,8 +29,28 @@
             </v-text-field>
           </v-col>
           <v-col cols="12" sm="4" class="py-1">
-            <v-text-field outlined label="Icon" v-model="page.icon">
-            </v-text-field>
+            <v-autocomplete
+              outlined
+              :items="icons"
+              v-model="page.icon"
+              item-text="name"
+              item-value="value"
+            >
+              <template v-slot:selection="data">
+                <v-icon v-text="data.item.value"></v-icon>
+                <span class="ml-4">{{ data.item.name }}</span>
+              </template>
+              <template v-slot:item="data">
+                <v-list-item-avatar>
+                  <v-icon v-text="data.item.value"></v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-html="data.item.name"
+                  ></v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </v-autocomplete>
           </v-col>
           <v-col cols="12" sm="4" class="py-1">
             <v-select
@@ -107,6 +127,7 @@ export default {
         { text: "Registration page", value: "register" },
         { text: "Footer", value: "footer" },
         { text: "Lateral Menu", value: "lateral" },
+        { text: "Membership Page", value: "membership" },
       ],
     };
   },
@@ -117,6 +138,7 @@ export default {
   computed: {
     ...mapState({
       pages: (state) => state.general.config.pages,
+      icons: (state) => state.general.icons,
       searchedPage: (state) => state.general.config.searchedPage,
       rules: (state) => state.general.rules,
       menu: (state) => state.menu.menu,

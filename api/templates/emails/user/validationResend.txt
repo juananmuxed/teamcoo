@@ -1,0 +1,8 @@
+Hello, {{ name }}!
+
+
+You can verify your e-mail <a href="{{ recoveryUrlPass }}">here</a> or copy this link in your web browser:
+{{ recoveryUrlPass }}
+
+-----
+{{ legalText }}
