@@ -26,10 +26,6 @@ const taskschema = new schema({
         type: Boolean,
         default: true
     },
-    creaDate: {
-        type: Date,
-        default: Date.now
-    },
     link: {
         type: String,
         default: ''
@@ -58,7 +54,7 @@ const taskschema = new schema({
         type: String,
         default: ''
     }
-})
+}, { timestamps: true })
 
 const task = mongoose.model('Tasks', taskschema)
 

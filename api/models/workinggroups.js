@@ -31,10 +31,6 @@ const workingGroupSchema = new schema({
         type: Boolean,
         default: true
     },
-    creaDate: {
-        type: Date,
-        default: Date.now
-    },
     questions: {
         type: Array,
         required: true
@@ -59,7 +55,7 @@ const workingGroupSchema = new schema({
         type: Array,
         default: []
     }
-})
+}, { timestamps: true })
 
 const wg = mongoose.model('wg', workingGroupSchema)
 

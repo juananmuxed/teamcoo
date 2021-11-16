@@ -3,35 +3,35 @@ const schema = mongoose.Schema
 
 const questionSchema = new schema({
     name: {
-        type: String, 
-        required: [true,'Required field']
+        type: String,
+        required: [true, 'Required field']
     },
     description: {
-        type: String, 
+        type: String,
         default: ''
     },
     type: {
-        type: String, 
+        type: String,
         required: [true, 'Required field']
     },
-    selections:{
+    selections: {
         type: Array
     },
     _userId: {
-        type:mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     },
     active: {
-        type:Boolean,
-        default:true
+        type: Boolean,
+        default: true
     },
     common: {
-        type:Boolean,
-        default:false
+        type: Boolean,
+        default: false
     }
-})
+}, { timestamps: true })
 
-const question = mongoose.model('question',questionSchema)
+const question = mongoose.model('question', questionSchema)
 
 module.exports = question
