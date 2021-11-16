@@ -1,29 +1,30 @@
 const Interests = require('../models/interests')
 
-exports.createInterest = async (req,res) => {
+exports.createInterest = async (req, res) => {
     const body = req.body
     try {
         let isInterest = await Interests.find({ name: body.name });
         if (isInterest.length >= 1) {
-            return res.status(409).json({message: "This interest already exist: " + body.name});
+            return res.status(409).json({ message: "This interest already exist: " + body.name });
         }
         const interestDB = await Interests.create(body)
         res.json(interestDB)
     } catch (error) {
-        res.status(500).json({message: 'An error has occurred: ' + error , error})
+        res.status(500).json({ message: 'An error has occurred: ' + error, error })
     }
 }
 
-exports.getAllInterests = async (req,res) => {
+exports.getAllInterests = async (req, res) => {
     try {
         const interestDB = await Interests.find()
+        console.log(interestDB)
         res.json(interestDB)
     } catch (error) {
-        res.status(500).json({message: 'An error has occurred: ' + error , error})
+        res.status(500).json({ message: 'An error has occurred: ' + error, error })
     }
 }
 
-exports.getInterest = async (req,res) => {
+exports.getInterest = async (req, res) => {
     const _id = req.params.id
 
     try {
@@ -31,32 +32,32 @@ exports.getInterest = async (req,res) => {
         res.json(interestDB)
 
     } catch (error) {
-        res.status(500).json({message: 'An error has occurred: ' + error , error})
+        res.status(500).json({ message: 'An error has occurred: ' + error, error })
     }
 }
 
-exports.updateInterest = async (req,res) => {
+exports.updateInterest = async (req, res) => {
     const _id = req.params.id
     const body = req.body
 
-    try { 
-        const interestDB = await Interests.findByIdAndUpdate(_id,body,{new:true})
+    try {
+        const interestDB = await Interests.findByIdAndUpdate(_id, body, { new: true })
         res.json(interestDB)
     } catch (error) {
-        res.status(500).json({message: 'An error has occurred: ' + error , error})
+        res.status(500).json({ message: 'An error has occurred: ' + error, error })
     }
 }
 
-exports.deleteInterest = async (req,res) => {
+exports.deleteInterest = async (req, res) => {
     const _id = req.params.id
     try {
-        let isInterest = await Interests.find({_id:_id});
+        let isInterest = await Interests.find({ _id: _id });
         if (isInterest.length < 1) {
-            return res.status(409).json({message: "This interest don't exist"});
+            return res.status(409).json({ message: "This interest don't exist" });
         }
-        const interestDB = await Interests.findByIdAndDelete({_id})
+        const interestDB = await Interests.findByIdAndDelete({ _id })
         res.json(interestDB)
     } catch (error) {
-        res.status(500).json({message: 'An error has occurred: ' + error , error})
+        res.status(500).json({ message: 'An error has occurred: ' + error, error })
     }
 }

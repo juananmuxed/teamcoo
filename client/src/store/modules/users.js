@@ -1,5 +1,7 @@
 import Axios from 'axios'
+import router from '@/router'
 import Vuetify from '../../plugins/vuetify'
+import Cookies from 'js-cookie'
 import { generatePalette } from '../../utils/utils'
 
 const state = {
@@ -218,7 +220,7 @@ const actions = {
             commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
         }
     },
-    async deleteUser({ rootState, commit, rootGetters }, params) {
+    async deleteUser({ rootState, commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let resTasks = await Axios.get('/tasks/', config);
@@ -239,12 +241,30 @@ const actions = {
                 email: rootState.user.loginuser.email,
                 password: params.password
             }
-            await Axios.delete('/users/' + params.id, config);
+            await Axios.delete('/users/finally/' + params.id, config);
             commit('menu/cancelDialog', 'confirm', { root: true });
             commit('menu/notification', ['primary', 3, 'Deleted User. Bye, bye!!'], { root: true });
         } catch (error) {
-            // TODO: revisar estas respuestas
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+    async deleteUserSoft({ rootState, commit, dispatch, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            config.data = {
+                email: rootState.user.loginuser.email,
+                password: params.password
+            }
+            await Axios.delete('/users/' + params.id, config);
+            commit('menu/cancelDialog', 'confirmSoft', { root: true });
+            Cookies.remove('catapa-jwt')
+            Cookies.remove('teamcoo-catapa-userdata')
+            commit('menu/cancelDialog', 'logout', { root: true })
+            commit('user/clearUser', null, { root: true })
+            router.push('/');
+            commit('menu/notification', ['success', 3, 'You are succesfully close your account. Goodbye!'], { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async saveCommonQuestions({ commit, rootGetters }, params) {

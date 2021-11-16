@@ -29,6 +29,7 @@ const state = {
             editinterest: false,
             editworkgroup: false,
             confirm: false,
+            confirmSoft: false,
             editmembers: false,
             editquestion: false,
             editcommonquestion: false,
@@ -54,7 +55,7 @@ const state = {
         active: false,
         color: 'info',
         message: '',
-        polling: null
+        timeout: 0
     },
     alert: {
         message: 'Message',
@@ -89,13 +90,10 @@ const mutations = {
         }
     },
     notification: (state, [color, time, message]) => {
-        if (state.snackbar.active) clearInterval(state.snackbar.polling);
         state.snackbar.active = true;
         state.snackbar.color = color;
         state.snackbar.message = message;
-        state.snackbar.polling = setTimeout(() => {
-            state.snackbar.active = false;
-        }, time * 1000);
+        state.snackbar.timeout = time * 1000
     },
     alert: (state, [color, message, icon]) => {
         state.alert.icon = icon
@@ -173,6 +171,15 @@ const actions = {
         setTimeout(() => {
             router.go(-1)
         }, 200);
+    },
+
+    notificationError({ commit }, error) {
+        if (error.response.data && error.response.data.message) {
+            const color = error.response.status >= 400 ? 'error' : 'warning';
+            commit('notification', [color, 0, error.response.data.message]);
+        } else {
+            commit('notification', ['error', 0, 'Unknow error']);
+        }
     },
 
     async getLogosPage({ state, commit, rootState }) {

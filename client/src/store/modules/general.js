@@ -214,7 +214,7 @@ const actions = {
             let config = getters.cookieAuth;
             let res = await Axios.get('/configuration/emails', config)
             if (!res.data) {
-                res = await Axios.post('/configuration/', { name: 'emails', values: state.config.email, protected: true }, config)
+                res = await Axios.post('/configuration/', { name: 'emails', values: state.config.email }, config)
             } else {
                 res = await Axios.put('/configuration/emails', { values: state.config.email, date: new Date() }, config);
             }

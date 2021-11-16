@@ -28,8 +28,12 @@ router.put("/:id", auth, userController.updateUser)
 
 router.put("/password/:id", auth, userController.updatePassword)
 
+// Delete Account soft
+
+router.delete("/:id", auth, userController.deleteUserSoft)
+
 // Delete Account
 
-router.delete("/:id", auth, userController.deleteUser)
+router.delete("/finally/:id", auth, userController.deleteUser)
 
 module.exports = router;

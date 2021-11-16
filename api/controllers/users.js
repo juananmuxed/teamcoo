@@ -30,13 +30,13 @@ exports.registerNewUser = async (req, res) => {
             _userId: user._id,
             token: token
         })
-        await tokenConfirmation.save((error) => {
-            if (error) { res.status(500).json({ message: 'An error has ocurred', error }) }
-            res.status(201).json({ data, token });
-        })
+        let tokenSaved = await tokenConfirmation.save()
+        if (!tokenSaved) {
+            return res.status(500).json({ message: 'An error has ocurred', error })
+        }
+        res.status(201).json({ data, token });
     } catch (error) {
-        console.log(error)
-        res.status(400).json({ message: 'An error has ocurred', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 };
 
@@ -47,13 +47,17 @@ exports.loginUser = async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
         const user = await User.findByCredentials(email, password);
-        if (!user) {
-            return res.status(409).json({ message: "Login failed! Check your credentials" });
+        if (user instanceof Error) {
+            return res.status(409).json({ message: user.message });
         }
+        if (user.deleted) {
+            return res.status(409).json({ message: 'Your account is closed, please contact with the administrators.' });
+        }
+
         const token = await user.generateAuthToken();
         res.status(201).json({ user, token })
     } catch (error) {
-        res.status(400).json({ message: 'An error has ocurred', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 };
 
@@ -68,7 +72,7 @@ exports.getUser = async (req, res) => {
         }
         res.status(201).json(user)
     } catch (error) {
-        res.status(400).json({ message: 'An error has ocurred', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
 
@@ -95,7 +99,7 @@ exports.getUsers = async (req, res) => {
         }
         res.status(201).json(datatemp)
     } catch (error) {
-        return res.status(400).json({ mensaje: 'An error has occurred', error })
+        return res.status(400).json({ message: 'An error has occurred', error: error })
     }
 }
 
@@ -161,19 +165,45 @@ exports.deleteUser = async (req, res) => {
         const user = await User.findByCredentials(email, password)
 
         if (!user) {
-            return res.status(401).json({ error: "Credentials error" });
+            return res.status(401).json({ message: "Credentials error" });
         }
 
         let userDB = await User.findByIdAndDelete(_id)
 
         if (!userDB) {
-            return res.status(401).json({ error: "Incorrect ID" });
+            return res.status(401).json({ message: "Incorrect ID" });
         }
 
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ status: 'error', error: 'Invalid Credentials' });
+        res.status(400).json({ message: 'Invalid Credentials' });
+    }
+
+}
+
+// Function to delete user soft
+
+exports.deleteUserSoft = async (req, res) => {
+    try {
+        const _id = req.params.id
+        const email = req.body.email
+        const password = req.body.password
+        const user = await User.findByCredentials(email, password)
+
+        if (user instanceof Error) {
+            return res.status(409).json({ message: user.message });
+        }
+
+        let userDB = await User.findByIdAndUpdate(_id, { deleted: true })
+
+        if (!userDB) {
+            return res.status(401).json({ message: "Incorrect ID" });
+        }
+
+        res.json(userDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 
 }
@@ -280,7 +310,7 @@ exports.reSendConfirmation = async (req, res) => {
 
         let token = new Token({ _userId: user._id, token: generatedToken })
         await token.save();
-        await mailer.sendMail({
+        mailer.sendMail({
             body: {
                 sendTo: req.body.email,
                 userTo: user.firstname,

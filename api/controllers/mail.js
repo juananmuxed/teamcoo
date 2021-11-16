@@ -53,7 +53,7 @@ exports.sendMail = async (req, res) => {
         context.url = !configWeb ? 'http://localhost:3000' : configWeb.values.url;
 
         const configLogo = await Config.findOne({ name: "logos" });
-        context.logoUrl = !configLogo ? url + '/uploads/TEAMCOO_LOGO.png' : configLogo.values.logo;
+        context.logoUrl = !configLogo ? context.url + '/uploads/TEAMCOO_LOGO.png' : configLogo.values.logo;
 
         context.legalText = !data.legalText ? 'Legal Text not added' : data.legalText
 
@@ -106,39 +106,26 @@ exports.sendMail = async (req, res) => {
             responseError: ''
         }
 
-        transporter.sendMail(mailOptions, (error, info) => {
+        const mailModel = new Mail(mailObj);
+        const mail = await mailModel.save();
+
+        transporter.sendMail(mailOptions, async (error, info) => {
             if (error) {
-                console.log('Error: ' + error);
-                mailObj.responseError = error.response
-                Mail.create(mailObj);
-                if (error.responseCode) {
-                    res.status(error.responseCode).json({ message: error.response, responseCode: error.responseCode, code: error.code });
-                } else {
-                    res.status(400).json({ message: error.response, responseCode: 400, code: error.code });
-                }
+                await Mail.findByIdAndUpdate(mail._id, {
+                    responseError: error.message
+                }, { new: true })
+                res.status(400).json({ message: error.message });
             } else {
-                console.log('Email sent: ' + info.response);
-                mailObj.response = info.response;
-                mailObj.sended = true;
-                Mail.create(mailObj);
+                await Mail.findByIdAndUpdate(mail._id, {
+                    response: info,
+                    sended: true,
+                    sendDate: new Date()
+                }, { new: true })
                 res.status(200).json({ info });
             }
         });
 
     } catch (error) {
-        console.log(error)
-        res.status(400).json({ message: error.message | 'An error has ocurred', error });
-    }
-}
-
-exports.updateMailLog = async (req, res) => {
-    const _id = req.params.id
-    const body = req.body
-
-    try {
-        const interestDB = await Mail.findByIdAndUpdate(_id, body, { new: true })
-        res.json(interestDB)
-    } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(400).json({ message: 'Email not sended: ' + error.message });
     }
 }

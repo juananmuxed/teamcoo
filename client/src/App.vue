@@ -36,10 +36,10 @@
       v-model="snackbar.active"
       bottom
       :color="snackbar.color"
-      :timeout="0"
+      :timeout="snackbar.timeout"
       multi-line
       >{{ snackbar.message }}
-      <v-btn color="error" icon @click="snackbar.active = false">
+      <v-btn color="white" icon @click="snackbar.active = false">
         <v-icon>fas fa-times</v-icon>
       </v-btn>
     </v-snackbar>

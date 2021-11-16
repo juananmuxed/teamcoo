@@ -10,7 +10,7 @@ exports.createConfig = async (req, res) => {
         const configDB = await Config.create(body)
         res.json(configDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error })
     }
 }
 
@@ -19,7 +19,7 @@ exports.getAllConfigs = async (req, res) => {
         const configDB = await Config.find()
         res.json(configDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error })
     }
 }
 
@@ -35,8 +35,7 @@ exports.getConfig = async (req, res) => {
         }
         res.json(configDB)
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error })
     }
 }
 
@@ -47,7 +46,7 @@ exports.getConfigProtected = async (req, res) => {
         const configDB = await Config.findOne({ name: name })
         res.json(configDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error })
     }
 }
 
@@ -59,7 +58,7 @@ exports.updateConfig = async (req, res) => {
         const configDB = await Config.findOneAndUpdate({ name: name }, body, { new: true })
         res.json(configDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error })
     }
 }
 
@@ -73,6 +72,6 @@ exports.deleteConfig = async (req, res) => {
         const configDB = await Config.findOneAndUpdate({ _id })
         res.json(configDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error })
     }
 }
