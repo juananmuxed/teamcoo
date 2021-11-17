@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const workingGroupSchema = new schema({
+const workgroupScheme = new schema({
     name: {
         type: String,
         required: [true, 'Required field']
@@ -54,9 +54,13 @@ const workingGroupSchema = new schema({
     members: {
         type: Array,
         default: []
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 
-const wg = mongoose.model('wg', workingGroupSchema)
+const workgroup = mongoose.model('workgroup', workgroupScheme)
 
-module.exports = wg
+module.exports = workgroup

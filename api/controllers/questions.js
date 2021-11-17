@@ -61,10 +61,6 @@ exports.deleteQuestionSoft = async (req, res) => {
 exports.deleteQuestion = async (req, res) => {
     const _id = req.params.id
     try {
-        let isQuestion = await Questions.find({ _id: _id });
-        if (isQuestion.length < 1) {
-            return res.status(409).json({ message: "This question don't exist" });
-        }
         const questionDb = await Questions.findByIdAndDelete({ _id })
         res.json(questionDb)
     } catch (error) {

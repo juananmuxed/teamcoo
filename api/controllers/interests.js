@@ -61,10 +61,6 @@ exports.deleteInterestSoft = async (req, res) => {
 exports.deleteInterest = async (req, res) => {
     const _id = req.params.id
     try {
-        let isInterest = await Interests.find({ _id: _id });
-        if (isInterest.length < 1) {
-            return res.status(409).json({ message: "This interest don't exist" });
-        }
         const interestDB = await Interests.findByIdAndDelete({ _id })
         res.json(interestDB)
     } catch (error) {

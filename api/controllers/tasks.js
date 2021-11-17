@@ -61,10 +61,6 @@ exports.deleteTaskSoft = async (req, res) => {
 exports.deleteTask = async (req, res) => {
     const _id = req.params.id
     try {
-        let isTask = await Tasks.find({ _id: _id });
-        if (isTask.length < 1) {
-            return res.status(409).json({ message: "This task don't exist" });
-        }
         const taskDB = await Tasks.findByIdAndDelete({ _id })
         res.json(taskDB)
     } catch (error) {
