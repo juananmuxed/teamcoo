@@ -64,17 +64,13 @@ const getters = {
 }
 
 const actions = {
-    async loadInterests({ commit, dispatch, rootState, rootGetters }) {
+    async loadInterests({ commit, dispatch, rootGetters }) {
         try {
             commit('changeLoading', true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/interests/', config)
             let interests = res.data;
             commit('loadInterestsNames', interests.map(a => a.name));
-            for (let x = 0; x < interests.length; x++) {
-                await dispatch('users/loadUserByID', interests[x]._userId, { root: true })
-                interests[x]['creator'] = rootState.users.temporaluser;
-            }
             commit('loadInterests', interests);
             commit('changeLoading', false);
         } catch (error) {
@@ -87,7 +83,7 @@ const actions = {
             let body = {
                 name: interest.name,
                 description: interest.description,
-                _userId: interest.creatorId,
+                creator: interest.creatorId,
                 color: !interest.color ? generateRandomColor(30) : interest.color
             };
             let config = rootGetters['general/cookieAuth'];
@@ -130,6 +126,18 @@ const actions = {
                     }
                 }
             }
+            await Axios.delete('/interests/finally/' + params.id, config);
+
+            await dispatch('loadInterests');
+            commit('menu/notification', ['info', 3, 'Interest Deleted'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+    async delInterestSoft({ commit, dispatch, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth']
             await Axios.delete('/interests/' + params.id, config);
 
             await dispatch('loadInterests');

@@ -1,4 +1,5 @@
 const Interests = require('../models/interests')
+const Questions = require('../models/questions')
 
 exports.createInterest = async (req, res) => {
     const body = req.body
@@ -16,7 +17,16 @@ exports.createInterest = async (req, res) => {
 
 exports.getAllInterests = async (req, res) => {
     try {
-        const interestDB = await Interests.find()
+        const interestDB = await Interests.find({ deleted: false }).populate('creator')
+        res.json(interestDB)
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error })
+    }
+}
+
+exports.getAllInterestsArchived = async (req, res) => {
+    try {
+        const interestDB = await Interests.find({ deleted: true }).populate('creator')
         res.json(interestDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
@@ -27,9 +37,8 @@ exports.getInterest = async (req, res) => {
     const _id = req.params.id
 
     try {
-        const interestDB = await Interests.findById(_id)
+        const interestDB = await Interests.findById(_id).populate('creator');
         res.json(interestDB)
-
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
     }
@@ -40,7 +49,7 @@ exports.updateInterest = async (req, res) => {
     const body = req.body
 
     try {
-        const interestDB = await Interests.findByIdAndUpdate(_id, body, { new: true })
+        const interestDB = await Interests.findByIdAndUpdate(_id, body, { new: true });
         res.json(interestDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
@@ -49,9 +58,9 @@ exports.updateInterest = async (req, res) => {
 
 exports.deleteInterestSoft = async (req, res) => {
     const _id = req.params.id
-
     try {
         const interestDB = await Interests.findByIdAndUpdate(_id, { deleted: true }, { new: true })
+        await Questions.updateMany({}, { $pull: { interests: _id } });
         res.json(interestDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
@@ -61,7 +70,14 @@ exports.deleteInterestSoft = async (req, res) => {
 exports.deleteInterest = async (req, res) => {
     const _id = req.params.id
     try {
+        const email = req.body.email;
+        const password = req.body.password;
+        const user = await User.findByCredentials(email, password);
+        if (user instanceof Error) {
+            return res.status(409).json({ message: user.message });
+        }
         const interestDB = await Interests.findByIdAndDelete({ _id })
+        await Questions.updateMany({}, { $pull: { interests: _id } });
         res.json(interestDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })

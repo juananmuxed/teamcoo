@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import Vue from 'vue'
 import { isDiferentArray } from '../../utils/utils'
 
 const state = {
@@ -45,16 +46,7 @@ const mutations = {
             state.questionForm.common = false
     },
     questionsLoad: (state, questions) => {
-        state.questions = questions
-        let tempQuestions = []
-        for (let i = 0; i < questions.length; i++) {
-            let question = {
-                text: questions[i].name,
-                value: questions[i]._id,
-                type: questions[i].type
-            }
-            tempQuestions[i] = question
-        }
+        Vue.set(state, 'questions', questions)
     },
     checkCommonQuestion: state => state.questionForm.common = true,
     updateCommonQuestions: (state, questions) => state.commonQuestions = questions,
@@ -100,31 +92,17 @@ const getters = {
 }
 
 const actions = {
-    async createQuestion({ state, commit, dispatch, rootState, rootGetters }, userId) {
+    async createQuestion({ state, commit, dispatch, rootGetters }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let selections = state.questionForm.selectionsSelected;
-            if (state.questionForm.type != 'text') {
-                let interests = rootState.interests.interestsNames;
-                for (let x = 0; x < selections.length; x++) {
-                    if (!interests.some(interest => interest == selections[x])) {
-                        await dispatch('interests/createInterest', {
-                            name: selections[x],
-                            description: 'Created for "' + state.questionForm.name + '" question.',
-                            creatorId: userId
-                        }, { root: true });
-                    }
-                }
-            } else {
-                selections = state.questionForm.text
-            }
             let body = {
                 name: state.questionForm.name,
                 description: state.questionForm.description,
                 type: state.questionForm.type,
                 common: state.questionForm.common,
-                _userId: userId,
-                selections: selections,
+                creator: userId,
+                interests: state.questionForm.selectionsSelected,
+                text: state.questionForm.text
             }
             await Axios.post('/questions/', body, config)
             commit('menu/cancelDialog', 'createquestion', { root: true });
@@ -192,35 +170,16 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async loadQuestions({ commit, dispatch, rootState, rootGetters }) {
+    async loadQuestions({ commit, dispatch, rootGetters }) {
         try {
             commit('changeLoading', true);
-            commit('changeSkeleton', true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/questions/', config);
-            let allQuestions = res.data
-            for (let x = 0; x < allQuestions.length; x++) {
-                await dispatch('users/loadUserByID', allQuestions[x]._userId, { root: true })
-                allQuestions[x]['creator'] = rootState.users.temporaluser;
-                if (allQuestions[x].type != 'text') {
-                    let interests = allQuestions[x].selections, tempInterests = Array(interests.length);
-                    for (let i = 0; i < interests.length; i++) {
-                        await dispatch('interests/searchInterestByName', interests[i], { root: true })
-                        tempInterests[i] = rootState.interests.interestTemp;
-                    }
-                    allQuestions[x]['selections'] = tempInterests;
-                }
-            }
-            let questions = allQuestions.filter(q => !q.common);
-            let questionsCommon = allQuestions.filter(q => q.common);
-            commit('questionsLoad', questions);
-            commit('updateCommonQuestions', questionsCommon);
+            commit('questionsLoad', res.data);
             commit('changeLoading', false);
-            commit('changeSkeleton', false);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
             commit('changeLoading', false);
-            commit('changeSkeleton', false);
         }
     },
     async searchQuestion({ state, commit, dispatch, rootState, rootGetters }, id) {

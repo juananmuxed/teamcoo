@@ -34,8 +34,12 @@
           </template>
           <template v-slot:item.creator="{ item }">
             <v-chip class="mx-1" :to="'/users/' + item._userId">
-              <v-avatar left v-if="item.creator.avatar != ''"><v-img :src="item.creator.avatar"></v-img></v-avatar>
-              <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+              <v-avatar left v-if="item.creator.image != ''"
+                ><v-img :src="item.creator.image"></v-img
+              ></v-avatar>
+              <v-avatar left v-else
+                ><v-icon small color="info">fas fa-user</v-icon></v-avatar
+              >
               {{ item.creator.username }}
             </v-chip>
           </template>
@@ -58,7 +62,7 @@
                 dialogs.editinterest = true;
               "
               class="mx-1"
-              v-if="item.creator.id == loginuser.id"
+              v-if="item.creator._id == loginuser.id"
             >
               Edit
               <v-icon x-small class="ml-1">fas fa-edit</v-icon>
@@ -88,8 +92,11 @@
             description="You are about to delete this Question. <br><br>Are you sure?"
             :cancelFunction="null"
             textButton="Delete"
-            :actionparams="{ id: searchedInterest._id, name: searchedInterest.name }"
-            :action="delInterest"
+            :actionparams="{
+              id: searchedInterest._id,
+              name: searchedInterest.name,
+            }"
+            :action="delInterestSoft"
           ></confirmation-template>
         </v-dialog>
       </v-col>
@@ -107,7 +114,10 @@
               block
               color="info"
               class="my-2"
-              @click="clearInterestForm();randomInterestColor()"
+              @click="
+                clearInterestForm();
+                randomInterestColor();
+              "
             >
               <v-icon left>fas fa-address-card</v-icon>Create Interest
             </v-btn>
@@ -160,8 +170,12 @@ export default {
     }),
   },
   methods: {
-    ...mapActions("interests", ["loadInterests", "delInterest",'searchInterest']),
-    ...mapMutations("interests", ["clearInterestForm","randomInterestColor"]),
+    ...mapActions("interests", [
+      "loadInterests",
+      "delInterestSoft",
+      "searchInterest",
+    ]),
+    ...mapMutations("interests", ["clearInterestForm", "randomInterestColor"]),
     textColor(color) {
       return idealTextColor(color);
     },

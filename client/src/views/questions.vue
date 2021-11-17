@@ -8,11 +8,7 @@
 
     <v-row>
       <v-col cols="12">
-        <v-data-table
-          :items="questions.filter((n) => !n.common)"
-          :headers="headers"
-          :loading="loading"
-        >
+        <v-data-table :headers="headers" :loading="loading" :items="questions">
           <template v-slot:loading>
             <span class="display-1 text-uppercase font-weight-thin ma-5"
               >Loading Questions</span
@@ -38,8 +34,12 @@
           </template>
           <template v-slot:item.creator="{ item }">
             <v-chip class="mx-1" :to="'/users/' + item._userId">
-              <v-avatar left v-if="item.creator.avatar != ''"><v-img :src="item.creator.avatar"></v-img></v-avatar>
-              <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+              <v-avatar left v-if="item.creator.image != ''"
+                ><v-img :src="item.creator.image"></v-img
+              ></v-avatar>
+              <v-avatar left v-else
+                ><v-icon small color="info">fas fa-user</v-icon></v-avatar
+              >
               {{ item.creator.username }}
             </v-chip>
           </template>
@@ -56,7 +56,9 @@
                 dialogs.editquestion = true;
               "
               class="mx-1"
-              v-if="item.creator.id == loginuser.id"
+              v-if="
+                item.creator._id == loginuser.id || loginuser.role == 'admin'
+              "
             >
               Edit
               <v-icon x-small class="ml-1">fas fa-edit</v-icon>
@@ -78,12 +80,12 @@
           </template>
           <template v-slot:item.selections="{ item }">
             <template v-if="item.type == 'text'">
-              <span>Open Answer</span>
+              <span>{{ item.text }}</span>
             </template>
             <template v-else>
               <v-chip
                 small
-                v-for="(answer, index) in item.selections"
+                v-for="(answer, index) in item.interests"
                 v-bind:key="index"
                 class="ma-1"
                 :color="answer.color"
@@ -138,7 +140,7 @@ import { mapActions, mapState, mapMutations } from "vuex";
 import createquestion from "../components/questions/createquestion.vue";
 import editquestion from "../components/questions/editquestion.vue";
 import confirm from "../components/general/confirm.vue";
-import { idealTextColor } from '../utils/utils';
+import { idealTextColor } from "../utils/utils";
 export default {
   data() {
     return {

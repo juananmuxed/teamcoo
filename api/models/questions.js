@@ -14,10 +14,17 @@ const questionSchema = new schema({
         type: String,
         required: [true, 'Required field']
     },
-    selections: {
-        type: Array
+    interests: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Interest'
+        }]
     },
-    _userId: {
+    text: {
+        type: String,
+        default: ''
+    },
+    creator: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
@@ -36,6 +43,6 @@ const questionSchema = new schema({
     }
 }, { timestamps: true })
 
-const question = mongoose.model('question', questionSchema)
+const question = mongoose.model('Question', questionSchema)
 
 module.exports = question

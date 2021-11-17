@@ -12,9 +12,9 @@ const interestschema = new schema({
     },
     color: {
         type: String,
-        default: 'grey'
+        default: '#B1B1B1'
     },
-    _userId: {
+    creator: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
@@ -25,6 +25,6 @@ const interestschema = new schema({
     },
 }, { timestamps: true })
 
-const interest = mongoose.model('Interests', interestschema)
+const interest = mongoose.model('Interest', interestschema)
 
 module.exports = interest

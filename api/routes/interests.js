@@ -8,6 +8,8 @@ router.post("/", auth, interestsController.createInterest)
 
 router.get("/", auth, interestsController.getAllInterests)
 
+router.get("/archived/:id", auth, interestsController.getAllInterestsArchived)
+
 router.get("/:id", auth, interestsController.getInterest)
 
 router.put("/:id", auth, interestsController.updateInterest)

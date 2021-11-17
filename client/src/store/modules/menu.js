@@ -174,7 +174,7 @@ const actions = {
     },
 
     notificationError({ commit }, error) {
-        if (error.response.data && error.response.data.message) {
+        if (error.response && error.response.data && error.response.data.message) {
             const color = error.response.status >= 400 ? 'error' : 'warning';
             commit('notification', [color, 0, error.response.data.message]);
         } else {
