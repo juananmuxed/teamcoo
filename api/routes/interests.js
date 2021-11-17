@@ -4,24 +4,16 @@ const router = express.Router();
 const auth = require("../controllers/auth")
 const interestsController = require("../controllers/interests")
 
-// Create Interest
+router.post("/", auth, interestsController.createInterest)
 
-router.post("/", auth , interestsController.createInterest )
+router.get("/", auth, interestsController.getAllInterests)
 
-// Get all Interests
+router.get("/:id", auth, interestsController.getInterest)
 
-router.get("/", auth , interestsController.getAllInterests)
+router.put("/:id", auth, interestsController.updateInterest)
 
-// Get Interest by id
+router.delete("/finally/:id", auth, interestsController.deleteInterest)
 
-router.get("/:id", auth , interestsController.getInterest)
-
-// Update Interest
-
-router.put("/:id", auth , interestsController.updateInterest)
-
-// Delete Interest
-
-router.delete("/:id", auth ,interestsController.deleteInterest)
+router.delete("/:id", auth, interestsController.deleteInterestSoft)
 
 module.exports = router;

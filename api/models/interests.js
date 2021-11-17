@@ -19,9 +19,9 @@ const interestschema = new schema({
         required: true,
         ref: 'User'
     },
-    active: {
+    deleted: {
         type: Boolean,
-        default: true
+        default: false
     },
 }, { timestamps: true })
 

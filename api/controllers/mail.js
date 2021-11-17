@@ -114,7 +114,7 @@ exports.sendMail = async (req, res) => {
                 await Mail.findByIdAndUpdate(mail._id, {
                     responseError: error.message
                 }, { new: true })
-                res.status(400).json({ message: error.message });
+                res.status(400).json({ message: error.message, error: error });
             } else {
                 await Mail.findByIdAndUpdate(mail._id, {
                     response: info,
@@ -126,6 +126,6 @@ exports.sendMail = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(400).json({ message: 'Email not sended: ' + error.message });
+        res.status(400).json({ message: 'Email not sended: ' + error.message, error: error });
     }
 }
