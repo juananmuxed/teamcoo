@@ -137,7 +137,7 @@ const actions = {
             commit('menu/cancelDialog', 'createtask', { root: true });
             commit('clearTaskForm');
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async loadTasks({ rootState, commit, dispatch }) {
@@ -175,7 +175,7 @@ const actions = {
             commit('tasksLoad', tasks);
             commit('changeLoading', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
             commit('changeLoading', false);
         }
     },
@@ -206,7 +206,7 @@ const actions = {
             commit('pullTask', task);
             commit('changeSkeleton', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
             commit('changeSkeleton', false);
         }
     },
@@ -235,7 +235,7 @@ const actions = {
             task.interests = tempInterests;
             commit('pullTask', task);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async saveEditedTask({ state, commit, dispatch, rootGetters }, id) {
@@ -265,7 +265,7 @@ const actions = {
             commit('clearTaskForm');
             commit('menu/notification', ['success', 5, 'Task edited'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async delTask({ commit, dispatch, rootGetters }, params) {
@@ -277,7 +277,7 @@ const actions = {
             commit('menu/notification', ['info', 3, 'Task Deleted'], { root: true });
             commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true })
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async saveMember({ commit, rootGetters, dispatch }, params) {
@@ -293,7 +293,7 @@ const actions = {
             commit('menu/notification', ['info', 4, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
             await dispatch('searchTask', resPut.data._id);
         } catch (error) {
-            commit('menu/notification', ['error', 5, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async saveMembers({ state, commit, dispatch, rootGetters }) {
@@ -307,7 +307,7 @@ const actions = {
             commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
             await dispatch('searchTask', res.data._id);
         } catch (error) {
-            commit('menu/notification', ['info', 10, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     }
 }

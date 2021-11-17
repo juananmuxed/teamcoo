@@ -182,7 +182,7 @@ const actions = {
         }
     },
 
-    async getLogosPage({ state, commit, rootState }) {
+    async getLogosPage({ state, commit, dispatch, rootState }) {
         try {
             let res = await Axios.get("/configuration/logos");
             if (res.data) {
@@ -197,11 +197,11 @@ const actions = {
             const favicon = document.getElementById("favicon");
             favicon.href = state.logos.favicon;
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getThemeColors({ commit }) {
+    async getThemeColors({ commit, dispatch }) {
         try {
             let res = await Axios.get("/configuration/colors");
             if (res.data) {
@@ -227,11 +227,11 @@ const actions = {
                 })
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getWebName({ commit }) {
+    async getWebName({ commit, dispatch }) {
         try {
             let res = await Axios.get("/configuration/web");
             if (res.data) {
@@ -240,11 +240,11 @@ const actions = {
                 commit('setWebName', { name: 'TeamCoo' })
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getFooterPages({ commit }) {
+    async getFooterPages({ commit, dispatch }) {
         try {
             let res = await Axios.get("/pages/");
             if (res.data) {
@@ -254,11 +254,11 @@ const actions = {
                 commit('setPagesFooter', [])
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getLateralPages({ commit }) {
+    async getLateralPages({ commit, dispatch }) {
         try {
             let res = await Axios.get("/pages/");
             if (res.data) {
@@ -268,7 +268,7 @@ const actions = {
                 commit('setPagesLateral', [])
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     }
 }

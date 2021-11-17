@@ -107,7 +107,7 @@ const getters = {
 }
 
 const actions = {
-    async loadUsers({ commit, rootState, rootGetters }) {
+    async loadUsers({ commit, rootState, rootGetters, dispatch }) {
         try {
             commit('changeLoading', true);
             let config = rootGetters['general/cookieAuth'];
@@ -144,11 +144,11 @@ const actions = {
             commit('usersLoad', users);
             commit('changeLoading', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
             commit('changeLoading', false);
         }
     },
-    async loadUsersSilent({ commit, rootState, rootGetters }) {
+    async loadUsersSilent({ commit, dispatch, rootState, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/', config),
@@ -166,10 +166,10 @@ const actions = {
             }
             commit('usersLoad', users);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async searchUser({ commit, rootGetters }, userId) {
+    async searchUser({ commit, dispatch, rootGetters }, userId) {
         try {
             commit('changeSkeleton', true);
             let config = rootGetters['general/cookieAuth'];
@@ -177,27 +177,27 @@ const actions = {
             commit('userLoad', res.data);
             commit('changeSkeleton', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
             commit('changeSkeleton', false);
         }
     },
-    async loadUserByID({ commit, rootGetters }, userId) {
+    async loadUserByID({ commit, dispatch, rootGetters }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get("/users/" + userId, config)
             commit('cleanTemporalUser');
             commit('temporaluser', res.data);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async loadUserData({ commit, rootGetters }, user) {
+    async loadUserData({ commit, dispatch, rootGetters }, user) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/' + user, config);
             commit('userToEdit', res.data);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async saveEditedData({ commit, rootState, rootGetters, dispatch }, user) {
@@ -217,7 +217,7 @@ const actions = {
             commit('userLoad', res.data);
         }
         catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async deleteUser({ rootState, commit, dispatch, rootGetters }, params) {
@@ -267,7 +267,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async saveCommonQuestions({ commit, rootGetters }, params) {
+    async saveCommonQuestions({ commit, rootGetters, dispatch }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let user = new Object;
@@ -277,7 +277,7 @@ const actions = {
             commit('menu/cancelDialog', 'editcommonquestion', { root: true });
             commit('userLoad', res.data);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     }
 }
