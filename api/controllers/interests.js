@@ -17,7 +17,6 @@ exports.createInterest = async (req, res) => {
 exports.getAllInterests = async (req, res) => {
     try {
         const interestDB = await Interests.find()
-        console.log(interestDB)
         res.json(interestDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
