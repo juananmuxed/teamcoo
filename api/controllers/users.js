@@ -3,8 +3,6 @@ const Token = require('../models/tokens')
 const bcrypt = require('bcryptjs');
 const mailer = require("../controllers/mail");
 
-// Async method to register
-
 exports.registerNewUser = async (req, res) => {
     try {
         let isUser = await User.find({ email: req.body.email });
@@ -40,8 +38,6 @@ exports.registerNewUser = async (req, res) => {
     }
 };
 
-// Async method to login
-
 exports.loginUser = async (req, res) => {
     try {
         const email = req.body.email;
@@ -61,8 +57,6 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-// Async method to return User
-
 exports.getUser = async (req, res) => {
     try {
         const _id = req.params.id;
@@ -75,8 +69,6 @@ exports.getUser = async (req, res) => {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
-
-// Async method to return Users
 
 exports.getUsers = async (req, res) => {
     try {
@@ -103,8 +95,6 @@ exports.getUsers = async (req, res) => {
     }
 }
 
-// Async method to update User
-
 exports.updateUser = async (req, res) => {
     try {
         const _id = req.params.id
@@ -125,8 +115,6 @@ exports.updateUser = async (req, res) => {
         res.status(400).json({ message: 'Error finding user id:', error });
     }
 }
-
-// Async method to update Password
 
 exports.updatePassword = async (req, res) => {
     try {
@@ -155,8 +143,6 @@ exports.updatePassword = async (req, res) => {
     }
 }
 
-// Function to delete user
-
 exports.deleteUser = async (req, res) => {
     try {
         const _id = req.params.id
@@ -182,8 +168,6 @@ exports.deleteUser = async (req, res) => {
 
 }
 
-// Function to delete user soft
-
 exports.deleteUserSoft = async (req, res) => {
     try {
         const _id = req.params.id
@@ -207,8 +191,6 @@ exports.deleteUserSoft = async (req, res) => {
     }
 
 }
-
-// Function to confirm token
 
 exports.confirmationEmail = (req, res) => {
 
@@ -235,8 +217,6 @@ exports.confirmationEmail = (req, res) => {
     })
 
 }
-
-// Function to external pass change
 
 exports.changepassexternal = async (req, res) => {
 
@@ -265,8 +245,6 @@ exports.changepassexternal = async (req, res) => {
 
 }
 
-// Function to send a change for pass
-
 exports.sendPassEmail = async (req, res) => {
     try {
         let user = await User.findOne({ email: req.body.email })
@@ -293,8 +271,6 @@ exports.sendPassEmail = async (req, res) => {
         res.status(500).json({ message: 'An error has ocurred', error })
     }
 }
-
-// Function to resend token
 
 exports.reSendConfirmation = async (req, res) => {
     try {
