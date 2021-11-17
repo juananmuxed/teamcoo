@@ -91,7 +91,7 @@ exports.getUsers = async (req, res) => {
         }
         res.status(201).json(datatemp)
     } catch (error) {
-        return res.status(400).json({ message: 'An error has occurred', error: error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
 
@@ -112,7 +112,7 @@ exports.updateUser = async (req, res) => {
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ message: 'Error finding user id:', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
 
@@ -139,7 +139,7 @@ exports.updatePassword = async (req, res) => {
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ message: 'Wrong password', error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
 
@@ -163,7 +163,7 @@ exports.deleteUser = async (req, res) => {
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ message: 'Invalid Credentials' });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 
 }
@@ -192,57 +192,52 @@ exports.deleteUserSoft = async (req, res) => {
 
 }
 
-exports.confirmationEmail = (req, res) => {
-
-    Token.findOne({ token: req.body.token }, (e, token) => {
+exports.confirmationEmail = async (req, res) => {
+    try {
+        let token = await Token.findOne({ token: req.body.token });
         if (!token) {
             return res.status(400).json({ message: 'Invalid token', type: "not-verified" })
         }
 
-        User.findOne({ _id: token._userId }, (e, user) => {
-
-            if (!user) {
-                return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
-            }
-            if (user.verifiedemail) {
-                return res.status(400).json({ message: 'You are already verified. This token is used.', type: "already-verified" })
-            }
-
-            user.verifiedemail = true;
-            user.save()
-            res.status(200).json({ message: 'Correct validation.', type: "correct" })
-
-        })
-
-    })
-
+        let user = await User.findOne({ _id: token._userId });
+        if (!user) {
+            return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
+        }
+        if (user.verifiedemail) {
+            return res.status(400).json({ message: 'You are already verified. This token is used.', type: "already-verified" })
+        }
+        user.verifiedemail = true;
+        await user.save()
+        res.status(200).json({ message: 'Correct validation.', type: "correct" })
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
 }
 
 exports.changepassexternal = async (req, res) => {
+    try {
+        let password = req.body.password
 
-    let password = req.body.password
+        if (!password) {
+            return res.status(400).json({ message: 'No password', type: "not-pass" })
+        }
 
-    if (!password) {
-        return res.status(400).json({ message: 'No password', type: "not-pass" })
-    }
-
-    Token.findOne({ token: req.body.token }, (e, token) => {
+        let token = await Token.findOne({ token: req.body.token });
         if (!token) {
             return res.status(400).json({ message: 'Invalid token', type: "not-verified" })
         }
 
-        User.findOne({ _id: token._userId }, (e, user) => {
-            if (!user) {
-                return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
-            }
+        let user = await User.findOne({ _id: token._userId });
+        if (!user) {
+            return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
+        }
 
-            user.password = password;
-            user.save()
-            res.status(200).json({ message: 'Correct password change.', type: "correct" })
-
-        })
-    })
-
+        user.password = password;
+        await user.save()
+        res.status(200).json({ message: 'Correct password change.', type: "correct" })
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
 }
 
 exports.sendPassEmail = async (req, res) => {
@@ -268,7 +263,7 @@ exports.sendPassEmail = async (req, res) => {
         })
         return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.', token: token });
     } catch (error) {
-        res.status(500).json({ message: 'An error has ocurred', error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
 
@@ -298,9 +293,8 @@ exports.reSendConfirmation = async (req, res) => {
                 }
             }
         })
-        return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.' });
+        res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.' });
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'An error has ocurred', error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
