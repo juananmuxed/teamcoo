@@ -53,6 +53,10 @@ const taskschema = new schema({
     color: {
         type: String,
         default: ''
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

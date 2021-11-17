@@ -3,24 +3,16 @@ const router = express.Router();
 const auth = require("../controllers/auth");
 const tasksController = require("../controllers/tasks");
 
-// Create task
-
-router.post("/", auth , tasksController.createTask );
-
-// Get all tasks
+router.post("/", auth, tasksController.createTask);
 
 router.get("/", tasksController.getAllTasks);
 
-// Get task by id
-
 router.get("/:id", tasksController.getTask)
 
-// Update task
+router.put("/:id", auth, tasksController.updateTask)
 
-router.put("/:id", auth , tasksController.updateTask)
+router.delete("/finally/:id", auth, tasksController.deleteTask)
 
-// Delete task
-
-router.delete("/:id", auth ,tasksController.deleteTask)
+router.delete("/:id", auth, tasksController.deleteTaskSoft)
 
 module.exports = router;
