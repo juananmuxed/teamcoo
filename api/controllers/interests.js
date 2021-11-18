@@ -1,5 +1,6 @@
 const Interests = require('../models/interests')
 const Questions = require('../models/questions')
+const User = require('../models/users')
 
 exports.createInterest = async (req, res) => {
     const body = req.body

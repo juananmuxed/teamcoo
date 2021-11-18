@@ -88,13 +88,13 @@
         </v-dialog>
         <v-dialog max-width="400" v-model="dialogs.confirm">
           <confirmation-template
-            :title="`Delete '${searchedInterest.name}'`"
+            :title="`Delete '${interest.name}'`"
             description="You are about to delete this Question. <br><br>Are you sure?"
             :cancelFunction="null"
             textButton="Delete"
             :actionparams="{
-              id: searchedInterest._id,
-              name: searchedInterest.name,
+              id: interest._id,
+              name: interest.name,
             }"
             :action="delInterestSoft"
           ></confirmation-template>
@@ -163,7 +163,7 @@ export default {
   computed: {
     ...mapState({
       interests: (state) => state.interests.interests,
-      searchedInterest: (state) => state.interests.searchedInterest,
+      interest: (state) => state.interests.interest,
       loginuser: (state) => state.user.loginuser,
       dialogs: (state) => state.menu.menu.dialogs,
       loading: (state) => state.interests.loading,
