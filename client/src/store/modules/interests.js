@@ -84,14 +84,10 @@ const actions = {
         }
     },
 
-    async createInterest({ commit, dispatch, rootGetters }, interest) {
+    async createInterest({ state, commit, dispatch, rootGetters }, id) {
         try {
-            let body = {
-                name: interest.name,
-                description: interest.description,
-                creator: interest.creatorId,
-                color: interest.color
-            };
+            let body = state.interestForm;
+            body.creator = id;
             let config = rootGetters['general/cookieAuth'];
             await Axios.post('/interests/', body, config);
             await dispatch('loadInterests');
@@ -106,15 +102,10 @@ const actions = {
     async saveEditedInterest({ state, commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let body = {
-                name: state.interestForm.name,
-                description: state.interestForm.description,
-                color: state.interestForm.color
-            }
-            await Axios.put('/interests/' + id, body, config);
+            await Axios.put('/interests/' + id, state.interestForm, config);
             commit('menu/cancelDialog', 'editinterest', { root: true });
             await dispatch('loadInterests');
-            commit('menu/notification', ['info', 3, 'Interest saved'], { root: true });
+            commit('menu/notification', ['info', 3, 'Interest saved correctly'], { root: true });
             commit('clearInterestForm');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
