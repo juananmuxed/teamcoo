@@ -83,6 +83,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async createInterest({ commit, dispatch, rootGetters }, interest) {
         try {
             let body = {
@@ -95,11 +96,13 @@ const actions = {
             await Axios.post('/interests/', body, config);
             await dispatch('loadInterests');
             commit('menu/cancelDialog', 'createinterest', { root: true });
+            commit('menu/notification', ['info', 3, 'Interest created correctly'], { root: true });
             commit('clearInterestForm');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async saveEditedInterest({ state, commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
@@ -117,6 +120,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async delInterest({ commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth']
@@ -128,6 +132,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async delInterestSoft({ commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth']
@@ -140,13 +145,11 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async searchInterest({ state, commit, dispatch, rootGetters }, id) {
+
+    async searchInterest({ state, commit, dispatch }, interest) {
         try {
             commit('clearInterestForm')
             state.interestForm.loading = true
-            let config = rootGetters['general/cookieAuth']
-            let res = await Axios.get('/interests/' + id, config)
-            let interest = res.data
             commit('loadEditedInterest', interest)
             setTimeout(() => {
                 state.interestForm.loading = false;

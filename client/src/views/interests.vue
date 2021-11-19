@@ -58,7 +58,7 @@
               small
               color="info"
               @click="
-                searchInterest(item._id);
+                searchInterest(item);
                 dialogs.editinterest = true;
               "
               class="mx-1"
@@ -72,7 +72,7 @@
               small
               color="error"
               @click="
-                searchInterest(item._id);
+                searchInterest(item);
                 dialogs.confirm = true;
               "
               class="mx-1"
