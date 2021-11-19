@@ -3,18 +3,24 @@ const Interests = require('../models/interests');
 
 exports.createQuestion = async (req, res) => {
     try {
-        let body = req.body
-        let isQuestion = await Questions.find({ name: body.name });
-        if (isQuestion.length >= 1) {
+        let body = req.body;
+        let question = await Questions.find({ name: body.name });
+        if (question.length >= 1) {
             return res.status(409).json({ message: "This question already exist" });
         }
         for (let i = 0; i < body.interests.length; i++) {
-            let interest = await Interests.create({
-                name: body.interests[i],
-                description: 'Created for "' + body.interests[i] + '" question.',
-                creator: body.creator
-            })
-            body.interests[i] = interest._id
+            let interestName = body.interests[i];
+            let interest = await Interests.findOne({ name: interestName });
+            if (interest) {
+                body.interests[i] = interest._id;
+            } else {
+                interest = await Interests.create({
+                    name: interestName,
+                    description: 'Created for "' + body.name + '" question.',
+                    creator: body.creator
+                });
+                body.interests[i] = interest._id;
+            }
         }
         const questionsDB = await Questions.create(body)
         res.json(questionsDB)
@@ -38,7 +44,6 @@ exports.loadQuestion = async (req, res) => {
 exports.loadAllQuestions = async (req, res) => {
     try {
         const questionsDB = await Questions.find({ deleted: false }).populate('creator').populate('interests')
-        console.log(questionsDB)
         res.json(questionsDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
@@ -46,10 +51,27 @@ exports.loadAllQuestions = async (req, res) => {
 }
 
 exports.updateQuestion = async (req, res) => {
-    const _id = req.params.id
-    const body = req.body
-
     try {
+        const _id = req.params.id
+        let body = req.body;
+        let question = await Questions.findById(req.params.id);
+        if (question.length >= 1) {
+            return res.status(409).json({ message: "This question already exist" });
+        }
+        for (let i = 0; i < body.interests.length; i++) {
+            let interestName = body.interests[i];
+            let interest = await Interests.findOne({ name: interestName });
+            if (interest) {
+                body.interests[i] = interest._id;
+            } else {
+                interest = await Interests.create({
+                    name: interestName,
+                    description: 'Created for "' + body.name + '" question.',
+                    creator: question.creator
+                });
+                body.interests[i] = interest._id;
+            }
+        }
         const questionDb = await Questions.findByIdAndUpdate(_id, body, { new: true })
         res.json(questionDb)
     } catch (error) {

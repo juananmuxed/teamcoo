@@ -1,5 +1,4 @@
 import Axios from 'axios'
-import Vue from 'vue'
 import { generateRandomColor } from '../../utils/utils'
 
 const state = {
@@ -8,10 +7,12 @@ const state = {
     interest: {},
     interestTemp: {},
     interestForm: {
-        name: '',
+        interest: {
+            name: '',
+            description: '',
+            color: ''
+        },
         loading: false,
-        description: '',
-        color: ''
     },
     loading: false
 }
@@ -20,22 +21,17 @@ const mutations = {
     loadInterests: (state, interests) => {
         state.interests = interests;
     },
-    loadTempInterest: (state, interest) => {
-        Vue.set(state, 'interestTemp', interest);
-    },
     clearInterestForm: (state) => {
-        state.interestForm.name = '';
-        state.interestForm.description = '';
-        state.interestForm.color = '';
+        state.interestForm.interest.name = '';
+        state.interestForm.interest.description = '';
+        state.interestForm.interest.color = '';
     },
     randomInterestColor: (state) => {
-        state.interestForm.color = generateRandomColor(30);
+        state.interestForm.interest.color = generateRandomColor(30);
     },
     loadEditedInterest: (state, interest) => {
-        state.interest = interest;
-        state.interestForm.name = interest.name;
-        state.interestForm.description = interest.description;
-        state.interestForm.color = interest.color;
+        state.interest = Object.assign({}, interest);
+        state.interestForm.interest = Object.assign({}, interest);
     },
     changeLoading: (state) => {
         state.loading = !state.loading;
@@ -45,9 +41,9 @@ const mutations = {
 const getters = {
     validInterest: (state) => {
         if (
-            state.interestForm.name != '' &&
-            state.interestForm.type != '' &&
-            state.interestForm.description.length <= 380
+            state.interestForm.interest.name != '' &&
+            state.interestForm.interest.type != '' &&
+            state.interestForm.interest.description.length <= 380
         ) {
             return false
         }
@@ -57,9 +53,9 @@ const getters = {
     },
     isEditedInterest: (state) => {
         if (
-            state.interestForm.name != state.interest.name ||
-            state.interestForm.description != state.interest.description ||
-            state.interestForm.color.toUpperCase() != state.interest.color.toUpperCase()
+            state.interestForm.interest.name != state.interest.name ||
+            state.interestForm.interest.description != state.interest.description ||
+            state.interestForm.interest.color.toUpperCase() != state.interest.color.toUpperCase()
         ) {
             return true
         }

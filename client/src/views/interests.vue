@@ -53,34 +53,54 @@
             </v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn
-              depressed
-              small
-              color="info"
-              @click="
-                searchInterest(item);
-                dialogs.editinterest = true;
-              "
-              class="mx-1"
-              v-if="item.creator._id == loginuser.id"
+            <v-tooltip
+              top
+              transition="slide-y-reverse-transition"
+              open-delay="100"
             >
-              Edit
-              <v-icon x-small class="ml-1">fas fa-edit</v-icon>
-            </v-btn>
-            <v-btn
-              depressed
-              small
-              color="error"
-              @click="
-                searchInterest(item);
-                dialogs.confirm = true;
-              "
-              class="mx-1"
-              v-if="loginuser.rol.value == 'admin'"
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  fab
+                  x-small
+                  v-on="on"
+                  color="info"
+                  @click="
+                    searchInterest(item);
+                    dialogs.editinterest = true;
+                  "
+                  class="mx-1"
+                  v-if="item.creator._id == loginuser.id"
+                >
+                  <v-icon x-small>fas fa-edit</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-right font-weight-light">Edit</span>
+            </v-tooltip>
+            <v-tooltip
+              top
+              transition="slide-y-reverse-transition"
+              open-delay="100"
             >
-              Delete
-              <v-icon x-small class="ml-1">fas fa-trash</v-icon>
-            </v-btn>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  fab
+                  x-small
+                  v-on="on"
+                  color="error"
+                  @click="
+                    searchInterest(item);
+                    dialogs.confirm = true;
+                  "
+                  class="mx-1"
+                  v-if="loginuser.rol.value == 'admin'"
+                >
+                  <v-icon x-small>fas fa-trash</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-right font-weight-light">Delete</span>
+            </v-tooltip>
           </template>
         </v-data-table>
         <v-dialog v-model="dialogs.editinterest" max-width="650">
@@ -101,31 +121,35 @@
         </v-dialog>
       </v-col>
     </v-row>
-    <v-row
-      class="px-3"
+    <v-dialog
+      max-width="650"
+      v-model="dialogs.createinterest"
       v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
     >
-      <v-col>
-        <v-dialog max-width="650" v-model="dialogs.createinterest">
-          <template v-slot:activator="{ on }">
+      <template v-slot:activator="{ on: onDialog }">
+        <v-tooltip transition="slide-x-transition" open-delay="100" right>
+          <template v-slot:activator="{ on: onTooltip }">
             <v-btn
-              height="160"
-              v-on="on"
-              block
+              v-on="{ ...onDialog, ...onTooltip }"
+              fab
+              left
+              top
+              absolute
               color="info"
-              class="my-2"
+              class="mt-12 ml-2"
               @click="
                 clearInterestForm();
                 randomInterestColor();
               "
             >
-              <v-icon left>fas fa-address-card</v-icon>Create Interest
+              <v-icon>fas fa-address-card</v-icon>
             </v-btn>
           </template>
-          <create-interest></create-interest>
-        </v-dialog>
-      </v-col>
-    </v-row>
+          <span class="text-right caption font-weight-light">Create new</span>
+        </v-tooltip>
+      </template>
+      <create-interest></create-interest>
+    </v-dialog>
   </v-container>
 </template>
 

@@ -3,7 +3,10 @@
     <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
       >Common questions</v-card-title
     >
-    <v-row v-for="(question, index) in commonQuestions" v-bind:key="index">
+    <v-row
+      v-for="(question, index) in questions.filter((q) => q.common)"
+      v-bind:key="index"
+    >
       <v-col
         class="display-1 text-uppercase font-weight-thin"
         cols="12"
@@ -16,7 +19,7 @@
           small
           color="error"
           @click="
-            searchQuestion(question._id);
+            searchQuestion(question);
             dialogs.confirm = true;
           "
           class="mx-1 float-right"
@@ -28,7 +31,7 @@
           small
           color="info"
           @click="
-            searchQuestion(question._id);
+            searchQuestion(question);
             dialogs.editquestion = true;
           "
           class="mx-1 float-right"
@@ -53,14 +56,14 @@
           >
           <v-col cols="12" class="mt-2 headline" v-else>Question</v-col>
           <v-col cols="12" md="6" v-if="question.type == 'text'" class="py-1">
-            {{ question.selections[0] }}
+            {{ question.text }}
           </v-col>
           <v-col cols="12" v-else class="py-1">
             <v-chip
               :color="answer.color"
               :text-color="textColor(answer.color)"
               small
-              v-for="(answer, index) in question.selections"
+              v-for="(answer, index) in question.interests"
               v-bind:key="index"
               class="ma-1"
               >{{ answer.name }}</v-chip
@@ -84,7 +87,7 @@
               <v-select
                 class="px-5"
                 outlined
-                :items="question.selections"
+                :items="question.interests"
                 item-text="name"
                 :label="question.name"
                 :hint="question.description"
@@ -101,7 +104,7 @@
               <v-autocomplete
                 no-data-text="Not a valid search"
                 class="px-5"
-                :items="question.selections"
+                :items="question.interests"
                 multiple
                 :label="question.name"
                 item-text="name"
@@ -121,7 +124,7 @@
                 <v-col cols="6" md="4" class="py-0">
                   <v-radio-group column>
                     <v-radio
-                      v-for="(radio, index) in question.selections"
+                      v-for="(radio, index) in question.interests"
                       v-bind:key="index"
                       outlined
                       :label="radio.name"
@@ -140,7 +143,7 @@
               <v-card-subtitle>{{ question.description }}</v-card-subtitle>
               <v-text-field
                 class="px-5"
-                :label="question.selections[0]"
+                :label="question.text"
                 outlined
                 color="primary"
               ></v-text-field>
@@ -148,7 +151,7 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-divider inset v-if="index < commonQuestions.length - 1"></v-divider>
+      <v-divider inset v-if="index < questions.length - 1"></v-divider>
     </v-row>
     <v-row>
       <v-dialog max-width="650" v-model="dialogs.createquestion">
@@ -175,11 +178,11 @@
     </v-dialog>
     <v-dialog max-width="400" v-model="dialogs.confirm">
       <confirmation-template
-        :title="`Delete '${searchedQuestion.name}'`"
+        :title="`Delete '${question.name}'`"
         description="You are about to delete this Question. <br><br>Are you sure?"
         :cancelFunction="null"
         textButton="Delete"
-        :actionparams="{ id: searchedQuestion._id }"
+        :actionparams="{ id: question._id }"
         :action="delQuestion"
       ></confirmation-template>
     </v-dialog>
@@ -200,9 +203,9 @@ export default {
   },
   computed: {
     ...mapState({
-      commonQuestions: (state) => state.questions.commonQuestions,
+      questions: (state) => state.questions.questions,
       questionForm: (state) => state.questions.questionForm,
-      searchedQuestion: (state) => state.questions.searchedQuestion,
+      question: (state) => state.questions.question,
       dialogs: (state) => state.menu.menu.dialogs,
       rules: (state) => state.general.rules,
     }),
