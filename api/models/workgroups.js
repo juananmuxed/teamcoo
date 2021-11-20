@@ -22,7 +22,7 @@ const workgroupScheme = new schema({
         type: mongoose.Schema.Types.ObjectId,
         default: null
     },
-    _userId: {
+    creator: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
@@ -32,7 +32,10 @@ const workgroupScheme = new schema({
         default: true
     },
     questions: {
-        type: Array,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Question'
+        }],
         required: true
     },
     dossier: {
@@ -48,11 +51,17 @@ const workgroupScheme = new schema({
         default: false
     },
     coordinators: {
-        type: Array,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
         default: []
     },
     members: {
-        type: Array,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
         default: []
     },
     deleted: {
@@ -61,6 +70,6 @@ const workgroupScheme = new schema({
     }
 }, { timestamps: true })
 
-const workgroup = mongoose.model('workgroup', workgroupScheme)
+const workgroup = mongoose.model('Workgroup', workgroupScheme)
 
 module.exports = workgroup

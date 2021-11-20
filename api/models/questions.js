@@ -18,7 +18,8 @@ const questionSchema = new schema({
         type: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Interest'
-        }]
+        }],
+        required: true
     },
     text: {
         type: String,

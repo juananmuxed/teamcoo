@@ -1,5 +1,7 @@
 const Questions = require('../models/questions');
 const Interests = require('../models/interests');
+const Workgroups = require('../models/workgroups');
+const User = require('../models/users');
 
 exports.createQuestion = async (req, res) => {
     try {
@@ -83,19 +85,27 @@ exports.deleteQuestionSoft = async (req, res) => {
     const _id = req.params.id
 
     try {
-        const questionDb = await Questions.findByIdAndUpdate(_id, { deleted: true }, { new: true })
-        res.json(questionDb)
+        const questionDb = await Questions.findByIdAndUpdate(_id, { deleted: true }, { new: true });
+        await Workgroups.updateMany({}, { $pull: { questions: _id } });
+        res.json(questionDb);
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred', error: error })
+        res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }
 
 exports.deleteQuestion = async (req, res) => {
     const _id = req.params.id
     try {
-        const questionDb = await Questions.findByIdAndDelete({ _id })
-        res.json(questionDb)
+        const email = req.body.email;
+        const password = req.body.password;
+        const user = await User.findByCredentials(email, password);
+        if (user instanceof Error) {
+            return res.status(409).json({ message: user.message });
+        }
+        const questionDb = await Questions.findByIdAndDelete({ _id });
+        await Workgroups.updateMany({}, { $pull: { questions: _id } });
+        res.json(questionDb);
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred', error: error })
+        res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }

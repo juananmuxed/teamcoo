@@ -33,7 +33,7 @@
             </v-tooltip>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip class="mx-1" :to="'/users/' + item._userId">
+            <v-chip class="mx-1" :to="'/users/' + item._id">
               <v-avatar left v-if="item.creator.image != ''"
                 ><v-img :src="item.creator.image"></v-img
               ></v-avatar>
@@ -126,7 +126,7 @@
             :cancelFunction="null"
             textButton="Delete"
             :actionparams="{ id: question._id }"
-            :action="delQuestion"
+            :action="delQuestionSoft"
           ></confirmation-template>
         </v-dialog>
       </v-col>
@@ -206,7 +206,7 @@ export default {
   methods: {
     ...mapActions("questions", [
       "loadQuestions",
-      "delQuestion",
+      "delQuestionSoft",
       "searchQuestion",
     ]),
     ...mapMutations("questions", ["clearquestionForm", "loadEditedQuestion"]),

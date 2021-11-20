@@ -33,7 +33,7 @@
             </v-tooltip>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip class="mx-1" :to="'/users/' + item._userId">
+            <v-chip class="mx-1" :to="'/users/' + item._id">
               <v-avatar left v-if="item.creator.image != ''"
                 ><v-img :src="item.creator.image"></v-img
               ></v-avatar>

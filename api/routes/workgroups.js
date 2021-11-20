@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../controllers/auth")
-const workgingGroupsController = require("../controllers/workinggroups")
+const workgingGroupsController = require("../controllers/workgroups")
 
 router.post("/", auth, workgingGroupsController.createWorkgroup);
 

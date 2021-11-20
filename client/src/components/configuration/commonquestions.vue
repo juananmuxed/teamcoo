@@ -183,7 +183,7 @@
         :cancelFunction="null"
         textButton="Delete"
         :actionparams="{ id: question._id }"
-        :action="delQuestion"
+        :action="delQuestionSoft"
       ></confirmation-template>
     </v-dialog>
   </v-card>
@@ -213,7 +213,7 @@ export default {
   methods: {
     ...mapActions("questions", [
       "searchQuestion",
-      "delQuestion",
+      "delQuestionSoft",
       "loadQuestions",
     ]),
     ...mapMutations("questions", ["clearquestionForm", "checkCommonQuestion"]),

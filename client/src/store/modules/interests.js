@@ -107,13 +107,13 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-
+    // Not implemented TODO: add User data to body and table to work
     async delInterest({ commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth']
             await Axios.delete('/interests/finally/' + params.id, config);
             await dispatch('loadInterests');
-            commit('menu/notification', ['info', 3, 'Interest permanently removed '], { root: true });
+            commit('menu/notification', ['info', 3, 'Interest permanently removed'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
@@ -124,7 +124,6 @@ const actions = {
         try {
             let config = rootGetters['general/cookieAuth']
             await Axios.delete('/interests/' + params.id, config);
-
             await dispatch('loadInterests');
             commit('menu/notification', ['info', 3, 'Interest removed'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });

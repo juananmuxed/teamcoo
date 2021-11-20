@@ -122,22 +122,25 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-
+    // Not implemented TODO: add User data to body and table to work
     async delQuestion({ commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth']
-            let res = await Axios.get('/workgroups/', config);
-            let workgroups = res.data;
-            for (let i = 0; i < workgroups.length; i++) {
-                let questions = workgroups[i].questions;
-                if (questions.some(a => a == params.id)) {
-                    let questionsUpdate = questions.filter(a => a != params.id)
-                    await Axios.put('/workgroups/' + workgroups[i]._id, { questions: questionsUpdate }, config);
-                }
-            }
+            await Axios.delete('/questions/finally/' + params.id, config);
+            await dispatch('loadQuestions');
+            commit('menu/notification', ['info', 3, 'Question permanently removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async delQuestionSoft({ commit, dispatch, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth']
             await Axios.delete('/questions/' + params.id, config);
             await dispatch('loadQuestions');
-            commit('menu/notification', ['info', 3, 'Question Deleted'], { root: true });
+            commit('menu/notification', ['info', 3, 'Question removed'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
