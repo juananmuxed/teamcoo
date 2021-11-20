@@ -13,6 +13,7 @@ const spacesPattern = /\s/
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 const state = {
+    loading: true,
     rules: {
         required: v => !!v || 'Required',
         maxSize: v => !v || v.size < 5 * 1024 * 1024 || 'Dossier size should be less than 5 MB!',
@@ -121,6 +122,9 @@ const state = {
 }
 
 const mutations = {
+    changeLoadingApp: (state) => {
+        state.loading = !state.loading
+    },
     setEmailConfig: (state, config) => {
         state.config.email.host = config.host;
         state.config.email.port = config.port;

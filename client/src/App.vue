@@ -1,5 +1,18 @@
 <template>
   <v-app>
+    <v-overlay
+      opacity="1"
+      :color="this.loginuser.dark ? 'black' : 'white'"
+      :z-index="9999"
+      :value="loading"
+    >
+      <div class="text-center">
+        <v-progress-circular
+          indeterminate
+          :color="!this.loginuser.dark ? 'black' : 'white'"
+        ></v-progress-circular>
+      </div>
+    </v-overlay>
     <lateral-menu></lateral-menu>
     <toolbar-top></toolbar-top>
     <v-content v-scroll="onScroll">
@@ -64,20 +77,24 @@ export default {
   },
   computed: {
     ...mapState({
+      loading: (state) => state.general.loading,
       menu: (state) => state.menu.menu,
       snackbar: (state) => state.menu.snackbar,
       loginuser: (state) => state.user.loginuser,
     }),
   },
 
-  created() {
-    this.getThemeColors();
+  async created() {
     Vuetify.framework.theme.dark = this.loginuser.dark;
+    await this.getThemeColors();
+    await this.getLogosPage();
+    this.changeLoadingApp();
   },
 
   methods: {
     ...mapMutations("menu", ["onScroll"]),
-    ...mapActions("menu", ["getThemeColors", "getWebName"]),
+    ...mapMutations("general", ["changeLoadingApp"]),
+    ...mapActions("menu", ["getThemeColors", "getLogosPage"]),
   },
 };
 </script>
