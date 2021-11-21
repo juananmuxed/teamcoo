@@ -46,6 +46,9 @@
           <template v-slot:item.type="{ item }">
             <span class="text-uppercase">{{ item.type }}</span>
           </template>
+          <template v-slot:item.common="{ item }">
+            <v-switch v-model="item.common" inset disabled></v-switch>
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-tooltip
               top
@@ -183,6 +186,7 @@ export default {
           width: 20,
         },
         { text: "Type", value: "type", sortable: false, width: 20 },
+        { text: "Common", value: "common", sortable: false, width: 20 },
         { text: "Answers", value: "selections", sortable: false, width: 100 },
         { text: "Creator", value: "creator", sortable: false, width: 30 },
         { text: "", value: "actions", sortable: false, width: 20 },

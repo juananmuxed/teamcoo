@@ -153,26 +153,35 @@
       </v-col>
       <v-divider inset v-if="index < questions.length - 1"></v-divider>
     </v-row>
-    <v-row>
-      <v-dialog max-width="650" v-model="dialogs.createquestion">
-        <template v-slot:activator="{ on }">
-          <v-btn
-            height="160"
-            v-on="on"
-            block
-            color="primary"
-            class="my-2"
-            @click="
-              clearquestionForm();
-              checkCommonQuestion();
-            "
-          >
-            <v-icon left>fas fa-question</v-icon>Create Common Question
-          </v-btn>
-        </template>
-        <create-question></create-question>
-      </v-dialog>
-    </v-row>
+    <v-dialog max-width="650" v-model="dialogs.createinterest">
+      <template v-slot:activator="{ on: onDialog }">
+        <v-tooltip
+          transition="slide-x-reverse-transition"
+          open-delay="100"
+          left
+        >
+          <template v-slot:activator="{ on: onTooltip }">
+            <v-btn
+              v-on="{ ...onDialog, ...onTooltip }"
+              fab
+              right
+              top
+              absolute
+              color="info"
+              class="mt-12 mr-2"
+              @click="
+                clearquestionForm();
+                checkCommonQuestion();
+              "
+            >
+              <v-icon>fas fa-question</v-icon>
+            </v-btn>
+          </template>
+          <span class="text-right caption font-weight-light">Create new</span>
+        </v-tooltip>
+      </template>
+      <create-question></create-question>
+    </v-dialog>
     <v-dialog v-model="dialogs.editquestion" max-width="650">
       <edit-question></edit-question>
     </v-dialog>

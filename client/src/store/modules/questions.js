@@ -44,7 +44,7 @@ const mutations = {
         state.questions = questions;
     },
     checkCommonQuestion: (state) => {
-        state.questionForm.common = true
+        state.questionForm.question.common = true
     },
     updateCommonQuestions: (state, questions) => {
         state.commonQuestions = questions
