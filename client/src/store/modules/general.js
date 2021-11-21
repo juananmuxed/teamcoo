@@ -13,6 +13,7 @@ const spacesPattern = /\s/
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 const state = {
+    loading: true,
     rules: {
         required: v => !!v || 'Required',
         maxSize: v => !v || v.size < 5 * 1024 * 1024 || 'Dossier size should be less than 5 MB!',
@@ -121,6 +122,9 @@ const state = {
 }
 
 const mutations = {
+    changeLoadingApp: (state) => {
+        state.loading = !state.loading
+    },
     setEmailConfig: (state, config) => {
         state.config.email.host = config.host;
         state.config.email.port = config.port;
@@ -153,6 +157,9 @@ const mutations = {
     },
     setTemporalPage: (state, page) => {
         Vue.set(state.config, 'searchedPage', page)
+    },
+    setConfig: (state, config) => {
+        Vue.set(state.pagesValues, config.name, config.value);
     }
 }
 
@@ -194,7 +201,7 @@ const actions = {
         }
     },
 
-    async searchEmailConfig({ commit, getters }) {
+    async searchEmailConfig({ commit, getters, dispatch }) {
         try {
             let config = getters.cookieAuth;
             let res = await Axios.get("/configuration/emails", config);
@@ -203,54 +210,50 @@ const actions = {
             }
             commit('setEmailConfig', res.data.values)
         } catch (error) {
-            if (error.message != 1) {
-                commit('menu/notification', ['error', 3, error], { root: true });
-            }
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
-    async saveEmailConfig({ state, commit, getters }) {
+    async saveEmailConfig({ state, commit, getters, dispatch }) {
         try {
             let config = getters.cookieAuth;
             let res = await Axios.get('/configuration/emails', config)
             if (!res.data) {
-                res = await Axios.post('/configuration/', { name: 'emails', values: state.config.email, protected: true }, config)
+                res = await Axios.post('/configuration/', { name: 'emails', values: state.config.email }, config)
             } else {
                 res = await Axios.put('/configuration/emails', { values: state.config.email, date: new Date() }, config);
             }
             commit('setEmailConfig', res.data.values);
             commit('menu/notification', ['success', 3, 'Email configuration saved'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
-    async searchConfig({ state, commit, getters }, page) {
+    async searchConfig({ commit, getters, dispatch }, page) {
         try {
             let config = getters.cookieAuth;
             let res = await Axios.get("/configuration/" + page.value, config);
             if (!res.data) {
                 throw new Error(1);
             }
-            Vue.set(state.pagesValues, res.data.name, res.data.value);
+            commit('setConfig', res.data);
         } catch (error) {
-            if (error.message != 1) {
-                commit('menu/notification', ['error', 3, error], { root: true });
-            }
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
-    async saveConfig({ commit, getters }, configuration) {
+    async saveConfig({ getters, dispatch }, configuration) {
         try {
             let config = getters.cookieAuth;
             let res = await Axios.get("/configuration/" + configuration.name, config);
             if (!res.data) {
-                res = await Axios.post('/configuration/', { name: configuration.name, values: configuration.values }, config);
+                await Axios.post('/configuration/', { name: configuration.name, values: configuration.values }, config);
             } else {
-                res = await Axios.put('/configuration/' + configuration.name, { values: configuration.values, date: new Date() }, config);
+                await Axios.put('/configuration/' + configuration.name, { values: configuration.values, date: new Date() }, config);
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
@@ -277,7 +280,7 @@ const actions = {
             commit('menu/clearLogos', null, { root: true });
             commit('menu/notification', ['success', 3, 'Configuration saved successfully'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
@@ -303,11 +306,11 @@ const actions = {
             dispatch('menu/getLateralPages', null, { root: true });
             commit('menu/notification', ['success', 3, 'Static page ' + res.data.title + ' saved'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
-    async sendTestEmail({ state, commit, getters }) {
+    async sendTestEmail({ state, commit, getters, dispatch }) {
         try {
             let config = getters.cookieAuth;
             commit('changeSending');
@@ -320,12 +323,12 @@ const actions = {
             commit('menu/notification', ['success', 3, 'Test mail sended'], { root: true });
             commit('changeSending');
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
             commit('changeSending');
         }
     },
 
-    async getStaticPages({ commit, getters }) {
+    async getStaticPages({ commit, getters, dispatch }) {
         try {
             let config = getters.cookieAuth;
             let res = await Axios.get("/pages/protected", config);
@@ -333,11 +336,11 @@ const actions = {
                 commit('setPages', res.data)
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
-    async searchPage({ state, commit }, slug) {
+    async searchPage({ state, commit, dispatch }, slug) {
         try {
             let res = await Axios.get("/pages/");
             let page = res.data.find((page) => page.slug == slug)
@@ -346,7 +349,7 @@ const actions = {
             }
             commit('setPage', page)
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
@@ -358,11 +361,11 @@ const actions = {
             commit('menu/cancelDialog', 'confirm', { root: true });
             commit('menu/notification', ['success', 3, 'Static page deleted'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
-    async getPage({ state, commit }, position) {
+    async getPage({ state, commit, dispatch }, position) {
         try {
             let res = await Axios.get("/pages/");
             let page = res.data.find((page) => page.position == position)
@@ -374,7 +377,7 @@ const actions = {
             }
             commit('setPageSpecial', { position: position, page: page })
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 }

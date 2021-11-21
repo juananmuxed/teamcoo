@@ -153,19 +153,22 @@ const getters = {
 }
 
 const actions = {
-    async signup({ state, commit, rootGetters }) {
+    async signup({ state, commit, dispatch, rootGetters }) {
         try {
             commit('changeSending');
             let user = state.newuser
             if (state.newuser.bevolunteer) {
                 user.rol = { name: 'Volunteer', value: 'volu' }
             }
-            user.username = state.newuser.firstname.toLowerCase() + '_' + state.newuser.lastname.toLowerCase()
+            user.username = state.newuser.firstname.toLowerCase();
             let response = await Axios.post('/users/signup', user);
             let token = response.data.token;
             if (token) {
                 Cookies.set('catapa-jwt', token, { expires: 30 });
+                commit('userStore', { data: response.data.data });
                 let config = rootGetters['general/cookieAuth'];
+                router.push('/dashboard');
+
                 await Axios.post("/mail/send", {
                     sendTo: response.data.data.email,
                     userTo: response.data.data.firstname,
@@ -174,18 +177,16 @@ const actions = {
                     variables: { recoveryUrlPass: window.location.origin + '/validation/' + token, name: response.data.data.firstname + ' ' + response.data.data.lastname }
                 }, config);
 
-                commit('userStore', { data: response.data.data });
                 commit('changeSending');
-                router.push('/dashboard');
                 commit('menu/notification', ['success', 3, 'Correct registration. Welcome to Catapa, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
             }
         }
         catch (error) {
             commit('changeSending');
-            commit('menu/notification', ['error', 5, 'Error: ' + error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async login({ commit }) {
+    async login({ commit, dispatch }) {
         try {
             let response = await Axios.post('/users/login', state.user)
             let token = response.data.token;
@@ -201,20 +202,20 @@ const actions = {
             else {
                 commit('menu/notification', ['error', 3, 'Server error. Try again.'], { root: true });
             }
-        } catch (err) {
-            commit('menu/notification', ['error', 3, 'Incorrect login.'], { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true })
         }
     },
-    async refreshLoadedUser({ state, commit, rootGetters }) {
+    async refreshLoadedUser({ state, commit, dispatch, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/' + state.loginuser.id, config)
             commit('userStore', { data: res.data });
-        } catch (err) {
-            commit('menu/notification', ['error', 3, 'Error'], { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true })
         }
     },
-    async logOut({ commit }) {
+    async logOut({ commit, dispatch }) {
         try {
             Cookies.remove('catapa-jwt')
             Cookies.remove('teamcoo-catapa-userdata')
@@ -222,11 +223,11 @@ const actions = {
             commit('clearUser')
             router.push('/');
             commit('menu/notification', ['success', 3, 'You are correctly log out.'], { root: true })
-        } catch (err) {
-            commit('menu/notification', ['error', 3, 'Error: Something Went Wrong.'], { root: true })
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true })
         }
     },
-    async changePasswordNotLogged({ state, commit }, token) {
+    async changePasswordNotLogged({ state, commit, dispatch }, token) {
         try {
             let data = {
                 token: token,
@@ -236,10 +237,10 @@ const actions = {
             commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true });
             router.push('/login');
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true })
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async sendResetPassMail({ commit }, email) {
+    async sendResetPassMail({ commit, dispatch }, email) {
         try {
             await Axios.post('/tokens/sendpassemail', {
                 email: email,
@@ -248,32 +249,21 @@ const actions = {
             commit('menu/notification', ['primary', 3, 'An email send to ' + email + '. Please check your account.'], { root: true })
             router.push('/')
         } catch (error) {
-            commit('menu/notification', ['error', 3, 'Something Went Wrong: ' + error.response.data.message], { root: true })
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async sendVerificationMail({ commit }, email) {
+    async sendVerificationMail({ commit, dispatch }, email) {
         try {
             commit('changeSending');
             await Axios.post('/tokens/resend', { email: email, name: state.loginuser.firstname, url: window.location.origin + '/validation/' })
             commit('changeSending');
             commit('menu/notification', ['primary', 3, 'Verification email send to ' + email + '. Please check your account.'], { root: true });
         } catch (error) {
-            let color = ''
-            switch (error.response.data.type) {
-                case 'not-verified':
-                    color = 'error'
-                    break;
-                case 'not-user':
-                    color = 'error'
-                    break;
-                default:
-                    break;
-            }
             commit('changeSending');
-            commit('menu/notification', [color, 3, 'Something Went Wrong: ' + error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async verifyEmail({ commit }, token) {
+    async verifyEmail({ commit, dispatch }, token) {
         try {
             await Axios.post('/tokens/confirmation', { token: token })
             setTimeout(() => {
@@ -282,32 +272,10 @@ const actions = {
             commit('verifiedEmailOk')
             commit('menu/alert', ['primary', 'Your email is now verified. Thanks a lot. In a few seconds you are redirected to your Dashboard or Login.', 'fas fa-smile-wink'], { root: true })
         } catch (error) {
-            let icon = 'fas fa-frown-open'
-            let color = ''
-            switch (error.response.data.type) {
-                case 'not-verified':
-                    icon = 'fas fa-angry'
-                    color = 'error'
-                    break;
-
-                case 'not-user':
-
-                    icon = 'fas fa-sad-tear'
-                    color = 'error'
-                    break;
-
-                case 'already-verified':
-
-                    icon = 'fas fa-laugh-wink'
-                    break;
-
-                default:
-                    break;
-            }
-            commit('menu/alert', [color, error.response.data.message, icon], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async changepassword({ state, commit, rootGetters }) {
+    async changepassword({ state, commit, dispatch, rootGetters }) {
         try {
             let user = {
                 email: state.loginuser.email,
@@ -320,7 +288,7 @@ const actions = {
             commit('clearpass');
             commit('menu/cancelDialog', 'changepassword', { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     goToSignin({ rootState }) {

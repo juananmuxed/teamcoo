@@ -10,25 +10,24 @@ const taskschema = new schema({
         type: String,
         required: [true, 'Required field']
     },
-    createdBy: {
+    creator: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
+        ref: 'User'
     },
     interests: {
-        type: Array,
-        required: true
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Interest'
+        }],
+        default: []
     },
     workgroups: {
-        type: Array,
-        required: true
-    },
-    active: {
-        type: Boolean,
-        default: true
-    },
-    creaDate: {
-        type: Date,
-        default: Date.now
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Workgroup'
+        }],
+        default: []
     },
     link: {
         type: String,
@@ -39,7 +38,10 @@ const taskschema = new schema({
         default: ''
     },
     usersjoined: {
-        type: Array,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
         default: []
     },
     secret: {
@@ -57,8 +59,12 @@ const taskschema = new schema({
     color: {
         type: String,
         default: ''
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
-})
+}, { timestamps: true })
 
 const task = mongoose.model('Tasks', taskschema)
 

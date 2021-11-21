@@ -3,8 +3,6 @@ const Token = require('../models/tokens')
 const bcrypt = require('bcryptjs');
 const mailer = require("../controllers/mail");
 
-// Async method to register
-
 exports.registerNewUser = async (req, res) => {
     try {
         let isUser = await User.find({ email: req.body.email });
@@ -30,34 +28,34 @@ exports.registerNewUser = async (req, res) => {
             _userId: user._id,
             token: token
         })
-        await tokenConfirmation.save((error) => {
-            if (error) { res.status(500).json({ message: 'An error has ocurred', error }) }
-            res.status(201).json({ data, token });
-        })
+        let tokenSaved = await tokenConfirmation.save()
+        if (!tokenSaved) {
+            return res.status(500).json({ message: 'An error has ocurred', error })
+        }
+        res.status(201).json({ data, token });
     } catch (error) {
-        console.log(error)
-        res.status(400).json({ message: 'An error has ocurred', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 };
-
-// Async method to login
 
 exports.loginUser = async (req, res) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
         const user = await User.findByCredentials(email, password);
-        if (!user) {
-            return res.status(409).json({ message: "Login failed! Check your credentials" });
+        if (user instanceof Error) {
+            return res.status(409).json({ message: user.message });
         }
+        if (user.deleted) {
+            return res.status(409).json({ message: 'Your account is closed, please contact with the administrators.' });
+        }
+
         const token = await user.generateAuthToken();
         res.status(201).json({ user, token })
     } catch (error) {
-        res.status(400).json({ message: 'An error has ocurred', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 };
-
-// Async method to return User
 
 exports.getUser = async (req, res) => {
     try {
@@ -68,11 +66,9 @@ exports.getUser = async (req, res) => {
         }
         res.status(201).json(user)
     } catch (error) {
-        res.status(400).json({ message: 'An error has ocurred', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
-
-// Async method to return Users
 
 exports.getUsers = async (req, res) => {
     try {
@@ -95,11 +91,9 @@ exports.getUsers = async (req, res) => {
         }
         res.status(201).json(datatemp)
     } catch (error) {
-        return res.status(400).json({ mensaje: 'An error has occurred', error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
-
-// Async method to update User
 
 exports.updateUser = async (req, res) => {
     try {
@@ -118,11 +112,9 @@ exports.updateUser = async (req, res) => {
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ message: 'Error finding user id:', error });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
-
-// Async method to update Password
 
 exports.updatePassword = async (req, res) => {
     try {
@@ -147,11 +139,9 @@ exports.updatePassword = async (req, res) => {
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ message: 'Wrong password', error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
-
-// Function to delete user
 
 exports.deleteUser = async (req, res) => {
     try {
@@ -161,81 +151,94 @@ exports.deleteUser = async (req, res) => {
         const user = await User.findByCredentials(email, password)
 
         if (!user) {
-            return res.status(401).json({ error: "Credentials error" });
+            return res.status(401).json({ message: "Credentials error" });
         }
 
         let userDB = await User.findByIdAndDelete(_id)
 
         if (!userDB) {
-            return res.status(401).json({ error: "Incorrect ID" });
+            return res.status(401).json({ message: "Incorrect ID" });
         }
 
         res.json(userDB)
 
     } catch (error) {
-        res.status(400).json({ status: 'error', error: 'Invalid Credentials' });
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 
 }
 
-// Function to confirm token
+exports.deleteUserSoft = async (req, res) => {
+    try {
+        const _id = req.params.id
+        const email = req.body.email
+        const password = req.body.password
+        const user = await User.findByCredentials(email, password)
 
-exports.confirmationEmail = (req, res) => {
+        if (user instanceof Error) {
+            return res.status(409).json({ message: user.message });
+        }
 
-    Token.findOne({ token: req.body.token }, (e, token) => {
+        let userDB = await User.findByIdAndUpdate(_id, { deleted: true })
+
+        if (!userDB) {
+            return res.status(401).json({ message: "Incorrect ID" });
+        }
+
+        res.json(userDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+
+}
+
+exports.confirmationEmail = async (req, res) => {
+    try {
+        let token = await Token.findOne({ token: req.body.token });
         if (!token) {
             return res.status(400).json({ message: 'Invalid token', type: "not-verified" })
         }
 
-        User.findOne({ _id: token._userId }, (e, user) => {
-
-            if (!user) {
-                return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
-            }
-            if (user.verifiedemail) {
-                return res.status(400).json({ message: 'You are already verified. This token is used.', type: "already-verified" })
-            }
-
-            user.verifiedemail = true;
-            user.save()
-            res.status(200).json({ message: 'Correct validation.', type: "correct" })
-
-        })
-
-    })
-
+        let user = await User.findOne({ _id: token._userId });
+        if (!user) {
+            return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
+        }
+        if (user.verifiedemail) {
+            return res.status(400).json({ message: 'You are already verified. This token is used.', type: "already-verified" })
+        }
+        user.verifiedemail = true;
+        await user.save()
+        res.status(200).json({ message: 'Correct validation.', type: "correct" })
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
 }
-
-// Function to external pass change
 
 exports.changepassexternal = async (req, res) => {
+    try {
+        let password = req.body.password
 
-    let password = req.body.password
+        if (!password) {
+            return res.status(400).json({ message: 'No password', type: "not-pass" })
+        }
 
-    if (!password) {
-        return res.status(400).json({ message: 'No password', type: "not-pass" })
-    }
-
-    Token.findOne({ token: req.body.token }, (e, token) => {
+        let token = await Token.findOne({ token: req.body.token });
         if (!token) {
             return res.status(400).json({ message: 'Invalid token', type: "not-verified" })
         }
 
-        User.findOne({ _id: token._userId }, (e, user) => {
-            if (!user) {
-                return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
-            }
+        let user = await User.findOne({ _id: token._userId });
+        if (!user) {
+            return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
+        }
 
-            user.password = password;
-            user.save()
-            res.status(200).json({ message: 'Correct password change.', type: "correct" })
-
-        })
-    })
-
+        user.password = password;
+        await user.save()
+        res.status(200).json({ message: 'Correct password change.', type: "correct" })
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
 }
-
-// Function to send a change for pass
 
 exports.sendPassEmail = async (req, res) => {
     try {
@@ -260,11 +263,9 @@ exports.sendPassEmail = async (req, res) => {
         })
         return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.', token: token });
     } catch (error) {
-        res.status(500).json({ message: 'An error has ocurred', error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }
-
-// Function to resend token
 
 exports.reSendConfirmation = async (req, res) => {
     try {
@@ -280,7 +281,7 @@ exports.reSendConfirmation = async (req, res) => {
 
         let token = new Token({ _userId: user._id, token: generatedToken })
         await token.save();
-        await mailer.sendMail({
+        mailer.sendMail({
             body: {
                 sendTo: req.body.email,
                 userTo: user.firstname,
@@ -292,9 +293,8 @@ exports.reSendConfirmation = async (req, res) => {
                 }
             }
         })
-        return res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.' });
+        res.status(201).json({ message: 'A verification email has been sent to ' + user.email + '.' });
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ message: 'An error has ocurred', error })
+        res.status(400).json({ message: 'An error has ocurred', error: error });
     }
 }

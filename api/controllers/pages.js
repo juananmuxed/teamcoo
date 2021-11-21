@@ -10,7 +10,7 @@ exports.creatPage = async (req, res) => {
         const pageDB = await Page.create(body)
         res.json(pageDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }
 
@@ -20,7 +20,7 @@ exports.getAllPagesNotProtected = async (req, res) => {
         const filteredPages = pageDB.filter(page => !page.protected)
         res.json(filteredPages)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }
 
@@ -29,7 +29,7 @@ exports.getAllPagesProtectedOrNot = async (req, res) => {
         const pageDB = await Page.find()
         res.json(pageDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }
 
@@ -45,7 +45,7 @@ exports.getPage = async (req, res) => {
         }
         res.json(pageDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }
 
@@ -56,7 +56,7 @@ exports.getPageProtected = async (req, res) => {
         const pageDB = await Page.findOne({ name: name })
         res.json(pageDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }
 
@@ -68,20 +68,16 @@ exports.updatePage = async (req, res) => {
         const pageDB = await Page.findOneAndUpdate({ name: name }, body, { new: true })
         res.json(pageDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }
 
 exports.deletePage = async (req, res) => {
     const name = req.params.name
     try {
-        let isPage = await Page.find({ name: name });
-        if (isPage.length < 1) {
-            return res.status(409).json({ message: "This page don't exist" });
-        }
         const pageDB = await Page.findOneAndDelete({ name: name })
         res.json(pageDB)
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred: ' + error, error })
+        res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }

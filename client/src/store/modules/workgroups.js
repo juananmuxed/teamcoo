@@ -179,7 +179,7 @@ const actions = {
             commit('menu/cancelDialog', 'createworkgroup', { root: true })
             commit('clearWorkgroupForm')
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async delWorkgroup({ commit, dispatch, rootGetters }, params) {
@@ -206,7 +206,7 @@ const actions = {
             commit('menu/notification', ['info', 3, 'Workgroup deleted'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async loadWorkgroups({ commit, dispatch, rootState, rootGetters }) {
@@ -244,7 +244,7 @@ const actions = {
             commit('secretWorkgroupNested', treeBuild(secretWorkgroups));
             commit('changeLoading', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
             commit('changeLoading', false);
         }
     },
@@ -281,7 +281,7 @@ const actions = {
             commit('pullWorkgroup', workgroup);
             commit('changeSkeleton', false);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
             commit('changeSkeleton', false);
         }
     },
@@ -318,7 +318,7 @@ const actions = {
             workgroup.questions = tempQuestions;
             commit('pullWorkgroup', workgroup);
         } catch (error) {
-            commit('menu/notification', ['error', 3, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async saveEditedworkgroup({ state, commit, dispatch, rootGetters }, id) {
@@ -346,10 +346,10 @@ const actions = {
             commit('clearWorkgroupForm');
             commit('menu/notification', ['success', 5, 'Workgroup edited'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 5, error.response.data.message], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async joinWorkgroup({ commit, rootState, rootGetters }, params) {
+    async joinWorkgroup({ commit, rootState, rootGetters, dispatch }, params) {
         try {
             let workgroupId = params.idWorkgroup, userId = params.idUser;
             let config = rootGetters['general/cookieAuth'];
@@ -364,10 +364,10 @@ const actions = {
             await Axios.put('/users/' + userId, { unsuscribedworkgroups: unsuscribed, workgroups: suscribed }, config);
             commit('menu/cancelDialog', 'suscribeto', { root: true })
         } catch (error) {
-            commit('menu/notification', ['error', 5, error], { root: true })
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async unjoinWorkgroup({ commit, rootState, rootGetters }, params) {
+    async unjoinWorkgroup({ commit, rootState, rootGetters, dispatch }, params) {
         try {
             let workgroupId = params.idWorkgroup, userId = params.idUser;
             let config = rootGetters['general/cookieAuth'];
@@ -383,7 +383,7 @@ const actions = {
             await Axios.put('/users/' + userId, { unsuscribedworkgroups: unsuscribed, workgroups: suscribed }, config);
             commit('menu/cancelDialog', 'unsuscribeworkgroup', { root: true });
         } catch (error) {
-            commit('menu/notification', ['error', 5, error], { root: true })
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async unsuscribeWorkgroup({ dispatch }, params) {
@@ -416,7 +416,7 @@ const actions = {
             commit('menu/cancelDialog', 'editmembers', { root: true });
             commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['info', 10, error], { root: true });
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async saveMember({ commit, dispatch, rootGetters }, params) {
@@ -433,7 +433,7 @@ const actions = {
             commit('menu/cancelDialog', 'suscribeto', { root: true });
             commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
         } catch (error) {
-            commit('menu/notification', ['info', 10, error], { root: true })
+            dispatch('menu/notificationError', error, { root: true });
         }
     }
 }

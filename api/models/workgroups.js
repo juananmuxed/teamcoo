@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const workingGroupSchema = new schema({
+const workgroupScheme = new schema({
     name: {
         type: String,
         required: [true, 'Required field']
@@ -22,7 +22,7 @@ const workingGroupSchema = new schema({
         type: mongoose.Schema.Types.ObjectId,
         default: null
     },
-    _userId: {
+    creator: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
@@ -31,12 +31,11 @@ const workingGroupSchema = new schema({
         type: Boolean,
         default: true
     },
-    creaDate: {
-        type: Date,
-        default: Date.now
-    },
     questions: {
-        type: Array,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Question'
+        }],
         required: true
     },
     dossier: {
@@ -52,15 +51,25 @@ const workingGroupSchema = new schema({
         default: false
     },
     coordinators: {
-        type: Array,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
         default: []
     },
     members: {
-        type: Array,
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }],
         default: []
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
-})
+}, { timestamps: true })
 
-const wg = mongoose.model('wg', workingGroupSchema)
+const workgroup = mongoose.model('Workgroup', workgroupScheme)
 
-module.exports = wg
+module.exports = workgroup

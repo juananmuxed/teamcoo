@@ -2,26 +2,18 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../controllers/auth")
-const workinggroupsController = require("../controllers/workinggroups")
+const workgingGroupsController = require("../controllers/workgroups")
 
-// Create working group
+router.post("/", auth, workgingGroupsController.createWorkgroup);
 
-router.post("/", auth , workinggroupsController.createWG );
+router.get("/", auth, workgingGroupsController.getAllWorkgroups);
 
-// Get all working groups
+router.get("/:id", auth, workgingGroupsController.getWorkgroup)
 
-router.get("/", auth , workinggroupsController.getAllWG);
+router.put("/:id", auth, workgingGroupsController.updateWorkgroup)
 
-// Get id working group
+router.delete("/finally/:id", auth, workgingGroupsController.deleteWorkgroup)
 
-router.get("/:id", auth , workinggroupsController.getWG)
-
-// Update working group
-
-router.put("/:id", auth , workinggroupsController.updateWG)
-
-// Delete working group
-
-router.delete("/:id", auth ,workinggroupsController.deleteWG)
+router.delete("/:id", auth, workgingGroupsController.deleteWorkgroupSoft)
 
 module.exports = router;

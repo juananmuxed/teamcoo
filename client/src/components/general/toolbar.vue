@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
   computed: {
     ...mapState({
@@ -35,10 +35,6 @@ export default {
   },
   methods: {
     ...mapGetters("user", ["isLogged"]),
-    ...mapActions("menu", ["getLogosPage"]),
-  },
-  created() {
-    this.getLogosPage();
   },
 };
 </script>

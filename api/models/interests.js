@@ -3,28 +3,28 @@ const schema = mongoose.Schema
 
 const interestschema = new schema({
     name: {
-        type: String, 
-        required: [true,'Required field']
+        type: String,
+        required: [true, 'Required field']
     },
     description: {
-        type: String, 
-        required: [true,'Required field']
+        type: String,
+        required: [true, 'Required field']
     },
-    color:{
-        type:String,
-        default:'grey'
+    color: {
+        type: String,
+        default: '#B1B1B1'
     },
-    _userId: {
-        type:mongoose.Schema.Types.ObjectId,
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     },
-    active: {
-        type:Boolean,
-        default:true
+    deleted: {
+        type: Boolean,
+        default: false
     },
-})
+}, { timestamps: true })
 
-const interest = mongoose.model('Interests' , interestschema)
+const interest = mongoose.model('Interest', interestschema)
 
 module.exports = interest

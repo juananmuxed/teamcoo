@@ -3,35 +3,47 @@ const schema = mongoose.Schema
 
 const questionSchema = new schema({
     name: {
-        type: String, 
-        required: [true,'Required field']
+        type: String,
+        required: [true, 'Required field']
     },
     description: {
-        type: String, 
+        type: String,
         default: ''
     },
     type: {
-        type: String, 
+        type: String,
         required: [true, 'Required field']
     },
-    selections:{
-        type: Array
+    interests: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Interest'
+        }],
+        required: true
     },
-    _userId: {
-        type:mongoose.Schema.Types.ObjectId,
+    text: {
+        type: String,
+        default: ''
+    },
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     },
     active: {
-        type:Boolean,
-        default:true
+        type: Boolean,
+        default: true
     },
     common: {
-        type:Boolean,
-        default:false
+        type: Boolean,
+        default: false
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
-})
+}, { timestamps: true })
 
-const question = mongoose.model('question',questionSchema)
+const question = mongoose.model('Question', questionSchema)
 
 module.exports = question

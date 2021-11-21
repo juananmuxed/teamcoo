@@ -29,6 +29,7 @@ const state = {
             editinterest: false,
             editworkgroup: false,
             confirm: false,
+            confirmSoft: false,
             editmembers: false,
             editquestion: false,
             editcommonquestion: false,
@@ -54,7 +55,7 @@ const state = {
         active: false,
         color: 'info',
         message: '',
-        polling: null
+        timeout: 0
     },
     alert: {
         message: 'Message',
@@ -89,13 +90,10 @@ const mutations = {
         }
     },
     notification: (state, [color, time, message]) => {
-        if (state.snackbar.active) clearInterval(state.snackbar.polling);
         state.snackbar.active = true;
         state.snackbar.color = color;
         state.snackbar.message = message;
-        state.snackbar.polling = setTimeout(() => {
-            state.snackbar.active = false;
-        }, time * 1000);
+        state.snackbar.timeout = time * 1000
     },
     alert: (state, [color, message, icon]) => {
         state.alert.icon = icon
@@ -175,7 +173,16 @@ const actions = {
         }, 200);
     },
 
-    async getLogosPage({ state, commit, rootState }) {
+    notificationError({ commit }, error) {
+        if (error.response && error.response.data && error.response.data.message) {
+            const color = error.response.status >= 400 ? 'error' : 'warning';
+            commit('notification', [color, 0, error.response.data.message]);
+        } else {
+            commit('notification', ['error', 0, 'Unknow error']);
+        }
+    },
+
+    async getLogosPage({ state, commit, dispatch, rootState }) {
         try {
             let res = await Axios.get("/configuration/logos");
             if (res.data) {
@@ -190,11 +197,11 @@ const actions = {
             const favicon = document.getElementById("favicon");
             favicon.href = state.logos.favicon;
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getThemeColors({ commit }) {
+    async getThemeColors({ commit, dispatch }) {
         try {
             let res = await Axios.get("/configuration/colors");
             if (res.data) {
@@ -220,11 +227,11 @@ const actions = {
                 })
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getWebName({ commit }) {
+    async getWebName({ commit, dispatch }) {
         try {
             let res = await Axios.get("/configuration/web");
             if (res.data) {
@@ -233,11 +240,11 @@ const actions = {
                 commit('setWebName', { name: 'TeamCoo' })
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getFooterPages({ commit }) {
+    async getFooterPages({ commit, dispatch }) {
         try {
             let res = await Axios.get("/pages/");
             if (res.data) {
@@ -247,11 +254,11 @@ const actions = {
                 commit('setPagesFooter', [])
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     },
 
-    async getLateralPages({ commit }) {
+    async getLateralPages({ commit, dispatch }) {
         try {
             let res = await Axios.get("/pages/");
             if (res.data) {
@@ -261,7 +268,7 @@ const actions = {
                 commit('setPagesLateral', [])
             }
         } catch (error) {
-            commit('menu/notification', ['error', 3, error], { root: true });
+            dispatch('notificationError', error);
         }
     }
 }

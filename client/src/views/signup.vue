@@ -147,7 +147,7 @@
                         <router-link to="/terms-and-conditions"
                           >Terms & Conditions</router-link
                         >
-                        of Catapa Belgium. *
+                        of {{ webName }}. *
                       </div>
                     </template>
                   </v-checkbox>
@@ -214,6 +214,7 @@ export default {
   computed: {
     ...mapState({
       rules: (state) => state.general.rules,
+      webName: (state) => state.menu.web.name,
       newuser: (state) => state.user.newuser,
       sendingEmail: (state) => state.user.sendingEmail,
       registerPage: (state) => state.general.pagesSpecials.register,

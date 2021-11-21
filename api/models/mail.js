@@ -48,9 +48,9 @@ const mailSchema = new schema({
     },
     sendDate: {
         type: Date,
-        default: Date.now
+        default: null
     }
-})
+}, { timestamps: true })
 
 const Mail = mongoose.model('Mail', mailSchema)
 module.exports = Mail

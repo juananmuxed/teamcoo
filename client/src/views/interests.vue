@@ -33,9 +33,13 @@
             </v-tooltip>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip class="mx-1" :to="'/users/' + item._userId">
-              <v-avatar left v-if="item.creator.avatar != ''"><v-img :src="item.creator.avatar"></v-img></v-avatar>
-              <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
+            <v-chip class="mx-1" :to="'/users/' + item._id">
+              <v-avatar left v-if="item.creator.image != ''"
+                ><v-img :src="item.creator.image"></v-img
+              ></v-avatar>
+              <v-avatar left v-else
+                ><v-icon small color="info">fas fa-user</v-icon></v-avatar
+              >
               {{ item.creator.username }}
             </v-chip>
           </template>
@@ -49,34 +53,54 @@
             </v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn
-              depressed
-              small
-              color="info"
-              @click="
-                searchInterest(item._id);
-                dialogs.editinterest = true;
-              "
-              class="mx-1"
-              v-if="item.creator.id == loginuser.id"
+            <v-tooltip
+              top
+              transition="slide-y-reverse-transition"
+              open-delay="100"
             >
-              Edit
-              <v-icon x-small class="ml-1">fas fa-edit</v-icon>
-            </v-btn>
-            <v-btn
-              depressed
-              small
-              color="error"
-              @click="
-                searchInterest(item._id);
-                dialogs.confirm = true;
-              "
-              class="mx-1"
-              v-if="loginuser.rol.value == 'admin'"
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  fab
+                  x-small
+                  v-on="on"
+                  color="info"
+                  @click="
+                    searchInterest(item);
+                    dialogs.editinterest = true;
+                  "
+                  class="mx-1"
+                  v-if="item.creator._id == loginuser.id"
+                >
+                  <v-icon x-small>fas fa-edit</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-right font-weight-light">Edit</span>
+            </v-tooltip>
+            <v-tooltip
+              top
+              transition="slide-y-reverse-transition"
+              open-delay="100"
             >
-              Delete
-              <v-icon x-small class="ml-1">fas fa-trash</v-icon>
-            </v-btn>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  fab
+                  x-small
+                  v-on="on"
+                  color="error"
+                  @click="
+                    searchInterest(item);
+                    dialogs.confirm = true;
+                  "
+                  class="mx-1"
+                  v-if="loginuser.rol.value == 'admin'"
+                >
+                  <v-icon x-small>fas fa-trash</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-right font-weight-light">Delete</span>
+            </v-tooltip>
           </template>
         </v-data-table>
         <v-dialog v-model="dialogs.editinterest" max-width="650">
@@ -84,38 +108,48 @@
         </v-dialog>
         <v-dialog max-width="400" v-model="dialogs.confirm">
           <confirmation-template
-            :title="`Delete '${searchedInterest.name}'`"
+            :title="`Delete '${interest.name}'`"
             description="You are about to delete this Question. <br><br>Are you sure?"
             :cancelFunction="null"
             textButton="Delete"
-            :actionparams="{ id: searchedInterest._id, name: searchedInterest.name }"
-            :action="delInterest"
+            :actionparams="{
+              id: interest._id,
+              name: interest.name,
+            }"
+            :action="delInterestSoft"
           ></confirmation-template>
         </v-dialog>
       </v-col>
     </v-row>
-    <v-row
-      class="px-3"
+    <v-dialog
+      max-width="650"
+      v-model="dialogs.createinterest"
       v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
     >
-      <v-col>
-        <v-dialog max-width="650" v-model="dialogs.createinterest">
-          <template v-slot:activator="{ on }">
+      <template v-slot:activator="{ on: onDialog }">
+        <v-tooltip transition="slide-x-transition" open-delay="100" right>
+          <template v-slot:activator="{ on: onTooltip }">
             <v-btn
-              height="160"
-              v-on="on"
-              block
+              v-on="{ ...onDialog, ...onTooltip }"
+              fab
+              left
+              top
+              absolute
               color="info"
-              class="my-2"
-              @click="clearInterestForm();randomInterestColor()"
+              class="mt-12 ml-2"
+              @click="
+                clearInterestForm();
+                randomInterestColor();
+              "
             >
-              <v-icon left>fas fa-address-card</v-icon>Create Interest
+              <v-icon>fas fa-address-card</v-icon>
             </v-btn>
           </template>
-          <create-interest></create-interest>
-        </v-dialog>
-      </v-col>
-    </v-row>
+          <span class="text-right caption font-weight-light">Create new</span>
+        </v-tooltip>
+      </template>
+      <create-interest></create-interest>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -153,15 +187,19 @@ export default {
   computed: {
     ...mapState({
       interests: (state) => state.interests.interests,
-      searchedInterest: (state) => state.interests.searchedInterest,
+      interest: (state) => state.interests.interest,
       loginuser: (state) => state.user.loginuser,
       dialogs: (state) => state.menu.menu.dialogs,
       loading: (state) => state.interests.loading,
     }),
   },
   methods: {
-    ...mapActions("interests", ["loadInterests", "delInterest",'searchInterest']),
-    ...mapMutations("interests", ["clearInterestForm","randomInterestColor"]),
+    ...mapActions("interests", [
+      "loadInterests",
+      "delInterestSoft",
+      "searchInterest",
+    ]),
+    ...mapMutations("interests", ["clearInterestForm", "randomInterestColor"]),
     textColor(color) {
       return idealTextColor(color);
     },

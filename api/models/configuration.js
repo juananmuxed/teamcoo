@@ -18,7 +18,7 @@ const configschema = new schema({
         type: Boolean,
         default: false
     }
-})
+}, { timestamps: true })
 
 const config = mongoose.model('Config', configschema)
 
