@@ -1,322 +1,459 @@
 <template>
-    <v-container
-        class="pa-10"
-    >
-        <v-row>
-            <v-col cols="12">
-                <v-skeleton-loader type="skeleton" :types="{skeleton:'card,article, table-tfoot'}" max-width="1080" class="mx-auto" transition="fade-transition" :loading="skeleton">
-                    <v-card :color="searchedWorkgroup.color" :class="`${textColor(searchedWorkgroup.color)}--text mx-auto`" max-width="1080" v-if="searchedWorkgroup._id">
-                        <v-card-title>
-                            <v-btn class="ml-n12" absolute fab top left color="info" @click="goBack()">
-                                <v-icon>fas fa-arrow-left</v-icon>
-                            </v-btn>
-                            <v-tooltip right :color="loginuser.workgroups.some(wg => wg._wgId === searchedWorkgroup._id) ? 'info' : 'error'" transition="scroll-x-transition">
-                                <template v-slot:activator="{ on }">
-                                    <span v-on="on" class="text-uppercase font-weight-thin display-1">{{ searchedWorkgroup.name }}</span>
-                                </template>
-                                <span class="text-right caption font-weight-light">{{loginuser.workgroups.some(wg => wg._wgId === searchedWorkgroup._id) ? 'Joined' : 'Unjoined'}}</span>
-                            </v-tooltip>
-                            <v-spacer></v-spacer>
-                            <v-dialog
-                                v-if="!loginuser.workgroups.some(wg => wg._wgId === searchedWorkgroup._id)"
-                                v-model="dialogs.suscribeto"
-                                max-width="650"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn v-on="on" color="primary" rounded v-if="!searchedWorkgroup.secret">Join</v-btn>
-                                </template>
-                                <suscribe-to-work-group :id="searchedWorkgroup._id"></suscribe-to-work-group>
-                            </v-dialog>
-                            <v-dialog
-                                v-else
-                                v-model="dialogs.unsuscribeworkgroup"
-                                max-width="650"
-                            >
-                                <template v-slot:activator="{ on }">
-                                    <v-btn rounded v-on="on" color="secondary">Unjoin</v-btn>
-                                </template>
-                                <confirmation-template 
-                                    :title="`Unjoin from <span class='${searchedWorkgroup.color}--text pl-2'>${searchedWorkgroup.name}</span>`" 
-                                    description="You are about to unjoin this Work Group. Your questions are saved in the Database for future stats. <br><br>Are you sure?" 
-                                    :cancelFunction="null" 
-                                    textButton="Unsuscribe" 
-                                    :actionparams="{idWorkgroup:searchedWorkgroup._id, idUser:loginuser.id, suscribe:false}" 
-                                    :action="unsuscribeWorkgroup"
-                                ></confirmation-template>
-                            </v-dialog>
-                        </v-card-title>
-                        <v-divider></v-divider>
-                        <v-card-text :class="`${textColor(searchedWorkgroup.color)}--text`">
-                            <v-dialog
-                                v-model="dialogs.editmembers"
-                                max-width="650"
-                            >
-                                <edit-members></edit-members>
-                            </v-dialog>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-chip color="secondary" v-if="searchedWorkgroup.secret">
-                                        Private
-                                    </v-chip>
-                                </v-col>
-                                <v-col cols="12" class="mb-4">
-                                    <span class="text-uppercase headline font-weight-light">Description<br></span>
-                                    <span class="font-italic">
-                                        {{ searchedWorkgroup.description }}
-                                    </span>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col cols="12" md="6" v-if="searchedWorkgroup.dossier != null"><v-btn color="info" target="_blank" :href="searchedWorkgroup.dossier" block height="80">Dossier <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
-                                <v-col cols="12" md="6" v-if="searchedWorkgroup.linktodocuments != ''"><v-btn color="accent" target="_blank" :href="searchedWorkgroup.linktodocuments" block height="80">Link to Documents <v-icon right x-small>fas fa-link</v-icon></v-btn></v-col>
-                            </v-row>
-                            <v-toolbar dense elevation="2" color="primary" class="my-1">
-                                <v-toolbar-title class="text-uppercase title font-weight-light">Coordinators</v-toolbar-title>
-                                <v-spacer></v-spacer>
-                                <v-btn v-if="(loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id))" depressed small color="secondary" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
-                            </v-toolbar>
-                            <v-row v-if="searchedWorkgroup.coordinators && searchedWorkgroup.coordinators.length != 0">
-                                <v-col cols="12" class="my-1">
-                                    <v-chip v-for="(coor , index) in searchedWorkgroup.coordinators" v-bind:key="index" class="mx-1">
-                                        <v-avatar left v-if="coor.avatar != ''"><v-img :src="coor.avatar"></v-img></v-avatar>
-                                        <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
-                                        {{ coor.username }}
-                                    </v-chip>
-                                </v-col>
-                            </v-row>
-                            <v-row v-else>
-                                <v-col cols="12" class="my-1">
-                                    <v-btn block color="info" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}); dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
-                                </v-col>
-                            </v-row>
-                            <v-toolbar dense elevation="2" color="secondary" class="my-1">
-                                <v-toolbar-title class="text-uppercase title font-weight-light">Members</v-toolbar-title>
-                                <v-spacer></v-spacer>
-                                <v-btn v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)" depressed small color="primary" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}); dialogs.editmembers = true">Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn>
-                            </v-toolbar>
-                            <v-row v-if="searchedWorkgroup.members && searchedWorkgroup.members.length != 0">
-                                <v-col cols="12" class="my-1">
-                                    <v-chip v-for="(member , index) in searchedWorkgroup.members" v-bind:key="index" class="mx-1">
-                                        <v-avatar left v-if="member.avatar != ''"><v-img :src="member.avatar"></v-img></v-avatar>
-                                        <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
-                                        {{ member.username }}
-                                    </v-chip>
-                                </v-col>
-                            </v-row>
-                            <v-row v-if="searchedWorkgroup.members && searchedWorkgroup.members.length == 0 && (loginuser.rol.value == 'admin' || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id))">
-                                <v-col cols="12" class="my-1">
-                                    <v-btn block color="info" @click="loadMembers({members:searchedWorkgroup.members,coordinators:searchedWorkgroup.coordinators}), dialogs.editmembers = true">Add <v-icon right x-small>fas fa-plus</v-icon></v-btn>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col cols="12" class="mb-4">
-                                    <span class="text-uppercase headline font-weight-light">Tasks<br></span>
-                                </v-col>
-                                <v-col cols="12" class="mb-4">
-                                    <v-data-iterator
-                                        :items="searchedWorkgroup.tasks"
-                                        items-per-page.sync="6"
+  <v-container class="pa-10">
+    <v-row>
+      <v-col cols="12">
+        <v-skeleton-loader
+          type="skeleton"
+          :types="{ skeleton: 'card,article, table-tfoot' }"
+          max-width="1080"
+          class="mx-auto"
+          transition="fade-transition"
+          :loading="skeleton"
+        >
+          <v-card
+            :color="workgroup.color"
+            :class="`${textColor(workgroup.color)}--text mx-auto`"
+            max-width="1080"
+            v-if="workgroup._id"
+          >
+            <v-card-title>
+              <v-btn
+                class="ml-n12"
+                absolute
+                fab
+                top
+                left
+                color="info"
+                @click="goBack()"
+              >
+                <v-icon>fas fa-arrow-left</v-icon>
+              </v-btn>
+              <v-tooltip
+                right
+                :color="
+                  loginuser.workgroups.some((wg) => wg._wgId === workgroup._id)
+                    ? 'info'
+                    : 'error'
+                "
+                transition="scroll-x-transition"
+              >
+                <template v-slot:activator="{ on }">
+                  <span
+                    v-on="on"
+                    class="text-uppercase font-weight-thin display-1"
+                    >{{ workgroup.name }}</span
+                  >
+                </template>
+                <span class="text-right caption font-weight-light">{{
+                  loginuser.workgroups.some((wg) => wg._wgId === workgroup._id)
+                    ? "Joined"
+                    : "Unjoined"
+                }}</span>
+              </v-tooltip>
+              <v-spacer></v-spacer>
+              <v-dialog
+                v-if="
+                  !loginuser.workgroups.some((wg) => wg._wgId === workgroup._id)
+                "
+                v-model="dialogs.suscribeto"
+                max-width="650"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    color="primary"
+                    rounded
+                    v-if="!workgroup.secret"
+                    >Join</v-btn
+                  >
+                </template>
+                <suscribe-to-work-group
+                  :id="workgroup._id"
+                ></suscribe-to-work-group>
+              </v-dialog>
+              <v-dialog
+                v-else
+                v-model="dialogs.unsuscribeworkgroup"
+                max-width="650"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn rounded v-on="on" color="secondary">Unjoin</v-btn>
+                </template>
+                <confirmation-template
+                  :title="`Unjoin from <span class='${workgroup.color}--text pl-2'>${workgroup.name}</span>`"
+                  description="You are about to unjoin this Work Group. Your questions are saved in the Database for future stats. <br><br>Are you sure?"
+                  :cancelFunction="null"
+                  textButton="Unsuscribe"
+                  :actionparams="{
+                    idWorkgroup: workgroup._id,
+                    idUser: loginuser.id,
+                    suscribe: false,
+                  }"
+                  :action="unsuscribeWorkgroup"
+                ></confirmation-template>
+              </v-dialog>
+              <v-chip small label color="secondary" v-if="workgroup.secret">
+                Private
+              </v-chip>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text :class="`${textColor(workgroup.color)}--text`">
+              <v-dialog v-model="dialogs.editmembers" max-width="650">
+                <edit-members></edit-members>
+              </v-dialog>
+              <v-row>
+                <v-col cols="12" class="mb-4">
+                  <span class="font-italic">
+                    {{ workgroup.description }}
+                  </span>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" md="6" v-if="workgroup.dossier != null"
+                  ><v-btn
+                    color="info"
+                    target="_blank"
+                    :href="workgroup.dossier"
+                    block
+                    height="80"
+                    >Dossier <v-icon right x-small>fas fa-link</v-icon></v-btn
+                  ></v-col
+                >
+                <v-col cols="12" md="6" v-if="workgroup.link != ''"
+                  ><v-btn
+                    color="accent"
+                    target="_blank"
+                    :href="workgroup.link"
+                    block
+                    height="80"
+                    >Link to Documents
+                    <v-icon right x-small>fas fa-link</v-icon></v-btn
+                  ></v-col
+                >
+              </v-row>
+              <v-divider
+                class="my-4"
+                :color="textColor(workgroup.color)"
+              ></v-divider>
+              <v-toolbar dense elevation="2" color="primary" class="my-1">
+                <v-toolbar-title class="text-uppercase title font-weight-light"
+                  >Coordinators</v-toolbar-title
+                >
+                <v-spacer></v-spacer>
+                <v-btn
+                  v-if="
+                    loginuser.rol.value == 'admin' ||
+                    loginuser.id == workgroup.creator.id ||
+                    workgroup.coordinators.some(
+                      (coor) => coor.id == loginuser.id
+                    )
+                  "
+                  depressed
+                  small
+                  color="secondary"
+                  @click="
+                    loadMembers({
+                      members: workgroup.members,
+                      coordinators: workgroup.coordinators,
+                    });
+                    dialogs.editmembers = true;
+                  "
+                  >Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn
+                >
+              </v-toolbar>
+              <v-row
+                v-if="
+                  workgroup.coordinators && workgroup.coordinators.length != 0
+                "
+              >
+                <v-col cols="12" class="my-1">
+                  <v-chip
+                    v-for="(coor, index) in workgroup.coordinators"
+                    v-bind:key="index"
+                    class="mx-1"
+                  >
+                    <v-avatar left v-if="coor.image != ''"
+                      ><v-img :src="coor.image"></v-img
+                    ></v-avatar>
+                    <v-avatar left v-else
+                      ><v-icon small color="info">fas fa-user</v-icon></v-avatar
+                    >
+                    {{ coor.username }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+              <v-toolbar dense elevation="2" color="secondary" class="my-1">
+                <v-toolbar-title class="text-uppercase title font-weight-light"
+                  >Members</v-toolbar-title
+                >
+                <v-spacer></v-spacer>
+                <v-btn
+                  v-if="
+                    loginuser.rol.value == 'admin' ||
+                    loginuser.id == workgroup.creator.id ||
+                    workgroup.coordinators.some(
+                      (coor) => coor.id == loginuser.id
+                    )
+                  "
+                  depressed
+                  small
+                  color="primary"
+                  @click="
+                    loadMembers({
+                      members: workgroup.members,
+                      coordinators: workgroup.coordinators,
+                    });
+                    dialogs.editmembers = true;
+                  "
+                  >Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn
+                >
+              </v-toolbar>
+              <v-row v-if="workgroup.members && workgroup.members.length != 0">
+                <v-col cols="12" class="my-1">
+                  <v-chip
+                    v-for="(member, index) in workgroup.members"
+                    v-bind:key="index"
+                    class="mx-1"
+                  >
+                    <v-avatar left v-if="member.image != ''"
+                      ><v-img :src="member.image"></v-img
+                    ></v-avatar>
+                    <v-avatar left v-else
+                      ><v-icon small color="info">fas fa-user</v-icon></v-avatar
+                    >
+                    {{ member.username }}
+                  </v-chip>
+                </v-col>
+              </v-row>
+              <v-divider
+                class="my-4"
+                :color="textColor(workgroup.color)"
+                v-if="workgroup.tasks.length > 0"
+              ></v-divider>
+              <v-row>
+                <v-col cols="12" class="mb-4" v-if="workgroup.tasks.length > 0">
+                  <v-data-iterator
+                    :items="workgroup.tasks"
+                    items-per-page.sync="6"
+                  >
+                    <template v-slot:default="props">
+                      <v-row>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          xl="3"
+                          class="pa-3"
+                          v-for="(task, index) in props.items"
+                          :key="index"
+                        >
+                          <v-hover>
+                            <template v-slot:default="{ hover }">
+                              <v-card>
+                                <v-img
+                                  v-if="task.image != ''"
+                                  height="100"
+                                  :src="task.image"
+                                  class="align-end"
+                                >
+                                </v-img>
+                                <v-img
+                                  v-else
+                                  height="100"
+                                  class="align-end"
+                                  :style="`background:${task.color}`"
+                                >
+                                </v-img>
+                                <v-card-title
+                                  class="text-uppercase font-weight-light"
+                                >
+                                  <v-list-item two-line>
+                                    <v-list-item-content>
+                                      <v-list-item-title>{{
+                                        task.name
+                                      }}</v-list-item-title>
+                                      <v-list-item-subtitle
+                                        >{{ dateFormated(task.eventStartDate) }}
+                                        -
+                                        {{
+                                          dateFormated(task.eventEndDate)
+                                        }}</v-list-item-subtitle
+                                      >
+                                    </v-list-item-content>
+                                  </v-list-item>
+                                </v-card-title>
+                                <v-fade-transition>
+                                  <v-overlay
+                                    v-if="hover"
+                                    absolute
+                                    color="#036358"
+                                  >
+                                    <v-btn
+                                      :to="`/tasks/${task._id}`"
+                                      color="primary"
                                     >
-                                        <template v-slot:default="props">
-                                            <v-row>
-                                                <v-col cols="12" md="4" xl="3" class="pa-3" v-for="(task , index) in props.items" :key="index">
-                                                    <v-hover>
-                                                        <template v-slot:default="{ hover }">
-                                                            <v-card>
-                                                                <v-img
-                                                                    v-if="task.image != ''"
-                                                                    height="100"
-                                                                    :src="task.image"
-                                                                    class="align-end"
-                                                                >
-                                                                </v-img>
-                                                                <v-img
-                                                                    v-else
-                                                                    height="100"
-                                                                    class="align-end"
-                                                                    :style="`background:${task.color}`"
-                                                                >
-                                                                </v-img>
-                                                                <v-card-title class="text-uppercase font-weight-light">
-                                                                    <v-list-item two-line>
-                                                                        <v-list-item-content>
-                                                                            <v-list-item-title>{{ task.name }}</v-list-item-title>
-                                                                            <v-list-item-subtitle>{{ dateFormated(task.eventStartDate) }} - {{ dateFormated(task.eventEndDate) }}</v-list-item-subtitle>
-                                                                        </v-list-item-content>
-                                                                    </v-list-item>
-                                                                </v-card-title>
-                                                                <v-fade-transition>
-                                                                    <v-overlay
-                                                                        v-if="hover"
-                                                                        absolute
-                                                                        color="#036358"
-                                                                    >
-                                                                        <v-btn :to="`/tasks/${task._id}`" color="primary">
-                                                                            <v-icon left>fas fa-eye</v-icon> See more
-                                                                        </v-btn>
-                                                                    </v-overlay>
-                                                                </v-fade-transition>
-                                                            </v-card>
-                                                        </template>
-                                                    </v-hover>
-                                                </v-col>
-                                            </v-row>
-                                        </template>
-                                    </v-data-iterator>
-                                </v-col>
-                            </v-row>
-                            <template v-if="loginuser.rol.value == 'coor' || loginuser.rol.value == 'admin'">
-                                <v-col cols="12" class="text-uppercase headline font-weight-light">
-                                    Comments
-                                    <v-chip label x-small color="secondary">In development</v-chip>
-                                </v-col>
-                                <v-col cols="12">
-                                    <v-alert
-                                        dense
-                                        color="info"
-                                        icon="fas fa-comment"
-                                        border="left"
-                                    >
-                                        <v-row align="center" no-gutters>
-                                            <v-col class="grow">
-                                                User
-                                            </v-col>
-                                            <v-spacer></v-spacer>
-                                            <v-col class="shrink">
-                                                Date
-                                            </v-col>
-                                        </v-row>
-                                        <v-divider class="my-4" color="primary"></v-divider>
-                                        <v-row align="center" no-gutters>
-                                            <v-col class="grow">
-                                                Proin magna. Vivamus in erat ut urna cursus vestibulum. Etiam imperdiet imperdiet orci.
-                                            </v-col>
-                                            <v-spacer></v-spacer>
-                                            <v-col class="shrink">
-                                                <v-btn icon>
-                                                    <v-icon small color="error">fas fa-trash</v-icon>
-                                                </v-btn>
-                                            </v-col>
-                                        </v-row>
-                                    </v-alert>
-                                    <v-badge overlap bordered icon="fas fa-lock">
-                                        <v-btn block color="primary"><v-icon small left>fas fa-comments</v-icon>Add comment</v-btn>
-                                    </v-badge>
-                                </v-col>
+                                      <v-icon left>fas fa-eye</v-icon> See more
+                                    </v-btn>
+                                  </v-overlay>
+                                </v-fade-transition>
+                              </v-card>
                             </template>
-                        </v-card-text>
-                        <template v-if="loginuser.rol.value == 'admin' || loginuser.id == searchedWorkgroup.creator.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
-                            <v-divider></v-divider>
-                            <v-card-actions>
-                                <v-row>
-                                    <v-col cols="12" class="font-weight-light ml-5">Created by
-                                        <v-chip class="font-italic ml-2" :to="`/users/`+ searchedWorkgroup.creator.id">
-                                            <v-avatar left v-if="searchedWorkgroup.creator.avatar != ''"><v-img :src="searchedWorkgroup.creator.avatar"></v-img></v-avatar>
-                                            <v-avatar left v-else><v-icon small color="info">fas fa-user</v-icon></v-avatar>
-                                            {{ searchedWorkgroup.creator.username }}
-                                        </v-chip>
-                                    </v-col>
-                                </v-row>
-                                <v-spacer></v-spacer>
-                                <v-dialog
-                                    max-width="650"
-                                    v-model="dialogs.editworkgroup"
-                                >
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn class="mx-1" @click="loadEditedWorkgroup" depressed small color="info" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id || searchedWorkgroup.coordinators.some(coor => coor.id == loginuser.id)">
-                                            Edit
-                                            <v-icon x-small class="ml-1">fas fa-edit</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <edit-work-group></edit-work-group>
-                                </v-dialog>
-                                <v-dialog
-                                    max-width="400"
-                                    v-model="dialogs.confirm"
-                                >
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn class="mx-1" depressed small color="error" v-on="on" v-if="loginuser.rol.value == 'admin' || searchedWorkgroup.creator.id == loginuser.id">
-                                            Delete
-                                            <v-icon x-small class="ml-1">fas fa-trash</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <confirmation-template 
-                                        :title="`Delete ${searchedWorkgroup.name}`" 
-                                        description="You are about to delete this Work Group. <br><br>Are you sure?" 
-                                        :cancelFunction="null" 
-                                        textButton="Delete" 
-                                        :actionparams="{id:searchedWorkgroup._id,type:'workgroup'}" 
-                                        :action="delWorkgroup"
-                                    ></confirmation-template>
-                                </v-dialog>
-                            </v-card-actions>
-                        </template>
-                    </v-card>
-                    <invalid-static
-                        v-else
-                        item="Workgroup"
-                        goto="/workgroups"
-                    ></invalid-static>
-                </v-skeleton-loader>
-            </v-col>
-        </v-row>
-
-    </v-container>
+                          </v-hover>
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-data-iterator>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <template
+              v-if="
+                loginuser.rol.value == 'admin' ||
+                loginuser.id == workgroup.creator.id ||
+                workgroup.coordinators.some((coor) => coor.id == loginuser.id)
+              "
+            >
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-row>
+                  <v-col cols="12" class="font-weight-light ml-5"
+                    >Created by
+                    <v-chip
+                      class="font-italic ml-2"
+                      :to="`/users/` + workgroup.creator._id"
+                    >
+                      <v-avatar left v-if="workgroup.creator.image != ''"
+                        ><v-img :src="workgroup.creator.image"></v-img
+                      ></v-avatar>
+                      <v-avatar left v-else
+                        ><v-icon small color="info"
+                          >fas fa-user</v-icon
+                        ></v-avatar
+                      >
+                      {{ workgroup.creator.username }}
+                    </v-chip>
+                  </v-col>
+                </v-row>
+                <v-spacer></v-spacer>
+                <v-dialog max-width="650" v-model="dialogs.editworkgroup">
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      class="mx-1"
+                      @click="loadEditedWorkgroup"
+                      depressed
+                      small
+                      color="info"
+                      v-on="on"
+                      v-if="
+                        loginuser.rol.value == 'admin' ||
+                        workgroup.creator.id == loginuser.id ||
+                        workgroup.coordinators.some(
+                          (coor) => coor.id == loginuser.id
+                        )
+                      "
+                    >
+                      Edit
+                      <v-icon x-small class="ml-1">fas fa-edit</v-icon>
+                    </v-btn>
+                  </template>
+                  <edit-work-group></edit-work-group>
+                </v-dialog>
+                <v-dialog max-width="400" v-model="dialogs.confirm">
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      class="mx-1"
+                      depressed
+                      small
+                      color="error"
+                      v-on="on"
+                      v-if="
+                        loginuser.rol.value == 'admin' ||
+                        workgroup.creator.id == loginuser.id
+                      "
+                    >
+                      Delete
+                      <v-icon x-small class="ml-1">fas fa-trash</v-icon>
+                    </v-btn>
+                  </template>
+                  <confirmation-template
+                    :title="`Delete ${workgroup.name}`"
+                    description="You are about to delete this Work Group. <br><br>Are you sure?"
+                    :cancelFunction="null"
+                    textButton="Delete"
+                    :actionparams="{ id: workgroup._id, type: 'workgroup' }"
+                    :action="delWorkgroup"
+                  ></confirmation-template>
+                </v-dialog>
+              </v-card-actions>
+            </template>
+          </v-card>
+          <invalid-static
+            v-else
+            item="Workgroup"
+            goto="/workgroups"
+          ></invalid-static>
+        </v-skeleton-loader>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex'
-import suscribeto from '../components/workgroups/suscribeto.vue'
-import confirm from '../components/general/confirm.vue'
-import invalidstatic from '../components/general/invalid.vue'
-import editworkgroup from '../components/workgroups/editworkgroup.vue'
-import editmembers from '../components/workgroups/editmembers.vue'
-import { dateToBeauty, idealTextColor } from '../utils/utils'
+import { mapActions, mapState, mapMutations } from "vuex";
+import suscribeto from "../components/workgroups/suscribeto.vue";
+import confirm from "../components/general/confirm.vue";
+import invalidstatic from "../components/general/invalid.vue";
+import editworkgroup from "../components/workgroups/editworkgroup.vue";
+import editmembers from "../components/workgroups/editmembers.vue";
+import { dateToBeauty, idealTextColor } from "../utils/utils";
 export default {
-    data() {
-        return {
-            polling:null
-        }
+  data() {
+    return {
+      polling: null,
+    };
+  },
+  components: {
+    "suscribe-to-work-group": suscribeto,
+    "edit-work-group": editworkgroup,
+    "confirmation-template": confirm,
+    "edit-members": editmembers,
+    "invalid-static": invalidstatic,
+  },
+  computed: {
+    ...mapState({
+      workgroup: (state) => state.workgroups.workgroup,
+      loginuser: (state) => state.user.loginuser,
+      dialogs: (state) => state.menu.menu.dialogs,
+      skeleton: (state) => state.workgroups.skeleton,
+    }),
+  },
+  methods: {
+    ...mapActions("workgroups", [
+      "searchWorkgroup",
+      "delWorkgroup",
+      "unsuscribeWorkgroup",
+    ]),
+    ...mapActions("menu", ["goBack"]),
+    ...mapMutations("workgroups", ["loadMembers", "loadEditedWorkgroup"]),
+    refreshing() {
+      this.polling = setInterval(() => {
+        this.searchWorkgroupSilent(this.$route.params.id);
+      }, 5 * 60 * 1000);
     },
-    components:{
-        'suscribe-to-work-group': suscribeto,
-        'edit-work-group': editworkgroup,
-        'confirmation-template': confirm,
-        'edit-members':editmembers,
-        'invalid-static': invalidstatic
+    textColor(color) {
+      return idealTextColor(color);
     },
-    computed: {
-        ...mapState({
-            searchedWorkgroup: state => state.workgroups.searchedWorkgroup,
-            loginuser: state => state.user.loginuser,
-            dialogs: state => state.menu.menu.dialogs,
-            skeleton: state => state.workgroups.skeleton,
-        })
+    dateFormated(date) {
+      return dateToBeauty(date);
     },
-    methods: {
-        ...mapActions('workgroups',['searchWorkgroup','searchWorkgroupSilent','delWorkgroup','unsuscribeWorkgroup']),
-        ...mapActions('menu',['goBack']),
-        ...mapMutations('workgroups',['loadMembers','loadEditedWorkgroup']),
-        refreshing() {
-            this.polling = setInterval(() => {
-                this.searchWorkgroupSilent(this.$route.params.id)
-            }, 5 * 60 * 1000);
-        },
-        textColor(color) {
-            return idealTextColor(color);
-        },
-        dateFormated(date) {
-            return dateToBeauty(date);
-        }
-    },
-    created() {
-        this.refreshing()
-        if(this.searchedWorkgroup == {} || this.searchedWorkgroup._id != this.$route.params.id){
-            this.searchWorkgroup(this.$route.params.id)
-        }
-    },
-    beforeDestroy() {
-        clearInterval(this.polling)  
-    },
-}
+  },
+  created() {
+    this.refreshing();
+    if (this.workgroup == {} || this.workgroup._id != this.$route.params.id) {
+      this.searchWorkgroup(this.$route.params.id);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.polling);
+  },
+};
 </script>

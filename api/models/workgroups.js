@@ -14,10 +14,6 @@ const workgroupScheme = new schema({
         type: String,
         default: 'grey'
     },
-    textcolor: {
-        type: String,
-        default: 'white'
-    },
     parent: {
         type: mongoose.Schema.Types.ObjectId,
         default: null
@@ -38,11 +34,18 @@ const workgroupScheme = new schema({
         }],
         required: true
     },
+    tasks: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Task'
+        }],
+        default: []
+    },
     dossier: {
         type: String,
         default: null
     },
-    linktodocuments: {
+    link: {
         type: String,
         default: null
     },

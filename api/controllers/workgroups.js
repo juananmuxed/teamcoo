@@ -16,7 +16,16 @@ exports.createWorkgroup = async (req, res) => {
 
 exports.getAllWorkgroups = async (req, res) => {
     try {
-        const workgroupDB = await Workgroups.find()
+        const workgroupDB = await Workgroups.find({ deleted: false, secret: false }).populate('creator').populate('questions').populate('coordinators').populate('members').populate('tasks');
+        res.json(workgroupDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+}
+
+exports.getAllSecretWorkgroups = async (req, res) => {
+    try {
+        const workgroupDB = await Workgroups.find({ secret: true }).populate('creator').populate('questions').populate('coordinators').populate('members').populate('tasks');
         res.json(workgroupDB)
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
@@ -27,11 +36,10 @@ exports.getWorkgroup = async (req, res) => {
     const _id = req.params.id
 
     try {
-        const workgroupDB = await Workgroups.findById(_id, function (err, wg) {
-            if (wg == undefined) {
-                return res.status(404).json({ message: 'Invalid ID' })
-            }
-        })
+        const workgroupDB = await Workgroups.findById(_id).populate('creator').populate('questions').populate('coordinators').populate('members').populate('tasks');
+        if (!workgroupDB) {
+            return res.status(404).json({ message: 'Invalid ID' })
+        }
         res.json(workgroupDB)
 
     } catch (error) {

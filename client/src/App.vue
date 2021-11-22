@@ -34,7 +34,7 @@
           v-if="menu.upDown"
           fixed
           fab
-          top
+          bottom
           right
           depressed
           color="secondary"

@@ -66,6 +66,6 @@ const taskschema = new schema({
     }
 }, { timestamps: true })
 
-const task = mongoose.model('Tasks', taskschema)
+const task = mongoose.model('Task', taskschema)
 
 module.exports = task
