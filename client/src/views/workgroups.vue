@@ -164,30 +164,6 @@
               </template>
               <span class="text-right font-weight-light">See more</span>
             </v-tooltip>
-            <v-tooltip
-              top
-              transition="slide-y-reverse-transition"
-              open-delay="100"
-            >
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  depressed
-                  fab
-                  x-small
-                  v-on="on"
-                  color="error"
-                  @click="
-                    searchQuestion(item);
-                    dialogs.confirm = true;
-                  "
-                  class="mx-1"
-                  v-if="loginuser.rol.value == 'admin'"
-                >
-                  <v-icon x-small>fas fa-trash</v-icon>
-                </v-btn>
-              </template>
-              <span class="text-right font-weight-light">Delete</span>
-            </v-tooltip>
           </template>
         </v-data-table>
       </v-col>
