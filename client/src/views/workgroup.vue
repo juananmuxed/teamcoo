@@ -31,7 +31,7 @@
               <v-tooltip
                 right
                 :color="
-                  loginuser.workgroups.some((wg) => wg._wgId === workgroup._id)
+                  workgroup.members.some((member) => member._id == loginuser.id)
                     ? 'info'
                     : 'error'
                 "
@@ -45,7 +45,7 @@
                   >
                 </template>
                 <span class="text-right caption font-weight-light">{{
-                  loginuser.workgroups.some((wg) => wg._wgId === workgroup._id)
+                  workgroup.members.some((member) => member._id == loginuser.id)
                     ? "Joined"
                     : "Unjoined"
                 }}</span>
@@ -53,7 +53,9 @@
               <v-spacer></v-spacer>
               <v-dialog
                 v-if="
-                  !loginuser.workgroups.some((wg) => wg._wgId === workgroup._id)
+                  !workgroup.members.some(
+                    (member) => member._id == loginuser.id
+                  )
                 "
                 v-model="dialogs.suscribeto"
                 max-width="650"
@@ -63,13 +65,12 @@
                     v-on="on"
                     color="primary"
                     rounded
+                    @click="loadInterests"
                     v-if="!workgroup.secret"
                     >Join</v-btn
                   >
                 </template>
-                <suscribe-to-work-group
-                  :id="workgroup._id"
-                ></suscribe-to-work-group>
+                <suscribe-to-work-group></suscribe-to-work-group>
               </v-dialog>
               <v-dialog
                 v-else
@@ -81,15 +82,11 @@
                 </template>
                 <confirmation-template
                   :title="`Unjoin from <span class='${workgroup.color}--text pl-2'>${workgroup.name}</span>`"
-                  description="You are about to unjoin this Work Group. Your questions are saved in the Database for future stats. <br><br>Are you sure?"
+                  description="You are about to unjoin this Work Group. Your answers are saved in the Database for future stats. <br><br>Are you sure?"
                   :cancelFunction="null"
-                  textButton="Unsuscribe"
-                  :actionparams="{
-                    idWorkgroup: workgroup._id,
-                    idUser: loginuser.id,
-                    suscribe: false,
-                  }"
-                  :action="unsuscribeWorkgroup"
+                  textButton="Unjoin"
+                  :actionparams="{ userId: loginuser.id }"
+                  :action="unjoinWorkgroup"
                 ></confirmation-template>
               </v-dialog>
               <v-chip small label color="secondary" v-if="workgroup.secret">
@@ -335,52 +332,71 @@
                 </v-row>
                 <v-spacer></v-spacer>
                 <v-dialog max-width="650" v-model="dialogs.editworkgroup">
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      class="mx-1"
-                      @click="loadEditedWorkgroup"
-                      depressed
-                      small
-                      color="info"
-                      v-on="on"
-                      v-if="
-                        loginuser.rol.value == 'admin' ||
-                        workgroup.creator.id == loginuser.id ||
-                        workgroup.coordinators.some(
-                          (coor) => coor.id == loginuser.id
-                        )
-                      "
+                  <template v-slot:activator="{ on: onDialog }">
+                    <v-tooltip
+                      top
+                      transition="slide-y-reverse-transition"
+                      open-delay="100"
                     >
-                      Edit
-                      <v-icon x-small class="ml-1">fas fa-edit</v-icon>
-                    </v-btn>
+                      <template v-slot:activator="{ on: onTooltip }">
+                        <v-btn
+                          class="mx-1"
+                          @click="loadEditedWorkgroup"
+                          depressed
+                          fab
+                          small
+                          color="info"
+                          v-on="{ ...onTooltip, ...onDialog }"
+                          v-if="
+                            loginuser.rol.value == 'admin' ||
+                            workgroup.creator.id == loginuser.id ||
+                            workgroup.coordinators.some(
+                              (coor) => coor.id == loginuser.id
+                            )
+                          "
+                        >
+                          <v-icon small class="ml-1">fas fa-edit</v-icon>
+                        </v-btn>
+                      </template>
+                      <span class="text-right font-weight-light">Edit</span>
+                    </v-tooltip>
                   </template>
                   <edit-work-group></edit-work-group>
                 </v-dialog>
-                <v-dialog max-width="400" v-model="dialogs.confirm">
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      class="mx-1"
-                      depressed
-                      small
-                      color="error"
-                      v-on="on"
-                      v-if="
-                        loginuser.rol.value == 'admin' ||
-                        workgroup.creator.id == loginuser.id
-                      "
+                <v-dialog max-width="650" v-model="dialogs.confirm">
+                  <template v-slot:activator="{ on: onDialog }">
+                    <v-tooltip
+                      top
+                      transition="slide-y-reverse-transition"
+                      open-delay="100"
                     >
-                      Delete
-                      <v-icon x-small class="ml-1">fas fa-trash</v-icon>
-                    </v-btn>
+                      <template v-slot:activator="{ on: onTooltip }">
+                        <v-btn
+                          class="mx-1"
+                          @click="loadEditedWorkgroup"
+                          depressed
+                          fab
+                          small
+                          color="error"
+                          v-on="{ ...onTooltip, ...onDialog }"
+                          v-if="
+                            loginuser.rol.value == 'admin' ||
+                            workgroup.creator.id == loginuser.id
+                          "
+                        >
+                          <v-icon small class="ml-1">fas fa-trash</v-icon>
+                        </v-btn>
+                      </template>
+                      <span class="text-right font-weight-light">Delete</span>
+                    </v-tooltip>
                   </template>
                   <confirmation-template
                     :title="`Delete ${workgroup.name}`"
                     description="You are about to delete this Work Group. <br><br>Are you sure?"
                     :cancelFunction="null"
                     textButton="Delete"
-                    :actionparams="{ id: workgroup._id, type: 'workgroup' }"
-                    :action="delWorkgroup"
+                    :actionparams="{ id: workgroup._id }"
+                    :action="delWorkgroupSoft"
                   ></confirmation-template>
                 </v-dialog>
               </v-card-actions>
@@ -429,10 +445,12 @@ export default {
   methods: {
     ...mapActions("workgroups", [
       "searchWorkgroup",
-      "delWorkgroup",
-      "unsuscribeWorkgroup",
+      "delWorkgroupSoft",
+      "unjoinWorkgroup",
+      "searchWorkgroupSilent",
     ]),
     ...mapActions("menu", ["goBack"]),
+    ...mapActions("interests", ["loadInterests"]),
     ...mapMutations("workgroups", ["loadMembers", "loadEditedWorkgroup"]),
     refreshing() {
       this.polling = setInterval(() => {

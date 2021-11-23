@@ -4,9 +4,11 @@ const router = express.Router()
 const auth = require("../controllers/auth")
 const questionsController = require("../controllers/questions")
 
-router.get('/:id', questionsController.loadQuestion)
+router.get('/:id', questionsController.getQuestion)
 
-router.get('/', auth, questionsController.loadAllQuestions)
+router.get('/', auth, questionsController.getAllQuestions)
+
+router.get('/archived/', auth, questionsController.getAllQuestionsDeleted)
 
 router.post('/', auth, questionsController.createQuestion)
 

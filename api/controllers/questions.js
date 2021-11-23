@@ -31,7 +31,7 @@ exports.createQuestion = async (req, res) => {
     }
 }
 
-exports.loadQuestion = async (req, res) => {
+exports.getQuestion = async (req, res) => {
     const _id = req.params.id
 
     try {
@@ -43,9 +43,18 @@ exports.loadQuestion = async (req, res) => {
     }
 }
 
-exports.loadAllQuestions = async (req, res) => {
+exports.getAllQuestions = async (req, res) => {
     try {
         const questionsDB = await Questions.find({ deleted: false }).populate('creator').populate('interests')
+        res.json(questionsDB)
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error })
+    }
+}
+
+exports.getAllQuestionsDeleted = async (req, res) => {
+    try {
+        const questionsDB = await Questions.find({ deleted: true }).populate('creator').populate('interests')
         res.json(questionsDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })

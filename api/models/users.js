@@ -44,14 +44,6 @@ const userScheme = mongoose.Schema({
             required: [true, 'Please accept policy']
         }
     },
-    workgroups: {
-        type: Array,
-        default: []
-    },
-    unsuscribedworkgroups: {
-        type: Array,
-        default: []
-    },
     verifiedemail: {
         type: Boolean,
         default: false

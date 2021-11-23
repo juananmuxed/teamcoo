@@ -106,7 +106,7 @@
         top
         absolute
         color="primary"
-        @click="createQuestion(loginuser._id)"
+        @click="createQuestion(loginuser.id)"
         :disabled="validQuestion()"
         class="mt-8"
       >
