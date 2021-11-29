@@ -26,7 +26,7 @@ exports.getAllWorkgroups = async (req, res) => {
 
 exports.getAllSecretWorkgroups = async (req, res) => {
     try {
-        const workgroupDB = await Workgroups.find({ secret: true, delete: false }).populate('creator').populate('questions').populate('coordinators').populate('members').populate('tasks');
+        const workgroupDB = await Workgroups.find({ secret: true, deleted: false }).populate('creator').populate('questions').populate('coordinators').populate('members').populate('tasks');
         res.json(workgroupDB)
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
@@ -84,28 +84,6 @@ exports.deleteWorkgroup = async (req, res) => {
     const _id = req.params.id
     try {
         const workgroupDB = await Workgroups.findByIdAndDelete({ _id })
-        res.json(workgroupDB)
-    } catch (error) {
-        res.status(400).json({ message: 'An error has ocurred', error: error });
-    }
-}
-
-exports.joinWorkgroup = async (req, res) => {
-    const _id = req.params.id
-    try {
-        const userId = req.body.user;
-        const answers = req.body.answers;
-        const workgroupDB = await Workgroups.findByIdAndUpdate(_id, {
-            $push: { members: userId }
-        }).populate('creator').populate('questions').populate('coordinators').populate('members').populate('tasks');
-        answers.forEach(async (answer) => {
-            await Answers.create({
-                user: userId,
-                question: answer.question,
-                answers: answer.answers,
-                text: answer.text
-            })
-        });
         res.json(workgroupDB)
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });

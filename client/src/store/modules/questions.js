@@ -122,7 +122,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    // Not implemented TODO: add User data to body and table to work
+    // TODO: finally deleted not implemented
     async delQuestion({ commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth']

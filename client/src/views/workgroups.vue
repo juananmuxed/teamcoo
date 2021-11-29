@@ -58,8 +58,8 @@
               >
                 <v-tooltip top>
                   <template v-slot:activator="{ on }">
-                    <template v-if="user.avatar != ''">
-                      <v-img :src="user.avatar" v-on="on"></v-img>
+                    <template v-if="user.image != ''">
+                      <v-img :src="user.image" v-on="on"></v-img>
                     </template>
                     <template v-else>
                       <v-icon small color="primary" v-on="on"

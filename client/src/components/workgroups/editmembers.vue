@@ -17,7 +17,7 @@
           <v-col cols="12" class="py-1">
             <v-autocomplete
               label="Members"
-              v-model="workgroup.coordinators"
+              v-model="editMemberForm.coordinators"
               multiple
               chips
               outlined
@@ -44,8 +44,8 @@
                 </v-chip>
               </template>
               <template v-slot:item="data">
-                <v-list-item-avatar v-if="data.item.avatar != ''">
-                  <img :src="data.item.avatar" />
+                <v-list-item-avatar v-if="data.item.image != ''">
+                  <img :src="data.item.image" />
                 </v-list-item-avatar>
                 <v-list-item-avatar v-else color="secondary"
                   ><v-icon color="primary"
@@ -78,7 +78,7 @@
         <v-col cols="12" class="py-1">
           <v-autocomplete
             label="Members"
-            v-model="workgroup.members"
+            v-model="editMemberForm.members"
             multiple
             chips
             outlined
@@ -90,8 +90,8 @@
           >
             <template v-slot:selection="data">
               <v-chip v-bind="data.attrs" :input-value="data.selected">
-                <v-avatar left v-if="data.item.avatar != ''">
-                  <v-img :src="data.item.avatar"></v-img>
+                <v-avatar left v-if="data.item.image != ''">
+                  <v-img :src="data.item.image"></v-img>
                 </v-avatar>
                 <v-avatar left v-else>
                   <v-icon color="primary" small>fas fa-user</v-icon>
@@ -105,8 +105,8 @@
               </v-chip>
             </template>
             <template v-slot:item="data">
-              <v-list-item-avatar v-if="data.item.avatar != ''">
-                <img :src="data.item.avatar" />
+              <v-list-item-avatar v-if="data.item.image != ''">
+                <img :src="data.item.image" />
               </v-list-item-avatar>
               <v-list-item-avatar v-else color="secondary"
                 ><v-icon color="primary"
@@ -132,41 +132,32 @@
           </v-autocomplete>
         </v-col>
       </v-row>
-      <v-slide-y-transition origin="center center">
-        <v-btn
-          fab
-          right
-          small
-          top
-          absolute
-          color="primary"
-          @click="saveMembers()"
-          v-show="!editedMembers()"
-          class="mt-8 mr-12"
-        >
-          <v-icon small>fas fa-save</v-icon>
-        </v-btn>
-      </v-slide-y-transition>
-      <v-slide-y-transition origin="center center">
-        <v-btn
-          fab
-          right
-          small
-          top
-          absolute
-          color="info"
-          @click="
-            loadMembers({
-              members: workgroup.members,
-              coordinators: workgroup.coordinators,
-            })
-          "
-          v-show="!editedMembers()"
-          class="mt-8"
-        >
-          <v-icon small>fas fa-undo</v-icon>
-        </v-btn>
-      </v-slide-y-transition>
+      <v-btn
+        fab
+        right
+        small
+        top
+        absolute
+        color="primary"
+        @click="saveMembers()"
+        :disabled="editedMembers()"
+        class="mt-8"
+      >
+        <v-icon small>fas fa-save</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        right
+        small
+        top
+        absolute
+        color="info"
+        @click="loadMembers()"
+        :disabled="editedMembers()"
+        class="mt-8 mr-12"
+      >
+        <v-icon small>fas fa-undo</v-icon>
+      </v-btn>
     </v-card-text>
   </v-card>
 </template>
@@ -177,6 +168,7 @@ export default {
   computed: {
     ...mapState({
       workgroup: (state) => state.workgroups.workgroup,
+      editMemberForm: (state) => state.workgroups.editMemberForm,
       users: (state) => state.users.users,
       loginuser: (state) => state.user.loginuser,
     }),
@@ -186,7 +178,6 @@ export default {
     ...mapActions("workgroups", ["saveMembers"]),
     ...mapGetters("workgroups", ["editedMembers"]),
     ...mapMutations("workgroups", ["loadMembers"]),
-    // TODO: mejorar esta mierda de función de busqueda y extraer
     customFilter(item, queryText) {
       const username = item.username.toLowerCase();
       const firstname = item.firstname.toLowerCase();

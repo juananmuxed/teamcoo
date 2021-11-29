@@ -73,23 +73,7 @@ exports.getUser = async (req, res) => {
 exports.getUsers = async (req, res) => {
     try {
         const userDB = await User.find()
-        let datatemp = []
-        for (let x = 0; x < userDB.length; x++) {
-            let tempuser = {
-                lastname: userDB[x].lastname,
-                rol: userDB[x].rol,
-                avatar: userDB[x].image,
-                firstname: userDB[x].firstname,
-                id: userDB[x]._id,
-                workgroups: userDB[x].workgroups,
-                commonquestions: userDB[x].commonquestions,
-                privatecomments: userDB[x].privatecomments,
-                username: userDB[x].username,
-                membership: userDB[x].membership
-            }
-            datatemp.push(tempuser)
-        }
-        res.status(201).json(datatemp)
+        res.status(201).json(userDB)
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }

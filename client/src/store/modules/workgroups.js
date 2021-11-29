@@ -26,7 +26,7 @@ const state = {
         },
         loading: false
     },
-    editmemberform: {
+    editMemberForm: {
         members: [],
         coordinators: [],
         loading: false
@@ -90,15 +90,9 @@ const mutations = {
             state.usersforadd.push(users[x])
         }
     },
-    loadMembers: (state, members) => {
-        state.editmemberform.members = Array(members.members.length)
-        for (let x = 0; x < members.members.length; x++) {
-            state.editmemberform.members[x] = members.members[x];
-        }
-        state.editmemberform.coordinators = Array(members.coordinators.length)
-        for (let x = 0; x < members.coordinators.length; x++) {
-            state.editmemberform.coordinators[x] = members.coordinators[x];
-        }
+    loadMembers: (state) => {
+        state.editMemberForm.members = JSON.parse(JSON.stringify(state.workgroup.members));
+        state.editMemberForm.coordinators = JSON.parse(JSON.stringify(state.workgroup.coordinators));
     },
     randomWorkgroupColor: (state) => {
         state.workgroupForm.workgroup.color = generateRandomColor(30);
@@ -155,10 +149,10 @@ const getters = {
     },
 
     editedMembers: (state) => {
-        if (isDiferentArray(state.workgroup.members, state.editmemberform.members, 'id', 'id')) {
+        if (isDiferentArray(state.workgroup.members, state.editMemberForm.members, '_id', '_id')) {
             return false
         }
-        if (isDiferentArray(state.workgroup.coordinators, state.editmemberform.coordinators, 'id', 'id')) {
+        if (isDiferentArray(state.workgroup.coordinators, state.editMemberForm.coordinators, '_id', '_id')) {
             return false
         }
         return true
@@ -198,7 +192,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    // Not implemented TODO: add User data to body and table to work
+    // TODO: finally deleted not implemented
     async delWorkgroup({ commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
@@ -298,7 +292,7 @@ const actions = {
             let answers = state.answers.map(answer => {
                 let a = answer;
                 if (typeof a.answers === 'string') a.answers = [answer.answers];
-                return a
+                return a;
             })
             let res = await Axios.put('/workgroups/join/' + state.workgroup._id, { user: userId, answers: answers }, config);
             commit('setWorkgroup', res.data);
@@ -321,52 +315,15 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async unsuscribeWorkgroup({ dispatch }, params) {
-        await dispatch('users/searchUser', params.idUser, { root: true })
-        await dispatch('unjoinWorkgroup', params);
-        await dispatch('saveMember', params);
-    },
-    async saveMembers({ state, commit, dispatch, rootState, rootGetters }) {
+
+    async saveMembers({ state, commit, dispatch, rootGetters }) {
         try {
-            let idWorkgroup = state.searchedWorkgroup._id;
-            let idMembersOld = state.searchedWorkgroup.members.map(m => m.id)
-            let idMembers = state.editmemberform.members.map(m => m.id);
-            let idCoordinators = state.editmemberform.coordinators.map(m => m.id);
             let config = rootGetters['general/cookieAuth'];
-            for (let x = 0; x < idMembers.length; x++) {
-                await dispatch('users/loadUserByID', idMembers[x], { root: true });
-                if (!rootState.users.temporaluser.workgroups.some(w => w._wgId == idWorkgroup)) {
-                    await dispatch('joinWorkgroup', { idWorkgroup: idWorkgroup, idUser: idMembers[x] });
-                }
-            }
-            for (let x = 0; x < idMembersOld.length; x++) {
-                await dispatch('users/loadUserByID', idMembersOld[x], { root: true });
-                if (!idMembers.some(w => w == idMembersOld[x])) {
-                    await dispatch('unjoinWorkgroup', { idWorkgroup: idWorkgroup, idUser: idMembersOld[x] });
-                }
-            }
-            let res = await Axios.put('/workgroups/' + idWorkgroup, { members: idMembers, coordinators: idCoordinators }, config);
-            await dispatch('searchWorkgroupSilent', res.data);
+            let res = await Axios.put('/workgroups/' + state.workgroup._id, { members: state.editMemberForm.members, coordinators: state.editMemberForm.coordinators }, config);
+            commit('setWorkgroup', res.data);
             await dispatch('user/refreshLoadedUser', null, { root: true });
             commit('menu/cancelDialog', 'editmembers', { root: true });
             commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-    async saveMember({ commit, dispatch, rootGetters }, params) {
-        try {
-            let userId = params.idUser, workgroupId = params.idWorkgroup;
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/workgroups/' + workgroupId, config);
-            let members = res.data.members;
-            members = members.filter(m => m != userId);
-            if (params.suscribe) members.push(userId);
-            let resPut = await Axios.put('/workgroups/' + workgroupId, { members: members }, config);
-            await dispatch('searchWorkgroupSilent', resPut.data);
-            await dispatch('user/refreshLoadedUser', null, { root: true });
-            commit('menu/cancelDialog', 'suscribeto', { root: true });
-            commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }

@@ -148,23 +148,11 @@ const actions = {
             commit('changeLoading', false);
         }
     },
-    async loadUsersSilent({ commit, dispatch, rootState, rootGetters }) {
+    async loadUsersSilent({ commit, dispatch, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/', config),
-                users = res.data,
-                workgroups = rootState.workgroups.workgroups;
-            for (let x = 0; x < users.length; x++) {
-                for (let y = 0; y < users[x].workgroups.length; y++) {
-                    let wg = workgroups.find(v => v._id == users[x].workgroups[y]._wgId);
-                    if (wg) {
-                        users[x].workgroups[y].name = wg.name;
-                        users[x].workgroups[y].color = wg.color;
-                        users[x].workgroups[y].textcolor = wg.textcolor;
-                    }
-                }
-            }
-            commit('usersLoad', users);
+            let res = await Axios.get('/users/', config);
+            commit('usersLoad', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
@@ -226,7 +214,6 @@ const actions = {
             let resTasks = await Axios.get('/tasks/', config);
             let resWorkgroups = await Axios.get('/workgroups/', config)
             let tasks = resTasks.data, workgroups = resWorkgroups.data;
-            // TODO: eliminar de acciones cuando se termine el CRUD de acciones
             for (let i = 0; i < tasks.length; i++) {
                 console.log('T')
             }

@@ -4,11 +4,6 @@
       >Join to {{ workgroup.name }}</v-card-title
     >
     <v-card-text>
-      <v-row>
-        <v-col cols="12" class="py-0 caption font-italic font-weight-light"
-          >You are previously Joined this Work Group:</v-col
-        >
-      </v-row>
       <v-row class="px-3 mb-3">
         <v-col cols="12" class="pa-2">
           <p>Please answer the question to join this Work Group.</p>
