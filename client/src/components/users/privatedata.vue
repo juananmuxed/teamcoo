@@ -246,8 +246,8 @@
 
 <script>
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
-import changePassword from "./changepass.vue";
-import createworkgroup from "../workgroups/createworkgroup.vue";
+import changePassword from "./ChangePass.vue";
+import createworkgroup from "../workgroups/CreateWorkgroup.vue";
 
 export default {
   components: {

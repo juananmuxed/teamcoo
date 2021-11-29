@@ -155,9 +155,9 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import createinterest from "../components/interests/createinterest.vue";
-import editinterest from "../components/interests/editinterest.vue";
-import confirm from "../components/general/confirm.vue";
+import createinterest from "../components/interests/CreateInterest.vue";
+import editinterest from "../components/interests/EditInterest.vue";
+import confirm from "../components/general/Confirm.vue";
 import { idealTextColor } from "../utils/utils";
 export default {
   data() {

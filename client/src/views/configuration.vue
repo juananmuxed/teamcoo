@@ -15,13 +15,13 @@
           <configuration-general></configuration-general>
         </v-tab-item>
         <v-tab-item>
-            <configuration-commonq></configuration-commonq>
+          <configuration-common-question></configuration-common-question>
         </v-tab-item>
         <v-tab-item>
-            <configuration-custom></configuration-custom>
+          <configuration-custom></configuration-custom>
         </v-tab-item>
         <v-tab-item>
-            <configuration-email></configuration-email>
+          <configuration-email></configuration-email>
         </v-tab-item>
       </v-tabs-items>
     </v-card>
@@ -30,16 +30,16 @@
 
 <script>
 import { mapState } from "vuex";
-import general from '../components/configuration/general'
-import commonq from '../components/configuration/commonquestions'
-import customization from '../components/configuration/customization'
-import email from '../components/configuration/email'
+import general from "../components/configuration/General";
+import commonQuestion from "../components/configuration/CommonQuestions";
+import customization from "../components/configuration/Customization";
+import email from "../components/configuration/Email";
 export default {
   components: {
-      'configuration-general': general,
-      'configuration-custom': customization,
-      'configuration-commonq': commonq,
-      'configuration-email': email,
+    "configuration-general": general,
+    "configuration-custom": customization,
+    "configuration-common-question": commonQuestion,
+    "configuration-email": email,
   },
   computed: {
     ...mapState({

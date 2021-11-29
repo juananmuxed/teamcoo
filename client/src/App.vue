@@ -60,9 +60,9 @@
 </template>
 
 <script>
-import lateralmenu from "./components/general/lateralmenu.vue";
-import toolbar from "./components/general/toolbar.vue";
-import footer from "./components/general/footer.vue";
+import lateralmenu from "./components/general/LateralMenu.vue";
+import toolbar from "./components/general/Toolbar.vue";
+import footer from "./components/general/Footer.vue";
 import Vuetify from "./plugins/vuetify";
 
 import { mapActions, mapMutations, mapState } from "vuex";

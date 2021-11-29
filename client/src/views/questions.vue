@@ -165,9 +165,9 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import createquestion from "../components/questions/createquestion.vue";
-import editquestion from "../components/questions/editquestion.vue";
-import confirm from "../components/general/confirm.vue";
+import createquestion from "../components/questions/CreateQuestion.vue";
+import editquestion from "../components/questions/EditQuestion.vue";
+import confirm from "../components/general/Confirm.vue";
 import { idealTextColor } from "../utils/utils";
 export default {
   data() {

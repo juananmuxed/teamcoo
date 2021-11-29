@@ -504,7 +504,7 @@
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 import { idealTextColor } from "../../utils/utils";
-import createtask from "../tasks/createtask.vue";
+import createtask from "../tasks/CreateTask.vue";
 
 export default {
   data() {

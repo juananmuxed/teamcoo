@@ -115,8 +115,8 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import textareaeditorVue from "./textareaeditor.vue";
-import confirm from "../general/confirm.vue";
+import textareaeditorVue from "./TextAreaEditor.vue";
+import confirm from "../general/Confirm.vue";
 
 export default {
   data() {

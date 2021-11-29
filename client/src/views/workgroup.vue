@@ -415,11 +415,11 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import suscribeto from "../components/workgroups/suscribeto.vue";
-import confirm from "../components/general/confirm.vue";
-import invalidstatic from "../components/general/invalid.vue";
-import editworkgroup from "../components/workgroups/editworkgroup.vue";
-import editmembers from "../components/workgroups/editmembers.vue";
+import suscribeto from "../components/workgroups/SuscribeTo.vue";
+import confirm from "../components/general/Confirm.vue";
+import invalidstatic from "../components/general/Invalid.vue";
+import editworkgroup from "../components/workgroups/EditWorkgroup.vue";
+import editmembers from "../components/workgroups/EditMembers.vue";
 import { dateToBeauty, idealTextColor } from "../utils/utils";
 export default {
   data() {

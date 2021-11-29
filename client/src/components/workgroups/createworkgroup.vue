@@ -207,7 +207,7 @@
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
 import { idealTextColor } from "../../utils/utils";
-import createquestion from "../questions/createquestion.vue";
+import createquestion from "../questions/CreateQuestion.vue";
 export default {
   components: {
     "create-question": createquestion,

@@ -279,7 +279,7 @@ export default {
   props: {
     value: {
       type: String,
-      default: '',
+      default: "",
     },
   },
   watch: {
@@ -289,7 +289,7 @@ export default {
       // JSON
       // const isSame = this.editor.getJSON().toString() === value.toString()
       if (isSame) {
-        return
+        return;
       }
       this.editor.commands.setContent(this.value, false);
     },
@@ -305,7 +305,7 @@ export default {
       extensions: [...defaultExtensions(), Underline, TextAlign],
       onUpdate: () => {
         // HTML
-        this.$emit('input', this.editor.getHTML());
+        this.$emit("input", this.editor.getHTML());
         // JSON
         // this.$emit('input', this.editor.getJSON())
       },

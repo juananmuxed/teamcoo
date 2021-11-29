@@ -378,7 +378,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import createworkgroup from "../components/workgroups/createworkgroup.vue";
+import createworkgroup from "../components/workgroups/CreateWorkgroup.vue";
 import { idealTextColor } from "../utils/utils";
 export default {
   data() {

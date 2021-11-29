@@ -27,7 +27,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import homebuttons from "../components/general/homebuttons.vue";
+import homebuttons from "../components/general/HomeButtons.vue";
 import { sleep } from "../utils/utils";
 export default {
   data() {

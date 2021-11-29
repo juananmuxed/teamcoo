@@ -53,7 +53,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
-import logintemplate from "../users/logintemplate.vue";
+import logintemplate from "./LoginTemplate.vue";
 export default {
   components: {
     "login-template": logintemplate,

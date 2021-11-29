@@ -532,11 +532,11 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import confirm from "../components/general/confirm.vue";
-import invalidstatic from "../components/general/invalid.vue";
-import editcommonquestions from "../components/users/editcommonquestions.vue";
-import changePassword from "../components/users/changepass.vue";
-import edituser from "../components/users/edituser.vue";
+import confirm from "../components/general/Confirm.vue";
+import invalidstatic from "../components/general/Invalid.vue";
+import editcommonquestions from "../components/users/EditCommonQuestions.vue";
+import changePassword from "../components/users/ChangePass.vue";
+import edituser from "../components/users/EditUser.vue";
 import { idealTextColor } from "../utils/utils";
 export default {
   components: {
