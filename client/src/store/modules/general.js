@@ -167,7 +167,7 @@ const getters = {
     cookieAuth: () => {
         return {
             headers: {
-                Authorization: "Bearer " + Cookies.get("catapa-jwt")
+                Authorization: "Bearer " + Cookies.get("teamcoo-jwt")
             }
         }
     },

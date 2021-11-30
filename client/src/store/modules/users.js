@@ -244,8 +244,8 @@ const actions = {
             }
             await Axios.delete('/users/' + params.id, config);
             commit('menu/cancelDialog', 'confirmSoft', { root: true });
-            Cookies.remove('catapa-jwt')
-            Cookies.remove('teamcoo-catapa-userdata')
+            Cookies.remove('teamcoo-jwt')
+            Cookies.remove('teamcoo-userdata')
             commit('menu/cancelDialog', 'logout', { root: true })
             commit('user/clearUser', null, { root: true })
             router.push('/');

@@ -204,7 +204,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (Cookies.get('catapa-jwt') == undefined) {
+        if (Cookies.get('teamcoo-jwt') == undefined) {
             next({
                 path: "/login"
             })
@@ -215,7 +215,7 @@ router.beforeEach((to, from, next) => {
         next()
     }
     if (to.matched.some(record => record.meta.withoutAuth)) {
-        if (Cookies.get('catapa-jwt') != undefined) {
+        if (Cookies.get('teamcoo-jwt') != undefined) {
             next({
                 path: "/dashboard"
             })

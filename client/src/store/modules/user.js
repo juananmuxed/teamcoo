@@ -164,7 +164,7 @@ const actions = {
             let response = await Axios.post('/users/signup', user);
             let token = response.data.token;
             if (token) {
-                Cookies.set('catapa-jwt', token, { expires: 30 });
+                Cookies.set('teamcoo-jwt', token, { expires: 30 });
                 commit('userStore', { data: response.data.data });
                 let config = rootGetters['general/cookieAuth'];
                 router.push('/dashboard');
@@ -178,7 +178,7 @@ const actions = {
                 }, config);
 
                 commit('changeSending');
-                commit('menu/notification', ['success', 3, 'Correct registration. Welcome to Catapa, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
+                commit('menu/notification', ['success', 3, 'Correct registration. Welcome, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
             }
         }
         catch (error) {
@@ -190,8 +190,8 @@ const actions = {
         try {
             let response = await Axios.post('/users/login', state.user)
             let token = response.data.token;
-            if (Cookies.get('catapa-jwt') == undefined) {
-                Cookies.set('catapa-jwt', token, { expires: 30 });
+            if (Cookies.get('teamcoo-jwt') == undefined) {
+                Cookies.set('teamcoo-jwt', token, { expires: 30 });
             }
             if (token) {
                 commit('userStore', { data: response.data.user });
@@ -217,8 +217,8 @@ const actions = {
     },
     async logOut({ commit, dispatch }) {
         try {
-            Cookies.remove('catapa-jwt')
-            Cookies.remove('teamcoo-catapa-userdata')
+            Cookies.remove('teamcoo-jwt')
+            Cookies.remove('teamcoo-userdata')
             commit('menu/cancelDialog', 'logout', { root: true })
             commit('clearUser')
             router.push('/');
