@@ -95,20 +95,23 @@
         >
         </confirmation-template>
       </v-dialog>
-      <v-row class="px-3">
-        <v-col>
+      <v-tooltip transition="slide-x-reverse-transition" open-delay="100" left>
+        <template v-slot:activator="{ on }">
           <v-btn
-            height="160"
-            block
-            color="primary"
-            class="my-2"
+            v-on="{ on }"
+            fab
+            right
+            top
+            absolute
+            color="info"
+            class="mt-12 mr-2"
             @click="addPageBlank()"
           >
-            <v-icon left>fas fa-plus</v-icon>
-            Add Page
+            <v-icon>fas fa-plus</v-icon>
           </v-btn>
-        </v-col>
-      </v-row>
+        </template>
+        <span class="text-right caption font-weight-light">Add new</span>
+      </v-tooltip>
     </v-card>
   </v-skeleton-loader>
 </template>

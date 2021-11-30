@@ -356,6 +356,9 @@ const actions = {
     async deletePage({ commit, getters, dispatch }, page) {
         try {
             let config = getters.cookieAuth;
+            if (!page.slug && !page.name) {
+                return commit('menu/notification', ['error', 3, 'This page is not saved, save before delete.'], { root: true });
+            }
             await Axios.delete('/pages/' + page.name, config);
             await dispatch('getStaticPages');
             commit('menu/cancelDialog', 'confirm', { root: true });

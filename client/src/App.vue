@@ -9,6 +9,7 @@
       <div class="text-center">
         <v-progress-circular
           indeterminate
+          size="80"
           :color="!this.loginuser.dark ? 'black' : 'white'"
         ></v-progress-circular>
       </div>

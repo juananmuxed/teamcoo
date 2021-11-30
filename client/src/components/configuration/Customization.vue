@@ -199,16 +199,16 @@
           </v-card>
         </v-col>
       </v-row>
-      <v-col cols="12" class="py-1">
-        <v-btn
-          height="160"
-          class="my-2"
-          block
-          color="primary"
-          @click="saveThemeConfig"
-          ><v-icon left>fas fa-save</v-icon>Save theme config</v-btn
-        >
-      </v-col>
+      <v-btn
+        absolute
+        fab
+        top
+        right
+        class="my-2"
+        color="primary"
+        @click="saveThemeConfig"
+        ><v-icon>fas fa-save</v-icon></v-btn
+      >
     </v-card>
   </v-skeleton-loader>
 </template>
