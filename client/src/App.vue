@@ -27,7 +27,7 @@
         ></v-progress-linear
       ></v-slide-y-transition>
       <v-fade-transition mode="out-in"
-        ><router-view></router-view
+        ><router-view :key="$route.fullPath"></router-view
       ></v-fade-transition>
       <v-scale-transition origin="center center">
         <v-btn
