@@ -26,7 +26,6 @@
             :items="workgroups"
             item-text="name"
             item-value="_id"
-            :disabled="workgroupForm.workgroup.secret"
             :menu-props="{ closeOnContentClick: true }"
           >
             <template v-slot:prepend-item>

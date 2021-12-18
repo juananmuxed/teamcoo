@@ -136,6 +136,7 @@ const getters = {
             state.workgroupForm.workgroup.name != state.workgroup.name ||
             state.workgroupForm.workgroup.description != state.workgroup.description ||
             state.workgroupForm.workgroup.link != state.workgroup.link ||
+            state.workgroupForm.workgroup.parent != state.workgroup.parent ||
             state.workgroupForm.workgroup.color.toUpperCase() != state.workgroup.color.toUpperCase() ||
             state.workgroupForm.workgroup.newDossier != null ||
             state.workgroupForm.workgroup.secret != state.workgroup.secret ||
@@ -175,13 +176,14 @@ const actions = {
     async createWorkGroup({ state, commit, dispatch, rootGetters }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let dossier = state.workgroupForm.workgroup.dossier;
-            if (dossier != null) {
-                dossier = await dispatch('general/saveFile', dossier, { root: true });
+            commit('menu/notification', ['info', 5, state.workgroupForm.workgroup.dossier], { root: true });
+            if (!state.workgroupForm.workgroup.dossier) {
+                state.workgroupForm.workgroup.dossier = await dispatch('general/saveFile', state.workgroupForm.workgroup.dossier, { root: true });
+            } else {
+                state.workgroupForm.workgroup.dossier = null;
             }
             let body = state.workgroupForm.workgroup;
             body.creator = userId;
-            body.dossier = dossier;
             body.coordinators = [userId];
             await Axios.post('/workgroups/', body, config)
             commit('menu/notification', ['info', 5, 'Workgroup created correctly'], { root: true });
@@ -205,7 +207,6 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-
 
     async delWorkgroupSoft({ commit, dispatch, rootGetters }, params) {
         try {

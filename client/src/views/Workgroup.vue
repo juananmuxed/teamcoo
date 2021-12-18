@@ -10,24 +10,101 @@
           transition="fade-transition"
           :loading="skeleton"
         >
-          <v-card
-            :color="workgroup.color"
-            :class="`${textColor(workgroup.color)}--text mx-auto`"
-            max-width="1080"
-            v-if="workgroup._id"
-          >
+          <v-card class="mx-auto" v-if="workgroup._id" max-width="1080">
+            <v-img
+              height="200"
+              class="align-end"
+              :style="`background:linear-gradient(to bottom, ${workgroup.color}, rgba(245,245,245,0))`"
+            >
+            </v-img>
             <v-card-title>
-              <v-btn
-                class="ml-n12"
-                absolute
-                fab
-                top
-                left
-                color="info"
-                @click="goBack()"
+              <v-dialog
+                v-if="
+                  !workgroup.members.some(
+                    (member) => member._id == loginuser.id
+                  )
+                "
+                v-model="dialogs.suscribeto"
+                max-width="650"
               >
-                <v-icon>fas fa-arrow-left</v-icon>
-              </v-btn>
+                <template v-slot:activator="{ on: onDialog }">
+                  <v-tooltip bottom transition="scroll-y-transition">
+                    <template v-slot:activator="{ on: onTooltip }">
+                      <v-btn
+                        v-on="{ ...onDialog, ...onTooltip }"
+                        class="mr-n12"
+                        absolute
+                        fab
+                        top
+                        right
+                        color="primary"
+                        rounded
+                        @click="loadInterests"
+                        v-if="!workgroup.secret"
+                      >
+                        <v-icon>fas fa-user-plus</v-icon>
+                      </v-btn>
+                    </template>
+                    <span class="text-right caption font-weight-light"
+                      >Join</span
+                    >
+                  </v-tooltip>
+                </template>
+                <suscribe-to-work-group></suscribe-to-work-group>
+              </v-dialog>
+              <v-dialog
+                v-else
+                v-model="dialogs.unsuscribeworkgroup"
+                max-width="650"
+              >
+                <template v-slot:activator="{ on: onDialog }">
+                  <v-tooltip bottom transition="scroll-y-transition">
+                    <template v-slot:activator="{ on: onTooltip }">
+                      <v-btn
+                        v-on="{ ...onDialog, ...onTooltip }"
+                        class="mr-n12"
+                        absolute
+                        fab
+                        top
+                        right
+                        color="error"
+                        rounded
+                        v-if="!workgroup.secret"
+                      >
+                        <v-icon>fas fa-user-minus</v-icon>
+                      </v-btn>
+                    </template>
+                    <span class="text-right caption font-weight-light"
+                      >Unjoin</span
+                    >
+                  </v-tooltip>
+                </template>
+                <confirmation-template
+                  :title="`Unjoin from <span class='${workgroup.color}--text pl-2'>${workgroup.name}</span>`"
+                  description="You are about to unjoin this Work Group. Your answers are saved in the Database for future stats. <br><br>Are you sure?"
+                  :cancelFunction="null"
+                  textButton="Unjoin"
+                  :actionparams="{ userId: loginuser.id }"
+                  :action="unjoinWorkgroup"
+                ></confirmation-template>
+              </v-dialog>
+              <v-tooltip bottom transition="scroll-y-transition">
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    class="ml-n12"
+                    v-on="on"
+                    absolute
+                    fab
+                    top
+                    left
+                    color="info"
+                    @click="goBack()"
+                  >
+                    <v-icon>fas fa-arrow-left</v-icon>
+                  </v-btn>
+                </template>
+                <span class="text-right caption font-weight-light">Back</span>
+              </v-tooltip>
               <v-tooltip
                 right
                 :color="
@@ -50,45 +127,12 @@
                     : "Unjoined"
                 }}</span>
               </v-tooltip>
+              <span
+                v-if="workgroup.parent"
+                class="text-uppercase font-weight-thin subtitle-4 ml-4"
+                >in {{ workgroup.parent.name }}</span
+              >
               <v-spacer></v-spacer>
-              <v-dialog
-                v-if="
-                  !workgroup.members.some(
-                    (member) => member._id == loginuser.id
-                  )
-                "
-                v-model="dialogs.suscribeto"
-                max-width="650"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    v-on="on"
-                    color="primary"
-                    rounded
-                    @click="loadInterests"
-                    v-if="!workgroup.secret"
-                    >Join</v-btn
-                  >
-                </template>
-                <suscribe-to-work-group></suscribe-to-work-group>
-              </v-dialog>
-              <v-dialog
-                v-else
-                v-model="dialogs.unsuscribeworkgroup"
-                max-width="650"
-              >
-                <template v-slot:activator="{ on }">
-                  <v-btn rounded v-on="on" color="secondary">Unjoin</v-btn>
-                </template>
-                <confirmation-template
-                  :title="`Unjoin from <span class='${workgroup.color}--text pl-2'>${workgroup.name}</span>`"
-                  description="You are about to unjoin this Work Group. Your answers are saved in the Database for future stats. <br><br>Are you sure?"
-                  :cancelFunction="null"
-                  textButton="Unjoin"
-                  :actionparams="{ userId: loginuser.id }"
-                  :action="unjoinWorkgroup"
-                ></confirmation-template>
-              </v-dialog>
               <v-chip small label color="secondary" v-if="workgroup.secret">
                 Private
               </v-chip>
@@ -132,7 +176,89 @@
                 class="my-4"
                 :color="textColor(workgroup.color)"
               ></v-divider>
-              <v-toolbar dense elevation="2" color="primary" class="my-1">
+              <v-toolbar dense elevation="0" color="secondary" class="my-1">
+                <v-toolbar-title class="text-uppercase title font-weight-light"
+                  >Children workgroups</v-toolbar-title
+                >
+              </v-toolbar>
+              <v-row>
+                <v-col
+                  v-if="
+                    workgroups.filter(
+                      (wg) => wg.parent && wg.parent._id == workgroup._id
+                    ).length != 0
+                  "
+                >
+                  <v-data-iterator
+                    :items="
+                      workgroups.filter(
+                        (wg) => wg.parent && wg.parent._id == workgroup._id
+                      )
+                    "
+                    items-per-page.sync="6"
+                  >
+                    <template v-slot:default="props">
+                      <v-row>
+                        <v-col
+                          cols="12"
+                          md="4"
+                          xl="3"
+                          class="pa-3"
+                          v-for="(child, index) in props.items"
+                          :key="index"
+                        >
+                          <v-hover>
+                            <template v-slot:default="{ hover }">
+                              <v-card>
+                                <v-img
+                                  height="100"
+                                  class="align-end"
+                                  :style="`background:${child.color}`"
+                                >
+                                </v-img>
+                                <v-card-title
+                                  class="text-uppercase font-weight-light"
+                                >
+                                  <v-list-item two-line>
+                                    <v-list-item-content>
+                                      <v-list-item-title>{{
+                                        child.name
+                                      }}</v-list-item-title>
+                                    </v-list-item-content>
+                                  </v-list-item>
+                                </v-card-title>
+                                <v-fade-transition>
+                                  <v-overlay
+                                    v-if="hover"
+                                    absolute
+                                    color="#036358"
+                                  >
+                                    <v-btn
+                                      :to="`/workgroups/${child._id}`"
+                                      color="primary"
+                                      fab
+                                    >
+                                      <v-icon>fas fa-eye</v-icon>
+                                    </v-btn>
+                                  </v-overlay>
+                                </v-fade-transition>
+                              </v-card>
+                            </template>
+                          </v-hover>
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </v-data-iterator>
+                </v-col>
+                <v-col class="text-uppercase title font-weight-light" v-else>
+                  No children workgroups
+                </v-col>
+              </v-row>
+              <v-divider
+                class="my-4"
+                :color="textColor(workgroup.color)"
+              ></v-divider>
+              <v-toolbar dense elevation="0" color="primary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Coordinators</v-toolbar-title
                 >
@@ -179,7 +305,12 @@
                   </v-chip>
                 </v-col>
               </v-row>
-              <v-toolbar dense elevation="2" color="secondary" class="my-1">
+              <v-row v-else>
+                <v-col class="text-uppercase title font-weight-light">
+                  No coordinators for this workgroup
+                </v-col>
+              </v-row>
+              <v-toolbar dense elevation="0" color="secondary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Members</v-toolbar-title
                 >
@@ -222,15 +353,36 @@
                   </v-chip>
                 </v-col>
               </v-row>
+              <v-row v-else>
+                <v-col class="text-uppercase title font-weight-light">
+                  No members for this workgroup
+                </v-col>
+              </v-row>
               <v-divider
                 class="my-4"
                 :color="textColor(workgroup.color)"
-                v-if="workgroup.tasks.length > 0"
               ></v-divider>
+              <v-toolbar dense elevation="0" color="primary" class="my-1">
+                <v-toolbar-title class="text-uppercase title font-weight-light"
+                  >Tasks</v-toolbar-title
+                >
+              </v-toolbar>
               <v-row>
-                <v-col cols="12" class="mb-4" v-if="workgroup.tasks.length > 0">
+                <v-col
+                  cols="12"
+                  class="mb-4"
+                  v-if="
+                    tasks.filter((task) =>
+                      task.workgroups.some((wg) => wg._id == workgroup._id)
+                    ).length > 0
+                  "
+                >
                   <v-data-iterator
-                    :items="workgroup.tasks"
+                    :items="
+                      tasks.filter((task) =>
+                        task.workgroups.some((wg) => wg._id == workgroup._id)
+                      )
+                    "
                     items-per-page.sync="6"
                   >
                     <template v-slot:default="props">
@@ -247,7 +399,7 @@
                             <template v-slot:default="{ hover }">
                               <v-card>
                                 <v-img
-                                  v-if="task.image != ''"
+                                  v-if="task.image"
                                   height="100"
                                   :src="task.image"
                                   class="align-end"
@@ -278,17 +430,28 @@
                                     </v-list-item-content>
                                   </v-list-item>
                                 </v-card-title>
+                                <v-card-actions
+                                  v-if="outdated(task.eventEndDate)"
+                                >
+                                  <v-spacer></v-spacer>
+                                  <v-chip color="error">Outdated</v-chip>
+                                </v-card-actions>
                                 <v-fade-transition>
                                   <v-overlay
                                     v-if="hover"
                                     absolute
-                                    color="#036358"
+                                    :color="
+                                      outdated(task.eventEndDate)
+                                        ? 'error'
+                                        : 'primary'
+                                    "
                                   >
                                     <v-btn
                                       :to="`/tasks/${task._id}`"
                                       color="primary"
+                                      fab
                                     >
-                                      <v-icon left>fas fa-eye</v-icon> See more
+                                      <v-icon>fas fa-eye</v-icon>
                                     </v-btn>
                                   </v-overlay>
                                 </v-fade-transition>
@@ -299,6 +462,9 @@
                       </v-row>
                     </template>
                   </v-data-iterator>
+                </v-col>
+                <v-col class="text-uppercase title font-weight-light" v-else>
+                  No task for this workgroup
                 </v-col>
               </v-row>
             </v-card-text>
@@ -420,7 +586,7 @@ import confirm from "../components/general/Confirm.vue";
 import invalidstatic from "../components/general/Invalid.vue";
 import editworkgroup from "../components/workgroups/EditWorkgroup.vue";
 import editmembers from "../components/workgroups/EditMembers.vue";
-import { dateToBeauty, idealTextColor } from "../utils/utils";
+import { dateToBeauty, idealTextColor, outdated } from "../utils/utils";
 export default {
   data() {
     return {
@@ -437,6 +603,8 @@ export default {
   computed: {
     ...mapState({
       workgroup: (state) => state.workgroups.workgroup,
+      workgroups: (state) => state.workgroups.workgroups,
+      tasks: (state) => state.tasks.tasks,
       loginuser: (state) => state.user.loginuser,
       dialogs: (state) => state.menu.menu.dialogs,
       skeleton: (state) => state.workgroups.skeleton,
@@ -451,10 +619,14 @@ export default {
     ]),
     ...mapActions("menu", ["goBack"]),
     ...mapActions("interests", ["loadInterests"]),
+    ...mapActions("workgroups", ["loadWorkgroups"]),
+    ...mapActions("tasks", ["loadTasks"]),
     ...mapMutations("workgroups", ["loadMembers", "loadEditedWorkgroup"]),
     refreshing() {
       this.polling = setInterval(() => {
         this.searchWorkgroupSilent(this.$route.params.id);
+        this.loadWorkgroups();
+        this.loadTasks();
       }, 5 * 60 * 1000);
     },
     textColor(color) {
@@ -463,11 +635,16 @@ export default {
     dateFormated(date) {
       return dateToBeauty(date);
     },
+    outdated(date) {
+      return outdated(date);
+    },
   },
   created() {
     this.refreshing();
     if (this.workgroup == {} || this.workgroup._id != this.$route.params.id) {
       this.searchWorkgroup(this.$route.params.id);
+      this.loadWorkgroups();
+      this.loadTasks();
     }
   },
   beforeDestroy() {

@@ -16,7 +16,8 @@ const workgroupScheme = new schema({
     },
     parent: {
         type: mongoose.Schema.Types.ObjectId,
-        default: null
+        default: null,
+        ref: 'Workgroup'
     },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
@@ -33,13 +34,6 @@ const workgroupScheme = new schema({
             ref: 'Question'
         }],
         required: true
-    },
-    tasks: {
-        type: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Task'
-        }],
-        default: []
     },
     dossier: {
         type: String,

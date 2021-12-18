@@ -14,6 +14,10 @@ const treeBuild = (dataset) => {
     return tree;
 };
 
+const outdated = (date) => {
+    return new Date(date) < new Date();
+}
+
 const dateToBeauty = (date) => {
     const day = new Date(date).getDate();
     const month = new Date(date).getMonth();
@@ -149,6 +153,7 @@ const sleep = async (ms) => {
 export {
     treeBuild,
     dateToBeauty,
+    outdated,
     dateToFormat,
     todayFormatToPicker,
     generateRandomColor,

@@ -1,5 +1,10 @@
 <template>
-  <v-card max-width="650" class="mx-auto pa-2">
+  <v-card
+    max-width="650"
+    class="mx-auto"
+    :loading="workgroupForm.loading"
+    :disabled="workgroupForm.loading"
+  >
     <v-card-title class="headline font-weight-medium text-uppercase"
       >Edit "{{ workgroup.name }}"</v-card-title
     >
@@ -13,6 +18,34 @@
             :rules="[rules.required, rules.minletter]"
           >
           </v-text-field>
+        </v-col>
+        <v-col cols="12" class="py-1">
+          <v-select
+            label="Parent Work Group"
+            v-model="workgroupForm.workgroup.parent"
+            outlined
+            :items="
+              workgroups.filter(
+                (wg) =>
+                  wg._id != workgroupForm.workgroup._id &&
+                  wg.parent != workgroupForm.workgroup._id
+              )
+            "
+            item-text="name"
+            item-value="_id"
+            :menu-props="{ closeOnContentClick: true }"
+          >
+            <template v-slot:prepend-item>
+              <v-list-item @click="workgroupForm.workgroup.parent = null">
+                <v-list-item-content>
+                  <v-list-item-title class="grey--text"
+                    >No parent</v-list-item-title
+                  >
+                </v-list-item-content>
+              </v-list-item>
+              <v-divider></v-divider>
+            </template>
+          </v-select>
         </v-col>
         <v-col cols="10" class="py-1">
           <v-menu
@@ -231,15 +264,18 @@ export default {
       "randomWorkgroupColor",
     ]),
     ...mapGetters("workgroups", ["editedWorkgroup", "validWorkgroup"]),
-    ...mapActions("workgroups", ["saveEditedworkgroup"]),
+    ...mapActions("workgroups", ["saveEditedworkgroup", "loadWorkgroups"]),
     ...mapActions("questions", ["loadQuestions"]),
     ...mapMutations("questions", ["clearquestionForm"]),
     textColor(color) {
       return idealTextColor(color);
     },
   },
-  created() {
-    this.loadQuestions();
+  async created() {
+    this.workgroupForm.loading = true;
+    await this.loadQuestions();
+    await this.loadWorkgroups();
+    this.workgroupForm.loading = false;
   },
 };
 </script>
