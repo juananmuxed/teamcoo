@@ -385,25 +385,23 @@ export default {
     return {
       headers: [
         {
-          text: "Work Groups",
+          text: "Workgroup name",
           align: "start",
           value: "name",
-          width: 100,
         },
         { text: "Description", value: "description", sortable: false },
-        { text: "Link", value: "link", sortable: false, width: 30 },
-        { text: "Dossier", value: "dossier", sortable: false, width: 30 },
+        { text: "Link", value: "link", sortable: false },
+        { text: "Dossier", value: "dossier", sortable: false },
         {
           text: "Coordinators",
           value: "coordinators",
           sortable: false,
-          width: 200,
         },
-        { text: "Members", value: "members", sortable: false, width: 200 },
-        { text: "Questions", value: "questions", sortable: false, width: 200 },
-        { text: "Creator", value: "creator", sortable: false, width: 40 },
-        { text: "Color", value: "color", sortable: false, width: 40 },
-        { text: "", value: "actions", sortable: false, width: 100 },
+        { text: "Members", value: "members", sortable: false },
+        { text: "Questions", value: "questions", sortable: false },
+        { text: "Creator", value: "creator", sortable: false },
+        { text: "Color", value: "color", sortable: false },
+        { text: "", value: "actions", sortable: false },
       ],
     };
   },

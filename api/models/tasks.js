@@ -37,7 +37,7 @@ const taskschema = new schema({
         type: String,
         default: ''
     },
-    usersjoined: {
+    suscribers: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'

@@ -4,22 +4,22 @@ import { todayFormatToPicker, generateRandomColor, isDiferentArray } from '../..
 
 const state = {
     tasks: [],
-    searchedTask: {},
+    task: {},
     tasksForm: {
-        name: '',
-        description: '',
-        link: '',
-        color: '',
-        workgroupsSelected: [],
-        interestsSelected: [],
-        startDate: todayFormatToPicker(),
-        endDate: '',
-        image: null,
-        imagelink: '',
-        secret: false
-    },
-    editmemberform: {
-        members: [],
+        task: {
+            name: '',
+            description: '',
+            link: '',
+            color: '',
+            workgroups: [],
+            interests: [],
+            eventStartDate: '',
+            eventEndDate: '',
+            image: null,
+            newImage: null,
+            imagelink: '',
+            secret: false
+        },
         loading: false
     },
     loading: false,
@@ -28,54 +28,52 @@ const state = {
 
 const mutations = {
     clearTaskForm: (state) => {
-        state.tasksForm.name = '',
-            state.tasksForm.description = '',
-            state.tasksForm.interestsSelected = [],
-            state.tasksForm.workgroupsSelected = [],
-            state.tasksForm.link = '',
-            state.tasksForm.startDate = todayFormatToPicker(),
-            state.tasksForm.endDate = '',
-            state.tasksForm.image = null,
-            state.tasksForm.imagelink = '',
-            state.tasksForm.secret = false
+        state.tasksForm.task.name = '';
+        state.tasksForm.task.description = '';
+        state.tasksForm.task.interests = [];
+        state.tasksForm.task.workgroups = [];
+        state.tasksForm.task.link = '';
+        state.tasksForm.task.eventStartDate = '';
+        state.tasksForm.task.eventEndDate = '';
+        state.tasksForm.task.image = null;
+        state.tasksForm.task.imagelink = '';
+        state.tasksForm.task.secret = false;
     },
-    tasksLoad: (state, tasks) => { state.tasks = tasks },
-    changeSkeleton: (state, skeleton) => state.skeleton = skeleton,
-    pullTask: (state, task) => { state.searchedTask = task },
+    tasksLoad: (state, tasks) => {
+        state.tasks = tasks
+    },
+    changeSkeleton: (state) => {
+        state.skeleton = !state.skeleton
+    },
+    pullTask: (state, task) => {
+        state.task = task
+    },
     loadEditedTask: (state) => {
-        state.tasksForm.name = state.searchedTask.name,
-            state.tasksForm.description = state.searchedTask.description,
-            state.tasksForm.link = state.searchedTask.link,
-            state.tasksForm.image = state.searchedTask.image,
-            state.tasksForm.newimage = null,
-            state.tasksForm.secret = state.searchedTask.secret,
-            state.tasksForm.color = state.searchedTask.color,
-            state.tasksForm.startDate = todayFormatToPicker(state.searchedTask.eventStartDate),
-            state.tasksForm.endDate = todayFormatToPicker(state.searchedTask.eventEndDate),
-            state.tasksForm.workgroupsSelected = state.searchedTask.workgroups,
-            state.tasksForm.interestsSelected = state.searchedTask.interests
+        state.tasksForm.task = Object.assign({}, state.task);
+        state.tasksForm.task.eventStartDate = todayFormatToPicker(state.task.eventStartDate);
+        state.tasksForm.task.eventEndDate = todayFormatToPicker(state.task.eventEndDate);
+        state.tasksForm.task.newimage = null;
     },
     randomTaskColor: (state) => {
-        state.tasksForm.color = generateRandomColor(30).toUpperCase();
+        state.tasksForm.task.color = generateRandomColor(30);
     },
-    loadMembers: (state, members) => {
-        state.editmemberform.members = Array(members.members.length)
-        for (let x = 0; x < members.members.length; x++) {
-            state.editmemberform.members[x] = members.members[x];
-        }
+    changeLoading: (state) => {
+        state.loading = !state.loading
     },
-    changeLoading: (state, loading) => state.loading = loading,
+    loadMembers: (state) => {
+        state.tasksForm.task.suscribers = JSON.parse(JSON.stringify(state.task.suscribers));
+    }
 }
 
 const getters = {
     validTask: (state) => {
         if (
-            state.tasksForm.name != '' &&
-            state.tasksForm.description != '' &&
-            state.tasksForm.endDate != '' &&
-            state.tasksForm.startDate != '' &&
-            state.tasksForm.description.length <= 380 &&
-            state.tasksForm.workgroupsSelected.length != 0
+            state.tasksForm.task.name != '' &&
+            state.tasksForm.task.description != '' &&
+            state.tasksForm.task.eventStartDate != '' &&
+            state.tasksForm.task.eventEndDate != '' &&
+            state.tasksForm.task.description.length <= 380 &&
+            state.tasksForm.task.workgroups.length != 0
         ) {
             return false
         }
@@ -83,18 +81,19 @@ const getters = {
             return true
         }
     },
+
     editedTask: (state) => {
         if (
-            state.tasksForm.name != state.searchedTask.name ||
-            state.tasksForm.description != state.searchedTask.description ||
-            state.tasksForm.endDate != todayFormatToPicker(state.searchedTask.eventEndDate) ||
-            state.tasksForm.startDate != todayFormatToPicker(state.searchedTask.eventStartDate) ||
-            state.tasksForm.link != state.searchedTask.link ||
-            state.tasksForm.newimage != null ||
-            state.tasksForm.secret != state.searchedTask.secret ||
-            state.tasksForm.color.toUpperCase() != state.searchedTask.color.toUpperCase() ||
-            isDiferentArray(state.tasksForm.workgroupsSelected, state.searchedTask.workgroups, '_id', '_id') ||
-            isDiferentArray(state.tasksForm.interestsSelected, state.searchedTask.interests, '_id', '_id')
+            state.tasksForm.task.name != state.task.name ||
+            state.tasksForm.task.description != state.task.description ||
+            state.tasksForm.task.eventEndDate != todayFormatToPicker(state.task.eventEndDate) ||
+            state.tasksForm.task.eventStartDate != todayFormatToPicker(state.task.eventStartDate) ||
+            state.tasksForm.task.link != state.task.link ||
+            state.tasksForm.task.newImage != null ||
+            state.tasksForm.task.secret != state.task.secret ||
+            state.tasksForm.task.color.toUpperCase() != state.task.color.toUpperCase() ||
+            isDiferentArray(state.tasksForm.task.workgroups, state.task.workgroups, '_id', '_id') ||
+            isDiferentArray(state.tasksForm.task.interests, state.task.interests, '_id', '_id')
         ) {
             return false
         }
@@ -102,37 +101,23 @@ const getters = {
             return true
         }
     },
+
     editedMembers: (state) => {
-        return !isDiferentArray(state.searchedTask.members, state.editmemberform.members, 'id', 'id')
+        return !isDiferentArray(state.task.suscribers, state.tasksForm.task.suscribers, '_id', '_id')
     },
 }
 
 const actions = {
     async createTask({ state, commit, dispatch, rootGetters }, userId) {
         try {
-            if (state.tasksForm.image != null) {
-                state.tasksForm.imagelink = await dispatch('general/saveFile', state.tasksForm.image, { root: true });
+            if (state.tasksForm.task.image != null) {
+                state.tasksForm.task.image = await dispatch('general/saveFile', state.tasksForm.task.image, { root: true });
             }
-            else {
-                state.tasksForm.imagelink = state.tasksForm.link
-            }
-            let color = generateRandomColor(135)
+            let body = state.tasksForm.task;
+            body.creator = userId;
             let config = rootGetters['general/cookieAuth'];
-            let body = {
-                name: state.tasksForm.name,
-                description: state.tasksForm.description,
-                interests: state.tasksForm.interestsSelected,
-                workgroups: state.tasksForm.workgroupsSelected,
-                eventStartDate: state.tasksForm.startDate,
-                eventEndDate: state.tasksForm.endDate,
-                image: state.tasksForm.imagelink,
-                secret: state.tasksForm.secret,
-                color: color,
-                createdBy: userId,
-                link: state.tasksForm.link
-            }
             await Axios.post('/tasks/', body, config);
-            commit('menu/notification', ['info', 5, 'Task created'], { root: true });
+            commit('menu/notification', ['info', 5, 'Task created correctly'], { root: true });
             dispatch('loadTasks');
             commit('menu/cancelDialog', 'createtask', { root: true });
             commit('clearTaskForm');
@@ -140,172 +125,118 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async loadTasks({ rootState, commit, dispatch }) {
+
+    async loadTasks({ commit, dispatch }) {
         try {
-            commit('changeLoading', true);
-            await dispatch('interests/loadInterests', null, { root: true });
-            await dispatch('workgroups/loadWorkgroups', null, { root: true });
+            commit('changeLoading');
             let res = await Axios.get('/tasks/');
-            let tasks = res.data;
-            for (let i = 0; i < tasks.length; i++) {
-                let tempInterests = [], tempWorkgroups = [];
-                for (let y = 0; y < tasks[i].interests.length; y++) {
-                    for (let x = 0; x < rootState.interests.interests.length; x++) {
-                        if (rootState.interests.interests[x]._id == tasks[i].interests[y]) {
-                            tempInterests.push(rootState.interests.interests[x])
-                        }
-                    }
-                }
-                for (let y = 0; y < tasks[i].workgroups.length; y++) {
-                    for (let x = 0; x < rootState.workgroups.workgroups.length; x++) {
-                        if (rootState.workgroups.workgroups[x]._id == tasks[i].workgroups[y]) {
-                            tempWorkgroups.push(rootState.workgroups.workgroups[x])
-                        }
-                    }
-                }
-                for (let y = 0; y < tasks[i].usersjoined.length; y++) {
-                    await dispatch('users/loadUserByID', tasks[i].usersjoined[y], { root: true });
-                    tasks[i].usersjoined[y] = rootState.users.temporaluser;
-                }
-                await dispatch('users/loadUserByID', tasks[i].createdBy, { root: true })
-                tasks[i].creator = rootState.users.temporaluser
-                tasks[i].interests = tempInterests
-                tasks[i].workgroups = tempWorkgroups
-            }
-            commit('tasksLoad', tasks);
-            commit('changeLoading', false);
+            commit('tasksLoad', res.data);
+            commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeLoading', false);
+            commit('changeLoading');
         }
     },
-    async searchTask({ commit, dispatch, rootState, rootGetters }, id) {
+
+    async searchTask({ commit, dispatch, rootGetters }, id) {
         try {
-            commit('changeSkeleton', true);
+            commit('changeSkeleton');
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/tasks/' + id, config)
-            let task = res.data
-            await dispatch('users/loadUserByID', task.createdBy, { root: true });
-            task['creator'] = rootState.users.temporaluser;
-            let tempMembers = Array(task.usersjoined.length), tempWorkgroups = Array(task.workgroups.length), tempInterests = Array(task.interests.length);
-            for (let x = 0; x < task.usersjoined.length; x++) {
-                await dispatch('users/loadUserByID', task.usersjoined[x], { root: true });
-                tempMembers[x] = rootState.users.temporaluser;
-            }
-            for (let x = 0; x < task.workgroups.length; x++) {
-                await dispatch('workgroups/searchWorkgroupSilent', task.workgroups[x], { root: true });
-                tempWorkgroups[x] = rootState.workgroups.searchedWorkgroup;
-            }
-            for (let x = 0; x < task.interests.length; x++) {
-                await dispatch('interests/searchInterestSilent', task.interests[x], { root: true });
-                tempInterests[x] = rootState.interests.searchedInterest;
-            }
-            task.members = tempMembers;
-            task.workgroups = tempWorkgroups;
-            task.interests = tempInterests;
-            commit('pullTask', task);
-            commit('changeSkeleton', false);
+            let res = await Axios.get('/tasks/' + id, config);
+            commit('pullTask', res.data);
+            commit('changeSkeleton');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeSkeleton', false);
+            commit('changeSkeleton');
         }
     },
-    async searchTaskSilent({ commit, dispatch, rootState, rootGetters }, id) {
+
+    async searchTaskSilent({ commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/tasks/' + id, config);
-            let task = res.data;
-            await dispatch('users/loadUserByID', task.createdBy, { root: true });
-            task['creator'] = rootState.users.temporaluser;
-            let tempMembers = Array(task.usersjoined.length), tempWorkgroups = Array(task.workgroups.length), tempInterests = Array(task.interests.length);
-            for (let x = 0; x < task.usersjoined.length; x++) {
-                await dispatch('users/loadUserByID', task.usersjoined[x], { root: true });
-                tempMembers[x] = rootState.users.temporaluser;
-            }
-            for (let x = 0; x < task.workgroups.length; x++) {
-                await dispatch('workgroups/searchWorkgroupSilent', task.workgroups[x], { root: true });
-                tempWorkgroups[x] = rootState.workgroups.searchedWorkgroup;
-            }
-            for (let x = 0; x < task.interests.length; x++) {
-                await dispatch('interests/searchInterestSilent', task.interests[x], { root: true });
-                tempInterests[x] = rootState.interests.searchedInterest;
-            }
-            task.members = tempMembers;
-            task.workgroups = tempWorkgroups;
-            task.interests = tempInterests;
-            commit('pullTask', task);
+            commit('pullTask', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async saveEditedTask({ state, commit, dispatch, rootGetters }, id) {
-        try {
-            let config = rootGetters['general/cookieAuth'], image = state.tasksForm.newimage;
-            if (image != null) {
-                image = await dispatch('general/saveFile', image, { root: true });
-            }
-            else {
-                image = state.tasksForm.image;
-            }
-            let body = {
-                name: state.tasksForm.name,
-                description: state.tasksForm.description,
-                color: state.tasksForm.color,
-                eventStartDate: state.tasksForm.startDate,
-                eventEndDate: state.tasksForm.endDate,
-                secret: state.tasksForm.secret,
-                workgroups: state.tasksForm.workgroupsSelected.map(q => q._id),
-                interests: state.tasksForm.interestsSelected.map(q => q._id),
-                image: image,
-                link: state.tasksForm.link
-            }
-            let res = await Axios.put('/tasks/' + id, body, config);
-            commit('menu/cancelDialog', 'edittask', { root: true });
-            await dispatch('searchTaskSilent', res.data._id);
-            commit('clearTaskForm');
-            commit('menu/notification', ['success', 5, 'Task edited'], { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-    async delTask({ commit, dispatch, rootGetters }, params) {
+
+    async saveEditedTask({ state, commit, dispatch, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            await Axios.delete('/tasks/' + params.id, config);
+            let body = state.tasksForm.task;
+            if (body.newImage != null) {
+                body.image = await dispatch('general/saveFile', body.newImage, { root: true });
+            }
+            let res = await Axios.put('/tasks/' + body._id, body, config);
+            commit('pullTask', res.data);
+            commit('menu/cancelDialog', 'edittask', { root: true });
+            commit('clearTaskForm');
+            commit('menu/notification', ['success', 5, 'Task saved correctly'], { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+    // TODO: finally deleted not implemented
+    async delTask({ state, commit, dispatch, rootGetters }) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.delete('/tasks/finally/' + state.task._id, config);
             await dispatch('loadTasks');
             router.push('/tasks');
-            commit('menu/notification', ['info', 3, 'Task Deleted'], { root: true });
-            commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true })
+            commit('menu/notification', ['info', 3, 'Task removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async saveMember({ commit, rootGetters, dispatch }, params) {
+
+    async delTaskSoft({ state, commit, dispatch, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let userId = params.userId, taskId = params.taskId;
-            let res = await Axios.get('/tasks/' + taskId, config);
-            let members = res.data.usersjoined;
-            members = members.filter(m => m != userId);
-            if (params.suscribe) members.push(userId);
-            let resPut = await Axios.put('/tasks/' + taskId, { usersjoined: members }, config);
-            commit('menu/cancelDialog', 'savemembertask', { root: true });
-            commit('menu/notification', ['info', 4, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
-            await dispatch('searchTask', resPut.data._id);
+            let res = await Axios.delete('/tasks/' + state.task._id, config);
+            commit('pullTask', res.data);
+            await dispatch('loadTasks');
+            router.push('/tasks');
+            commit('menu/notification', ['info', 3, 'Task removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
+    async joinTask({ state, commit, rootGetters, dispatch }, { userId }) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.put('/tasks/join/' + state.task._id, { user: userId }, config);
+            commit('pullTask', res.data);
+            commit('menu/notification', ['info', 10, 'Joined Succesfully 😀'], { root: true });
+            commit('menu/cancelDialog', 'savemembertask', { root: true })
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async unjoinTask({ state, commit, rootGetters, dispatch }, { userId }) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.put('/tasks/unjoin/' + state.task._id, { user: userId }, config);
+            commit('pullTask', res.data);
+            commit('menu/notification', ['info', 10, 'Unjoined Succesfully 🙁'], { root: true });
+            commit('menu/cancelDialog', 'savemembertask', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
     async saveMembers({ state, commit, dispatch, rootGetters }) {
         try {
-            let idTask = state.searchedTask._id;
-            let idMembers = state.editmemberform.members.map(m => m.id);
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.put('/tasks/' + idTask, { usersjoined: idMembers }, config);
+            let res = await Axios.put('/tasks/' + state.task._id, { suscribers: state.tasksForm.task.suscribers }, config);
+            commit('pullTask', res.data);
             await dispatch('user/refreshLoadedUser', null, { root: true });
             commit('menu/cancelDialog', 'editmembers', { root: true });
             commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
-            await dispatch('searchTask', res.data._id);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }

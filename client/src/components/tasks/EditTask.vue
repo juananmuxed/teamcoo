@@ -1,7 +1,7 @@
 <template>
   <v-card max-width="650" class="mx-auto pa-2">
     <v-card-title class="headline font-weight-medium text-uppercase"
-      >Edit Task "{{ tasksForm.name }}"</v-card-title
+      >Edit Task "{{ tasksForm.task.name }}"</v-card-title
     >
     <v-card-text>
       <v-row>
@@ -9,7 +9,7 @@
           <v-text-field
             outlined
             label="Name"
-            v-model="tasksForm.name"
+            v-model="tasksForm.task.name"
             :rules="[rules.required]"
           >
           </v-text-field>
@@ -21,7 +21,7 @@
             auto-grow
             counter
             rows="5"
-            v-model="tasksForm.description"
+            v-model="tasksForm.task.description"
             :rules="[rules.required, rules.maxdescletters]"
           >
           </v-textarea>
@@ -36,24 +36,24 @@
             <template v-slot:activator="{ on }">
               <v-btn
                 class="custom-btn mb-3"
-                :color="tasksForm.color"
+                :color="tasksForm.task.color"
                 block
                 depressed
                 v-on="on"
                 :ripple="false"
                 elevation="0"
-                ><span :class="`${textColor(tasksForm.color)}--text`">{{
-                  tasksForm.color
+                ><span :class="`${textColor(tasksForm.task.color)}--text`">{{
+                  tasksForm.task.color
                 }}</span></v-btn
               >
             </template>
-            <v-card :color="tasksForm.color" elevation="0">
+            <v-card :color="tasksForm.task.color" elevation="0">
               <v-color-picker
                 hide-mode-switch
                 hide-inputs
                 mode.sync="hex"
                 flat
-                v-model="tasksForm.color"
+                v-model="tasksForm.task.color"
               ></v-color-picker>
             </v-card>
           </v-menu>
@@ -61,13 +61,13 @@
         <v-col cols="2" class="py-1">
           <v-btn
             class="mb-3"
-            :color="tasksForm.color"
+            :color="tasksForm.task.color"
             block
             depressed
             :ripple="false"
             elevation="0"
             @click="randomTaskColor()"
-            ><v-icon :color="textColor(tasksForm.color)"
+            ><v-icon :color="textColor(tasksForm.task.color)"
               >fas fa-dice</v-icon
             ></v-btn
           >
@@ -83,16 +83,16 @@
               <v-text-field
                 class="pa-0"
                 outlined
-                v-model="tasksForm.startDate"
+                v-model="tasksForm.task.eventStartDate"
                 label="Start date"
                 readonly
                 v-on="on"
               ></v-text-field>
             </template>
             <v-date-picker
-              :max="tasksForm.endDate"
+              :max="tasksForm.task.eventEndDate"
               color="primary"
-              v-model="tasksForm.startDate"
+              v-model="tasksForm.task.eventStartDate"
               @input="menu2 = false"
             ></v-date-picker>
           </v-menu>
@@ -109,7 +109,7 @@
                 color="secondary"
                 outlined
                 class="pa-0"
-                v-model="tasksForm.endDate"
+                v-model="tasksForm.task.eventEndDate"
                 label="End date"
                 readonly
                 v-on="on"
@@ -117,9 +117,9 @@
               ></v-text-field>
             </template>
             <v-date-picker
-              :min="tasksForm.startDate"
+              :min="tasksForm.task.eventStartDate"
               color="secondary"
-              v-model="tasksForm.endDate"
+              v-model="tasksForm.task.eventEndDate"
               @input="menu2 = false"
             ></v-date-picker>
           </v-menu>
@@ -127,10 +127,10 @@
         <v-col
           cols="12"
           class="py-1"
-          v-if="tasksForm.image != null && tasksForm.image != ''"
+          v-if="tasksForm.task.image != null && tasksForm.task.image != ''"
         >
           <v-img
-            :src="tasksForm.image"
+            :src="tasksForm.task.image"
             height="220"
             contain
             :aspect-ratio="16 / 9"
@@ -139,32 +139,21 @@
         <v-col cols="12" class="py-1">
           <v-file-input
             chips
-            v-model="tasksForm.newimage"
+            v-model="tasksForm.task.newImage"
             label="New Image"
             accept="image/png, image/jpeg, image/bmp , image/gif"
             :show-size="1000"
             outlined
-            :clearable="false"
             prepend-icon="fas fa-image"
             hint="PNG, JPEG, GIF or BMP"
           >
-            <template v-slot:append-outer>
-              <v-slide-x-transition>
-                <v-icon
-                  color="primary"
-                  v-if="tasksForm.newimage != null"
-                  @click="tasksForm.newimage = null"
-                  >fas fa-times-circle</v-icon
-                >
-              </v-slide-x-transition>
-            </template>
           </v-file-input>
         </v-col>
         <v-col cols="12" class="py-1">
           <v-text-field
             outlined
             label="External Link"
-            v-model="tasksForm.link"
+            v-model="tasksForm.task.link"
             :rules="[rules.validlink]"
           >
           </v-text-field>
@@ -172,12 +161,12 @@
         <v-col cols="12" class="py-1">
           <v-autocomplete
             label="Workgroups"
-            v-model="tasksForm.workgroupsSelected"
+            v-model="tasksForm.task.workgroups"
             multiple
             chips
             return-object
             outlined
-            :items="workgroups.concat(secretworkgroups)"
+            :items="workgroups.concat(secretWorkgroups)"
             item-text="name"
             item-value="_id"
             hint="Select at least 1"
@@ -188,17 +177,12 @@
                 <span :class="`${item.textcolor}--text`">{{ item.name }}</span>
               </v-chip>
             </template>
-            <template v-slot:item="data">
-              <v-list-item-content>
-                <v-list-item-title>{{ data.item.name }}</v-list-item-title>
-              </v-list-item-content>
-            </template>
           </v-autocomplete>
         </v-col>
         <v-col cols="12" class="py-1">
           <v-autocomplete
             label="Interests"
-            v-model="tasksForm.interestsSelected"
+            v-model="tasksForm.task.interests"
             multiple
             return-object
             chips
@@ -208,46 +192,42 @@
             item-value="_id"
           >
             <template v-slot:selection="{ item, index }">
-              <v-chip v-if="index < 3">
+              <v-chip :color="item.color" v-if="index < 3">
                 <span>{{ item.name }}</span>
               </v-chip>
               <span v-if="index === 3" class="grey--text caption"
-                >(+{{ tasksForm.interestsSelected.length - 3 }} others)</span
+                >(+{{ tasksForm.task.interests.length - 3 }} others)</span
               >
             </template>
           </v-autocomplete>
         </v-col>
       </v-row>
-      <v-slide-y-transition origin="center center">
-        <v-btn
-          fab
-          right
-          small
-          top
-          absolute
-          color="primary"
-          @click="saveEditedTask(searchedTask._id)"
-          v-show="!editedTask() && !validTask()"
-          class="mt-8 mr-12"
-        >
-          <v-icon small>fas fa-save</v-icon>
-        </v-btn>
-      </v-slide-y-transition>
-      <v-slide-y-transition origin="center center">
-        <v-btn
-          fab
-          right
-          small
-          top
-          absolute
-          color="info"
-          @click="loadEditedTask()"
-          v-show="!editedTask()"
-          class="mt-8"
-        >
-          <v-icon small>fas fa-undo</v-icon>
-        </v-btn>
-      </v-slide-y-transition>
+      <v-btn
+        fab
+        right
+        small
+        top
+        absolute
+        color="primary"
+        @click="saveEditedTask()"
+        :disabled="editedTask() || validTask()"
+        class="mt-8"
+      >
+        <v-icon small>fas fa-save</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        right
+        small
+        top
+        absolute
+        color="info"
+        @click="loadEditedTask()"
+        :disabled="editedTask()"
+        class="mt-8 mr-12"
+      >
+        <v-icon small>fas fa-undo</v-icon>
+      </v-btn>
     </v-card-text>
   </v-card>
 </template>
@@ -258,10 +238,10 @@ import { idealTextColor } from "../../utils/utils";
 export default {
   computed: {
     ...mapState({
-      searchedTask: (state) => state.tasks.searchedTask,
+      task: (state) => state.tasks.task,
       tasksForm: (state) => state.tasks.tasksForm,
       workgroups: (state) => state.workgroups.workgroups,
-      secretworkgroups: (state) => state.workgroups.secretworkgroups,
+      secretWorkgroups: (state) => state.workgroups.secretWorkgroups,
       loginuser: (state) => state.user.loginuser,
       menu: (state) => state.menu.menu,
       rules: (state) => state.general.rules,
@@ -270,7 +250,11 @@ export default {
   },
   methods: {
     ...mapActions("tasks", ["saveEditedTask"]),
-    ...mapMutations("tasks", ["loadEditedTask", "randomTaskColor"]),
+    ...mapMutations("tasks", [
+      "loadEditedTask",
+      "randomTaskColor",
+      "clearImage",
+    ]),
     ...mapGetters("tasks", ["validTask", "editedTask"]),
     ...mapActions("interests", ["loadInterests"]),
     ...mapActions("workgroups", ["loadWorkgroups"]),

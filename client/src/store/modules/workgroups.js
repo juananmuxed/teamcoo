@@ -72,24 +72,6 @@ const mutations = {
     setWorkgroup: (state, workgroup) => {
         Vue.set(state, 'workgroup', workgroup);
     },
-    newMembers: (state, members) => {
-        state.workgroup.members = []
-        for (let x = 0; x < members.length; x++) {
-            state.workgroup.members.push(members[x])
-        }
-    },
-    newCoordinators: (state, coors) => {
-        state.workgroup.coordinators = []
-        for (let x = 0; x < coors.length; x++) {
-            state.workgroup.coordinators.push(coors[x])
-        }
-    },
-    addallusers: (state, users) => {
-        state.usersforadd = []
-        for (let x = 0; x < users.length; x++) {
-            state.usersforadd.push(users[x])
-        }
-    },
     loadMembers: (state) => {
         state.editMemberForm.members = JSON.parse(JSON.stringify(state.workgroup.members));
         state.editMemberForm.coordinators = JSON.parse(JSON.stringify(state.workgroup.coordinators));
@@ -194,32 +176,6 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    // TODO: finally deleted not implemented
-    async delWorkgroup({ commit, dispatch, rootGetters }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            await Axios.delete('/workgroups/finally/' + params.id, config);
-            await dispatch('loadWorkgroups');
-            router.push('/workgroups');
-            commit('menu/notification', ['info', 3, 'Workgroup removed'], { root: true });
-            commit('menu/cancelDialog', 'confirm', { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-
-    async delWorkgroupSoft({ commit, dispatch, rootGetters }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth']
-            await Axios.delete('/workgroups/' + params.id, config);
-            await dispatch('loadWorkgroups');
-            router.push('/workgroups');
-            commit('menu/notification', ['info', 3, 'Workgroup removed'], { root: true });
-            commit('menu/cancelDialog', 'confirm', { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
 
     async loadWorkgroups({ commit, dispatch, rootGetters }) {
         try {
@@ -282,6 +238,33 @@ const actions = {
             commit('menu/cancelDialog', 'editworkgroup', { root: true });
             commit('clearWorkgroupForm');
             commit('menu/notification', ['success', 5, 'Workgroup saved correctly'], { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+    // TODO: finally deleted not implemented
+    async delWorkgroup({ state, commit, dispatch, rootGetters }) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.delete('/workgroups/finally/' + state.workgroup._id, config);
+            await dispatch('loadWorkgroups');
+            router.push('/workgroups');
+            commit('menu/notification', ['info', 3, 'Workgroup removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async delWorkgroupSoft({ state, commit, dispatch, rootGetters }) {
+        try {
+            let config = rootGetters['general/cookieAuth']
+            let res = await Axios.delete('/workgroups/' + state.workgroup._id, config);
+            commit('setWorkgroup', res.data);
+            await dispatch('loadWorkgroups');
+            router.push('/workgroups');
+            commit('menu/notification', ['info', 3, 'Workgroup removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }

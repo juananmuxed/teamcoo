@@ -49,22 +49,22 @@
               class="ma-1"
               v-for="(interest, index) in item.interests"
               v-bind:key="index"
-              ><span>{{ interest.name.substring(0, 7) }}</span
-              ><span v-if="interest.name.length >= 9">...</span></v-chip
+              :color="interest.color"
+              >{{ interest.name }}</v-chip
             >
           </template>
-          <template v-slot:item.usersjoined="{ item }">
+          <template v-slot:item.suscribers="{ item }">
             <v-avatar
               size="24px"
               left
-              v-for="(user, index) in item.usersjoined"
+              v-for="(user, index) in item.suscribers"
               :key="index"
               class="ma-1"
             >
-              <v-tooltip top>
+              <v-tooltip bottom transition="slide-y-transition">
                 <template v-slot:activator="{ on }">
-                  <template v-if="user.avatar != ''">
-                    <v-img :src="user.avatar" v-on="on"></v-img>
+                  <template v-if="user.image != ''">
+                    <v-img :src="user.image" v-on="on"></v-img>
                   </template>
                   <template v-else>
                     <v-icon small color="info" v-on="on">fas fa-user</v-icon>
@@ -82,9 +82,9 @@
             }}</v-chip>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip class="mx-1" :to="'/users/' + item.creator.id">
-              <v-avatar left v-if="item.creator.avatar != ''"
-                ><v-img :src="item.creator.avatar"></v-img
+            <v-chip class="mx-1" :to="'/users/' + item.creator._id">
+              <v-avatar left v-if="item.creator.image != ''"
+                ><v-img :src="item.creator.image"></v-img
               ></v-avatar>
               <v-avatar left v-else
                 ><v-icon small color="info">fas fa-user</v-icon></v-avatar
@@ -93,35 +93,58 @@
             </v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn depressed small color="info" :to="'/tasks/' + item._id">
-              More <v-icon small class="ml-3">fas fa-eye</v-icon>
-            </v-btn>
+            <v-tooltip
+              top
+              transition="slide-y-reverse-transition"
+              open-delay="100"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  fab
+                  x-small
+                  v-on="on"
+                  color="info"
+                  :to="'/tasks/' + item._id"
+                  class="mx-1"
+                >
+                  <v-icon x-small>fas fa-eye</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-right font-weight-light">See more</span>
+            </v-tooltip>
           </template>
         </v-data-table>
       </v-col>
     </v-row>
-    <v-row
-      class="px-3"
-      v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
-    >
-      <v-col>
-        <v-dialog max-width="650" v-model="dialogs.createtask">
-          <template v-slot:activator="{ on }">
+    <v-dialog max-width="650" v-model="dialogs.createtask">
+      <template v-slot:activator="{ on: onDialog }">
+        <v-tooltip transition="slide-x-transition" open-delay="100" right>
+          <template v-slot:activator="{ on: onTooltip }">
             <v-btn
-              height="160"
-              v-on="on"
-              block
+              v-on="{ ...onDialog, ...onTooltip }"
+              fab
+              left
+              top
+              absolute
               color="info"
-              class="my-2"
-              @click="clearTaskForm()"
+              class="mt-12 ml-2"
+              @click="
+                clearTaskForm();
+                randomTaskColor();
+              "
+              v-if="
+                loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'
+              "
             >
-              <v-icon left>fas fa-tasks</v-icon> Create Task
+              <v-icon>fas fa-tasks</v-icon>
             </v-btn>
           </template>
-          <create-task></create-task>
-        </v-dialog>
-      </v-col>
-    </v-row>
+          <span class="text-right caption font-weight-light">Create new</span>
+        </v-tooltip>
+      </template>
+      <create-task></create-task>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -134,23 +157,21 @@ export default {
     return {
       headers: [
         {
-          text: "Tasks",
+          text: "Task name",
           align: "start",
           value: "name",
-          width: 100,
         },
         { text: "Description", value: "description", sortable: false },
-        { text: "Joined", value: "usersjoined", sortable: false, width: 200 },
+        { text: "Joined", value: "suscribers", sortable: false },
         {
           text: "Workgroups",
           value: "workgroups",
           sortable: false,
-          width: 200,
         },
-        { text: "Interests", value: "interests", sortable: false, width: 200 },
-        { text: "Creator", value: "creator", sortable: false, width: 40 },
-        { text: "Color", value: "color", sortable: false, width: 40 },
-        { text: "", value: "actions", sortable: false, width: 100 },
+        { text: "Interests", value: "interests", sortable: false },
+        { text: "Creator", value: "creator", sortable: false },
+        { text: "Color", value: "color", sortable: false },
+        { text: "", value: "actions", sortable: false },
       ],
     };
   },
@@ -167,7 +188,7 @@ export default {
   },
   methods: {
     ...mapActions("tasks", ["loadTasks"]),
-    ...mapMutations("tasks", ["clearTaskForm"]),
+    ...mapMutations("tasks", ["clearTaskForm", "randomTaskColor"]),
     textColor(color) {
       return idealTextColor(color);
     },

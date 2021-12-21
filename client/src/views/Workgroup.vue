@@ -11,6 +11,11 @@
           :loading="skeleton"
         >
           <v-card class="mx-auto" v-if="workgroup._id" max-width="1080">
+            <v-overlay absolute :value="workgroup.deleted">
+              <v-alert color="error" dark icon="fas fa-archive" dense>
+                Archived
+              </v-alert>
+            </v-overlay>
             <v-img
               height="200"
               class="align-end"
@@ -641,11 +646,9 @@ export default {
   },
   created() {
     this.refreshing();
-    if (this.workgroup == {} || this.workgroup._id != this.$route.params.id) {
-      this.searchWorkgroup(this.$route.params.id);
-      this.loadWorkgroups();
-      this.loadTasks();
-    }
+    this.searchWorkgroup(this.$route.params.id);
+    this.loadWorkgroups();
+    this.loadTasks();
   },
   beforeDestroy() {
     clearInterval(this.polling);

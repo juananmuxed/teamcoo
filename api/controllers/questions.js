@@ -35,27 +35,51 @@ exports.getQuestion = async (req, res) => {
     const _id = req.params.id
 
     try {
-        const questionsDB = await Questions.findById(_id).populate('creator').populate('interests')
-        res.json(questionsDB)
+        const questionsDB = await Questions.findById(_id)
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.json(questionsDB);
 
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred', error: error })
+        res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }
 
 exports.getAllQuestions = async (req, res) => {
     try {
-        const questionsDB = await Questions.find({ deleted: false }).populate('creator').populate('interests')
-        res.json(questionsDB)
+        const questionsDB = await Questions.find({ deleted: false })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.json(questionsDB);
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred', error: error })
+        res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }
 
 exports.getAllQuestionsDeleted = async (req, res) => {
     try {
-        const questionsDB = await Questions.find({ deleted: true }).populate('creator').populate('interests')
-        res.json(questionsDB)
+        const questionsDB = await Questions.find({ deleted: true })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.json(questionsDB);
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
     }
@@ -84,6 +108,14 @@ exports.updateQuestion = async (req, res) => {
             }
         }
         const questionDb = await Questions.findByIdAndUpdate(_id, body, { new: true })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         res.json(questionDb)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })
@@ -94,8 +126,15 @@ exports.deleteQuestionSoft = async (req, res) => {
     const _id = req.params.id
 
     try {
-        const questionDb = await Questions.findByIdAndUpdate(_id, { deleted: true }, { new: true });
-        await Workgroups.updateMany({}, { $pull: { questions: _id } });
+        const questionDb = await Questions.findByIdAndUpdate(_id, { deleted: true }, { new: true })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         res.json(questionDb);
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
@@ -113,6 +152,7 @@ exports.deleteQuestion = async (req, res) => {
         }
         const questionDb = await Questions.findByIdAndDelete({ _id });
         await Workgroups.updateMany({}, { $pull: { questions: _id } });
+        // TODO: Cascade delete
         res.json(questionDb);
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });

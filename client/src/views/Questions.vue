@@ -174,22 +174,20 @@ export default {
     return {
       headers: [
         {
-          text: "Question Name",
+          text: "Question name",
           align: "start",
           value: "name",
-          width: 30,
         },
         {
           text: "Description",
           value: "description",
           sortable: false,
-          width: 20,
         },
-        { text: "Type", value: "type", sortable: false, width: 20 },
-        { text: "Common", value: "common", sortable: false, width: 20 },
-        { text: "Answers", value: "selections", sortable: false, width: 100 },
-        { text: "Creator", value: "creator", sortable: false, width: 30 },
-        { text: "", value: "actions", sortable: false, width: 20 },
+        { text: "Type", value: "type", sortable: false },
+        { text: "Common", value: "common", sortable: false },
+        { text: "Answers", value: "selections", sortable: false },
+        { text: "Creator", value: "creator", sortable: false },
+        { text: "", value: "actions", sortable: false },
       ],
     };
   },

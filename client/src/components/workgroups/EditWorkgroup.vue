@@ -127,7 +127,6 @@
             outlined
             prepend-icon="fas fa-file"
             hint="PDF"
-            :clearable="false"
             v-model="workgroupForm.workgroup.newDossier"
             accept="application/pdf"
             :rules="[rules.maxSize]"
