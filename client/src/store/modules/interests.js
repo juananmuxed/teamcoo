@@ -14,6 +14,8 @@ const state = {
         },
         loading: false,
     },
+    options: {},
+    totalInterests: 0,
     loading: false
 }
 
@@ -35,6 +37,12 @@ const mutations = {
     },
     changeLoading: (state) => {
         state.loading = !state.loading;
+    },
+    setOptions: (state, options) => {
+        state.options = options;
+    },
+    setTotalInterest: (state, total) => {
+        state.totalInterests = total;
     }
 }
 
@@ -62,6 +70,9 @@ const getters = {
         else {
             return false
         }
+    },
+    options: (state) => {
+        return state.options;
     }
 }
 
@@ -71,8 +82,22 @@ const actions = {
             commit('changeLoading');
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/interests/', config)
-            let interests = res.data;
-            commit('loadInterests', interests);
+            commit('loadInterests', res.data);
+            commit('changeLoading');
+        } catch (error) {
+            commit('changeLoading');
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async loadInterestPaginated({ state, commit, dispatch, rootGetters }) {
+        try {
+            commit('changeLoading');
+            let config = Object.assign({}, rootGetters['general/cookieAuth']);
+            config.params = state.options;
+            let res = await Axios.get('/interests/paged', config)
+            commit('loadInterests', res.data.items);
+            commit('setTotalInterest', res.data.totalItems);
             commit('changeLoading');
         } catch (error) {
             commit('changeLoading');
@@ -82,11 +107,12 @@ const actions = {
 
     async createInterest({ state, commit, dispatch, rootGetters }, id) {
         try {
-            let body = state.interestForm;
+            let body = state.interestForm.interest;
             body.creator = id;
+            commit('menu/notification', ['info', 3, body], { root: true });
             let config = rootGetters['general/cookieAuth'];
             await Axios.post('/interests/', body, config);
-            await dispatch('loadInterests');
+            await dispatch('loadInterestPaginated');
             commit('menu/cancelDialog', 'createinterest', { root: true });
             commit('menu/notification', ['info', 3, 'Interest created correctly'], { root: true });
             commit('clearInterestForm');
@@ -98,9 +124,9 @@ const actions = {
     async saveEditedInterest({ state, commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            await Axios.put('/interests/' + id, state.interestForm, config);
+            await Axios.put('/interests/' + id, state.interestForm.interest, config);
             commit('menu/cancelDialog', 'editinterest', { root: true });
-            await dispatch('loadInterests');
+            await dispatch('loadInterestPaginated');
             commit('menu/notification', ['info', 3, 'Interest saved correctly'], { root: true });
             commit('clearInterestForm');
         } catch (error) {
@@ -112,7 +138,7 @@ const actions = {
         try {
             let config = rootGetters['general/cookieAuth']
             await Axios.delete('/interests/finally/' + params.id, config);
-            await dispatch('loadInterests');
+            await dispatch('loadInterestPaginated');
             commit('menu/notification', ['info', 3, 'Interest permanently removed'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
@@ -124,7 +150,7 @@ const actions = {
         try {
             let config = rootGetters['general/cookieAuth']
             await Axios.delete('/interests/' + params.id, config);
-            await dispatch('loadInterests');
+            await dispatch('loadInterestPaginated');
             commit('menu/notification', ['info', 3, 'Interest removed'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {

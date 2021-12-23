@@ -8,7 +8,15 @@
 
     <v-row>
       <v-col cols="12">
-        <v-data-table :items="interests" :headers="headers" :loading="loading">
+        <v-data-table
+          :items="interests"
+          :headers="headers"
+          :loading="loading"
+          :options.sync="options"
+          :server-items-length="totalInterests"
+          :footer-props="{ 'items-per-page-options': [5, 10, 20] }"
+          :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
+        >
           <template v-slot:loading>
             <span class="display-1 text-uppercase font-weight-thin ma-5 pa-5"
               >Loading Interests</span
@@ -171,7 +179,6 @@ export default {
         {
           text: "Description",
           value: "description",
-          sortable: false,
         },
         { text: "Color", value: "color", sortable: false },
         { text: "Creator", value: "creator", sortable: false },
@@ -190,22 +197,36 @@ export default {
       interest: (state) => state.interests.interest,
       loginuser: (state) => state.user.loginuser,
       dialogs: (state) => state.menu.menu.dialogs,
+      totalInterests: (state) => state.interests.totalInterests,
       loading: (state) => state.interests.loading,
     }),
+    options: {
+      get: function () {
+        return this.$store.getters["interests/options"];
+      },
+      set: function (value) {
+        this.$store.commit("interests/setOptions", value);
+      },
+    },
+  },
+  watch: {
+    options: {
+      handler() {
+        this.loadInterestPaginated();
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapActions("interests", [
-      "loadInterests",
       "delInterestSoft",
       "searchInterest",
+      "loadInterestPaginated",
     ]),
     ...mapMutations("interests", ["clearInterestForm", "randomInterestColor"]),
     textColor(color) {
       return idealTextColor(color);
     },
-  },
-  created() {
-    this.loadInterests();
   },
 };
 </script>

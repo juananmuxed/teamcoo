@@ -80,7 +80,7 @@
         top
         absolute
         color="primary"
-        @click="createInterest(interest._id)"
+        @click="createInterest(loginuser.id)"
         :disabled="validInterest()"
         class="mt-8"
       >

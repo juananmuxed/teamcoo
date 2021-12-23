@@ -8,6 +8,8 @@ router.post("/", auth, interestsController.createInterest)
 
 router.get("/", auth, interestsController.getAllInterests)
 
+router.get("/paged", auth, interestsController.getAllInterestsPaged)
+
 router.get("/archived/", auth, interestsController.getAllInterestsArchived)
 
 router.get("/:id", auth, interestsController.getInterest)
