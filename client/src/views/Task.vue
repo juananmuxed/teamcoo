@@ -96,20 +96,20 @@
                         top
                         right
                         :color="
-                          !task.suscribers.some((m) => m._id == loginuser.id)
+                          !task.suscribers.some((m) => m._id == loginUser._id)
                             ? 'primary'
                             : 'secondary'
                         "
                       >
                         <v-icon>{{
-                          !task.suscribers.some((m) => m._id == loginuser.id)
+                          !task.suscribers.some((m) => m._id == loginUser._id)
                             ? "fas fa-user-plus"
                             : "fas fa-user-minus"
                         }}</v-icon>
                       </v-btn>
                     </template>
                     <span class="text-right caption font-weight-light">{{
-                      !task.suscribers.some((m) => m._id == loginuser.id)
+                      !task.suscribers.some((m) => m._id == loginUser._id)
                         ? "Join"
                         : "Unjoin"
                     }}</span>
@@ -117,24 +117,24 @@
                 </template>
                 <confirmation-template
                   :title="`${
-                    !task.suscribers.some((m) => m._id == loginuser.id)
+                    !task.suscribers.some((m) => m._id == loginUser._id)
                       ? 'Join'
                       : 'Unjoin'
                   } to ${task.name}</span>`"
                   :description="`You are about to ${
-                    !task.suscribers.some((m) => m._id == loginuser.id)
+                    !task.suscribers.some((m) => m._id == loginUser._id)
                       ? 'Join'
                       : 'Unjoin'
                   } this Task.<br><br>Are you sure?`"
                   :cancelFunction="null"
                   :textButton="
-                    !task.suscribers.some((m) => m._id == loginuser.id)
+                    !task.suscribers.some((m) => m._id == loginUser._id)
                       ? 'Join'
                       : 'Unjoin'
                   "
-                  :actionparams="{ userId: loginuser.id }"
+                  :actionparams="{ userId: loginUser._id }"
                   :action="
-                    !task.suscribers.some((m) => m._id == loginuser.id)
+                    !task.suscribers.some((m) => m._id == loginUser._id)
                       ? joinTask
                       : unjoinTask
                   "
@@ -205,8 +205,8 @@
                   <template v-slot:activator="{ on }">
                     <v-btn
                       v-if="
-                        loginuser.rol.value == 'admin' ||
-                        loginuser.id == task.creator._id
+                        loginUser.rol.value == 'admin' ||
+                        loginUser._id == task.creator._id
                       "
                       @click="loadEditedTask()"
                       v-on="on"
@@ -245,8 +245,8 @@
             </v-card-text>
             <template
               v-if="
-                loginuser.rol.value == 'admin' ||
-                loginuser.id == task.creator._id
+                loginUser.rol.value == 'admin' ||
+                loginUser._id == task.creator._id
               "
             >
               <v-divider></v-divider>
@@ -288,8 +288,8 @@
                           color="info"
                           v-on="{ ...onTooltip, ...onDialog }"
                           v-if="
-                            loginuser.rol.value == 'admin' ||
-                            task.creator._id == loginuser.id
+                            loginUser.rol.value == 'admin' ||
+                            task.creator._id == loginUser._id
                           "
                         >
                           <v-icon small class="ml-1">fas fa-edit</v-icon>
@@ -316,8 +316,8 @@
                           color="error"
                           v-on="{ ...onTooltip, ...onDialog }"
                           v-if="
-                            loginuser.rol.value == 'admin' ||
-                            task.creator._id == loginuser.id
+                            loginUser.rol.value == 'admin' ||
+                            task.creator._id == loginUser._id
                           "
                         >
                           <v-icon small class="ml-1">fas fa-trash</v-icon>
@@ -366,7 +366,7 @@ export default {
   computed: {
     ...mapState({
       task: (state) => state.tasks.task,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       dialogs: (state) => state.menu.menu.dialogs,
       skeleton: (state) => state.tasks.skeleton,
     }),

@@ -202,12 +202,10 @@ const router = new Router({
     ]
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (Cookies.get('teamcoo-jwt') == undefined) {
-            next({
-                path: "/login"
-            })
+            await store.dispatch('user/expiredLogOut');
         } else {
             next()
         }
@@ -229,7 +227,7 @@ router.beforeEach((to, from, next) => {
         let validRoles = []
         let menu = store.state.menu.menu.links.find(element => to.path.includes(element.link))
         validRoles = menu.roles
-        if (validRoles.includes(store.state.user.loginuser.rol.value)) {
+        if (validRoles.includes(store.state.user.loginUser.rol.value)) {
             next()
         } else {
             next({
@@ -241,7 +239,7 @@ router.beforeEach((to, from, next) => {
         next()
     }
     if (to.matched.some(record => record.meta.isUser)) {
-        if (store.state.user.loginuser.rol.value != 'user' || store.state.user.loginuser.id == to.params.id) {
+        if (store.state.user.loginUser.rol.value != 'user' || store.state.user.loginUser._id == to.params.id) {
             next()
         } else {
             next({ path: "/404" })

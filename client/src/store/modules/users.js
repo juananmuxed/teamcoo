@@ -196,7 +196,7 @@ const actions = {
             let id = user.id
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.put('/users/' + id, user, config);
-            if (rootState.user.loginuser.id == id) {
+            if (rootState.user.loginUser._id == id) {
                 commit('user/userStore', { data: res.data }, { root: true });
             }
             commit('menu/notification', ['primary', 3, 'Changed data Succesfully'], { root: true });
@@ -225,7 +225,7 @@ const actions = {
                 await Axios.put('/workgroups/' + workgroups[i]._id, updatedWorkgroup, config);
             }
             config.data = {
-                email: rootState.user.loginuser.email,
+                email: rootState.user.loginUser.email,
                 password: params.password
             }
             await Axios.delete('/users/finally/' + params.id, config);
@@ -239,7 +239,7 @@ const actions = {
         try {
             let config = rootGetters['general/cookieAuth'];
             config.data = {
-                email: rootState.user.loginuser.email,
+                email: rootState.user.loginUser.email,
                 password: params.password
             }
             await Axios.delete('/users/' + params.id, config);

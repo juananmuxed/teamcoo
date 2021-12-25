@@ -118,7 +118,7 @@
         top
         absolute
         color="primary"
-        @click="joinWorkgroup(loginuser.id)"
+        @click="joinWorkgroup(loginUser._id)"
         :disabled="!isValidJoin()"
         class="mt-8"
       >
@@ -139,7 +139,7 @@ export default {
       answers: (state) => state.workgroups.answers,
       rules: (state) => state.workgroups.rules,
       interests: (state) => state.interests.interests,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
     }),
   },
   methods: {

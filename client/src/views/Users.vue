@@ -154,7 +154,7 @@ export default {
   computed: {
     ...mapState({
       users: (state) => state.users.users,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       loading: (state) => state.users.loading,
     }),
   },

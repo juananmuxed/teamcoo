@@ -178,7 +178,7 @@
             </template>
           </v-autocomplete>
         </v-col>
-        <v-col cols="12" class="py-1" v-if="loginuser.rol.value == 'admin'">
+        <v-col cols="12" class="py-1" v-if="loginUser.rol.value == 'admin'">
           <v-switch
             color="primary"
             v-model="workgroupForm.workgroup.secret"
@@ -193,7 +193,7 @@
         top
         absolute
         color="primary"
-        @click="createWorkGroup(loginuser.id)"
+        @click="createWorkGroup(loginUser._id)"
         :disabled="validWorkgroup()"
         class="mt-8"
       >
@@ -214,7 +214,7 @@ export default {
   computed: {
     ...mapState({
       workgroupForm: (state) => state.workgroups.workgroupForm,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       menu: (state) => state.menu.menu,
       workgroups: (state) => state.workgroups.workgroups,
       questions: (state) => state.questions.questions,

@@ -17,12 +17,12 @@
                 v-on="on"
               >
                 <v-icon>{{
-                  !loginuser.dark ? "fas fa-lightbulb" : "far fa-lightbulb"
+                  !userConfigs.dark ? "fas fa-lightbulb" : "far fa-lightbulb"
                 }}</v-icon>
               </v-btn>
             </template>
             <span class="text-right caption font-weight-light">{{
-              !loginuser.dark ? "🌚 Lights off" : "🌞 Lights on"
+              !userConfigs.dark ? "🌚 Lights off" : "🌞 Lights on"
             }}</span>
           </v-tooltip>
 
@@ -149,7 +149,8 @@ export default {
   computed: {
     ...mapState({
       menu: (state) => state.menu.menu,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
+      userConfigs: (state) => state.user.userConfigs,
     }),
   },
   methods: {

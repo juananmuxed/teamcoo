@@ -78,7 +78,7 @@
                     dialogs.editinterest = true;
                   "
                   class="mx-1"
-                  v-if="item.creator._id == loginuser.id"
+                  v-if="item.creator._id == loginUser._id"
                 >
                   <v-icon x-small>fas fa-edit</v-icon>
                 </v-btn>
@@ -102,7 +102,7 @@
                     dialogs.confirm = true;
                   "
                   class="mx-1"
-                  v-if="loginuser.rol.value == 'admin'"
+                  v-if="loginUser.rol.value == 'admin'"
                 >
                   <v-icon x-small>fas fa-trash</v-icon>
                 </v-btn>
@@ -132,7 +132,7 @@
     <v-dialog
       max-width="650"
       v-model="dialogs.createinterest"
-      v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
+      v-if="loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'"
     >
       <template v-slot:activator="{ on: onDialog }">
         <v-tooltip transition="slide-x-transition" open-delay="100" right>
@@ -195,7 +195,7 @@ export default {
     ...mapState({
       interests: (state) => state.interests.interests,
       interest: (state) => state.interests.interest,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       dialogs: (state) => state.menu.menu.dialogs,
       totalInterests: (state) => state.interests.totalInterests,
       loading: (state) => state.interests.loading,

@@ -167,9 +167,9 @@
     </v-col>
     <template
       v-if="
-        loginuser.rol.value == 'coor' ||
-        loginuser.rol.value == 'admin' ||
-        loginuser.rol.value == 'volu'
+        loginUser.rol.value == 'coor' ||
+        loginUser.rol.value == 'admin' ||
+        loginUser.rol.value == 'volu'
       "
     >
       <v-col cols="12"><v-divider></v-divider></v-col>
@@ -199,7 +199,7 @@
                   xl="3"
                   class="pa-3"
                   :key="index + '-own'"
-                  v-if="task.usersjoined.some((u) => u.id == loginuser.id)"
+                  v-if="task.usersjoined.some((u) => u.id == loginUser._id)"
                 >
                   <v-card>
                     <v-img
@@ -326,7 +326,7 @@
       </v-col>
     </template>
     <template
-      v-if="loginuser.rol.value == 'coor' || loginuser.rol.value == 'admin'"
+      v-if="loginUser.rol.value == 'coor' || loginUser.rol.value == 'admin'"
     >
       <v-col cols="12"><v-divider></v-divider></v-col>
       <v-col cols="12" class="display-1 font-weight-thin text-uppercase">
@@ -372,7 +372,7 @@
                   xl="3"
                   class="pa-3"
                   :key="index + '-own'"
-                  v-if="task.creator.id == loginuser.id"
+                  v-if="task.creator.id == loginUser._id"
                 >
                   <v-card>
                     <v-img
@@ -521,7 +521,7 @@ export default {
   computed: {
     ...mapState({
       tasks: (state) => state.tasks.tasks,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       loading: (state) => state.tasks.loading,
       menu: (state) => state.menu.menu,
     }),

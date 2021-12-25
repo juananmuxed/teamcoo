@@ -10,19 +10,6 @@
         >Be a Volunteer</v-btn
       >
     </v-col>
-    <v-col cols="12" sm="6" class="pa-2" v-if="isLogged()">
-      <v-btn
-        color="secondary"
-        block
-        height="160"
-        class="display-1"
-        v-if="loginuser.membership.state == 'inactive'"
-        >Be a Member</v-btn
-      >
-      <v-btn color="secondary" block height="160" class="display-1" v-else
-        >Go to membership</v-btn
-      >
-    </v-col>
     <v-col
       cols="12"
       sm="6"
@@ -60,7 +47,6 @@ export default {
   },
   computed: {
     ...mapState({
-      loginuser: (state) => state.user.loginuser,
       newuser: (state) => state.user.newuser,
       dialogs: (state) => state.menu.menu.dialogs,
     }),

@@ -12,6 +12,8 @@ router.get("/paged", auth, interestsController.getAllInterestsPaged)
 
 router.get("/archived/", auth, interestsController.getAllInterestsArchived)
 
+router.get("/archived/paged", auth, interestsController.getAllInterestsArchivedPaged)
+
 router.get("/:id", auth, interestsController.getInterest)
 
 router.put("/:id", auth, interestsController.updateInterest)

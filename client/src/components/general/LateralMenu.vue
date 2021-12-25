@@ -30,15 +30,15 @@
       </v-tooltip>
 
       <v-list-item two-line>
-        <v-list-item-avatar v-if="loginuser.image">
-          <img :src="loginuser.image" />
+        <v-list-item-avatar v-if="loginUser.image">
+          <img :src="loginUser.image" />
         </v-list-item-avatar>
         <v-list-item-avatar color="primary" v-else>
           <v-icon>fas fa-user</v-icon>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>{{ loginuser.firstname }}</v-list-item-title>
-          <v-list-item-subtitle>{{ loginuser.username }}</v-list-item-subtitle>
+          <v-list-item-title>{{ loginUser.firstname }}</v-list-item-title>
+          <v-list-item-subtitle>{{ loginUser.username }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action link class="hidden-sm-and-down">
           <v-icon @click="menu.drawerMini = !menu.drawerMini"
@@ -62,7 +62,7 @@
               v-on="on"
               link
               :to="item.link"
-              v-if="item.roles.includes(loginuser.rol.value)"
+              v-if="item.roles.includes(loginUser.rol.value)"
             >
               <v-list-item-icon>
                 <v-icon>{{ item.icon }}</v-icon>
@@ -106,7 +106,7 @@
         <template v-for="item in menu.links">
           <v-list-item
             link
-            v-if="item.roles.includes(loginuser.rol.value)"
+            v-if="item.roles.includes(loginUser.rol.value)"
             :key="item.name"
             :to="item.link"
           >
@@ -142,7 +142,7 @@ export default {
   computed: {
     ...mapState({
       menu: (state) => state.menu.menu,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
     }),
   },
   methods: {

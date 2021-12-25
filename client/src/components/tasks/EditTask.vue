@@ -242,7 +242,7 @@ export default {
       tasksForm: (state) => state.tasks.tasksForm,
       workgroups: (state) => state.workgroups.workgroups,
       secretWorkgroups: (state) => state.workgroups.secretWorkgroups,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       menu: (state) => state.menu.menu,
       rules: (state) => state.general.rules,
       interests: (state) => state.interests.interests,

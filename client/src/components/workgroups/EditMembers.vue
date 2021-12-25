@@ -7,8 +7,8 @@
       <v-row>
         <template
           v-if="
-            loginuser.rol.value == 'admin' ||
-            loginuser.id == workgroup.creator._id
+            loginUser.rol.value == 'admin' ||
+            loginUser._id == workgroup.creator._id
           "
         >
           <v-col cols="12" class="py-1 text-uppercase font-weight-light title"
@@ -170,7 +170,7 @@ export default {
       workgroup: (state) => state.workgroups.workgroup,
       editMemberForm: (state) => state.workgroups.editMemberForm,
       users: (state) => state.users.users,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
     }),
   },
   methods: {

@@ -199,7 +199,7 @@
             </template>
           </v-autocomplete>
         </v-col>
-        <v-col cols="12" class="py-1" v-if="loginuser.rol.value == 'admin'">
+        <v-col cols="12" class="py-1" v-if="loginUser.rol.value == 'admin'">
           <v-switch
             color="primary"
             v-model="workgroupForm.workgroup.secret"
@@ -250,7 +250,7 @@ export default {
       workgroupForm: (state) => state.workgroups.workgroupForm,
       workgroup: (state) => state.workgroups.workgroup,
       questions: (state) => state.questions.questions,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       menu: (state) => state.menu.menu,
       workgroups: (state) => state.workgroups.workgroups,
       secretWorkgroups: (state) => state.workgroups.secretWorkgroups,

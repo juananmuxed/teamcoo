@@ -80,7 +80,7 @@
         top
         absolute
         color="primary"
-        @click="createInterest(loginuser.id)"
+        @click="createInterest(loginUser._id)"
         :disabled="validInterest()"
         class="mt-8"
       >
@@ -98,7 +98,7 @@ export default {
     ...mapState({
       interestForm: (state) => state.interests.interestForm,
       rules: (state) => state.general.rules,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
     }),
   },
   methods: {

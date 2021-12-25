@@ -68,8 +68,8 @@
                   "
                   class="mx-1"
                   v-if="
-                    item.creator._id == loginuser.id ||
-                    loginuser.role == 'admin'
+                    item.creator._id == loginUser._id ||
+                    loginUser.role == 'admin'
                   "
                 >
                   <v-icon x-small>fas fa-edit</v-icon>
@@ -94,7 +94,7 @@
                     dialogs.confirm = true;
                   "
                   class="mx-1"
-                  v-if="loginuser.rol.value == 'admin'"
+                  v-if="loginUser.rol.value == 'admin'"
                 >
                   <v-icon x-small>fas fa-trash</v-icon>
                 </v-btn>
@@ -137,7 +137,7 @@
     <v-dialog
       max-width="650"
       v-model="dialogs.createinterest"
-      v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
+      v-if="loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'"
     >
       <template v-slot:activator="{ on: onDialog }">
         <v-tooltip transition="slide-x-transition" open-delay="100" right>
@@ -185,7 +185,7 @@ export default {
         },
         { text: "Type", value: "type", sortable: false },
         { text: "Common", value: "common", sortable: false },
-        { text: "Answers", value: "selections", sortable: false },
+        { text: "Answers", value: "selections", sortable: false, width: 200 },
         { text: "Creator", value: "creator", sortable: false },
         { text: "", value: "actions", sortable: false },
       ],
@@ -200,7 +200,7 @@ export default {
     ...mapState({
       questions: (state) => state.questions.questions,
       question: (state) => state.questions.question,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       dialogs: (state) => state.menu.menu.dialogs,
       loading: (state) => state.questions.loading,
     }),

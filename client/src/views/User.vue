@@ -91,8 +91,8 @@
                         v-on="on"
                         icon
                         v-if="
-                          loginuser.rol.value == 'admin' ||
-                          loginuser.id == $route.params.id
+                          loginUser.rol.value == 'admin' ||
+                          loginUser._id == $route.params.id
                         "
                         ><v-icon
                           color="primary"
@@ -107,7 +107,7 @@
                 </v-card-actions>
               </v-card>
             </v-col>
-            <template v-if="loginuser.rol.value != 'user'">
+            <template v-if="loginUser.rol.value != 'user'">
               <v-skeleton-loader
                 type="skeleton"
                 :types="{
@@ -201,8 +201,8 @@
                             block
                             color="success"
                             v-if="
-                              loginuser.rol.value == 'admin' ||
-                              loginuser.id == $route.params.id
+                              loginUser.rol.value == 'admin' ||
+                              loginUser._id == $route.params.id
                             "
                             @click="dialogs.editcommonquestion = true"
                             >Fill it!</v-btn
@@ -216,8 +216,8 @@
                       <v-btn
                         icon
                         v-if="
-                          loginuser.rol.value == 'admin' ||
-                          loginuser.id == $route.params.id
+                          loginUser.rol.value == 'admin' ||
+                          loginUser._id == $route.params.id
                         "
                         @click="dialogs.editcommonquestion = true"
                         ><v-icon color="primary" small
@@ -411,8 +411,8 @@
               </v-row>
               <template
                 v-if="
-                  loginuser.rol.value == 'coor' ||
-                  loginuser.rol.value == 'admin'
+                  loginUser.rol.value == 'coor' ||
+                  loginUser.rol.value == 'admin'
                 "
               >
                 <v-col
@@ -475,7 +475,7 @@
                   <v-icon left>fas fa-key</v-icon> Change your Password
                 </v-btn>
               </v-col>
-              <v-col cols="12" sm="6" v-if="loginuser.rol.value == 'admin'">
+              <v-col cols="12" sm="6" v-if="loginUser.rol.value == 'admin'">
                 <v-btn
                   height="90"
                   @click="dialogs.confirm = true"
@@ -484,7 +484,7 @@
                   ><v-icon left>fas fa-trash</v-icon> Delete User</v-btn
                 >
               </v-col>
-              <v-col cols="12" sm="6" v-if="loginuser.id == $route.params.id">
+              <v-col cols="12" sm="6" v-if="loginUser._id == $route.params.id">
                 <v-btn
                   height="90"
                   @click="dialogs.confirmSoft = true"
@@ -553,7 +553,7 @@ export default {
       skeletonQuestions: (state) => state.questions.skeleton,
       workgroups: (state) => state.workgroups.workgroups,
       dialogs: (state) => state.menu.menu.dialogs,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       commonQuestions: (state) => state.questions.commonQuestions,
     }),
   },

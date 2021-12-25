@@ -87,7 +87,7 @@
             :rules="[rules.required]"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" v-if="loginuser.rol.value == 'admin'">
+        <v-col cols="12" v-if="loginUser.rol.value == 'admin'">
           <v-checkbox
             dense
             color="primary"
@@ -106,7 +106,7 @@
         top
         absolute
         color="primary"
-        @click="createQuestion(loginuser.id)"
+        @click="createQuestion(loginUser._id)"
         :disabled="validQuestion()"
         class="mt-8"
       >
@@ -139,7 +139,7 @@ export default {
     ...mapState({
       questionForm: (state) => state.questions.questionForm,
       interests: (state) => state.interests.interests,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       rules: (state) => state.general.rules,
     }),
   },

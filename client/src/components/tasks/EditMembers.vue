@@ -100,7 +100,7 @@ export default {
       task: (state) => state.tasks.task,
       tasksForm: (state) => state.tasks.tasksForm,
       users: (state) => state.users.users,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
     }),
   },
   methods: {

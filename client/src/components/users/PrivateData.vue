@@ -1,6 +1,6 @@
 <template>
   <v-col>
-    <v-row v-if="!loginuser.verifiedemail" class="px-3">
+    <v-row v-if="!loginUser.verifiedemail" class="px-3">
       <v-col class="subtitle-1 font-weight-light text-justify">
         You need verify your email to edit or change data from this web.
         <v-btn
@@ -8,36 +8,36 @@
           :loading="sendingEmail"
           block
           class="my-6"
-          @click="sendVerificationMail(loginuser.email)"
+          @click="sendVerificationMail(loginUser.email)"
         >
           Verify your Email
         </v-btn>
       </v-col>
     </v-row>
-    <v-card elevation="8" :disabled="!loginuser.verifiedemail">
+    <v-card elevation="8" :disabled="!loginUser.verifiedemail">
       <v-card-title>
-        <v-avatar v-if="loginuser.image">
-          <img :src="loginuser.image" />
+        <v-avatar v-if="loginUser.image">
+          <img :src="loginUser.image" />
         </v-avatar>
         <v-avatar v-else color="primary">
           <v-icon>fas fa-user</v-icon>
         </v-avatar>
         <span class="title font-weight-light pa-3">{{
-          loginuser.username
+          loginUser.username
         }}</span>
       </v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols="12">
-            Email: {{ loginuser.email }}<br />
+            Email: {{ loginUser.email }}<br />
             <span
               cols="12"
               v-if="
-                loginuser.rol.value == 'admin' ||
-                loginuser.rol.value == 'coor' ||
-                loginuser.rol.value == 'dire'
+                loginUser.rol.value == 'admin' ||
+                loginUser.rol.value == 'coor' ||
+                loginUser.rol.value == 'dire'
               "
-              >Rol: {{ loginuser.rol.name }}</span
+              >Rol: {{ loginUser.rol.name }}</span
             >
           </v-col>
         </v-row>
@@ -46,11 +46,11 @@
     <v-row class="px-3">
       <v-col>
         <v-btn
-          :to="'/users/' + loginuser.id"
+          :to="'/users/' + loginUser._id"
           block
           color="primary"
           class="my-2"
-          :disabled="!loginuser.verifiedemail"
+          :disabled="!loginUser.verifiedemail"
         >
           <v-icon left>fas fa-user-edit</v-icon> Edit Information
         </v-btn>
@@ -66,8 +66,8 @@
     </v-row>
     <v-card
       elevation="5"
-      :disabled="!loginuser.verifiedemail"
-      v-if="loginuser.rol.value != 'user'"
+      :disabled="!loginUser.verifiedemail"
+      v-if="loginUser.rol.value != 'user'"
       class="my-3"
     >
       <v-card-title class="title font-weight-light pa-3"
@@ -123,19 +123,19 @@
                   <v-icon
                     v-on="on"
                     :color="
-                      loginuser.workgroups.some((wg) => wg._wgId === item._id)
+                      loginUser.workgroups.some((wg) => wg._wgId === item._id)
                         ? 'info'
                         : 'error'
                     "
                     >{{
-                      loginuser.workgroups.some((wg) => wg._wgId === item._id)
+                      loginUser.workgroups.some((wg) => wg._wgId === item._id)
                         ? "fas fa-check"
                         : "fas fa-times"
                     }}</v-icon
                   >
                 </template>
                 <span class="text-right caption font-weight-light">{{
-                  loginuser.workgroups.some((wg) => wg._wgId === item._id)
+                  loginUser.workgroups.some((wg) => wg._wgId === item._id)
                     ? "Joined"
                     : "Unjoined"
                 }}</span>
@@ -144,12 +144,12 @@
           </v-treeview>
         </v-skeleton-loader>
         <v-row
-          v-if="loginuser.rol.value == 'admin' && secretworkgroups.length != 0"
+          v-if="loginUser.rol.value == 'admin' && secretworkgroups.length != 0"
         >
           <v-col cols="12"> Privated Groups </v-col>
         </v-row>
         <v-skeleton-loader
-          v-if="loginuser.rol.value == 'admin' && secretworkgroups.length != 0"
+          v-if="loginUser.rol.value == 'admin' && secretworkgroups.length != 0"
           transition="fade-transition"
           :loading="menu.loader.secretwg"
           :types="{
@@ -198,19 +198,19 @@
                   <v-icon
                     v-on="on"
                     :color="
-                      loginuser.workgroups.some((wg) => wg._wgId === item._id)
+                      loginUser.workgroups.some((wg) => wg._wgId === item._id)
                         ? 'info'
                         : 'error'
                     "
                     >{{
-                      loginuser.workgroups.some((wg) => wg._wgId === item._id)
+                      loginUser.workgroups.some((wg) => wg._wgId === item._id)
                         ? "fas fa-check"
                         : "fas fa-times"
                     }}</v-icon
                   >
                 </template>
                 <span class="text-right caption font-weight-light">{{
-                  loginuser.workgroups.some((wg) => wg._wgId === item._id)
+                  loginUser.workgroups.some((wg) => wg._wgId === item._id)
                     ? "Joined"
                     : "Unjoined"
                 }}</span>
@@ -221,7 +221,7 @@
       </v-card-text>
       <v-row
         class="px-3"
-        v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
+        v-if="loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'"
       >
         <v-col>
           <v-dialog max-width="650" v-model="menu.dialogs.createworkgroup">
@@ -257,7 +257,7 @@ export default {
   computed: {
     ...mapState({
       menu: (state) => state.menu.menu,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       sendingEmail: (state) => state.user.sendingEmail,
       tasks: (state) => state.tasks.tasks,
       workgroups: (state) => state.workgroups.nestedWorkgroups,

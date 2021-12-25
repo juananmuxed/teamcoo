@@ -134,7 +134,7 @@
                 randomTaskColor();
               "
               v-if="
-                loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'
+                loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'
               "
             >
               <v-icon>fas fa-tasks</v-icon>
@@ -181,7 +181,7 @@ export default {
   computed: {
     ...mapState({
       tasks: (state) => state.tasks.tasks,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       loading: (state) => state.tasks.loading,
       dialogs: (state) => state.menu.menu.dialogs,
     }),

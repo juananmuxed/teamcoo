@@ -120,7 +120,7 @@ export default {
     ...mapState({
       menu: (state) => state.menu.menu,
       questions: (state) => state.questions.questions,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       loadedUser: (state) => state.users.loadedUser,
     }),
   },

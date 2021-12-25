@@ -38,7 +38,7 @@
                   <v-text-field
                     outlined
                     label="First Name *"
-                    v-model="newuser.firstname"
+                    v-model="newUser.firstName"
                     :rules="[rules.required]"
                   >
                   </v-text-field>
@@ -47,7 +47,7 @@
                   <v-text-field
                     outlined
                     label="Last Name *"
-                    v-model="newuser.lastname"
+                    v-model="newUser.lastName"
                     :rules="[rules.required]"
                   >
                   </v-text-field>
@@ -55,7 +55,7 @@
                 <v-col cols="12">
                   <v-text-field
                     outlined
-                    v-model="newuser.email"
+                    v-model="newUser.email"
                     label="E-mail *"
                     :rules="[rules.required, rules.emailrules]"
                     hint="Correct Format: user@domain.com"
@@ -64,9 +64,9 @@
                 </v-col>
                 <v-col cols="12" sm="6">
                   <v-text-field
-                    v-model="newuser.password"
+                    v-model="newUser.password"
                     outlined
-                    :type="newuser.passshow ? 'text' : 'password'"
+                    :type="newUser.passShow ? 'text' : 'password'"
                     label="Password *"
                     :rules="[
                       rules.required,
@@ -78,15 +78,15 @@
                 </v-col>
                 <v-col cols="12" sm="6">
                   <v-text-field
-                    v-model="newuser.passwordconfirm"
+                    v-model="newUser.passwordConfirm"
                     outlined
-                    :type="newuser.passshow ? 'text' : 'password'"
+                    :type="newUser.passShow ? 'text' : 'password'"
                     label="Password Confirm *"
                     :rules="[
                       rules.required,
                       rules.passwordconfirm(
-                        this.newuser.passwordconfirm,
-                        this.newuser.password
+                        this.newUser.passwordConfirm,
+                        this.newUser.password
                       ),
                     ]"
                   >
@@ -97,39 +97,22 @@
                     <v-btn
                       block
                       color="primary"
-                      @click="newuser.passshow = !newuser.passshow"
+                      @click="newUser.passShow = !newUser.passShow"
                       v-if="
-                        newuser.password != '' || newuser.passwordconfirm != ''
+                        newUser.password != '' || newUser.passwordConfirm != ''
                       "
                     >
                       <v-icon class="px-4">{{
-                        newuser.passshow ? "fas fa-eye" : "fas fa-eye-slash"
+                        newUser.passShow ? "fas fa-eye" : "fas fa-eye-slash"
                       }}</v-icon
                       ><span class="px-4">{{
-                        newuser.passshow ? "Hidden passwords" : "Show passwords"
+                        newUser.passShow ? "Hidden passwords" : "Show passwords"
                       }}</span>
                     </v-btn>
                   </v-expand-transition>
                 </v-col>
                 <v-col cols="12">
-                  <span class="font-weight-bold"
-                    >Minimum for secure password</span
-                  >
-                  <ul>
-                    <li>Eight-characters minimun.</li>
-                    <li>Include at least 1 number.</li>
-                    <li>Include at least 1 capital letter.</li>
-                    <li>Include at least 1 lower case letter.</li>
-                    <li>Avoid using the same password for multiple sites.</li>
-                    <li>No spaces.</li>
-                  </ul>
-                </v-col>
-                <v-col cols="12">
-                  <v-checkbox
-                    dense
-                    color="primary"
-                    v-model="newuser.bevolunteer"
-                  >
+                  <v-checkbox dense color="primary" v-model="newUser.volunteer">
                     <template v-slot:label>
                       <div>I want to be a Volunteer</div>
                     </template>
@@ -137,7 +120,7 @@
 
                   <v-checkbox
                     color="primary"
-                    v-model="newuser.accept.termsconditions"
+                    v-model="newUser.accept.termsConditions"
                     :rules="[rules.acceptterms]"
                     dense
                   >
@@ -155,7 +138,7 @@
                   <v-checkbox
                     dense
                     color="primary"
-                    v-model="newuser.accept.privacycookiepolicy"
+                    v-model="newUser.accept.privacyCookiePolicy"
                     :rules="[rules.acceptchecks]"
                   >
                     <template v-slot:label>
@@ -215,7 +198,7 @@ export default {
     ...mapState({
       rules: (state) => state.general.rules,
       webName: (state) => state.menu.web.name,
-      newuser: (state) => state.user.newuser,
+      newUser: (state) => state.user.newUser,
       sendingEmail: (state) => state.user.sendingEmail,
       registerPage: (state) => state.general.pagesSpecials.register,
     }),

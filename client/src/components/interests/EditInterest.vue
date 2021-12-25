@@ -115,7 +115,7 @@ export default {
   computed: {
     ...mapState({
       interest: (state) => state.interests.interest,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       interestForm: (state) => state.interests.interestForm,
       rules: (state) => state.general.rules,
     }),

@@ -6,7 +6,7 @@
           <template v-slot:activator="{ on }">
             <v-icon
               v-on="on"
-              v-if="loginuser.membership.state == 'active'"
+              v-if="loginUser.membership.state == 'active'"
               left
               color="info"
               class="pr-1"
@@ -17,10 +17,10 @@
             >Membershiped!!</span
           >
         </v-tooltip>
-        {{ loginuser.username }}'s Dashboard
+        {{ loginUser.username }}'s Dashboard
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-icon v-on="on" v-if="loginuser.verifiedemail" color="primary"
+            <v-icon v-on="on" v-if="loginUser.verifiedemail" color="primary"
               >fas fa-check</v-icon
             >
           </template>
@@ -36,7 +36,7 @@
         <private-data-column></private-data-column>
       </v-col>
       <v-col cols="12" md="8" xl="10" class="pa-3">
-        <not-user-tasks v-if="loginuser.rol.value != 'user'"></not-user-tasks>
+        <not-user-tasks v-if="loginUser.rol.value != 'user'"></not-user-tasks>
         <home-buttons v-else></home-buttons>
       </v-col>
     </v-row>
@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     ...mapState({
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
     }),
   },
 };

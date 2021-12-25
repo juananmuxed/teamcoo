@@ -2,7 +2,7 @@
   <v-app>
     <v-overlay
       opacity="1"
-      :color="this.loginuser.dark ? 'black' : 'white'"
+      :color="userConfigs.dark ? 'black' : 'white'"
       :z-index="9999"
       :value="loading"
     >
@@ -10,7 +10,7 @@
         <v-progress-circular
           indeterminate
           size="80"
-          :color="!this.loginuser.dark ? 'black' : 'white'"
+          :color="!userConfigs.dark ? 'black' : 'white'"
         ></v-progress-circular>
       </div>
     </v-overlay>
@@ -81,12 +81,12 @@ export default {
       loading: (state) => state.general.loading,
       menu: (state) => state.menu.menu,
       snackbar: (state) => state.menu.snackbar,
-      loginuser: (state) => state.user.loginuser,
+      userConfigs: (state) => state.user.userConfigs,
     }),
   },
 
   async created() {
-    Vuetify.framework.theme.dark = this.loginuser.dark;
+    Vuetify.framework.theme.dark = this.userConfigs.dark;
     await this.getThemeColors();
     await this.getLogosPage();
     this.changeLoadingApp();

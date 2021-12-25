@@ -16,11 +16,11 @@ const userScheme = mongoose.Schema({
         type: String,
         required: [true, 'Please include a password']
     },
-    firstname: {
+    firstName: {
         type: String,
         required: [true, 'Please include your First name']
     },
-    lastname: {
+    lastName: {
         type: String,
         default: ''
     },
@@ -35,16 +35,16 @@ const userScheme = mongoose.Schema({
         }
     }],
     accept: {
-        termsconditions: {
+        termsConditions: {
             type: Boolean,
             required: [true, 'Please accept terms']
         },
-        privacycookiepolicy: {
+        privacyCookiePolicy: {
             type: Boolean,
             required: [true, 'Please accept policy']
         }
     },
-    verifiedemail: {
+    verifiedEmail: {
         type: Boolean,
         default: false
     },
@@ -56,12 +56,11 @@ const userScheme = mongoose.Schema({
         type: Object,
         default: { status: 'inactive' }
     },
-    emailconfig: {
-        type: Array,
-        default: []
-    },
-    commonquestions: {
-        type: Array,
+    interests: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Interests'
+        }],
         default: []
     },
     deleted: {
@@ -80,12 +79,7 @@ userScheme.pre('save', async function (next) {
 
 userScheme.methods.generateAuthToken = function () {
     const user = this;
-    const token = jwt.sign({ _id: user._id, name: user.name, email: user.email }, process.env.SECRET_STRING);
-    while (user.tokens.length >= 5) {
-        user.tokens.shift();
-    }
-    user.tokens = user.tokens.concat({ token })
-    user.save();
+    const token = jwt.sign({ _id: user._id, name: user.username, email: user.email }, process.env.SECRET_STRING);
     return token;
 };
 

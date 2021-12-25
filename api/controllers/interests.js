@@ -63,6 +63,26 @@ exports.getAllInterestsArchived = async (req, res) => {
     }
 }
 
+exports.getAllInterestsArchivedPaged = async (req, res) => {
+    try {
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [] } = req.query;
+        let sort = {};
+        sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
+        const interestDB = await Interests.find({ deleted: true })
+            .limit(itemsPerPage * 1)
+            .skip((page - 1) * itemsPerPage)
+            .sort(sort)
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            });
+        const count = await Interests.countDocuments({ deleted: false });
+        res.json({ items: interestDB, totalItems: count });
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+
 exports.getInterest = async (req, res) => {
     const _id = req.params.id
 
@@ -88,7 +108,6 @@ exports.updateInterest = async (req, res) => {
                 path: 'creator',
                 match: { deleted: false }
             });
-        console.log(interestDB)
         res.json(interestDB)
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error })

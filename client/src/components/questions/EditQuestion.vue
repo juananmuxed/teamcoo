@@ -95,7 +95,7 @@
             :rules="[rules.required]"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" v-if="loginuser.rol.value == 'admin'">
+        <v-col cols="12" v-if="loginUser.rol.value == 'admin'">
           <v-switch
             dense
             inset
@@ -159,7 +159,7 @@ export default {
     ...mapState({
       question: (state) => state.questions.question,
       interests: (state) => state.interests.interests,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       questionForm: (state) => state.questions.questionForm,
       rules: (state) => state.general.rules,
     }),

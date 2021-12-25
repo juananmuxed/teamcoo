@@ -11,28 +11,17 @@ exports.registerNewUser = async (req, res) => {
                 message: "E-mail already in use"
             });
         }
-        const user = new User({
-            username: req.body.username,
-            email: req.body.email,
-            lastname: req.body.lastname,
-            firstname: req.body.firstname,
-            password: req.body.password,
-            accept: req.body.accept,
-            verifiedemail: req.body.verifiedemail,
-            rol: req.body.rol
-        });
 
-        let data = await user.save();
+        const user = await User.create(req.body);
         const token = await user.generateAuthToken();
-        let tokenConfirmation = new Token({
-            _userId: user._id,
-            token: token
+        const tokenModel = await Token.create({
+            token: token,
+            type: 'registration'
         })
-        let tokenSaved = await tokenConfirmation.save()
-        if (!tokenSaved) {
-            return res.status(500).json({ message: 'An error has ocurred', error })
+        if (!tokenModel) {
+            return res.status(500).json({ message: 'Not asigned token', error })
         }
-        res.status(201).json({ data, token });
+        res.status(201).json({ user, token });
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }
@@ -51,6 +40,10 @@ exports.loginUser = async (req, res) => {
         }
 
         const token = await user.generateAuthToken();
+        await Token.create({
+            token: token,
+            type: 'login'
+        })
         res.status(201).json({ user, token })
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });

@@ -169,7 +169,7 @@
       </v-col>
     </v-row>
     <template
-      v-if="loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'"
+      v-if="loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'"
     >
       <v-row class="text-center">
         <v-col>
@@ -362,7 +362,7 @@
                 randomWorkgroupColor();
               "
               v-if="
-                loginuser.rol.value == 'admin' || loginuser.rol.value == 'coor'
+                loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'
               "
             >
               <v-icon>fas fa-network-wired</v-icon>
@@ -412,7 +412,7 @@ export default {
     ...mapState({
       workgroups: (state) => state.workgroups.workgroups,
       secretWorkgroups: (state) => state.workgroups.secretWorkgroups,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       loading: (state) => state.workgroups.loading,
       dialogs: (state) => state.menu.menu.dialogs,
     }),
@@ -430,8 +430,8 @@ export default {
   created() {
     this.loadWorkgroups();
     if (
-      this.loginuser.rol.value == "admin" ||
-      this.loginuser.rol.value == "coor"
+      this.loginUser.rol.value == "admin" ||
+      this.loginUser.rol.value == "coor"
     ) {
       this.loadSecretWorkgroups();
     }

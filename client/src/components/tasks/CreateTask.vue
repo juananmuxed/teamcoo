@@ -221,7 +221,7 @@
         top
         absolute
         color="primary"
-        @click="createTask(loginuser.id)"
+        @click="createTask(loginUser._id)"
         :disabled="validTask()"
         class="mt-8"
       >
@@ -241,7 +241,7 @@ export default {
       workgroups: (state) => state.workgroups.workgroups,
       secretWorkgroups: (state) => state.workgroups.secretWorkgroups,
       interests: (state) => state.interests.interests,
-      loginuser: (state) => state.user.loginuser,
+      loginUser: (state) => state.user.loginUser,
       menu: (state) => state.menu.menu,
       rules: (state) => state.general.rules,
     }),
