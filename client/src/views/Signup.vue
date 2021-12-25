@@ -163,7 +163,7 @@
                     depressed
                     color="primary"
                     :disabled="signUpIsValid()"
-                    @click="signup()"
+                    @click="signUp()"
                   >
                     Create your account
                   </v-btn>
@@ -205,7 +205,7 @@ export default {
   },
   methods: {
     ...mapGetters("user", ["signUpIsValid"]),
-    ...mapActions("user", ["signup"]),
+    ...mapActions("user", ["signUp"]),
     ...mapActions("general", ["getPage"]),
   },
   async created() {

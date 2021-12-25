@@ -5,6 +5,11 @@ const tokenScheme = mongoose.Schema({
         type: String,
         required: true
     },
+    _userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    },
     type: {
         type: String,
         required: true

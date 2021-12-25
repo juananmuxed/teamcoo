@@ -74,7 +74,7 @@
             block
             depressed
             color="primary"
-            @click="changepassword()"
+            @click="changePassword()"
             :disabled="isChangePass()"
           >
             Change Password
@@ -111,7 +111,7 @@ export default {
     }),
   },
   methods: {
-    ...mapActions("user", ["changepassword", "changePasswordNotLogged"]),
+    ...mapActions("user", ["changePassword", "changePasswordNotLogged"]),
     ...mapGetters("user", ["isChangePass", "isLogged", "isDiferentPass"]),
   },
 };

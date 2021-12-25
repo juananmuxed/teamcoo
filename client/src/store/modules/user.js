@@ -22,6 +22,7 @@ const state = {
         passShow: false,
         password: '',
         email: '',
+        loading: false
     },
     newUser: {
         firstName: '',
@@ -72,7 +73,10 @@ const mutations = {
 
 const getters = {
     isvalid(state, getters, rootState) {
-        if (state.user.password != '' && state.user.email != '' && !rootState.general.rules.emailrules(state.user.email)[0]) {
+        if (state.user.password != '' &&
+            state.user.email != '' &&
+            !rootState.general.rules.emailrules(state.user.email)[0]
+        ) {
             return false
         }
         else { return true }
@@ -98,7 +102,11 @@ const getters = {
     },
 
     isChangePass(state) {
-        if (state.password.oldpassword != '' && state.password.newpassword != '' && state.password.confirmnewpassword != '' && state.password.confirmnewpassword == state.password.newpassword) {
+        if (state.password.oldpassword != '' &&
+            state.password.newpassword != '' &&
+            state.password.confirmnewpassword != '' &&
+            state.password.confirmnewpassword == state.password.newpassword
+        ) {
             return false
         }
         else {
@@ -106,18 +114,23 @@ const getters = {
         }
     },
     isDiferentPass(state) {
-        if (state.password.newpassword != '' && state.password.confirmnewpassword != '' && state.password.confirmnewpassword == state.password.newpassword) {
+        if (state.password.newpassword != '' &&
+            state.password.confirmnewpassword != '' &&
+            state.password.confirmnewpassword == state.password.newpassword
+        ) {
             return false
         }
         else {
             return true
         }
+    },
+    invalidEmail(state, getters, rootState) {
+        return !(!rootState.general.rules.emailrules(state.user.email)[0] && state.user.email != '')
     }
-
 }
 
 const actions = {
-    async signup({ state, commit, dispatch, rootGetters }) {
+    async signUp({ state, commit, dispatch, rootGetters }) {
         try {
             commit('changeSending');
             let user = state.newUser
@@ -173,7 +186,7 @@ const actions = {
         try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/' + state.loginUser._id, config)
-            commit('userStore', { data: res.data });
+            commit('userStore', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true })
         }
@@ -199,17 +212,17 @@ const actions = {
 
     async changePasswordNotLogged({ state, commit, dispatch }, token) {
         try {
-            let data = {
+            await Axios.post('/tokens/changepassexternal', {
                 token: token,
                 password: state.password.confirmnewpassword
-            }
-            await Axios.post('/tokens/changepassexternal', data);
+            });
             commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true });
             router.push('/login');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async sendResetPassMail({ commit, dispatch }, email) {
         try {
             await Axios.post('/tokens/sendpassemail', {
@@ -222,6 +235,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async sendVerificationMail({ commit, dispatch }, email) {
         try {
             commit('changeSending');
@@ -245,7 +259,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async changepassword({ state, commit, dispatch, rootGetters }) {
+    async changePassword({ state, commit, dispatch, rootGetters }) {
         try {
             let user = {
                 email: state.loginUser.email,
@@ -261,18 +275,21 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     goToSignin({ rootState }) {
         if (rootState.menu.menu.dialogs.login) {
             rootState.menu.menu.dialogs.login = false
         }
         router.push('/signup')
     },
+
     goToRemeberme({ rootState }) {
         if (rootState.menu.menu.dialogs.login) {
             rootState.menu.menu.dialogs.login = false
         }
         router.push('/sendreset')
     },
+
     goToSignUpAsVolunteer({ commit }) {
         router.push('/signup')
         commit('checkVolunteer')

@@ -3,7 +3,7 @@ const Token = require('../models/tokens')
 const bcrypt = require('bcryptjs');
 const mailer = require("../controllers/mail");
 
-exports.registerNewUser = async (req, res) => {
+exports.createUser = async (req, res) => {
     try {
         let isUser = await User.find({ email: req.body.email });
         if (isUser.length >= 1) {
@@ -16,11 +16,13 @@ exports.registerNewUser = async (req, res) => {
         const token = await user.generateAuthToken();
         const tokenModel = await Token.create({
             token: token,
+            _userId: user._id,
             type: 'registration'
         })
         if (!tokenModel) {
             return res.status(500).json({ message: 'Not asigned token', error })
         }
+        await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
         res.status(201).json({ user, token });
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
@@ -40,10 +42,15 @@ exports.loginUser = async (req, res) => {
         }
 
         const token = await user.generateAuthToken();
-        await Token.create({
+        const tokenModel = await Token.create({
             token: token,
+            _userId: user._id,
             type: 'login'
         })
+        if (!tokenModel) {
+            return res.status(500).json({ message: 'Not asigned token', error })
+        }
+        await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
         res.status(201).json({ user, token })
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
@@ -53,9 +60,13 @@ exports.loginUser = async (req, res) => {
 exports.getUser = async (req, res) => {
     try {
         const _id = req.params.id;
-        const user = await User.findById(_id);
+        const user = await User.findById(_id)
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         if (!user) {
-            return res.status(409).json({ message: "Login failed! Check your credentials" });
+            return res.status(409).json({ message: "User not find" });
         }
         res.status(201).json(user)
     } catch (error) {
@@ -63,9 +74,26 @@ exports.getUser = async (req, res) => {
     }
 }
 
-exports.getUsers = async (req, res) => {
+exports.getAllUsers = async (req, res) => {
     try {
-        const userDB = await User.find()
+        const userDB = await User.find({ deleted: false })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.status(201).json(userDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+}
+
+exports.getAllUsersDeleted = async (req, res) => {
+    try {
+        const userDB = await User.find({ deleted: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         res.status(201).json(userDB)
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
@@ -76,16 +104,11 @@ exports.updateUser = async (req, res) => {
     try {
         const _id = req.params.id
 
-        let body = req.body
-
-        delete body['roles']
-        delete body['passshow']
-        delete body['save']
-        delete body['id']
-        delete body['email']
-        delete body['password']
-
-        let userDB = await User.findByIdAndUpdate(_id, body, { new: true })
+        const userDB = await User.findByIdAndUpdate(_id, req.body, { new: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         res.json(userDB)
 
     } catch (error) {
@@ -108,13 +131,13 @@ exports.updatePassword = async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: "Credentials error" })
         }
-        let body = {
-            password: newpassword
-        }
 
-        let userDB = await User.findByIdAndUpdate(_id, body, { new: true })
+        const userDB = await User.findByIdAndUpdate(_id, { password: newpassword }, { new: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         res.json(userDB)
-
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }
@@ -156,7 +179,11 @@ exports.deleteUserSoft = async (req, res) => {
             return res.status(409).json({ message: user.message });
         }
 
-        let userDB = await User.findByIdAndUpdate(_id, { deleted: true })
+        const userDB = await User.findByIdAndUpdate(_id, { deleted: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
 
         if (!userDB) {
             return res.status(401).json({ message: "Incorrect ID" });
@@ -191,7 +218,7 @@ exports.confirmationEmail = async (req, res) => {
     }
 }
 
-exports.changepassexternal = async (req, res) => {
+exports.changePassExternal = async (req, res) => {
     try {
         let password = req.body.password
 
@@ -219,22 +246,34 @@ exports.changepassexternal = async (req, res) => {
 
 exports.sendPassEmail = async (req, res) => {
     try {
-        let user = await User.findOne({ email: req.body.email })
+        const email = req.body.email;
+        const user = await User.findOne({ email: email });
         if (!user) {
-            return res.status(400).json({ message: 'We were unable to find the user with this E-mail.', type: "not-user" })
+            return res.status(409).json({ message: 'We were unable to find the user with this E-mail.' });
+        }
+        if (user.deleted) {
+            return res.status(409).json({ message: 'Your account is closed, please contact with the administrators.' });
         }
 
-        let generatedToken = user.generateAuthToken()
-        let token = new Token({ _userId: user._id, token: generatedToken })
-        await token.save();
+        const token = await user.generateAuthToken();
+        const tokenModel = await Token.create({
+            token: token,
+            _userId: user._id,
+            type: 'resetPassword'
+        })
+        if (!tokenModel) {
+            return res.status(500).json({ message: 'Not asigned token', error })
+        }
+        await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
+
         await mailer.sendMail({
             body: {
-                sendTo: req.body.email,
-                userTo: user.firstname,
+                sendTo: email,
+                userTo: user.firstName,
                 template: 'user/changePass',
                 subject: 'Change your password',
                 variables: {
-                    recoveryUrlPass: req.body.url + '/reset/password/' + generatedToken
+                    recoveryUrlPass: req.body.url + '/reset/password/' + token
                 }
             }
         })

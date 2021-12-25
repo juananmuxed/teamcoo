@@ -4,11 +4,13 @@ const router = express.Router();
 const auth = require("../controllers/auth")
 const userController = require("../controllers/users")
 
-router.post("/signup", userController.registerNewUser);
+router.post("/signup", userController.createUser);
 
 router.post("/login", userController.loginUser);
 
-router.get("/", auth, userController.getUsers);
+router.get("/", auth, userController.getAllUsers);
+
+router.get("/archived/", auth, userController.getAllUsersDeleted);
 
 router.get("/:id", auth, userController.getUser)
 

@@ -28,12 +28,14 @@ const userScheme = mongoose.Schema({
         type: Object,
         default: { name: 'User', value: 'user' }
     },
-    tokens: [{
-        token: {
-            type: String,
-            required: true
-        }
-    }],
+    tokens: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Token'
+        }],
+        default: [],
+        select: false
+    },
     accept: {
         termsConditions: {
             type: Boolean,
@@ -59,7 +61,7 @@ const userScheme = mongoose.Schema({
     interests: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Interests'
+            ref: 'Interest'
         }],
         default: []
     },
@@ -98,30 +100,6 @@ userScheme.statics.findByCredentials = async (email, password) => {
         return error
     }
 };
-
-userScheme.statics.findByEmail = async (email) => {
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            throw new Error("Invalid mail");
-        }
-        return user;
-    } catch (error) {
-        return error;
-    }
-}
-
-userScheme.statics.findById = async (_id) => {
-    try {
-        const user = await User.findOne({ _id });
-        if (!user) {
-            throw new Error("Invalid id");
-        }
-        return user
-    } catch (error) {
-        return error;
-    }
-}
 
 const User = mongoose.model("User", userScheme);
 module.exports = User;

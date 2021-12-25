@@ -47,8 +47,8 @@
             >
           </template>
           <template v-slot:item.username="{ item }">
-            <v-avatar v-if="item.avatar" size="32">
-              <img :src="item.avatar" />
+            <v-avatar v-if="item.image" size="32">
+              <img :src="item.image" />
             </v-avatar>
             <v-avatar v-else color="primary" size="32">
               <v-icon size="18">fas fa-user</v-icon>
@@ -56,35 +56,20 @@
             <span class="font-italic pl-3">{{ item.username }}</span>
           </template>
           <template v-slot:item.name="{ item }"
-            >{{ item.firstname }} {{ item.lastname }}</template
+            >{{ item.firstName }} {{ item.lastName }}</template
           >
-          <template v-slot:item.workgroups="{ item }">
-            <v-chip
-              small
-              class="ma-1"
-              v-for="(wg, index) in item.workgroups"
-              v-bind:key="index"
-              :color="wg.color"
-              :text-color="textColor(wg.color)"
-              :to="'/workgroups/' + wg._wgId"
-              >{{ wg.name }}</v-chip
-            >
-          </template>
           <template v-slot:item.interests="{ item }">
             <v-chip
               small
               class="ma-1"
               v-for="(interest, index) in item.interests"
               v-bind:key="index"
+              :color="interest.color"
             >
-              <template v-if="interest">
-                <span>{{ interest.substring(0, 7) }}</span
-                ><span v-if="interest.length >= 9">...</span>
-              </template>
             </v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn depressed color="info" :to="'/users/' + item.id">
+            <v-btn depressed color="info" :to="'/users/' + item._id">
               See more <v-icon small class="ml-3">fas fa-eye</v-icon>
             </v-btn>
           </template>
@@ -98,7 +83,7 @@
           block
           color="success"
           class="my-2"
-          @click="refreshUsers()"
+          @click="loadUsers()"
         >
           <v-icon left>fas fa-sync-alt</v-icon>Refresh list
         </v-btn>
@@ -118,35 +103,26 @@ export default {
         {
           text: "Users",
           value: "username",
-          width: 10,
         },
         {
           text: "Role",
           value: "role",
-          sortable: false,
-          width: 10,
+          sortable: true,
         },
         {
           text: "Name",
           value: "name",
-          sortable: false,
-          width: 30,
-        },
-        {
-          text: "Workgroups",
-          value: "workgroups",
-          width: 30,
+          sortable: true,
         },
         {
           text: "Interests",
           value: "interests",
-          width: 30,
+          sortable: false,
         },
         {
           text: "",
           value: "actions",
           sortable: false,
-          width: 10,
         },
       ],
     };
@@ -160,24 +136,18 @@ export default {
   },
   methods: {
     ...mapActions("users", ["loadUsers"]),
-    ...mapActions("workgroups", ["loadWorkgroups"]),
     getColor(role) {
       return this.$store.getters["users/getRoleColor"](role).color;
     },
     getTextColor(role) {
       return this.$store.getters["users/getRoleColor"](role).textColor;
     },
-    refreshUsers() {
-      this.loadWorkgroups().then(() => {
-        this.loadUsers();
-      });
-    },
     textColor(color) {
       return idealTextColor(color);
     },
   },
   created() {
-    this.refreshUsers();
+    this.loadUsers();
   },
 };
 </script>

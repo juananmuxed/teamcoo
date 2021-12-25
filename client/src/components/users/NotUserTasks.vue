@@ -105,7 +105,7 @@
                       </v-col>
                     </v-row>
                   </template>
-                  <template v-if="task.usersjoined.length != 0">
+                  <template v-if="task.suscribers.length != 0">
                     <v-row>
                       <h3 class="pa-1">
                         <span class="text-uppercase font-weight-light"
@@ -115,7 +115,7 @@
                       <v-col cols="12" class="pa-0">
                         <v-avatar
                           left
-                          v-for="(user, index) in task.usersjoined"
+                          v-for="(user, index) in task.suscribers"
                           :key="index"
                           class="ma-1"
                         >
@@ -199,7 +199,7 @@
                   xl="3"
                   class="pa-3"
                   :key="index + '-own'"
-                  v-if="task.usersjoined.some((u) => u.id == loginUser._id)"
+                  v-if="task.suscribers.some((u) => u._id == loginUser._id)"
                 >
                   <v-card>
                     <v-img
@@ -263,7 +263,7 @@
                           </v-col>
                         </v-row>
                       </template>
-                      <template v-if="task.usersjoined.length != 0">
+                      <template v-if="task.suscribers.length != 0">
                         <v-row>
                           <h3 class="pa-1">
                             <span class="text-uppercase font-weight-light"
@@ -273,7 +273,7 @@
                           <v-col cols="12" class="pa-0">
                             <v-avatar
                               left
-                              v-for="(user, index) in task.usersjoined"
+                              v-for="(user, index) in task.suscribers"
                               :key="index"
                               class="ma-1"
                             >
@@ -372,7 +372,7 @@
                   xl="3"
                   class="pa-3"
                   :key="index + '-own'"
-                  v-if="task.creator.id == loginUser._id"
+                  v-if="task.creator._id == loginUser._id"
                 >
                   <v-card>
                     <v-img
@@ -436,7 +436,7 @@
                           </v-col>
                         </v-row>
                       </template>
-                      <template v-if="task.usersjoined.length != 0">
+                      <template v-if="task.suscribers.length != 0">
                         <v-row>
                           <h3 class="pa-1">
                             <span class="text-uppercase font-weight-light"
@@ -446,7 +446,7 @@
                           <v-col cols="12" class="pa-0">
                             <v-avatar
                               left
-                              v-for="(user, index) in task.usersjoined"
+                              v-for="(user, index) in task.suscribers"
                               :key="index"
                               class="ma-1"
                             >

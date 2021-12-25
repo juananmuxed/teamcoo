@@ -107,47 +107,19 @@ const getters = {
 }
 
 const actions = {
-    async loadUsers({ commit, rootState, rootGetters, dispatch }) {
+    async loadUsers({ commit, rootGetters, dispatch }) {
         try {
             commit('changeLoading', true);
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/', config),
-                users = res.data,
-                workgroups = rootState.workgroups.workgroups;
-            for (let x = 0; x < users.length; x++) {
-                let interests = [];
-                for (let y = 0; y < users[x].workgroups.length; y++) {
-                    let workgroup = users[x].workgroups[y];
-                    let wg = workgroups.find(v => v._id == workgroup._wgId);
-                    if (wg) {
-                        users[x].workgroups[y].name = wg.name;
-                        users[x].workgroups[y].color = wg.color;
-                        for (let i = 0; i < workgroup.answers.length; i++) {
-                            if (Array.isArray(users[x].workgroups[y].answers[i].answer)) {
-                                interests = users[x].workgroups[y].answers[i].answer.concat(interests);
-                            } else {
-                                console.log(users[x].workgroups[y].answers[i])
-                                if (!users[x].workgroups[y].answers.includes('Joined by Coordinator/Admin:')) interests.push(users[x].workgroups[y].answers[i].answer);
-                            }
-                        }
-                    }
-                }
-                for (let i = 0; i < users[x].commonquestions.length; i++) {
-                    if (Array.isArray(users[x].commonquestions[i].answer)) {
-                        interests = users[x].commonquestions[i].answer.concat(interests);
-                    } else {
-                        interests.push(users[x].commonquestions[i].answer)
-                    }
-                }
-                users[x].interests = interests.filter((v, i, a) => a.indexOf(v) === i);
-            }
-            commit('usersLoad', users);
+            let res = await Axios.get('/users/', config);
+            commit('usersLoad', res.data);
             commit('changeLoading', false);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
             commit('changeLoading', false);
         }
     },
+
     async loadUsersSilent({ commit, dispatch, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
@@ -157,6 +129,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async searchUser({ commit, dispatch, rootGetters }, userId) {
         try {
             commit('changeSkeleton', true);
@@ -167,16 +140,6 @@ const actions = {
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
             commit('changeSkeleton', false);
-        }
-    },
-    async loadUserByID({ commit, dispatch, rootGetters }, userId) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get("/users/" + userId, config)
-            commit('cleanTemporalUser');
-            commit('temporaluser', res.data);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
         }
     },
     async loadUserData({ commit, dispatch, rootGetters }, user) {
