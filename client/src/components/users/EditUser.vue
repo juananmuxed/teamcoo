@@ -9,7 +9,7 @@
           <v-text-field
             outlined
             label="First Name"
-            v-model="edituser.firstname"
+            v-model="edituser.firstName"
             :rules="[rules.required]"
           >
           </v-text-field>
@@ -18,7 +18,7 @@
           <v-text-field
             outlined
             label="Last Name"
-            v-model="edituser.lastname"
+            v-model="edituser.lastName"
             :rules="[rules.required]"
           >
           </v-text-field>

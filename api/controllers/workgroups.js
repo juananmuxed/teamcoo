@@ -1,6 +1,8 @@
+const mongoose = require('mongoose')
 const Workgroups = require('../models/workgroups')
 const Answers = require('../models/answers')
 const Tasks = require('../models/tasks')
+const User = require('../models/users')
 
 exports.createWorkgroup = async (req, res) => {
     const body = req.body
@@ -244,9 +246,17 @@ exports.joinWorkgroup = async (req, res) => {
         answers.forEach(async (answer) => {
             await Answers.create({
                 user: userId,
+                workgroup: _id,
                 question: answer.question,
-                answers: answer.answers,
+                answers: answer.answer,
                 text: answer.text
+            })
+            await User.findByIdAndUpdate(userId, {
+                $addToSet: {
+                    interests: {
+                        $each: answer.answer
+                    }
+                }
             })
         });
         res.json(workgroupDB)
@@ -262,6 +272,39 @@ exports.unjoinWorkgroup = async (req, res) => {
         const workgroupDB = await Workgroups.findByIdAndUpdate(_id, {
             $pull: { members: userId }
         }, { new: true })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'questions',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'coordinators',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'members',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'parent',
+                match: { deleted: false }
+            });
+        workgroupDB.questions.forEach(async (question) => {
+            await Answers.findOneAndUpdate({ workgroup: workgroupDB._id, question: question._id, deleted: false }, { deleted: true })
+        })
+        res.json(workgroupDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+}
+
+exports.getWorkgroupsByUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const workgroupDB = await Workgroups.find({ 'members': mongoose.Types.ObjectId(userId) })
             .populate({
                 path: 'creator',
                 match: { deleted: false }

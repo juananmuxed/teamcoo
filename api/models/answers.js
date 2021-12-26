@@ -12,16 +12,24 @@ const answerScheme = new schema({
         required: true,
         ref: 'Question'
     },
+    workgroup: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Workgroup'
+    },
     answers: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Interests'
+            ref: 'Interest'
         }],
         default: []
     },
     text: {
         type: String,
         default: ''
+    },
+    deleted: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

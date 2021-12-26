@@ -1,5 +1,6 @@
 const Questions = require('../models/questions');
 const Interests = require('../models/interests');
+const Answers = require('../models/answers')
 const Workgroups = require('../models/workgroups');
 const User = require('../models/users');
 
@@ -155,6 +156,25 @@ exports.deleteQuestion = async (req, res) => {
         // TODO: Cascade delete
         res.json(questionDb);
     } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+
+exports.getAnswersById = async (req, res) => {
+    try {
+        const _id = req.params.id
+        const answerDB = await Answers.find({ $and: [{ user: _id }, { deleted: false }] })
+            .populate({
+                path: 'question',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'answers',
+                match: { deleted: false }
+            });
+        res.json(answerDB);
+    } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }

@@ -275,9 +275,9 @@
                 <v-btn
                   v-if="
                     loginUser.rol.value == 'admin' ||
-                    loginUser._id == workgroup.creator.id ||
+                    loginUser._id == workgroup.creator._id ||
                     workgroup.coordinators.some(
-                      (coor) => coor.id == loginUser._id
+                      (coor) => coor._id == loginUser._id
                     )
                   "
                   depressed
@@ -327,9 +327,9 @@
                 <v-btn
                   v-if="
                     loginUser.rol.value == 'admin' ||
-                    loginUser._id == workgroup.creator.id ||
+                    loginUser._id == workgroup.creator._id ||
                     workgroup.coordinators.some(
-                      (coor) => coor.id == loginUser._id
+                      (coor) => coor._id == loginUser._id
                     )
                   "
                   depressed
@@ -480,8 +480,8 @@
             <template
               v-if="
                 loginUser.rol.value == 'admin' ||
-                loginUser._id == workgroup.creator.id ||
-                workgroup.coordinators.some((coor) => coor.id == loginUser._id)
+                loginUser._id == workgroup.creator._id ||
+                workgroup.coordinators.some((coor) => coor._id == loginUser._id)
               "
             >
               <v-divider></v-divider>
@@ -524,9 +524,9 @@
                           v-on="{ ...onTooltip, ...onDialog }"
                           v-if="
                             loginUser.rol.value == 'admin' ||
-                            workgroup.creator.id == loginUser._id ||
+                            workgroup.creator._id == loginUser._id ||
                             workgroup.coordinators.some(
-                              (coor) => coor.id == loginUser._id
+                              (coor) => coor._id == loginUser._id
                             )
                           "
                         >
@@ -556,7 +556,7 @@
                           v-on="{ ...onTooltip, ...onDialog }"
                           v-if="
                             loginUser.rol.value == 'admin' ||
-                            workgroup.creator.id == loginUser._id
+                            workgroup.creator._id == loginUser._id
                           "
                         >
                           <v-icon small class="ml-1">fas fa-trash</v-icon>

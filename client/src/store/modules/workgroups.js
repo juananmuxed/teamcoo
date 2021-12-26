@@ -34,7 +34,8 @@ const state = {
     loading: false,
     skeleton: false,
     usersforadd: [],
-    loadedSuscription: {}
+    loadedSuscription: {},
+    workgroupsByUser: []
 }
 
 const mutations = {
@@ -51,10 +52,10 @@ const mutations = {
     loadEditedWorkgroup: (state) => {
         state.workgroupForm.workgroup = Object.assign({}, state.workgroup);
     },
-    workgroupLoad: (state, workgroups) => {
+    workgroupsLoad: (state, workgroups) => {
         state.workgroups = workgroups
     },
-    secretWorkgroupLoad: (state, secretWorkgroups) => {
+    secretWorkgroupsLoad: (state, secretWorkgroups) => {
         state.secretWorkgroups = secretWorkgroups
     },
     workgroupNested: (state, nestedWorkgroups) => {
@@ -94,6 +95,9 @@ const mutations = {
     clearJoinForm: (state) => {
         state.rules = [];
         state.answers = [];
+    },
+    setWorkgroupsByUser: (state, workgroups) => {
+        state.workgroupsByUser = workgroups
     }
 }
 
@@ -182,7 +186,7 @@ const actions = {
             commit('changeLoading', true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/workgroups/', config);
-            commit('workgroupLoad', res.data);
+            commit('workgroupsLoad', res.data);
             commit('workgroupNested', treeBuild(res.data));
             commit('changeLoading', false);
         } catch (error) {
@@ -196,7 +200,7 @@ const actions = {
             commit('changeLoading', true);
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/workgroups/secret/', config);
-            commit('secretWorkgroupLoad', res.data);
+            commit('secretWorkgroupsLoad', res.data);
             commit('secretWorkgroupNested', treeBuild(res.data));
             commit('changeLoading', false);
         } catch (error) {
@@ -275,7 +279,7 @@ const actions = {
             let config = rootGetters['general/cookieAuth'];
             let answers = state.answers.map(answer => {
                 let a = answer;
-                if (typeof a.answers === 'string') a.answers = [answer.answers];
+                if (typeof a.answer === 'string') a.answer = [answer.answer];
                 return a;
             })
             let res = await Axios.put('/workgroups/join/' + state.workgroup._id, { user: userId, answers: answers }, config);
@@ -340,7 +344,17 @@ const actions = {
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
-    }
+    },
+
+    async loadWorkgroupsByUser({ commit, dispatch, rootGetters }, id) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/workgroups/workgroupsByUser/' + id, config);
+            commit('setWorkgroupsByUser', res.data);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
 }
 
 export default {

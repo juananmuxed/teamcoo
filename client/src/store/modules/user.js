@@ -239,7 +239,7 @@ const actions = {
     async sendVerificationMail({ commit, dispatch }, email) {
         try {
             commit('changeSending');
-            await Axios.post('/tokens/resend', { email: email, name: state.loginUser.firstname, url: window.location.origin + '/validation/' })
+            await Axios.post('/tokens/resend', { email: email, name: state.loginUser.firstName, url: window.location.origin + '/validation/' })
             commit('changeSending');
             commit('menu/notification', ['primary', 3, 'Verification email send to ' + email + '. Please check your account.'], { root: true });
         } catch (error) {

@@ -22,6 +22,7 @@ const state = {
         ],
     },
     commonQuestions: [],
+    answersByUser: [],
     loading: false,
     skeleton: false
 }
@@ -55,6 +56,9 @@ const mutations = {
     changeSkeleton: (state) => {
         state.skeleton = !state.skeleton
     },
+    answersByUserLoad: (state, answers) => {
+        state.answersByUser = answers;
+    }
 }
 
 const getters = {
@@ -172,6 +176,16 @@ const actions = {
             setTimeout(() => {
                 state.questionForm.loading = false;
             }, 400)
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async loadAnswersByUser({ commit, dispatch, rootGetters }, id) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/questions/answersByUser/' + id, config);
+            commit('answersByUserLoad', res.data);
+        } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },

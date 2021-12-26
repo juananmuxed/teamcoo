@@ -65,28 +65,33 @@
               v-for="(interest, index) in item.interests"
               v-bind:key="index"
               :color="interest.color"
+              v-text="interest.name"
             >
             </v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn depressed color="info" :to="'/users/' + item._id">
-              See more <v-icon small class="ml-3">fas fa-eye</v-icon>
-            </v-btn>
+            <v-tooltip
+              top
+              transition="slide-y-reverse-transition"
+              open-delay="100"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  depressed
+                  fab
+                  x-small
+                  v-on="on"
+                  color="info"
+                  :to="'/users/' + item._id"
+                  class="mx-1"
+                >
+                  <v-icon x-small>fas fa-eye</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-right font-weight-light">See more</span>
+            </v-tooltip>
           </template>
         </v-data-table>
-      </v-col>
-    </v-row>
-    <v-row class="px-3">
-      <v-col>
-        <v-btn
-          height="160"
-          block
-          color="success"
-          class="my-2"
-          @click="loadUsers()"
-        >
-          <v-icon left>fas fa-sync-alt</v-icon>Refresh list
-        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -118,6 +123,7 @@ export default {
           text: "Interests",
           value: "interests",
           sortable: false,
+          width: 200,
         },
         {
           text: "",

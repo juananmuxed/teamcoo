@@ -46,9 +46,9 @@
               <v-list-item-content>
                 <v-list-item-title
                   v-html="
-                    data.item.firstname +
+                    data.item.firstName +
                     ' ' +
-                    data.item.lastname +
+                    data.item.lastName +
                     ' (' +
                     data.item.username +
                     ')'
@@ -111,15 +111,15 @@ export default {
     // TODO: mejorar esta mierda de función de busqueda y extraer
     customFilter(item, queryText) {
       const username = item.username.toLowerCase();
-      const firstname = item.firstname.toLowerCase();
-      const lastname = item.lastname.toLowerCase();
-      const name = firstname + " " + lastname;
+      const firstName = item.firstName.toLowerCase();
+      const lastName = item.lastName.toLowerCase();
+      const name = firstName + " " + lastName;
       const search = queryText.toLowerCase();
 
       return (
         username.indexOf(search) > -1 ||
-        firstname.indexOf(search) > -1 ||
-        lastname.indexOf(search) > -1 ||
+        firstName.indexOf(search) > -1 ||
+        lastName.indexOf(search) > -1 ||
         name.indexOf(search) > -1
       );
     },

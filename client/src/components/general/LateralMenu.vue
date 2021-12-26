@@ -37,7 +37,7 @@
           <v-icon>fas fa-user</v-icon>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>{{ loginUser.firstname }}</v-list-item-title>
+          <v-list-item-title>{{ loginUser.firstName }}</v-list-item-title>
           <v-list-item-subtitle>{{ loginUser.username }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action link class="hidden-sm-and-down">

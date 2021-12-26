@@ -6,61 +6,32 @@ import { generatePalette } from '../../utils/utils'
 
 const state = {
     users: [],
-    loadedUser: {},
-    temporaluser: {},
-    notEditUser: {
-        firstname: '',
-        lastname: '',
-        username: '',
-        image: '',
-        imagefile: null
-    },
-    editUser: {
-        firstname: '',
-        lastname: '',
-        username: '',
-        image: '',
-        id: null,
-        imagefile: null,
-        save: false
+    user: {},
+    userForm: {
+        user: {
+
+        }
     },
     loading: false,
     skeleton: false
 }
 
 const mutations = {
-    usersLoad: (state, users) => { state.users = users },
-    userLoad: (state, user) => { state.loadedUser = user },
-    userToEdit: (state, user) => {
-        state.editUser.firstname = user.firstname,
-            state.editUser.lastname = user.lastname,
-            state.editUser.username = user.username,
-            state.editUser.image = user.image,
-            state.editUser.id = user._id,
-            state.notEditUser.firstname = user.firstname,
-            state.notEditUser.lastname = user.lastname,
-            state.notEditUser.image = user.image,
-            state.notEditUser.username = user.username
+    usersLoad: (state, users) => {
+        state.users = users
     },
-    undoEdit: (state) => {
-        state.editUser.firstname = state.notEditUser.firstname,
-            state.editUser.lastname = state.notEditUser.lastname,
-            state.editUser.username = state.notEditUser.username,
-            state.editUser.image = state.notEditUser.image,
-            state.editUser.imagefile = null
+    userLoad: (state, user) => {
+        state.user = user
     },
-    temporaluser: (state, user) => {
-        state.temporaluser.id = user._id,
-            state.temporaluser.avatar = user.image,
-            state.temporaluser.firstname = user.firstname,
-            state.temporaluser.lastname = user.lastname,
-            state.temporaluser.rol = user.rol,
-            state.temporaluser.username = user.username,
-            state.temporaluser.workgroups = user.workgroups
+    loadEditedUser: (state) => {
+        state.userForm.user = Object.assign({}, state.user);
     },
-    cleanTemporalUser: (state) => state.temporaluser = {},
-    changeLoading: (state, loading) => state.loading = loading,
-    changeSkeleton: (state, skeleton) => state.skeleton = skeleton
+    changeLoading: (state, loading) => {
+        state.loading = loading
+    },
+    changeSkeleton: (state, skeleton) => {
+        state.skeleton = skeleton
+    }
 }
 
 const getters = {
@@ -81,8 +52,8 @@ const getters = {
     },
     isChangeUser(state) {
         if (
-            state.editUser.firstname == state.notEditUser.firstname &&
-            state.editUser.lastname == state.notEditUser.lastname &&
+            state.editUser.firstName == state.notEditUser.firstName &&
+            state.editUser.lastName == state.notEditUser.lastName &&
             state.editUser.username == state.notEditUser.username &&
             state.editUser.image == state.notEditUser.image &&
             state.editUser.imagefile == state.notEditUser.imagefile
@@ -93,8 +64,8 @@ const getters = {
     },
     isValidSave(state, getters, rootState) {
         if (
-            !rootState.general.rules.required(state.editUser.firstname)[0] &&
-            !rootState.general.rules.required(state.editUser.lastname)[0] &&
+            !rootState.general.rules.required(state.editUser.firstName)[0] &&
+            !rootState.general.rules.required(state.editUser.lastName)[0] &&
             !rootState.general.rules.required(state.editUser.username)[0] &&
             !rootState.general.rules.maxletters(state.editUser.username)[0]
         ) {
@@ -130,27 +101,27 @@ const actions = {
         }
     },
 
-    async searchUser({ commit, dispatch, rootGetters }, userId) {
+    async searchUser({ commit, dispatch }, userId) {
         try {
             commit('changeSkeleton', true);
+            await dispatch('searchUserSilent', userId)
+            commit('changeSkeleton', false);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeSkeleton', false);
+        }
+    },
+
+    async searchUserSilent({ commit, dispatch, rootGetters }, userId) {
+        try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/' + userId, config);
             commit('userLoad', res.data);
-            commit('changeSkeleton', false);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-            commit('changeSkeleton', false);
-        }
-    },
-    async loadUserData({ commit, dispatch, rootGetters }, user) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/' + user, config);
-            commit('userToEdit', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async saveEditedData({ commit, rootState, rootGetters, dispatch }, user) {
         try {
             if (user.imagefile != null) {

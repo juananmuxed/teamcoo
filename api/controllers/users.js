@@ -64,7 +64,7 @@ exports.getUser = async (req, res) => {
             .populate({
                 path: 'interests',
                 match: { deleted: false }
-            });
+            })
         if (!user) {
             return res.status(409).json({ message: "User not find" });
         }
@@ -300,12 +300,12 @@ exports.reSendConfirmation = async (req, res) => {
         mailer.sendMail({
             body: {
                 sendTo: req.body.email,
-                userTo: user.firstname,
+                userTo: user.firstName,
                 template: 'user/validationResend',
-                subject: 'Welcome ' + user.firstname,
+                subject: 'Welcome ' + user.firstName,
                 variables: {
                     recoveryUrlPass: req.body.url + generatedToken,
-                    name: user.firstname + ' ' + user.lastname
+                    name: user.firstName + ' ' + user.lastName
                 }
             }
         })

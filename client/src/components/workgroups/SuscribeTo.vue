@@ -83,7 +83,7 @@
             outlined
           >
             <template v-slot:selection="{ item, index }">
-              <v-chip v-if="index < 3">
+              <v-chip v-if="index < 3" :color="item.color">
                 <span>{{ item.name }}</span>
               </v-chip>
               <span v-if="index === 3" class="grey--text caption"

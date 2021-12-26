@@ -8,6 +8,8 @@ router.get('/:id', questionsController.getQuestion)
 
 router.get('/', auth, questionsController.getAllQuestions)
 
+router.get('/answersByUser/:id', auth, questionsController.getAnswersById)
+
 router.get('/archived/', auth, questionsController.getAllQuestionsDeleted)
 
 router.post('/', auth, questionsController.createQuestion)

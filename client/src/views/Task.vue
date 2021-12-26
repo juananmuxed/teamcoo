@@ -16,6 +16,23 @@
             v-if="task._id"
             :disabled="task.deleted"
           >
+            <v-tooltip bottom transition="scroll-y-transition">
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  class="ml-n12"
+                  v-on="on"
+                  absolute
+                  fab
+                  top
+                  left
+                  color="info"
+                  @click="goBack()"
+                >
+                  <v-icon>fas fa-arrow-left</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-right caption font-weight-light">Back</span>
+            </v-tooltip>
             <v-overlay absolute :value="task.deleted">
               <v-alert color="error" dark icon="fas fa-archive" dense>
                 Archived
@@ -26,7 +43,7 @@
               height="200"
               :src="task.image"
               class="align-end"
-              gradient="to bottom, rgba(0,0,0,0), rgba(245,245,245,.7)"
+              gradient="to bottom, rgba(0,0,0,0), rgba(245,245,245,.4)"
             >
               <template v-for="(workgroup, index) in task.workgroups">
                 <v-chip
@@ -67,23 +84,6 @@
               </template>
             </v-img>
             <v-card-title>
-              <v-tooltip bottom transition="scroll-y-transition">
-                <template v-slot:activator="{ on }">
-                  <v-btn
-                    class="ml-n12"
-                    v-on="on"
-                    absolute
-                    fab
-                    top
-                    left
-                    color="info"
-                    @click="goBack()"
-                  >
-                    <v-icon>fas fa-arrow-left</v-icon>
-                  </v-btn>
-                </template>
-                <span class="text-right caption font-weight-light">Back</span>
-              </v-tooltip>
               <v-dialog v-model="dialogs.savemembertask" max-width="650">
                 <template v-slot:activator="{ on: onDialog }">
                   <v-tooltip bottom transition="scroll-y-transition">

@@ -8,6 +8,8 @@ router.post("/", auth, workgingGroupsController.createWorkgroup);
 
 router.get("/", auth, workgingGroupsController.getAllWorkgroups);
 
+router.get("/workgroupsByUser/:id", auth, workgingGroupsController.getWorkgroupsByUser);
+
 router.get("/secret/", auth, workgingGroupsController.getAllSecretWorkgroups);
 
 router.get("/archived/", auth, workgingGroupsController.getAllWorkgroupsDeleted);
