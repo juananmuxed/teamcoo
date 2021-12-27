@@ -22,6 +22,7 @@ const state = {
         ],
     },
     commonQuestions: [],
+    notCommonQuestions: [],
     answersByUser: [],
     loading: false,
     skeleton: false
@@ -43,6 +44,12 @@ const mutations = {
     },
     questionsLoad: (state, questions) => {
         state.questions = questions;
+    },
+    commonQuestionsLoad: (state, questions) => {
+        state.commonQuestions = questions;
+    },
+    notCommonQuestionsLoad: (state, questions) => {
+        state.notCommonQuestions = questions;
     },
     checkCommonQuestion: (state) => {
         state.questionForm.question.common = true
@@ -157,6 +164,32 @@ const actions = {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/questions/', config);
             commit('questionsLoad', res.data);
+            commit('changeLoading');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeLoading');
+        }
+    },
+
+    async loadCommonQuestions({ commit, dispatch, rootGetters }) {
+        try {
+            commit('changeLoading');
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/questions/common/all', config);
+            commit('commonQuestionsLoad', res.data);
+            commit('changeLoading');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeLoading');
+        }
+    },
+
+    async loadNotCommonQuestions({ commit, dispatch, rootGetters }) {
+        try {
+            commit('changeLoading');
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/questions/notcommon/all', config);
+            commit('notCommonQuestionsLoad', res.data);
             commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });

@@ -8,6 +8,10 @@ router.get('/:id', questionsController.getQuestion)
 
 router.get('/', auth, questionsController.getAllQuestions)
 
+router.get('/notcommon/all', auth, questionsController.getAllQuestionsNotCommon)
+
+router.get('/common/all', auth, questionsController.getAllQuestionsCommon)
+
 router.get('/answersByUser/:id', auth, questionsController.getAnswersById)
 
 router.get('/archived/', auth, questionsController.getAllQuestionsDeleted)

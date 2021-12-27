@@ -3,10 +3,7 @@
     <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
       >Common questions</v-card-title
     >
-    <v-row
-      v-for="(question, index) in questions.filter((q) => q.common)"
-      v-bind:key="index"
-    >
+    <v-row v-for="(question, index) in questions" v-bind:key="index">
       <v-col
         class="display-1 text-uppercase font-weight-thin"
         cols="12"
@@ -212,7 +209,7 @@ export default {
   },
   computed: {
     ...mapState({
-      questions: (state) => state.questions.questions,
+      questions: (state) => state.questions.commonQuestions,
       questionForm: (state) => state.questions.questionForm,
       question: (state) => state.questions.question,
       dialogs: (state) => state.menu.menu.dialogs,
@@ -223,7 +220,7 @@ export default {
     ...mapActions("questions", [
       "searchQuestion",
       "delQuestionSoft",
-      "loadQuestions",
+      "loadCommonQuestions",
     ]),
     ...mapMutations("questions", ["clearquestionForm", "checkCommonQuestion"]),
     textColor(color) {
@@ -231,7 +228,7 @@ export default {
     },
   },
   created() {
-    this.loadQuestions();
+    this.loadCommonQuestions();
   },
 };
 </script>

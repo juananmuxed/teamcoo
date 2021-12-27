@@ -69,6 +69,39 @@ exports.getAllQuestions = async (req, res) => {
     }
 }
 
+exports.getAllQuestionsNotCommon = async (req, res) => {
+    try {
+        const questionsDB = await Questions.find({ deleted: false, common: false })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.json(questionsDB);
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+exports.getAllQuestionsCommon = async (req, res) => {
+    try {
+        const questionsDB = await Questions.find({ deleted: false, common: true })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.json(questionsDB);
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+
 exports.getAllQuestionsDeleted = async (req, res) => {
     try {
         const questionsDB = await Questions.find({ deleted: true })
@@ -164,10 +197,6 @@ exports.getAnswersById = async (req, res) => {
     try {
         const _id = req.params.id
         const answerDB = await Answers.find({ $and: [{ user: _id }, { deleted: false }] })
-            .populate({
-                path: 'question',
-                match: { deleted: false }
-            })
             .populate({
                 path: 'answers',
                 match: { deleted: false }

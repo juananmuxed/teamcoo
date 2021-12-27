@@ -249,7 +249,7 @@ export default {
     ...mapState({
       workgroupForm: (state) => state.workgroups.workgroupForm,
       workgroup: (state) => state.workgroups.workgroup,
-      questions: (state) => state.questions.questions,
+      questions: (state) => state.questions.notCommonQuestions,
       loginUser: (state) => state.user.loginUser,
       menu: (state) => state.menu.menu,
       workgroups: (state) => state.workgroups.workgroups,
@@ -264,7 +264,7 @@ export default {
     ]),
     ...mapGetters("workgroups", ["editedWorkgroup", "validWorkgroup"]),
     ...mapActions("workgroups", ["saveEditedworkgroup", "loadWorkgroups"]),
-    ...mapActions("questions", ["loadQuestions"]),
+    ...mapActions("questions", ["loadNotCommonQuestions"]),
     ...mapMutations("questions", ["clearquestionForm"]),
     textColor(color) {
       return idealTextColor(color);
@@ -272,7 +272,7 @@ export default {
   },
   async created() {
     this.workgroupForm.loading = true;
-    await this.loadQuestions();
+    await this.loadNotCommonQuestions();
     await this.loadWorkgroups();
     this.workgroupForm.loading = false;
   },

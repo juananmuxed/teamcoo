@@ -217,23 +217,23 @@ export default {
       loginUser: (state) => state.user.loginUser,
       menu: (state) => state.menu.menu,
       workgroups: (state) => state.workgroups.workgroups,
-      questions: (state) => state.questions.questions,
+      questions: (state) => state.questions.notCommonQuestions,
       secretworkgroups: (state) => state.workgroups.secretworkgroups,
       rules: (state) => state.general.rules,
     }),
   },
   methods: {
     ...mapMutations("workgroups", ["randomWorkgroupColor"]),
-    ...mapActions("workgroups", ["loadQuestions", "createWorkGroup"]),
+    ...mapActions("workgroups", ["createWorkGroup"]),
     ...mapGetters("workgroups", ["validWorkgroup"]),
-    ...mapActions("questions", ["loadQuestions"]),
+    ...mapActions("questions", ["loadNotCommonQuestions"]),
     ...mapMutations("questions", ["clearquestionForm"]),
     textColor(color) {
       return idealTextColor(color);
     },
   },
   created() {
-    this.loadQuestions();
+    this.loadNotCommonQuestions();
   },
 };
 </script>
