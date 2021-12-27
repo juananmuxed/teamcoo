@@ -160,7 +160,6 @@ exports.updateCommonQuestions = async (req, res) => {
     try {
         const _id = req.params.id
         let body = req.body;
-        console.log(body)
         body.answers.forEach(async answer => {
             const answerDB = await Answers.findOne({ $and: [{ user: _id }, { question: answer.question }] })
             if (!answerDB) {
