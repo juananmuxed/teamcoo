@@ -293,7 +293,7 @@ exports.unjoinWorkgroup = async (req, res) => {
                 match: { deleted: false }
             });
         workgroupDB.questions.forEach(async (question) => {
-            await Answers.findOneAndUpdate({ workgroup: workgroupDB._id, question: question._id, deleted: false }, { deleted: true })
+            await Answers.findOneAndUpdate({ workgroup: workgroupDB._id, question: question._id, user: userId, deleted: false }, { deleted: true })
         })
         res.json(workgroupDB)
     } catch (error) {

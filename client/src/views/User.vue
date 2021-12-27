@@ -12,7 +12,11 @@
           transition="fade-transition"
           :loading="skeleton"
         >
-          <v-card elevation="0" v-if="user._id" color="rgba(0,0,0,0)">
+          <v-card
+            elevation="0"
+            v-if="user._id && loginUser.rol.value != 'user'"
+            color="rgba(0,0,0,0)"
+          >
             <v-overlay absolute :value="user.deleted">
               <v-alert color="error" dark icon="fas fa-archive" dense>
                 Archived
@@ -161,6 +165,11 @@
                 </v-card>
               </v-col>
               <v-col
+                v-if="
+                  loginUser.rol.value == 'admin' ||
+                  loginUser.rol.value == 'coor' ||
+                  loginUser._id == user._id
+                "
                 cols="12"
                 md="8"
                 xl="9"
@@ -213,7 +222,13 @@
                 </v-card>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row
+              v-if="
+                loginUser.rol.value == 'admin' ||
+                loginUser.rol.value == 'coor' ||
+                loginUser._id == user._id
+              "
+            >
               <v-col
                 cols="12"
                 class="text-uppercase display-1 font-weight-thin"
@@ -221,123 +236,144 @@
                 Joined Workgroups
               </v-col>
             </v-row>
-            <v-row>
-              <v-col v-if="workgroups.length != 0 || answers.length != 0">
-                <v-data-iterator :items="workgroups" items-per-page.sync="6">
-                  <template v-slot:default="props">
-                    <v-row>
-                      <v-col
-                        cols="12"
-                        md="4"
-                        xl="3"
-                        class="pa-3"
-                        v-for="(workgroup, index) in props.items"
-                        :key="index"
+            <v-row
+              v-if="
+                loginUser.rol.value == 'admin' ||
+                loginUser.rol.value == 'coor' ||
+                loginUser._id == user._id
+              "
+            >
+              <v-col v-if="workgroups.length != 0 && answers.length != 0">
+                <v-row>
+                  <v-col
+                    cols="12"
+                    md="4"
+                    xl="3"
+                    class="pa-3"
+                    v-for="(workgroup, indexW) in workgroups"
+                    :key="indexW"
+                  >
+                    <v-card>
+                      <v-img
+                        height="100"
+                        class="align-end"
+                        :style="`background:${workgroup.color}`"
                       >
-                        <v-card>
-                          <v-img
-                            height="100"
-                            class="align-end"
-                            :style="`background:${workgroup.color}`"
+                      </v-img>
+                      <v-card-title class="text-uppercase font-weight-light">
+                        <v-list-item two-line>
+                          <v-list-item-content>
+                            <v-list-item-title>{{
+                              workgroup.name
+                            }}</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-card-title>
+                      <v-divider></v-divider>
+                      <v-card-text>
+                        <v-list two-line>
+                          <v-list-item
+                            v-for="(question, index) in workgroup.questions"
+                            :key="index"
                           >
-                          </v-img>
-                          <v-card-title
-                            class="text-uppercase font-weight-light"
-                          >
-                            <v-list-item two-line>
+                            <template
+                              v-if="
+                                answers.filter(
+                                  (answer) =>
+                                    answer.workgroup == workgroup._id &&
+                                    answer.question == question._id
+                                )[0]
+                              "
+                            >
+                              <v-list-item-icon>
+                                <v-icon color="secondary">
+                                  fas fa-question
+                                </v-icon>
+                              </v-list-item-icon>
                               <v-list-item-content>
-                                <v-list-item-title>{{
-                                  workgroup.name
-                                }}</v-list-item-title>
-                              </v-list-item-content>
-                            </v-list-item>
-                          </v-card-title>
-                          <v-card-text>
-                            <v-list two-line>
-                              <v-list-item
-                                v-for="(question, index) in workgroup.questions"
-                                :key="index"
-                              >
-                                <v-list-item-icon>
-                                  <v-icon color="secondary">
-                                    fas fa-question
-                                  </v-icon>
-                                </v-list-item-icon>
-                                <v-list-item-content>
-                                  <v-list-item-title
-                                    v-text="question.name"
-                                  ></v-list-item-title>
-                                  <v-list-item-subtitle
-                                    v-if="question.type != 'text'"
+                                <v-list-item-title
+                                  v-text="question.name"
+                                ></v-list-item-title>
+                                <v-list-item-subtitle
+                                  v-if="question.type != 'text'"
+                                >
+                                  <v-tooltip
+                                    bottom
+                                    transition="scroll-y-transition"
                                   >
-                                    <v-tooltip
-                                      bottom
-                                      transition="scroll-y-transition"
-                                    >
-                                      <template v-slot:activator="{ on }">
-                                        <v-btn v-on="on" text>Answers</v-btn>
-                                      </template>
-                                      <v-chip
-                                        small
-                                        class="mx-1"
-                                        v-for="(
-                                          answer, index
-                                        ) in answers.filter(
-                                          (answer) =>
-                                            answer.question._id == question._id
-                                        )[0].answers"
-                                        :key="index"
-                                        :color="answer.color"
-                                        v-text="answer.name"
-                                      ></v-chip>
-                                    </v-tooltip>
-                                  </v-list-item-subtitle>
-                                  <v-list-item-subtitle v-else>
-                                    <v-tooltip
-                                      bottom
-                                      transition="scroll-y-transition"
-                                    >
-                                      <template v-slot:activator="{ on }">
-                                        <v-btn v-on="on" text>Answer</v-btn>
-                                      </template>
-                                      <span
-                                        v-text="
-                                          answers.filter(
-                                            (answer) =>
-                                              answer.question._id ==
-                                              question._id
-                                          )[0].text
-                                        "
-                                      ></span>
-                                    </v-tooltip>
-                                  </v-list-item-subtitle>
-                                </v-list-item-content>
-                                <v-list-item-action>
-                                  <v-list-item-action-text
-                                    v-text="
-                                      dateFormated(
+                                    <template v-slot:activator="{ on }">
+                                      Answers<v-icon right v-on="on"
+                                        >fas fa-eye</v-icon
+                                      >
+                                    </template>
+                                    <v-chip
+                                      small
+                                      class="mx-1"
+                                      v-for="(answer, index) in answers.filter(
+                                        (answer) =>
+                                          answer.workgroup == workgroup._id &&
+                                          answer.question == question._id
+                                      )[0].answers"
+                                      :key="index"
+                                      :color="answer.color"
+                                      v-text="answer.name"
+                                    ></v-chip>
+                                  </v-tooltip>
+                                </v-list-item-subtitle>
+                                <v-list-item-subtitle v-else>
+                                  <v-tooltip
+                                    bottom
+                                    transition="scroll-y-transition"
+                                  >
+                                    <template v-slot:activator="{ on }">
+                                      Answer<v-icon right v-on="on"
+                                        >fas fa-eye</v-icon
+                                      >
+                                    </template>
+                                    <span
+                                      v-text="
                                         answers.filter(
                                           (answer) =>
-                                            answer.question._id == question._id
-                                        )[0].createdAt
-                                      )
-                                    "
-                                  ></v-list-item-action-text>
-                                </v-list-item-action>
-                              </v-list-item>
-                            </v-list>
-                          </v-card-text>
-                        </v-card>
-                      </v-col>
-                    </v-row>
-                  </template>
-                </v-data-iterator>
+                                            answer.workgroup == workgroup._id &&
+                                            answer.question == question._id
+                                        )[0].text
+                                      "
+                                    ></span>
+                                  </v-tooltip>
+                                </v-list-item-subtitle>
+                              </v-list-item-content>
+                              <v-list-item-action>
+                                <v-list-item-action-text
+                                  v-text="
+                                    dateFormated(
+                                      answers.filter(
+                                        (answer) =>
+                                          answer.workgroup == workgroup._id &&
+                                          answer.question == question._id
+                                      )[0].createdAt
+                                    )
+                                  "
+                                ></v-list-item-action-text>
+                              </v-list-item-action>
+                            </template>
+                          </v-list-item>
+                        </v-list>
+                      </v-card-text>
+                    </v-card>
+                  </v-col>
+                </v-row>
               </v-col>
               <v-col class="text-uppercase title font-weight-light" v-else>
                 Not joined to workgroups
               </v-col>
             </v-row>
-            <v-row>
+            <v-row
+              v-if="
+                loginUser.rol.value == 'admin' ||
+                loginUser.rol.value == 'coor' ||
+                loginUser._id == user._id
+              "
+            >
               <v-col
                 cols="12"
                 class="text-uppercase display-1 font-weight-thin"
@@ -403,7 +439,7 @@ export default {
       "deleteUserSoft",
     ]),
     ...mapMutations("users", ["loadEditedUser"]),
-    ...mapActions("questions", ["loadAnswersByUser"]),
+    ...mapActions("questions", ["loadAnswersByUser", "filterAnswer"]),
     ...mapActions("workgroups", ["loadWorkgroupsByUser"]),
     textColor(color) {
       return idealTextColor(color);
