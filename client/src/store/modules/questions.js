@@ -25,7 +25,9 @@ const state = {
     notCommonQuestions: [],
     answersByUser: [],
     loading: false,
-    skeleton: false
+    skeleton: false,
+    answers: [],
+    rules: []
 }
 
 const mutations = {
@@ -65,7 +67,13 @@ const mutations = {
     },
     answersByUserLoad: (state, answers) => {
         state.answersByUser = answers;
-    }
+    },
+    setRules: (state, rules) => {
+        state.rules = rules;
+    },
+    setAnswers: (state, answers) => {
+        state.answers = answers;
+    },
 }
 
 const getters = {
@@ -97,6 +105,18 @@ const getters = {
         else {
             return false
         }
+    },
+
+    isValidQuestions: (state) => {
+        let valid = 0;
+        let answers = state.answers;
+        state.commonQuestions.forEach((q, index) => {
+            let check = q.type != 'text' ? state.rules[index](answers[index].answer) : state.rules[index](answers[index].text);
+            if (typeof check == 'boolean') {
+                valid++
+            }
+        });
+        return valid == state.commonQuestions.length;
     }
 }
 
@@ -111,6 +131,7 @@ const actions = {
             commit('menu/cancelDialog', 'createquestion', { root: true });
             await dispatch('interests/loadInterests', null, { root: true });
             await dispatch('loadQuestions');
+            await dispatch('loadCommonQuestions');
             commit('menu/notification', ['info', 3, 'Question created correctly'], { root: true });
             commit('clearquestionForm');
         } catch (error) {
@@ -173,27 +194,21 @@ const actions = {
 
     async loadCommonQuestions({ commit, dispatch, rootGetters }) {
         try {
-            commit('changeLoading');
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/questions/common/all', config);
             commit('commonQuestionsLoad', res.data);
-            commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeLoading');
         }
     },
 
     async loadNotCommonQuestions({ commit, dispatch, rootGetters }) {
         try {
-            commit('changeLoading');
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/questions/notcommon/all', config);
             commit('notCommonQuestionsLoad', res.data);
-            commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeLoading');
         }
     },
 
@@ -222,6 +237,57 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
+    async createRules({ state, commit, dispatch }) {
+        try {
+            let rules = state.commonQuestions.map(q => {
+                if (q.type == 'text') return (v) => !!v || "Required";
+                else if (q.type == 'checkbox') return (v) => v.length != 0 || "Select one at least";
+                else if (q.type == 'select') return (v) => v.length != 0 || "Select one";
+                else if (q.type == 'radio') return (v) => v.length != 0 || "A selection is required";
+            })
+            commit('setRules', rules);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async createAnswers({ state, commit, dispatch }) {
+        try {
+            let answers = state.commonQuestions.map(q => {
+                const question = state.answersByUser.find(ans => ans.question == q._id);
+                let answers = !question ? [] : question.answers.map(answer => answer._id);
+                if (q.type == 'radio' || q.type == 'select') answers = answers[0]
+                const text = !question ? '' : question.text;
+                return {
+                    question: q._id,
+                    answer: answers,
+                    text: text
+                }
+            })
+            commit('setAnswers', answers);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async saveCommonQuestions({ state, commit, rootGetters, dispatch }, userId) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let answers = state.answers.map(answer => {
+                let a = answer;
+                if (typeof a.answer === 'string') a.answer = [answer.answer];
+                return a;
+            })
+            await Axios.put('/questions/commonquestions/' + userId, { answers: answers }, config);
+            commit('menu/notification', ['primary', 3, 'Common question saved correctly'], { root: true });
+            await dispatch('loadAnswersByUser', userId);
+            await dispatch('createAnswers');
+            commit('menu/cancelDialog', 'editcommonquestion', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    }
 }
 
 export default {

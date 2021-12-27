@@ -23,9 +23,13 @@
               </v-alert>
             </v-overlay>
             <v-row>
-              <v-col cols="12" md="4" xl="3">
+              <v-col cols="12" md="5" xl="4">
                 <v-card>
-                  <v-tooltip bottom transition="scroll-y-transition">
+                  <v-tooltip
+                    max-width="200"
+                    bottom
+                    transition="scroll-y-transition"
+                  >
                     <template v-slot:activator="{ on }">
                       <v-btn
                         class="ml-n12"
@@ -136,8 +140,9 @@
                       <v-dialog max-width="650" v-model="dialogs.edituser">
                         <template v-slot:activator="{ on: onDialog }">
                           <v-tooltip
-                            top
-                            transition="slide-y-reverse-transition"
+                            max-width="200"
+                            left
+                            transition="slide-x-reverse-transition"
                             open-delay="100"
                           >
                             <template v-slot:activator="{ on: onTooltip }">
@@ -171,9 +176,9 @@
                   loginUser._id == user._id
                 "
                 cols="12"
-                md="8"
-                xl="9"
-                class="text-uppercase display-1 font-weight-thin"
+                md="7"
+                xl="8"
+                class="display-1 font-weight-thin"
               >
                 <v-card class="mx-auto">
                   <v-card-title
@@ -182,8 +187,96 @@
                     Common Questions
                   </v-card-title>
                   <v-divider></v-divider>
-                  <v-card-text> Config sdfdsfdsfs </v-card-text>
-                  <v-divider class="my-4"></v-divider>
+                  <v-card-text>
+                    <v-list two-line>
+                      <v-list-item
+                        v-for="(question, index) in commonQuestions"
+                        :key="index"
+                      >
+                        <template>
+                          <v-list-item-icon>
+                            <v-icon color="secondary"> fas fa-question </v-icon>
+                          </v-list-item-icon>
+                          <v-list-item-content>
+                            <v-list-item-title
+                              v-text="question.name"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              class="text--primary text-uppercase"
+                              v-text="question.type"
+                            >
+                            </v-list-item-subtitle>
+                            <v-list-item-subtitle v-text="question.description">
+                            </v-list-item-subtitle>
+                          </v-list-item-content>
+                          <v-list-item-action
+                            v-if="
+                              answers.filter(
+                                (answer) => answer.question == question._id
+                              )[0]
+                            "
+                          >
+                            <v-list-item-action-text
+                              v-text="
+                                dateFormated(
+                                  answers.filter(
+                                    (answer) => answer.question == question._id
+                                  )[0].updatedAt
+                                )
+                              "
+                            ></v-list-item-action-text>
+                            <v-tooltip
+                              max-width="200"
+                              left
+                              transition="scroll-x-reverse-transition"
+                            >
+                              <template v-slot:activator="{ on }">
+                                <v-icon v-on="on" color="primary darken-1">
+                                  fas fa-eye
+                                </v-icon>
+                              </template>
+                              <span
+                                v-if="question.type == 'text'"
+                                v-text="
+                                  answers.filter(
+                                    (answer) => answer.question == question._id
+                                  )[0].text
+                                "
+                              ></span>
+                              <v-chip
+                                v-else
+                                small
+                                class="ma-1"
+                                v-for="(answer, index) in answers.filter(
+                                  (answer) => answer.question == question._id
+                                )[0].answers"
+                                :key="index"
+                                :color="answer.color"
+                                v-text="answer.name"
+                              ></v-chip>
+                            </v-tooltip>
+                          </v-list-item-action>
+                          <v-list-item-action v-else>
+                            <v-tooltip
+                              max-width="200"
+                              left
+                              transition="scroll-x-reverse-transition"
+                            >
+                              <template v-slot:activator="{ on }">
+                                <v-icon v-on="on" color="secondary darken-1">
+                                  fas fa-exclamation
+                                </v-icon>
+                              </template>
+                              <span class="text-right caption font-weight-light"
+                                >Not answered</span
+                              >
+                            </v-tooltip>
+                          </v-list-item-action>
+                        </template>
+                      </v-list-item>
+                    </v-list>
+                  </v-card-text>
+                  <v-divider></v-divider>
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-dialog
@@ -192,14 +285,14 @@
                     >
                       <template v-slot:activator="{ on: onDialog }">
                         <v-tooltip
-                          top
-                          transition="slide-y-reverse-transition"
+                          max-width="200"
+                          left
+                          transition="slide-x-reverse-transition"
                           open-delay="100"
                         >
                           <template v-slot:activator="{ on: onTooltip }">
                             <v-btn
                               class="mx-1"
-                              @click="loadEditedUser"
                               depressed
                               fab
                               small
@@ -298,17 +391,18 @@
                                   v-if="question.type != 'text'"
                                 >
                                   <v-tooltip
+                                    max-width="200"
                                     bottom
                                     transition="scroll-y-transition"
                                   >
                                     <template v-slot:activator="{ on }">
-                                      Answers<v-icon right v-on="on"
-                                        >fas fa-eye</v-icon
-                                      >
+                                      <span v-on="on">
+                                        Answers<v-icon right>fas fa-eye</v-icon>
+                                      </span>
                                     </template>
                                     <v-chip
                                       small
-                                      class="mx-1"
+                                      class="ma-1"
                                       v-for="(answer, index) in answers.filter(
                                         (answer) =>
                                           answer.workgroup == workgroup._id &&
@@ -322,13 +416,14 @@
                                 </v-list-item-subtitle>
                                 <v-list-item-subtitle v-else>
                                   <v-tooltip
+                                    max-width="200"
                                     bottom
                                     transition="scroll-y-transition"
                                   >
                                     <template v-slot:activator="{ on }">
-                                      Answer<v-icon right v-on="on"
-                                        >fas fa-eye</v-icon
-                                      >
+                                      <span v-on="on">
+                                        Answer<v-icon right>fas fa-eye</v-icon>
+                                      </span>
                                     </template>
                                     <span
                                       v-text="
@@ -350,11 +445,40 @@
                                         (answer) =>
                                           answer.workgroup == workgroup._id &&
                                           answer.question == question._id
-                                      )[0].createdAt
+                                      )[0].updatedAt
                                     )
                                   "
                                 ></v-list-item-action-text>
                               </v-list-item-action>
+                            </template>
+                            <template v-else>
+                              <v-list-item-icon>
+                                <v-icon color="secondary">
+                                  fas fa-question
+                                </v-icon>
+                              </v-list-item-icon>
+                              <v-list-item-content>
+                                <v-list-item-title
+                                  v-text="question.name"
+                                ></v-list-item-title>
+                                <v-list-item-subtitle>
+                                  <v-tooltip
+                                    max-width="200"
+                                    bottom
+                                    transition="scroll-y-transition"
+                                  >
+                                    <template v-slot:activator="{ on }">
+                                      <span v-on="on">
+                                        Answer<v-icon right>fas fa-eye</v-icon>
+                                      </span>
+                                    </template>
+                                    <span
+                                      >Not answered, added by Admin or
+                                      Coordinator</span
+                                    >
+                                  </v-tooltip>
+                                </v-list-item-subtitle>
+                              </v-list-item-content>
                             </template>
                           </v-list-item>
                         </v-list>
@@ -380,7 +504,6 @@
               >
                 Joined Tasks
               </v-col>
-              List
             </v-row>
           </v-card>
           <invalid-static v-else item="User" goto="/users"></invalid-static>
@@ -426,6 +549,7 @@ export default {
       skeleton: (state) => state.users.skeleton,
       skeletonQuestions: (state) => state.questions.skeleton,
       workgroups: (state) => state.workgroups.workgroupsByUser,
+      commonQuestions: (state) => state.questions.commonQuestions,
       dialogs: (state) => state.menu.menu.dialogs,
       loginUser: (state) => state.user.loginUser,
       answers: (state) => state.questions.answersByUser,
@@ -439,7 +563,11 @@ export default {
       "deleteUserSoft",
     ]),
     ...mapMutations("users", ["loadEditedUser"]),
-    ...mapActions("questions", ["loadAnswersByUser", "filterAnswer"]),
+    ...mapActions("questions", [
+      "loadAnswersByUser",
+      "filterAnswer",
+      "loadCommonQuestions",
+    ]),
     ...mapActions("workgroups", ["loadWorkgroupsByUser"]),
     textColor(color) {
       return idealTextColor(color);
@@ -449,6 +577,7 @@ export default {
         this.searchUserSilent(this.$route.params.id);
         this.loadAnswersByUser(this.$route.params.id);
         this.loadWorkgroupsByUser(this.$route.params.id);
+        this.loadCommonQuestions();
       }, 5 * 60 * 1000);
     },
     dateFormated(date) {
@@ -460,6 +589,7 @@ export default {
     this.searchUser(this.$route.params.id);
     this.loadAnswersByUser(this.$route.params.id);
     this.loadWorkgroupsByUser(this.$route.params.id);
+    this.loadCommonQuestions();
   },
 };
 </script>

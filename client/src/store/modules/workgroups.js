@@ -11,7 +11,6 @@ const state = {
     workgroup: {},
     answers: [],
     rules: [],
-    valid: true,
     workgroupForm: {
         workgroup: {
             name: '',

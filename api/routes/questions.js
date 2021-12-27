@@ -20,6 +20,8 @@ router.post('/', auth, questionsController.createQuestion)
 
 router.put('/:id', auth, questionsController.updateQuestion)
 
+router.put('/commonquestions/:id', auth, questionsController.updateCommonQuestions)
+
 router.delete('/finally/:id', auth, questionsController.deleteQuestion)
 
 router.delete('/:id', auth, questionsController.deleteQuestionSoft)

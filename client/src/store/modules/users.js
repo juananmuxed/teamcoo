@@ -188,19 +188,6 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async saveCommonQuestions({ commit, rootGetters, dispatch }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let user = new Object;
-            user.commonquestions = params.answers;
-            let res = await Axios.put('/users/' + params.idUser, user, config);
-            commit('menu/notification', ['primary', 3, 'Common question saved'], { root: true });
-            commit('menu/cancelDialog', 'editcommonquestion', { root: true });
-            commit('userLoad', res.data);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    }
 }
 
 export default {

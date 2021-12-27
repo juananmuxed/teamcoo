@@ -156,6 +156,51 @@ exports.updateQuestion = async (req, res) => {
     }
 }
 
+exports.updateCommonQuestions = async (req, res) => {
+    try {
+        const _id = req.params.id
+        let body = req.body;
+        console.log(body)
+        body.answers.forEach(async answer => {
+            const answerDB = await Answers.findOne({ $and: [{ user: _id }, { question: answer.question }] })
+            if (!answerDB) {
+                await Answers.create({
+                    user: _id,
+                    question: answer.question,
+                    answers: answer.answer,
+                    text: answer.text
+                })
+            } else {
+                await Answers.findByIdAndUpdate(answerDB._id, {
+                    user: _id,
+                    question: answer.question,
+                    answers: answer.answer,
+                    text: answer.text
+                })
+            }
+            await User.findByIdAndUpdate(_id, {
+                $addToSet: {
+                    interests: {
+                        $each: answer.answer
+                    }
+                }
+            })
+        });
+        const questionsDB = await Questions.find({ deleted: false, common: true })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.json(questionsDB);
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error })
+    }
+}
+
 exports.deleteQuestionSoft = async (req, res) => {
     const _id = req.params.id
 

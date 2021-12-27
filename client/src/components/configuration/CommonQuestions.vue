@@ -150,7 +150,7 @@
       </v-col>
       <v-divider inset v-if="index < questions.length - 1"></v-divider>
     </v-row>
-    <v-dialog max-width="650" v-model="dialogs.createinterest">
+    <v-dialog max-width="650" v-model="dialogs.createquestion">
       <template v-slot:activator="{ on: onDialog }">
         <v-tooltip
           transition="slide-x-reverse-transition"

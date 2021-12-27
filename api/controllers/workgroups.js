@@ -244,13 +244,25 @@ exports.joinWorkgroup = async (req, res) => {
                 match: { deleted: false }
             });
         answers.forEach(async (answer) => {
-            await Answers.create({
-                user: userId,
-                workgroup: _id,
-                question: answer.question,
-                answers: answer.answer,
-                text: answer.text
-            })
+            const answerDB = await Answers.findOne({ $and: [{ user: userId }, { question: answer.question }, { workgroup: _id }] })
+            if (!answerDB) {
+                await Answers.create({
+                    user: userId,
+                    workgroup: _id,
+                    question: answer.question,
+                    answers: answer.answer,
+                    text: answer.text
+                })
+            } else {
+                await Answers.findByIdAndUpdate(answerDB._id, {
+                    user: userId,
+                    workgroup: _id,
+                    question: answer.question,
+                    answers: answer.answer,
+                    text: answer.text,
+                    deleted: false
+                })
+            }
             await User.findByIdAndUpdate(userId, {
                 $addToSet: {
                     interests: {

@@ -135,7 +135,6 @@ export default {
     ...mapState({
       menu: (state) => state.menu.menu,
       workgroup: (state) => state.workgroups.workgroup,
-      valid: (state) => state.workgroups.valid,
       answers: (state) => state.workgroups.answers,
       rules: (state) => state.workgroups.rules,
       interests: (state) => state.interests.interests,
