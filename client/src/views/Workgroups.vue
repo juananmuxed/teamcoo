@@ -103,7 +103,12 @@
             </template>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip class="mx-1" :to="'/users/' + item.creator._id">
+            <v-chip v-if="!item.creator">
+              <v-avatar left color="primary"
+                ><v-icon x-small>fas fa-user-slash</v-icon></v-avatar
+              >Closed account
+            </v-chip>
+            <v-chip v-else class="mx-1" :to="'/users/' + item.creator._id">
               <v-avatar left v-if="item.creator.image != ''"
                 ><v-img :src="item.creator.image"></v-img
               ></v-avatar>
@@ -169,7 +174,11 @@
       </v-col>
     </v-row>
     <template
-      v-if="loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'"
+      v-if="
+        loginUser.rol.value == 'admin' ||
+        loginUser.rol.value == 'coor' ||
+        loginUser.rol.value == 'dire'
+      "
     >
       <v-row class="text-center">
         <v-col>
@@ -279,7 +288,12 @@
               </template>
             </template>
             <template v-slot:item.creator="{ item }">
-              <v-chip class="mx-1" :to="'/users/' + item.creator._id">
+              <v-chip v-if="!item.creator">
+                <v-avatar left color="primary"
+                  ><v-icon x-small>fas fa-user-slash</v-icon></v-avatar
+                >Closed account
+              </v-chip>
+              <v-chip v-else class="mx-1" :to="'/users/' + item.creator._id">
                 <v-avatar left v-if="item.creator.image != ''"
                   ><v-img :src="item.creator.image"></v-img
                 ></v-avatar>
