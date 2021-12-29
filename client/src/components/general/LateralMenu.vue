@@ -29,7 +29,7 @@
         <span class="text-right caption font-weight-light">Expand</span>
       </v-tooltip>
 
-      <v-list-item two-line>
+      <v-list-item two-line :to="'/users/' + loginUser._id">
         <v-list-item-avatar v-if="loginUser.image">
           <img :src="loginUser.image" />
         </v-list-item-avatar>
