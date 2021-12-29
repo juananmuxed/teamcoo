@@ -91,6 +91,7 @@ const getters = {
             return true
         }
     },
+
     isEditedQuestion: (state) => {
         let validating = state.questionForm.question.type == 'text' ? state.questionForm.question.text != state.question.text : isDiferentArray(state.questionForm.question.interests, state.question.interests)
         if (
@@ -257,7 +258,9 @@ const actions = {
             let answers = state.commonQuestions.map(q => {
                 const question = state.answersByUser.find(ans => ans.question == q._id);
                 let answers = !question ? [] : question.answers.map(answer => answer._id);
-                if (q.type == 'radio' || q.type == 'select') answers = answers[0]
+                if (answers.length != 0 && (q.type == 'radio' || q.type == 'select')) {
+                    answers = answers[0]
+                }
                 const text = !question ? '' : question.text;
                 return {
                     question: q._id,

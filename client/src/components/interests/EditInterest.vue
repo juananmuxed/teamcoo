@@ -77,6 +77,11 @@
             ></v-btn
           >
         </v-col>
+        <v-col cols="12" class="py-1" v-if="!interest.creator">
+          <user-search-component
+            v-model="interestForm.interest.creator"
+          ></user-search-component>
+        </v-col>
       </v-row>
       <v-btn
         fab
@@ -111,7 +116,11 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { idealTextColor } from "../../utils/utils";
+import UserSearchVue from "../users/UserSearch.vue";
 export default {
+  components: {
+    "user-search-component": UserSearchVue,
+  },
   computed: {
     ...mapState({
       interest: (state) => state.interests.interest,

@@ -5,12 +5,12 @@ const state = {
     interests: [],
     interestsNames: [],
     interest: {},
-    interestTemp: {},
     interestForm: {
         interest: {
             name: '',
             description: '',
-            color: ''
+            color: '',
+            creator: null
         },
         loading: false,
     },
@@ -27,6 +27,7 @@ const mutations = {
         state.interestForm.interest.name = '';
         state.interestForm.interest.description = '';
         state.interestForm.interest.color = '';
+        state.interestForm.interest.creator = null;
     },
     randomInterestColor: (state) => {
         state.interestForm.interest.color = generateRandomColor(30);
@@ -59,10 +60,12 @@ const getters = {
             return true
         }
     },
+
     isEditedInterest: (state) => {
         if (
             state.interestForm.interest.name != state.interest.name ||
             state.interestForm.interest.description != state.interest.description ||
+            state.interestForm.interest.creator != state.interest.creator ||
             state.interestForm.interest.color.toUpperCase() != state.interest.color.toUpperCase()
         ) {
             return true
@@ -71,6 +74,7 @@ const getters = {
             return false
         }
     },
+
     options: (state) => {
         return state.options;
     }
