@@ -77,8 +77,15 @@
                           <v-list-item-title
                             v-text="user.email"
                           ></v-list-item-title>
-                          <v-list-item-subtitle>Personal</v-list-item-subtitle>
+                          <v-list-item-subtitle>Email</v-list-item-subtitle>
                         </v-list-item-content>
+                        <v-list-item-action>
+                          <v-btn icon disabled>
+                            <v-icon color="primary darken-1">
+                              fas fa-comment-dots
+                            </v-icon>
+                          </v-btn>
+                        </v-list-item-action>
                       </v-list-item>
 
                       <v-divider inset></v-divider>
@@ -90,15 +97,24 @@
 
                         <v-list-item-content>
                           <v-list-item-title
-                            v-text="user.firstName + ' ' + user.lastName"
+                            v-text="user.firstName"
                           ></v-list-item-title>
-                          <v-list-item-subtitle>Name</v-list-item-subtitle>
+                          <v-list-item-subtitle>Firstname</v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
 
                       <v-list-item>
                         <v-list-item-action></v-list-item-action>
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="user.lastName"
+                          ></v-list-item-title>
+                          <v-list-item-subtitle>Lastname</v-list-item-subtitle>
+                        </v-list-item-content>
+                      </v-list-item>
 
+                      <v-list-item>
+                        <v-list-item-action></v-list-item-action>
                         <v-list-item-content>
                           <v-list-item-title
                             v-text="user.rol.name"
@@ -155,7 +171,7 @@
                                 color="info"
                                 v-on="{ ...onTooltip, ...onDialog }"
                               >
-                                <v-icon small class="ml-1">fas fa-edit</v-icon>
+                                <v-icon small>fas fa-edit</v-icon>
                               </v-btn>
                             </template>
                             <span class="text-right font-weight-light"
@@ -164,6 +180,41 @@
                           </v-tooltip>
                         </template>
                         <edit-user></edit-user>
+                      </v-dialog>
+                      <v-dialog max-width="400" v-model="dialogs.confirmSoft">
+                        <template v-slot:activator="{ on: onDialog }">
+                          <v-tooltip
+                            max-width="200"
+                            left
+                            transition="slide-x-reverse-transition"
+                            open-delay="100"
+                          >
+                            <template v-slot:activator="{ on: onTooltip }">
+                              <v-btn
+                                class="mx-1"
+                                depressed
+                                fab
+                                small
+                                color="error"
+                                v-on="{ ...onTooltip, ...onDialog }"
+                              >
+                                <v-icon small>fas fa-trash</v-icon>
+                              </v-btn>
+                            </template>
+                            <span class="text-right font-weight-light"
+                              >Close account</span
+                            >
+                          </v-tooltip>
+                        </template>
+                        <confirmation-template
+                          title="Close your account"
+                          description="You are about to close your account. <br><br>Are you sure?"
+                          :cancelFunction="null"
+                          textButton="Delete"
+                          :actionparams="{ id: user._id }"
+                          :confirmationPass="true"
+                          :action="deleteUserSoft"
+                        ></confirmation-template>
                       </v-dialog>
                     </v-card-actions>
                   </template>
@@ -299,9 +350,7 @@
                               color="info"
                               v-on="{ ...onTooltip, ...onDialog }"
                             >
-                              <v-icon small class="ml-1"
-                                >fas fa-question</v-icon
-                              >
+                              <v-icon small>fas fa-question</v-icon>
                             </v-btn>
                           </template>
                           <span class="text-right font-weight-light"
@@ -511,17 +560,6 @@
         <v-dialog max-width="650" v-model="dialogs.changepassword">
           <change-pass></change-pass>
         </v-dialog>
-        <v-dialog max-width="400" v-model="dialogs.confirmSoft">
-          <confirmation-template
-            title="Close your account"
-            description="You are about to close your account. <br><br>Are you sure?"
-            :cancelFunction="null"
-            textButton="Delete"
-            :actionparams="{ id: user._id }"
-            :confirmationPass="true"
-            :action="deleteUserSoft"
-          ></confirmation-template>
-        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
@@ -542,6 +580,11 @@ export default {
     "invalid-static": invalidstatic,
     "change-pass": changePassword,
     "edit-common-question": editcommonquestions,
+  },
+  data() {
+    return {
+      polling: null,
+    };
   },
   computed: {
     ...mapState({
@@ -590,6 +633,9 @@ export default {
     this.loadAnswersByUser(this.$route.params.id);
     this.loadWorkgroupsByUser(this.$route.params.id);
     this.loadCommonQuestions();
+  },
+  beforeDestroy() {
+    clearInterval(this.polling);
   },
 };
 </script>

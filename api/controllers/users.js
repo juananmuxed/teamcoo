@@ -87,6 +87,28 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
+exports.getUserByString = async (req, res) => {
+    try {
+        const string = req.params.name;
+        const regex = new RegExp(string, 'i')
+        const userDB = await User.find({
+            $and: [
+                { deleted: false },
+                {
+                    $or: [
+                        { username: { $regex: regex } },
+                        { firstName: { $regex: regex } },
+                        { lastName: { $regex: regex } }
+                    ]
+                }
+            ]
+        })
+        res.status(201).json(userDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+}
+
 exports.getAllUsersDeleted = async (req, res) => {
     try {
         const userDB = await User.find({ deleted: true })
@@ -103,7 +125,6 @@ exports.getAllUsersDeleted = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const _id = req.params.id
-
         const userDB = await User.findByIdAndUpdate(_id, req.body, { new: true })
             .populate({
                 path: 'interests',
@@ -179,7 +200,7 @@ exports.deleteUserSoft = async (req, res) => {
             return res.status(409).json({ message: user.message });
         }
 
-        const userDB = await User.findByIdAndUpdate(_id, { deleted: true })
+        const userDB = await User.findByIdAndUpdate(_id, { deleted: true }, { new: true })
             .populate({
                 path: 'interests',
                 match: { deleted: false }

@@ -10,6 +10,8 @@ router.post("/login", userController.loginUser);
 
 router.get("/", auth, userController.getAllUsers);
 
+router.get("/usersByName/:name", auth, userController.getUserByString);
+
 router.get("/archived/", auth, userController.getAllUsersDeleted);
 
 router.get("/:id", auth, userController.getUser)

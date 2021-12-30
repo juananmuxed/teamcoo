@@ -1,8 +1,7 @@
 import Axios from 'axios'
-import router from '@/router'
+import Vue from 'vue'
 import Vuetify from '../../plugins/vuetify'
-import Cookies from 'js-cookie'
-import { generatePalette } from '../../utils/utils'
+import { generatePalette, isDiferentArray } from '../../utils/utils'
 
 const state = {
     users: [],
@@ -13,21 +12,30 @@ const state = {
         }
     },
     loading: false,
-    skeleton: false
+    skeleton: false,
+    isLoadingUser: false,
+    usersByName: []
 }
 
 const mutations = {
     usersLoad: (state, users) => {
         state.users = users
     },
+    usersByNameLoad: (state, users) => {
+        Vue.set(state, 'usersByName', users);
+    },
     userLoad: (state, user) => {
         state.user = user
     },
     loadEditedUser: (state) => {
         state.userForm.user = Object.assign({}, state.user);
+        state.userForm.user.imagefile = null;
     },
     changeLoading: (state, loading) => {
         state.loading = loading
+    },
+    changeIsLoadingUser: (state, loading) => {
+        state.isLoadingUser = loading
     },
     changeSkeleton: (state, skeleton) => {
         state.skeleton = skeleton
@@ -50,24 +58,28 @@ const getters = {
             textColor: colors.textColors[roles.findIndex(a => a.value === role)]
         }
     },
+
     isChangeUser(state) {
         if (
-            state.editUser.firstName == state.notEditUser.firstName &&
-            state.editUser.lastName == state.notEditUser.lastName &&
-            state.editUser.username == state.notEditUser.username &&
-            state.editUser.image == state.notEditUser.image &&
-            state.editUser.imagefile == state.notEditUser.imagefile
+            state.user.firstName == state.userForm.user.firstName &&
+            state.user.lastName == state.userForm.user.lastName &&
+            state.user.username == state.userForm.user.username &&
+            state.user.image == state.userForm.user.image &&
+            state.user.imagefile == state.userForm.user.imagefile &&
+            state.user.rol.value == state.userForm.user.rol.value &&
+            !isDiferentArray(state.user.interests, state.userForm.user.interests, '_id', '_id')
         ) {
             return false
         }
         else { return true }
     },
+
     isValidSave(state, getters, rootState) {
         if (
-            !rootState.general.rules.required(state.editUser.firstName)[0] &&
-            !rootState.general.rules.required(state.editUser.lastName)[0] &&
-            !rootState.general.rules.required(state.editUser.username)[0] &&
-            !rootState.general.rules.maxletters(state.editUser.username)[0]
+            !rootState.general.rules.required(state.userForm.user.firstName)[0] &&
+            !rootState.general.rules.required(state.userForm.user.lastName)[0] &&
+            !rootState.general.rules.required(state.userForm.user.username)[0] &&
+            !rootState.general.rules.maxletters(state.userForm.user.username)[0]
         ) {
             return false
         }
@@ -78,12 +90,10 @@ const getters = {
 }
 
 const actions = {
-    async loadUsers({ commit, rootGetters, dispatch }) {
+    async loadUsers({ commit, dispatch }) {
         try {
             commit('changeLoading', true);
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/', config);
-            commit('usersLoad', res.data);
+            await dispatch('loadUsersSilent');
             commit('changeLoading', false);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
@@ -112,6 +122,25 @@ const actions = {
         }
     },
 
+    async searchUsersByName({ state, rootGetters, commit, dispatch }, string) {
+        try {
+            if (state.isLoadingUser) return
+            if (!string) {
+                string = null
+            } else {
+                if (string.length < 3) return
+            }
+            commit('changeIsLoadingUser', true);
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/users/usersByName/' + string, config);
+            commit('usersByNameLoad', res.data);
+            commit('changeIsLoadingUser', false);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeIsLoadingUser', false);
+        }
+    },
+
     async searchUserSilent({ commit, dispatch, rootGetters }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
@@ -122,42 +151,29 @@ const actions = {
         }
     },
 
-    async saveEditedData({ commit, rootState, rootGetters, dispatch }, user) {
+    async saveEditedUser({ state, commit, rootState, rootGetters, dispatch }) {
         try {
+            let user = state.userForm.user;
             if (user.imagefile != null) {
                 user.image = await dispatch('general/saveFile', user.imagefile, { root: true });
             }
-            let id = user.id
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.put('/users/' + id, user, config);
-            if (rootState.user.loginUser._id == id) {
-                commit('user/userStore', { data: res.data }, { root: true });
+            let res = await Axios.put('/users/' + user._id, user, config);
+            if (rootState.user.loginUser._id == user._id) {
+                commit('user/userStore', res.data, { root: true });
             }
-            commit('menu/notification', ['primary', 3, 'Changed data Succesfully'], { root: true });
-            commit('undoEdit');
-            commit('menu/cancelDialog', 'edituser', { root: true });
             commit('userLoad', res.data);
+            commit('menu/cancelDialog', 'edituser', { root: true });
+            commit('menu/notification', ['primary', 3, 'User saved correctly'], { root: true });
         }
         catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+    // TODO: finally deleted not implemented
     async deleteUser({ rootState, commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let resTasks = await Axios.get('/tasks/', config);
-            let resWorkgroups = await Axios.get('/workgroups/', config)
-            let tasks = resTasks.data, workgroups = resWorkgroups.data;
-            for (let i = 0; i < tasks.length; i++) {
-                console.log('T')
-            }
-            for (let i = 0; i < workgroups.length; i++) {
-                let updatedWorkgroup = {
-                    members: workgroups[i].members.filter(a => a != params.id),
-                    coordinators: workgroups[i].coordinators.filter(a => a != params.id)
-                };
-                await Axios.put('/workgroups/' + workgroups[i]._id, updatedWorkgroup, config);
-            }
             config.data = {
                 email: rootState.user.loginUser.email,
                 password: params.password
@@ -169,6 +185,7 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async deleteUserSoft({ rootState, commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
@@ -176,14 +193,14 @@ const actions = {
                 email: rootState.user.loginUser.email,
                 password: params.password
             }
-            await Axios.delete('/users/' + params.id, config);
+            let res = await Axios.delete('/users/' + params.id, config);
             commit('menu/cancelDialog', 'confirmSoft', { root: true });
-            Cookies.remove('teamcoo-jwt')
-            Cookies.remove('teamcoo-userdata')
-            commit('menu/cancelDialog', 'logout', { root: true })
-            commit('user/clearUser', null, { root: true })
-            router.push('/');
-            commit('menu/notification', ['success', 3, 'You are succesfully close your account. Goodbye!'], { root: true });
+            if (rootState.user.loginUser._id == res.data._id) {
+                await dispatch('user/logOut', null, { root: true })
+                commit('menu/notification', ['success', 3, 'You are succesfully close your account. Goodbye!'], { root: true });
+            } else {
+                commit('userLoad', res.data);
+            }
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
