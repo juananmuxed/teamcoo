@@ -34,7 +34,7 @@
                           <v-chip
                             class="mx-1"
                             v-if="search.name"
-                            v-text="'Search: ' + search.name"
+                            v-text="'Text: ' + search.name"
                             color="primary"
                           ></v-chip>
                           <v-chip
@@ -54,7 +54,7 @@
                       <v-text-field
                         @input="loadInterestPaginated"
                         v-model="search.name"
-                        label="Search by name or description"
+                        label="Name or description"
                         clearable
                         clear-icon="fas fa-times"
                         class="mx-4"

@@ -35,13 +35,13 @@
                           <v-chip
                             class="mx-1"
                             v-if="search.name"
-                            v-text="'Search: ' + search.name"
+                            v-text="'Text: ' + search.name"
                             color="primary"
                           ></v-chip>
                           <v-chip
-                            class="mx-1 text-uppercase"
+                            class="mx-1"
                             v-if="search.type"
-                            v-text="search.type"
+                            v-text="'Type: ' + search.type"
                             color="warning"
                           ></v-chip>
                           <v-chip
@@ -73,7 +73,7 @@
                     <v-col cols="12" md="6">
                       <v-text-field
                         v-model="search.name"
-                        label="Search by name or description"
+                        label="Name or description"
                         clearable
                         clear-icon="fas fa-times"
                         outlined
@@ -81,7 +81,7 @@
                     </v-col>
                     <v-col cols="12" md="6">
                       <user-search-component
-                        label="Search by creator"
+                        label="Creator"
                         return-object
                         v-model="search.creator"
                       ></user-search-component>
@@ -98,13 +98,20 @@
                     </v-col>
                     <v-col cols="11" md="5">
                       <interest-search-component
-                        label="Search answers"
+                        label="Answers"
                         return-object
                         v-model="search.interests"
                       ></interest-search-component>
                     </v-col>
                     <v-col cols="1">
-                      <v-switch v-model="search.interestsAll" inset></v-switch>
+                      <v-switch
+                        :disabled="
+                          search.interests && search.interests.length == 0
+                        "
+                        v-model="search.interestsAll"
+                        :label="search.interestsAll ? 'All' : 'One'"
+                        inset
+                      ></v-switch>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>
