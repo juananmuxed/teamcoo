@@ -294,7 +294,6 @@ exports.getAnswersById = async (req, res) => {
             });
         res.json(answerDB);
     } catch (error) {
-        console.log(error)
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }
