@@ -80,6 +80,7 @@
         <v-col cols="12" class="py-1" v-if="!interest.creator">
           <user-search-component
             v-model="interestForm.interest.creator"
+            label="Search new creator"
           ></user-search-component>
         </v-col>
       </v-row>

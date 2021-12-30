@@ -1,7 +1,8 @@
 <template>
   <v-autocomplete
     @input="handleInput"
-    @click:clear="clearValue"
+    @click:clear="emitClear"
+    @change="emitChange"
     :items="usersByName"
     outlined
     clearable
@@ -12,9 +13,8 @@
     clear-icon="fas fa-times"
     item-text="username"
     item-value="_id"
-    label="Search new creator"
-    placeholder="Search..."
-    prepend-icon="fas fa-users"
+    :label="label"
+    :prepend-icon="icon"
   >
     <template v-slot:no-data>
       <v-list-item>
@@ -43,7 +43,19 @@
 <script>
 import { mapActions, mapState } from "vuex";
 export default {
-  props: ["value"],
+  props: {
+    value: {
+      required: true,
+    },
+    label: {
+      type: String,
+      default: "Search...",
+    },
+    icon: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
       searchName: null,
@@ -59,17 +71,17 @@ export default {
     searchName(val) {
       this.searchUsersByName(val);
     },
-    value(val) {
-      if (!val) this.clearSearch();
-    },
   },
   methods: {
     ...mapActions("users", ["searchUsersByName"]),
     handleInput(val) {
       this.$emit("input", val);
     },
-    clearValue() {
-      this.value = null;
+    emitClear() {
+      this.$emit("clear");
+    },
+    emitChange(val) {
+      this.$emit("change", val);
     },
     clearSearch() {
       this.searchName = null;

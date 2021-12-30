@@ -15,6 +15,10 @@ const state = {
         loading: false,
     },
     options: {},
+    search: {
+        name: null,
+        creator: null
+    },
     totalInterests: 0,
     loading: false
 }
@@ -44,6 +48,9 @@ const mutations = {
     },
     setTotalInterest: (state, total) => {
         state.totalInterests = total;
+    },
+    setSearchName: (state, search) => {
+        state.searchName = search;
     }
 }
 
@@ -74,10 +81,6 @@ const getters = {
             return false
         }
     },
-
-    options: (state) => {
-        return state.options;
-    }
 }
 
 const actions = {
@@ -99,6 +102,8 @@ const actions = {
             commit('changeLoading');
             let config = Object.assign({}, rootGetters['general/cookieAuth']);
             config.params = state.options;
+            config.params.searchName = state.search.name;
+            config.params.searchCreator = state.search.creator;
             let res = await Axios.get('/interests/paged', config)
             commit('loadInterests', res.data.items);
             commit('setTotalInterest', res.data.totalItems);

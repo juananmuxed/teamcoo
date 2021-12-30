@@ -17,6 +17,60 @@
           :footer-props="{ 'items-per-page-options': [5, 10, 20] }"
           :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
         >
+          <template v-slot:top>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header v-slot="{ open }">
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      <v-icon>fas fa-search</v-icon>
+                    </v-col>
+                    <v-col cols="10" class="text--secondary">
+                      <v-fade-transition leave-absolute>
+                        <span v-if="open"
+                          >Search by name, description and creator</span
+                        >
+                        <v-row v-else>
+                          <v-chip
+                            class="mx-1"
+                            v-if="search.name"
+                            v-text="search.name"
+                            color="primary"
+                          ></v-chip>
+                          <v-chip
+                            v-if="search.creator"
+                            color="secondary"
+                            class="mx-1"
+                            >Creator selected</v-chip
+                          >
+                        </v-row>
+                      </v-fade-transition>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-row>
+                    <v-col cols="12" md="6">
+                      <v-text-field
+                        @input="loadInterestPaginated"
+                        v-model="search.name"
+                        label="Search by name or description"
+                        class="mx-4"
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <user-search-component
+                        label="Search by creator"
+                        v-model="search.creator"
+                        @change="loadInterestPaginated"
+                      ></user-search-component>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
           <template v-slot:loading>
             <span class="display-1 text-uppercase font-weight-thin ma-5 pa-5"
               >Loading Interests</span
@@ -179,6 +233,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import createinterest from "../components/interests/CreateInterest.vue";
 import editinterest from "../components/interests/EditInterest.vue";
 import confirm from "../components/general/Confirm.vue";
+import UserSearchVue from "../components/users/UserSearch.vue";
 import { idealTextColor } from "../utils/utils";
 export default {
   data() {
@@ -193,9 +248,9 @@ export default {
           text: "Description",
           value: "description",
         },
-        { text: "Color", value: "color", sortable: false },
-        { text: "Creator", value: "creator", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "Color", value: "color" },
+        { text: "Creator", value: "creator" },
+        { text: "", value: "actions", sortable: false, width: 120 },
       ],
     };
   },
@@ -203,6 +258,7 @@ export default {
     "create-interest": createinterest,
     "edit-interest": editinterest,
     "confirmation-template": confirm,
+    "user-search-component": UserSearchVue,
   },
   computed: {
     ...mapState({
@@ -211,14 +267,16 @@ export default {
       loginUser: (state) => state.user.loginUser,
       dialogs: (state) => state.menu.menu.dialogs,
       totalInterests: (state) => state.interests.totalInterests,
+      search: (state) => state.interests.search,
+      optionsGet: (state) => state.interests.options,
       loading: (state) => state.interests.loading,
     }),
     options: {
       get: function () {
-        return this.$store.getters["interests/options"];
+        return this.optionsGet;
       },
       set: function (value) {
-        this.$store.commit("interests/setOptions", value);
+        this.setOptions(value);
       },
     },
   },
@@ -236,7 +294,12 @@ export default {
       "searchInterest",
       "loadInterestPaginated",
     ]),
-    ...mapMutations("interests", ["clearInterestForm", "randomInterestColor"]),
+    ...mapMutations("interests", [
+      "clearInterestForm",
+      "randomInterestColor",
+      "setSearchName",
+      "setOptions",
+    ]),
     textColor(color) {
       return idealTextColor(color);
     },

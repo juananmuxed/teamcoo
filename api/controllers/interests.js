@@ -32,10 +32,26 @@ exports.getAllInterests = async (req, res) => {
 
 exports.getAllInterestsPaged = async (req, res) => {
     try {
-        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [] } = req.query;
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null } = req.query;
         let sort = {};
+        let searchObject = {
+            $and: [
+                { deleted: false }
+            ]
+        }
+        if (searchName) searchObject.$and.push({
+            $or: [
+                { name: { $regex: searchName, $options: 'i' } },
+                { description: { $regex: searchName, $options: 'i' } }
+            ]
+        })
+        if (searchCreator) searchObject.$and.push({ creator: searchCreator })
         sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
-        const interestDB = await Interests.find({ deleted: false })
+        const interestDB = await Interests.find({
+            $and: [
+                { deleted: false }, searchObject
+            ]
+        })
             .limit(itemsPerPage * 1)
             .skip((page - 1) * itemsPerPage)
             .sort(sort)
