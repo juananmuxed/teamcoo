@@ -62,20 +62,10 @@ export default {
       default: "",
     },
   },
-  data() {
-    return {
-      searchName: null,
-    };
-  },
   computed: {
     ...mapState({
       interests: (state) => state.interests.interests,
     }),
-  },
-  watch: {
-    searchName(val) {
-      this.searchInterestsByName(val);
-    },
   },
   methods: {
     ...mapActions("interests", ["loadInterests"]),
@@ -87,9 +77,6 @@ export default {
     },
     emitChange(val) {
       this.$emit("change", val);
-    },
-    clearSearch() {
-      this.searchName = null;
     },
   },
   created() {
