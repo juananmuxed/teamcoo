@@ -88,15 +88,14 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" v-if="loginUser.rol.value == 'admin'">
-          <v-checkbox
+          <v-switch
             dense
+            inset
             color="primary"
             v-model="questionForm.question.common"
+            label="Common question"
           >
-            <template v-slot:label>
-              <div>Common question</div>
-            </template>
-          </v-checkbox>
+          </v-switch>
         </v-col>
       </v-row>
       <v-btn
