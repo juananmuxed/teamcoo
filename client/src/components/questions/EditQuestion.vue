@@ -62,12 +62,17 @@
             label="Answers"
           >
             <template v-slot:selection="{ attrs, item, parent, selected }">
-              <v-chip v-bind="attrs" :input-value="selected" small>
+              <v-chip
+                v-bind="attrs"
+                :input-value="selected"
+                small
+                :color="item.color"
+              >
                 <span class="pr-2">
                   {{ item.name }}
                 </span>
                 <v-icon small @click="parent.selectItem(item)">
-                  fas fa-times-circle
+                  fas fa-times
                 </v-icon>
               </v-chip>
             </template>
@@ -94,6 +99,12 @@
             v-model="questionForm.question.text"
             :rules="[rules.required]"
           ></v-text-field>
+        </v-col>
+        <v-col cols="12" class="py-1" v-if="!question.creator">
+          <user-search-component
+            v-model="questionForm.question.creator"
+            label="Search new creator"
+          ></user-search-component>
         </v-col>
         <v-col cols="12" v-if="loginUser.rol.value == 'admin'">
           <v-switch
@@ -138,7 +149,11 @@
 
 <script>
 import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
+import UserSearchVue from "../users/UserSearch.vue";
 export default {
+  components: {
+    "user-search-component": UserSearchVue,
+  },
   watch: {
     "questionForm.question.interests"(val, prev) {
       if (val.length === prev.length) return;

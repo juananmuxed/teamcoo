@@ -55,12 +55,17 @@
             hint="Press Enter to create a new one"
           >
             <template v-slot:selection="{ attrs, item, parent, selected }">
-              <v-chip v-bind="attrs" :input-value="selected" small>
+              <v-chip
+                v-bind="attrs"
+                :input-value="selected"
+                small
+                :color="item.color"
+              >
                 <span class="pr-2">
                   {{ item.name }}
                 </span>
                 <v-icon small @click="parent.selectItem(item)">
-                  fas fa-times-circle
+                  fas fa-times
                 </v-icon>
               </v-chip>
             </template>

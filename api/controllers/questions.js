@@ -69,6 +69,53 @@ exports.getAllQuestions = async (req, res) => {
     }
 }
 
+exports.getAllQuestionsPaged = async (req, res) => {
+    try {
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null, searchType = null, searchInterests = [], searchMode } = req.query;
+        let sort = {};
+        let searchObject = {
+            $and: [
+                { deleted: false }
+            ]
+        }
+        if (searchName) searchObject.$and.push({
+            $or: [
+                { name: { $regex: searchName, $options: 'i' } },
+                { description: { $regex: searchName, $options: 'i' } }
+            ]
+        })
+        if (searchCreator) searchObject.$and.push({ creator: searchCreator })
+        if (searchType) searchObject.$and.push({ type: searchType })
+        if (searchInterests.length != 0) {
+            const interestsObject = {
+                interests: { [!JSON.parse(searchMode.toLowerCase()) ? '$in' : '$all']: searchInterests }
+            }
+            searchObject.$and.push(interestsObject)
+        }
+        sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
+        const questionsDB = await Questions.find({
+            $and: [
+                { deleted: false }, searchObject
+            ]
+        })
+            .limit(itemsPerPage * 1)
+            .skip((page - 1) * itemsPerPage)
+            .sort(sort)
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        const count = await Questions.countDocuments({ deleted: false });
+        res.json({ items: questionsDB, totalItems: count });
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+
 exports.getAllQuestionsNotCommon = async (req, res) => {
     try {
         const questionsDB = await Questions.find({ deleted: false, common: false })

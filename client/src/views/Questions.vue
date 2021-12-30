@@ -8,7 +8,109 @@
 
     <v-row>
       <v-col cols="12">
-        <v-data-table :headers="headers" :loading="loading" :items="questions">
+        <v-data-table
+          :headers="headers"
+          :loading="loading"
+          :items="questions"
+          :options.sync="search.options"
+          :server-items-length="totalQuestions"
+          :footer-props="{ 'items-per-page-options': [5, 10, 20] }"
+          :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
+        >
+          <template v-slot:top>
+            <v-expansion-panels>
+              <v-expansion-panel>
+                <v-expansion-panel-header v-slot="{ open }">
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      <v-icon>fas fa-search</v-icon>
+                    </v-col>
+                    <v-col cols="10" class="text--secondary">
+                      <v-fade-transition leave-absolute>
+                        <span v-if="open"
+                          >Search by name, description, answers, type and
+                          creator</span
+                        >
+                        <v-row v-else>
+                          <v-chip
+                            class="mx-1"
+                            v-if="search.name"
+                            v-text="'Search: ' + search.name"
+                            color="primary"
+                          ></v-chip>
+                          <v-chip
+                            class="mx-1 text-uppercase"
+                            v-if="search.type"
+                            v-text="search.type"
+                            color="warning"
+                          ></v-chip>
+                          <v-chip
+                            v-for="(interest, index) in search.interests"
+                            class="mx-1"
+                            v-text="interest.name"
+                            :color="interest.color"
+                            :key="index"
+                          ></v-chip>
+                          <v-chip
+                            v-if="search.interestsAll"
+                            color="success"
+                            class="mx-1"
+                            >All answers</v-chip
+                          >
+                          <v-chip
+                            v-if="search.creator && search.creator._id"
+                            color="secondary"
+                            class="mx-1"
+                            v-text="'Creator: ' + search.creator.username"
+                          ></v-chip>
+                        </v-row>
+                      </v-fade-transition>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-row>
+                    <v-col cols="12" md="6">
+                      <v-text-field
+                        v-model="search.name"
+                        label="Search by name or description"
+                        clearable
+                        clear-icon="fas fa-times"
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <user-search-component
+                        label="Search by creator"
+                        return-object
+                        v-model="search.creator"
+                      ></user-search-component>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-select
+                        outlined
+                        :items="questionForm.types"
+                        v-model="search.type"
+                        clearable
+                        clear-icon="fas fa-times"
+                        label="Question type"
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="11" md="5">
+                      <interest-search-component
+                        label="Search answers"
+                        return-object
+                        v-model="search.interests"
+                      ></interest-search-component>
+                    </v-col>
+                    <v-col cols="1">
+                      <v-switch v-model="search.interestsAll" inset></v-switch>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
+          </template>
           <template v-slot:loading>
             <span class="display-1 text-uppercase font-weight-thin ma-5"
               >Loading Questions</span
@@ -38,7 +140,7 @@
                 ><v-icon x-small>fas fa-user-slash</v-icon></v-avatar
               >Closed account
             </v-chip>
-            <v-chip v-else class="mx-1" :to="'/users/' + item._id">
+            <v-chip v-else class="mx-1" :to="'/users/' + item.creator._id">
               <v-avatar left v-if="item.creator.image != ''"
                 ><v-img :src="item.creator.image"></v-img
               ></v-avatar>
@@ -112,7 +214,7 @@
               <span class="text-right font-weight-light">Delete</span>
             </v-tooltip>
           </template>
-          <template v-slot:item.selections="{ item }">
+          <template v-slot:item.answers="{ item }">
             <template v-if="item.type == 'text'">
               <span>{{ item.text }}</span>
             </template>
@@ -178,7 +280,9 @@ import { mapActions, mapState, mapMutations } from "vuex";
 import createquestion from "../components/questions/CreateQuestion.vue";
 import editquestion from "../components/questions/EditQuestion.vue";
 import confirm from "../components/general/Confirm.vue";
+import UserSearchVue from "../components/users/UserSearch.vue";
 import { idealTextColor } from "../utils/utils";
+import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
 export default {
   data() {
     return {
@@ -191,13 +295,12 @@ export default {
         {
           text: "Description",
           value: "description",
-          sortable: false,
         },
-        { text: "Type", value: "type", sortable: false },
-        { text: "Common", value: "common", sortable: false },
-        { text: "Answers", value: "selections", sortable: false, width: 200 },
-        { text: "Creator", value: "creator", sortable: false },
-        { text: "", value: "actions", sortable: false },
+        { text: "Type", value: "type" },
+        { text: "Common", value: "common" },
+        { text: "Answers", value: "answers", sortable: false, width: 200 },
+        { text: "Creator", value: "creator" },
+        { text: "", value: "actions", sortable: false, width: 120 },
       ],
     };
   },
@@ -205,29 +308,43 @@ export default {
     "create-question": createquestion,
     "edit-question": editquestion,
     "confirmation-template": confirm,
+    "user-search-component": UserSearchVue,
+    "interest-search-component": InterestsSearchVue,
   },
   computed: {
     ...mapState({
       questions: (state) => state.questions.questions,
       question: (state) => state.questions.question,
+      questionForm: (state) => state.questions.questionForm,
       loginUser: (state) => state.user.loginUser,
       dialogs: (state) => state.menu.menu.dialogs,
+      totalQuestions: (state) => state.questions.totalQuestions,
+      search: (state) => state.questions.search,
       loading: (state) => state.questions.loading,
     }),
   },
+  watch: {
+    search: {
+      handler() {
+        if (!this.loading) this.loadQuestionsPaginated();
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapActions("questions", [
-      "loadQuestions",
+      "loadQuestionsPaginated",
       "delQuestionSoft",
       "searchQuestion",
     ]),
-    ...mapMutations("questions", ["clearquestionForm", "loadEditedQuestion"]),
+    ...mapMutations("questions", [
+      "clearquestionForm",
+      "loadEditedQuestion",
+      "setOptions",
+    ]),
     textColor(color) {
       return idealTextColor(color);
     },
-  },
-  created() {
-    this.loadQuestions();
   },
 };
 </script>

@@ -3,39 +3,40 @@
     @input="handleInput"
     @click:clear="emitClear"
     @change="emitChange"
-    :items="usersByName"
+    :value="value"
+    :items="interests"
     outlined
     clearable
-    no-filter
-    hide-selected
     :return-object="returnObject"
-    :loading="isLoadingUser"
-    :search-input.sync="searchName"
+    hide-selected
     clear-icon="fas fa-times"
-    item-text="username"
+    item-text="name"
     item-value="_id"
     :label="label"
     :prepend-icon="icon"
+    multiple
   >
     <template v-slot:no-data>
       <v-list-item>
-        <v-list-item-title>Search user</v-list-item-title>
+        <v-list-item-title>Search interest</v-list-item-title>
       </v-list-item>
     </template>
-    <template v-slot:item="{ item }">
-      <v-list-item-avatar v-if="item.image != ''">
-        <img :src="item.image" />
-      </v-list-item-avatar>
-      <v-list-item-avatar v-else color="secondary"
-        ><v-icon color="primary">fas fa-user</v-icon></v-list-item-avatar
+    <template v-slot:selection="data">
+      <v-chip
+        v-bind="data.attrs"
+        :input-value="data.selected"
+        :color="data.item.color"
+        small
       >
+        {{ data.item.name }}
+      </v-chip>
+    </template>
+    <template v-slot:item="{ item }">
       <v-list-item-content>
         <v-list-item-title
-          v-text="
-            item.firstName + ' ' + item.lastName + ' (' + item.username + ')'
-          "
+          :color="item.color"
+          v-text="item.name"
         ></v-list-item-title>
-        <v-list-item-subtitle v-text="item.rol.name"></v-list-item-subtitle>
       </v-list-item-content>
     </template>
   </v-autocomplete>
@@ -68,17 +69,16 @@ export default {
   },
   computed: {
     ...mapState({
-      isLoadingUser: (state) => state.users.isLoadingUser,
-      usersByName: (state) => state.users.usersByName,
+      interests: (state) => state.interests.interests,
     }),
   },
   watch: {
     searchName(val) {
-      this.searchUsersByName(val);
+      this.searchInterestsByName(val);
     },
   },
   methods: {
-    ...mapActions("users", ["searchUsersByName"]),
+    ...mapActions("interests", ["loadInterests"]),
     handleInput(val) {
       this.$emit("input", val);
     },
@@ -91,6 +91,9 @@ export default {
     clearSearch() {
       this.searchName = null;
     },
+  },
+  created() {
+    this.loadInterests();
   },
 };
 </script>

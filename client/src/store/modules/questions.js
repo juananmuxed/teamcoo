@@ -24,6 +24,15 @@ const state = {
     commonQuestions: [],
     notCommonQuestions: [],
     answersByUser: [],
+    search: {
+        name: null,
+        creator: {},
+        type: null,
+        interests: [],
+        interestsAll: false,
+        options: {},
+    },
+    totalQuestions: 0,
     loading: false,
     skeleton: false,
     answers: [],
@@ -74,6 +83,12 @@ const mutations = {
     setAnswers: (state, answers) => {
         state.answers = answers;
     },
+    setOptions: (state, options) => {
+        state.options = options;
+    },
+    setTotalQuestions: (state, total) => {
+        state.totalQuestions = total;
+    }
 }
 
 const getters = {
@@ -98,6 +113,7 @@ const getters = {
             state.questionForm.question.name != state.question.name ||
             state.questionForm.question.type != state.question.type ||
             state.questionForm.question.description != state.question.description ||
+            state.questionForm.question.creator != state.question.creator ||
             state.questionForm.question.common != state.question.common ||
             validating
         ) {
@@ -122,64 +138,6 @@ const getters = {
 }
 
 const actions = {
-    async createQuestion({ state, commit, dispatch, rootGetters }, userId) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let body = state.questionForm.question;
-            body.creator = userId;
-            body.interests = body.interests.map(interest => interest.name)
-            await Axios.post('/questions/', body, config)
-            commit('menu/cancelDialog', 'createquestion', { root: true });
-            await dispatch('interests/loadInterests', null, { root: true });
-            await dispatch('loadQuestions');
-            await dispatch('loadCommonQuestions');
-            commit('menu/notification', ['info', 3, 'Question created correctly'], { root: true });
-            commit('clearquestionForm');
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-
-    async saveEditedQuestion({ state, commit, dispatch, rootGetters }, id) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let body = state.questionForm.question;
-            body.interests = body.interests.map(interest => interest.name)
-            await Axios.put('/questions/' + id, body, config);
-            commit('menu/cancelDialog', 'editquestion', { root: true });
-            await dispatch('interests/loadInterests', null, { root: true });
-            await dispatch('loadQuestions');
-            commit('menu/notification', ['info', 3, 'Question saved correctly'], { root: true });
-            commit('clearquestionForm');
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-    // TODO: finally deleted not implemented
-    async delQuestion({ commit, dispatch, rootGetters }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth']
-            await Axios.delete('/questions/finally/' + params.id, config);
-            await dispatch('loadQuestions');
-            commit('menu/notification', ['info', 3, 'Question permanently removed'], { root: true });
-            commit('menu/cancelDialog', 'confirm', { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-
-    async delQuestionSoft({ commit, dispatch, rootGetters }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth']
-            await Axios.delete('/questions/' + params.id, config);
-            await dispatch('loadQuestions');
-            commit('menu/notification', ['info', 3, 'Question removed'], { root: true });
-            commit('menu/cancelDialog', 'confirm', { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-
     async loadQuestions({ commit, dispatch, rootGetters }) {
         try {
             commit('changeLoading');
@@ -213,6 +171,26 @@ const actions = {
         }
     },
 
+    async loadQuestionsPaginated({ state, commit, dispatch, rootGetters }) {
+        try {
+            commit('changeLoading');
+            let config = Object.assign({}, rootGetters['general/cookieAuth']);
+            config.params = state.search.options;
+            config.params.searchName = state.search.name;
+            config.params.searchCreator = state.search.creator?._id;
+            config.params.searchType = state.search.type;
+            config.params.searchInterests = state.search.interests.map(i => i._id);
+            config.params.searchMode = state.search.interestsAll;
+            let res = await Axios.get('/questions/paged', config);
+            commit('questionsLoad', res.data.items);
+            commit('setTotalQuestions', res.data.totalItems);
+            commit('changeLoading');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeLoading');
+        }
+    },
+
     async searchQuestion({ state, commit, dispatch }, question) {
         try {
             commit('clearquestionForm');
@@ -225,6 +203,82 @@ const actions = {
             setTimeout(() => {
                 state.questionForm.loading = false;
             }, 400)
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async createQuestion({ state, commit, dispatch, rootGetters }, id) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let body = state.questionForm.question;
+            body.creator = id;
+            body.interests = body.interests.map(interest => interest.name)
+            await Axios.post('/questions/', body, config)
+            commit('menu/cancelDialog', 'createquestion', { root: true });
+            await dispatch('interests/loadInterests', null, { root: true });
+            await dispatch('loadQuestions');
+            await dispatch('loadCommonQuestions');
+            commit('menu/notification', ['info', 3, 'Question created correctly'], { root: true });
+            commit('clearquestionForm');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async saveEditedQuestion({ state, commit, dispatch, rootGetters }, id) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let body = state.questionForm.question;
+            body.interests = body.interests.map(interest => interest.name)
+            await Axios.put('/questions/' + id, body, config);
+            commit('menu/cancelDialog', 'editquestion', { root: true });
+            await dispatch('interests/loadInterests', null, { root: true });
+            await dispatch('loadQuestions');
+            commit('menu/notification', ['info', 3, 'Question saved correctly'], { root: true });
+            commit('clearquestionForm');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async saveCommonQuestions({ state, commit, rootGetters, dispatch }, userId) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let answers = state.answers.map(answer => {
+                let a = answer;
+                if (typeof a.answer === 'string') a.answer = [answer.answer];
+                return a;
+            })
+            await Axios.put('/questions/commonquestions/' + userId, { answers: answers }, config);
+            commit('menu/notification', ['primary', 3, 'Common question saved correctly'], { root: true });
+            await dispatch('loadAnswersByUser', userId);
+            await dispatch('createAnswers');
+            commit('menu/cancelDialog', 'editcommonquestion', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+    // TODO: finally deleted not implemented
+    async delQuestion({ commit, dispatch, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth']
+            await Axios.delete('/questions/finally/' + params.id, config);
+            await dispatch('loadQuestions');
+            commit('menu/notification', ['info', 3, 'Question permanently removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async delQuestionSoft({ commit, dispatch, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth']
+            await Axios.delete('/questions/' + params.id, config);
+            await dispatch('loadQuestions');
+            commit('menu/notification', ['info', 3, 'Question removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
@@ -273,24 +327,6 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-
-    async saveCommonQuestions({ state, commit, rootGetters, dispatch }, userId) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let answers = state.answers.map(answer => {
-                let a = answer;
-                if (typeof a.answer === 'string') a.answer = [answer.answer];
-                return a;
-            })
-            await Axios.put('/questions/commonquestions/' + userId, { answers: answers }, config);
-            commit('menu/notification', ['primary', 3, 'Common question saved correctly'], { root: true });
-            await dispatch('loadAnswersByUser', userId);
-            await dispatch('createAnswers');
-            commit('menu/cancelDialog', 'editcommonquestion', { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    }
 }
 
 export default {

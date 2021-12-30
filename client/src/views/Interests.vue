@@ -12,7 +12,7 @@
           :items="interests"
           :headers="headers"
           :loading="loading"
-          :options.sync="options"
+          :options.sync="search.options"
           :server-items-length="totalInterests"
           :footer-props="{ 'items-per-page-options': [5, 10, 20] }"
           :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
@@ -34,15 +34,15 @@
                           <v-chip
                             class="mx-1"
                             v-if="search.name"
-                            v-text="search.name"
+                            v-text="'Search: ' + search.name"
                             color="primary"
                           ></v-chip>
                           <v-chip
-                            v-if="search.creator"
+                            v-if="search.creator && search.creator._id"
                             color="secondary"
                             class="mx-1"
-                            >Creator selected</v-chip
-                          >
+                            v-text="'Creator: ' + search.creator.username"
+                          ></v-chip>
                         </v-row>
                       </v-fade-transition>
                     </v-col>
@@ -55,6 +55,8 @@
                         @input="loadInterestPaginated"
                         v-model="search.name"
                         label="Search by name or description"
+                        clearable
+                        clear-icon="fas fa-times"
                         class="mx-4"
                         outlined
                       ></v-text-field>
@@ -62,6 +64,7 @@
                     <v-col cols="12" md="6">
                       <user-search-component
                         label="Search by creator"
+                        return-object
                         v-model="search.creator"
                         @change="loadInterestPaginated"
                       ></user-search-component>
@@ -268,22 +271,13 @@ export default {
       dialogs: (state) => state.menu.menu.dialogs,
       totalInterests: (state) => state.interests.totalInterests,
       search: (state) => state.interests.search,
-      optionsGet: (state) => state.interests.options,
       loading: (state) => state.interests.loading,
     }),
-    options: {
-      get: function () {
-        return this.optionsGet;
-      },
-      set: function (value) {
-        this.setOptions(value);
-      },
-    },
   },
   watch: {
-    options: {
+    search: {
       handler() {
-        this.loadInterestPaginated();
+        if (!this.loading) this.loadInterestPaginated();
       },
       deep: true,
     },
@@ -294,12 +288,7 @@ export default {
       "searchInterest",
       "loadInterestPaginated",
     ]),
-    ...mapMutations("interests", [
-      "clearInterestForm",
-      "randomInterestColor",
-      "setSearchName",
-      "setOptions",
-    ]),
+    ...mapMutations("interests", ["clearInterestForm", "randomInterestColor"]),
     textColor(color) {
       return idealTextColor(color);
     },

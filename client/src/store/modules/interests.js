@@ -14,13 +14,13 @@ const state = {
         },
         loading: false,
     },
-    options: {},
     search: {
+        options: {},
         name: null,
-        creator: null
+        creator: {}
     },
     totalInterests: 0,
-    loading: false
+    loading: false,
 }
 
 const mutations = {
@@ -48,9 +48,6 @@ const mutations = {
     },
     setTotalInterest: (state, total) => {
         state.totalInterests = total;
-    },
-    setSearchName: (state, search) => {
-        state.searchName = search;
     }
 }
 
@@ -101,15 +98,31 @@ const actions = {
         try {
             commit('changeLoading');
             let config = Object.assign({}, rootGetters['general/cookieAuth']);
-            config.params = state.options;
+            config.params = state.search.options;
             config.params.searchName = state.search.name;
-            config.params.searchCreator = state.search.creator;
-            let res = await Axios.get('/interests/paged', config)
+            config.params.searchCreator = state.search.creator?._id;
+            let res = await Axios.get('/interests/paged', config);
             commit('loadInterests', res.data.items);
             commit('setTotalInterest', res.data.totalItems);
             commit('changeLoading');
         } catch (error) {
             commit('changeLoading');
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async searchInterest({ state, commit, dispatch }, interest) {
+        try {
+            commit('clearInterestForm')
+            state.interestForm.loading = true
+            commit('loadEditedInterest', interest)
+            setTimeout(() => {
+                state.interestForm.loading = false;
+            }, 400)
+        } catch (error) {
+            setTimeout(() => {
+                state.interestForm.loading = false;
+            }, 400)
             dispatch('menu/notificationError', error, { root: true });
         }
     },
@@ -163,22 +176,6 @@ const actions = {
             commit('menu/notification', ['info', 3, 'Interest removed'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-
-    async searchInterest({ state, commit, dispatch }, interest) {
-        try {
-            commit('clearInterestForm')
-            state.interestForm.loading = true
-            commit('loadEditedInterest', interest)
-            setTimeout(() => {
-                state.interestForm.loading = false;
-            }, 400)
-        } catch (error) {
-            setTimeout(() => {
-                state.interestForm.loading = false;
-            }, 400)
             dispatch('menu/notificationError', error, { root: true });
         }
     },
