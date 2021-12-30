@@ -76,6 +76,9 @@ export default {
     searchName(val) {
       this.searchUsersByName(val);
     },
+    value(val) {
+      if (!val) this.clearSearch();
+    },
   },
   methods: {
     ...mapActions("users", ["searchUsersByName"]),
