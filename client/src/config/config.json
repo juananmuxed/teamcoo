@@ -1,6 +1,6 @@
 {
   "global": {
-    "versionApp": "0.12.0",
+    "versionApp": "0.18.0",
     "versionApi": 1,
     "development": {
       "hostApi": "http://localhost:3000"

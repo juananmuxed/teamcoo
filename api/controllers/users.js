@@ -3,7 +3,7 @@ const Token = require('../models/tokens')
 const bcrypt = require('bcryptjs');
 const mailer = require("../controllers/mail");
 
-exports.registerNewUser = async (req, res) => {
+exports.createUser = async (req, res) => {
     try {
         let isUser = await User.find({ email: req.body.email });
         if (isUser.length >= 1) {
@@ -11,28 +11,19 @@ exports.registerNewUser = async (req, res) => {
                 message: "E-mail already in use"
             });
         }
-        const user = new User({
-            username: req.body.username,
-            email: req.body.email,
-            lastname: req.body.lastname,
-            firstname: req.body.firstname,
-            password: req.body.password,
-            accept: req.body.accept,
-            verifiedemail: req.body.verifiedemail,
-            rol: req.body.rol
-        });
 
-        let data = await user.save();
+        const user = await User.create(req.body);
         const token = await user.generateAuthToken();
-        let tokenConfirmation = new Token({
+        const tokenModel = await Token.create({
+            token: token,
             _userId: user._id,
-            token: token
+            type: 'registration'
         })
-        let tokenSaved = await tokenConfirmation.save()
-        if (!tokenSaved) {
-            return res.status(500).json({ message: 'An error has ocurred', error })
+        if (!tokenModel) {
+            return res.status(500).json({ message: 'Not asigned token', error })
         }
-        res.status(201).json({ data, token });
+        await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
+        res.status(201).json({ user, token });
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }
@@ -51,6 +42,15 @@ exports.loginUser = async (req, res) => {
         }
 
         const token = await user.generateAuthToken();
+        const tokenModel = await Token.create({
+            token: token,
+            _userId: user._id,
+            type: 'login'
+        })
+        if (!tokenModel) {
+            return res.status(500).json({ message: 'Not asigned token', error })
+        }
+        await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
         res.status(201).json({ user, token })
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
@@ -60,9 +60,13 @@ exports.loginUser = async (req, res) => {
 exports.getUser = async (req, res) => {
     try {
         const _id = req.params.id;
-        const user = await User.findById(_id);
+        const user = await User.findById(_id)
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            })
         if (!user) {
-            return res.status(409).json({ message: "Login failed! Check your credentials" });
+            return res.status(409).json({ message: "User not find" });
         }
         res.status(201).json(user)
     } catch (error) {
@@ -70,26 +74,49 @@ exports.getUser = async (req, res) => {
     }
 }
 
-exports.getUsers = async (req, res) => {
+exports.getAllUsers = async (req, res) => {
     try {
-        const userDB = await User.find()
-        let datatemp = []
-        for (let x = 0; x < userDB.length; x++) {
-            let tempuser = {
-                lastname: userDB[x].lastname,
-                rol: userDB[x].rol,
-                avatar: userDB[x].image,
-                firstname: userDB[x].firstname,
-                id: userDB[x]._id,
-                workgroups: userDB[x].workgroups,
-                commonquestions: userDB[x].commonquestions,
-                privatecomments: userDB[x].privatecomments,
-                username: userDB[x].username,
-                membership: userDB[x].membership
-            }
-            datatemp.push(tempuser)
-        }
-        res.status(201).json(datatemp)
+        const userDB = await User.find({ deleted: false })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.status(201).json(userDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+}
+
+exports.getUserByString = async (req, res) => {
+    try {
+        const string = req.params.name;
+        const regex = new RegExp(string, 'i')
+        const userDB = await User.find({
+            $and: [
+                { deleted: false },
+                {
+                    $or: [
+                        { username: { $regex: regex } },
+                        { firstName: { $regex: regex } },
+                        { lastName: { $regex: regex } }
+                    ]
+                }
+            ]
+        })
+        res.status(201).json(userDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+}
+
+exports.getAllUsersDeleted = async (req, res) => {
+    try {
+        const userDB = await User.find({ deleted: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        res.status(201).json(userDB)
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }
@@ -98,17 +125,11 @@ exports.getUsers = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const _id = req.params.id
-
-        let body = req.body
-
-        delete body['roles']
-        delete body['passshow']
-        delete body['save']
-        delete body['id']
-        delete body['email']
-        delete body['password']
-
-        let userDB = await User.findByIdAndUpdate(_id, body, { new: true })
+        const userDB = await User.findByIdAndUpdate(_id, req.body, { new: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         res.json(userDB)
 
     } catch (error) {
@@ -131,13 +152,13 @@ exports.updatePassword = async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: "Credentials error" })
         }
-        let body = {
-            password: newpassword
-        }
 
-        let userDB = await User.findByIdAndUpdate(_id, body, { new: true })
+        const userDB = await User.findByIdAndUpdate(_id, { password: newpassword }, { new: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
         res.json(userDB)
-
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }
@@ -179,7 +200,11 @@ exports.deleteUserSoft = async (req, res) => {
             return res.status(409).json({ message: user.message });
         }
 
-        let userDB = await User.findByIdAndUpdate(_id, { deleted: true })
+        const userDB = await User.findByIdAndUpdate(_id, { deleted: true }, { new: true })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
 
         if (!userDB) {
             return res.status(401).json({ message: "Incorrect ID" });
@@ -214,7 +239,7 @@ exports.confirmationEmail = async (req, res) => {
     }
 }
 
-exports.changepassexternal = async (req, res) => {
+exports.changePassExternal = async (req, res) => {
     try {
         let password = req.body.password
 
@@ -242,22 +267,34 @@ exports.changepassexternal = async (req, res) => {
 
 exports.sendPassEmail = async (req, res) => {
     try {
-        let user = await User.findOne({ email: req.body.email })
+        const email = req.body.email;
+        const user = await User.findOne({ email: email });
         if (!user) {
-            return res.status(400).json({ message: 'We were unable to find the user with this E-mail.', type: "not-user" })
+            return res.status(409).json({ message: 'We were unable to find the user with this E-mail.' });
+        }
+        if (user.deleted) {
+            return res.status(409).json({ message: 'Your account is closed, please contact with the administrators.' });
         }
 
-        let generatedToken = user.generateAuthToken()
-        let token = new Token({ _userId: user._id, token: generatedToken })
-        await token.save();
+        const token = await user.generateAuthToken();
+        const tokenModel = await Token.create({
+            token: token,
+            _userId: user._id,
+            type: 'resetPassword'
+        })
+        if (!tokenModel) {
+            return res.status(500).json({ message: 'Not asigned token', error })
+        }
+        await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
+
         await mailer.sendMail({
             body: {
-                sendTo: req.body.email,
-                userTo: user.firstname,
+                sendTo: email,
+                userTo: user.firstName,
                 template: 'user/changePass',
                 subject: 'Change your password',
                 variables: {
-                    recoveryUrlPass: req.body.url + '/reset/password/' + generatedToken
+                    recoveryUrlPass: req.body.url + '/reset/password/' + token
                 }
             }
         })
@@ -284,12 +321,12 @@ exports.reSendConfirmation = async (req, res) => {
         mailer.sendMail({
             body: {
                 sendTo: req.body.email,
-                userTo: user.firstname,
+                userTo: user.firstName,
                 template: 'user/validationResend',
-                subject: 'Welcome ' + user.firstname,
+                subject: 'Welcome ' + user.firstName,
                 variables: {
                     recoveryUrlPass: req.body.url + generatedToken,
-                    name: user.firstname + ' ' + user.lastname
+                    name: user.firstName + ' ' + user.lastName
                 }
             }
         })

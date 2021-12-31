@@ -1,10 +1,11 @@
 {
   "name": "teamcoo",
-  "version": "0.12.0",
+  "version": "0.18.0",
   "description": "🎩 A HR Collaborative team manager for Non-profit Associations",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon app.js --exec babel-node",
+    "local": "nodemon app.js",
     "start": "node app.js"
   },
   "repository": {

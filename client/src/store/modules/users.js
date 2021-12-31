@@ -1,66 +1,45 @@
 import Axios from 'axios'
-import router from '@/router'
+import Vue from 'vue'
 import Vuetify from '../../plugins/vuetify'
-import Cookies from 'js-cookie'
-import { generatePalette } from '../../utils/utils'
+import { generatePalette, isDiferentArray } from '../../utils/utils'
 
 const state = {
     users: [],
-    loadedUser: {},
-    temporaluser: {},
-    notEditUser: {
-        firstname: '',
-        lastname: '',
-        username: '',
-        image: '',
-        imagefile: null
-    },
-    editUser: {
-        firstname: '',
-        lastname: '',
-        username: '',
-        image: '',
-        id: null,
-        imagefile: null,
-        save: false
+    user: {},
+    userForm: {
+        user: {
+
+        }
     },
     loading: false,
-    skeleton: false
+    skeleton: false,
+    isLoadingUser: false,
+    usersByName: []
 }
 
 const mutations = {
-    usersLoad: (state, users) => { state.users = users },
-    userLoad: (state, user) => { state.loadedUser = user },
-    userToEdit: (state, user) => {
-        state.editUser.firstname = user.firstname,
-            state.editUser.lastname = user.lastname,
-            state.editUser.username = user.username,
-            state.editUser.image = user.image,
-            state.editUser.id = user._id,
-            state.notEditUser.firstname = user.firstname,
-            state.notEditUser.lastname = user.lastname,
-            state.notEditUser.image = user.image,
-            state.notEditUser.username = user.username
+    usersLoad: (state, users) => {
+        state.users = users
     },
-    undoEdit: (state) => {
-        state.editUser.firstname = state.notEditUser.firstname,
-            state.editUser.lastname = state.notEditUser.lastname,
-            state.editUser.username = state.notEditUser.username,
-            state.editUser.image = state.notEditUser.image,
-            state.editUser.imagefile = null
+    usersByNameLoad: (state, users) => {
+        Vue.set(state, 'usersByName', users);
     },
-    temporaluser: (state, user) => {
-        state.temporaluser.id = user._id,
-            state.temporaluser.avatar = user.image,
-            state.temporaluser.firstname = user.firstname,
-            state.temporaluser.lastname = user.lastname,
-            state.temporaluser.rol = user.rol,
-            state.temporaluser.username = user.username,
-            state.temporaluser.workgroups = user.workgroups
+    userLoad: (state, user) => {
+        state.user = user
     },
-    cleanTemporalUser: (state) => state.temporaluser = {},
-    changeLoading: (state, loading) => state.loading = loading,
-    changeSkeleton: (state, skeleton) => state.skeleton = skeleton
+    loadEditedUser: (state) => {
+        state.userForm.user = Object.assign({}, state.user);
+        state.userForm.user.imagefile = null;
+    },
+    changeLoading: (state, loading) => {
+        state.loading = loading
+    },
+    changeIsLoadingUser: (state, loading) => {
+        state.isLoadingUser = loading
+    },
+    changeSkeleton: (state, skeleton) => {
+        state.skeleton = skeleton
+    }
 }
 
 const getters = {
@@ -79,24 +58,28 @@ const getters = {
             textColor: colors.textColors[roles.findIndex(a => a.value === role)]
         }
     },
+
     isChangeUser(state) {
         if (
-            state.editUser.firstname == state.notEditUser.firstname &&
-            state.editUser.lastname == state.notEditUser.lastname &&
-            state.editUser.username == state.notEditUser.username &&
-            state.editUser.image == state.notEditUser.image &&
-            state.editUser.imagefile == state.notEditUser.imagefile
+            state.user.firstName == state.userForm.user.firstName &&
+            state.user.lastName == state.userForm.user.lastName &&
+            state.user.username == state.userForm.user.username &&
+            state.user.image == state.userForm.user.image &&
+            state.user.imagefile == state.userForm.user.imagefile &&
+            state.user.rol.value == state.userForm.user.rol.value &&
+            !isDiferentArray(state.user.interests, state.userForm.user.interests, '_id', '_id')
         ) {
             return false
         }
         else { return true }
     },
+
     isValidSave(state, getters, rootState) {
         if (
-            !rootState.general.rules.required(state.editUser.firstname)[0] &&
-            !rootState.general.rules.required(state.editUser.lastname)[0] &&
-            !rootState.general.rules.required(state.editUser.username)[0] &&
-            !rootState.general.rules.maxletters(state.editUser.username)[0]
+            !rootState.general.rules.required(state.userForm.user.firstName)[0] &&
+            !rootState.general.rules.required(state.userForm.user.lastName)[0] &&
+            !rootState.general.rules.required(state.userForm.user.username)[0] &&
+            !rootState.general.rules.maxletters(state.userForm.user.username)[0]
         ) {
             return false
         }
@@ -107,138 +90,92 @@ const getters = {
 }
 
 const actions = {
-    async loadUsers({ commit, rootState, rootGetters, dispatch }) {
+    async loadUsers({ commit, dispatch }) {
         try {
             commit('changeLoading', true);
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/', config),
-                users = res.data,
-                workgroups = rootState.workgroups.workgroups;
-            for (let x = 0; x < users.length; x++) {
-                let interests = [];
-                for (let y = 0; y < users[x].workgroups.length; y++) {
-                    let workgroup = users[x].workgroups[y];
-                    let wg = workgroups.find(v => v._id == workgroup._wgId);
-                    if (wg) {
-                        users[x].workgroups[y].name = wg.name;
-                        users[x].workgroups[y].color = wg.color;
-                        for (let i = 0; i < workgroup.answers.length; i++) {
-                            if (Array.isArray(users[x].workgroups[y].answers[i].answer)) {
-                                interests = users[x].workgroups[y].answers[i].answer.concat(interests);
-                            } else {
-                                console.log(users[x].workgroups[y].answers[i])
-                                if (!users[x].workgroups[y].answers.includes('Joined by Coordinator/Admin:')) interests.push(users[x].workgroups[y].answers[i].answer);
-                            }
-                        }
-                    }
-                }
-                for (let i = 0; i < users[x].commonquestions.length; i++) {
-                    if (Array.isArray(users[x].commonquestions[i].answer)) {
-                        interests = users[x].commonquestions[i].answer.concat(interests);
-                    } else {
-                        interests.push(users[x].commonquestions[i].answer)
-                    }
-                }
-                users[x].interests = interests.filter((v, i, a) => a.indexOf(v) === i);
-            }
-            commit('usersLoad', users);
+            await dispatch('loadUsersSilent');
             commit('changeLoading', false);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
             commit('changeLoading', false);
         }
     },
-    async loadUsersSilent({ commit, dispatch, rootState, rootGetters }) {
+
+    async loadUsersSilent({ commit, dispatch, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/', config),
-                users = res.data,
-                workgroups = rootState.workgroups.workgroups;
-            for (let x = 0; x < users.length; x++) {
-                for (let y = 0; y < users[x].workgroups.length; y++) {
-                    let wg = workgroups.find(v => v._id == users[x].workgroups[y]._wgId);
-                    if (wg) {
-                        users[x].workgroups[y].name = wg.name;
-                        users[x].workgroups[y].color = wg.color;
-                        users[x].workgroups[y].textcolor = wg.textcolor;
-                    }
-                }
-            }
-            commit('usersLoad', users);
+            let res = await Axios.get('/users/', config);
+            commit('usersLoad', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async searchUser({ commit, dispatch, rootGetters }, userId) {
+
+    async searchUser({ commit, dispatch }, userId) {
         try {
             commit('changeSkeleton', true);
+            await dispatch('searchUserSilent', userId)
+            commit('changeSkeleton', false);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeSkeleton', false);
+        }
+    },
+
+    async searchUsersByName({ state, rootGetters, commit, dispatch }, string) {
+        try {
+            if (state.isLoadingUser) return
+            if (!string) {
+                string = null
+            } else {
+                if (string.length < 3) return
+            }
+            commit('changeIsLoadingUser', true);
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/users/usersByName/' + string, config);
+            commit('usersByNameLoad', res.data);
+            commit('changeIsLoadingUser', false);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeIsLoadingUser', false);
+        }
+    },
+
+    async searchUserSilent({ commit, dispatch, rootGetters }, userId) {
+        try {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/' + userId, config);
             commit('userLoad', res.data);
-            commit('changeSkeleton', false);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-            commit('changeSkeleton', false);
-        }
-    },
-    async loadUserByID({ commit, dispatch, rootGetters }, userId) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get("/users/" + userId, config)
-            commit('cleanTemporalUser');
-            commit('temporaluser', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async loadUserData({ commit, dispatch, rootGetters }, user) {
+
+    async saveEditedUser({ state, commit, rootState, rootGetters, dispatch }) {
         try {
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/' + user, config);
-            commit('userToEdit', res.data);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-    async saveEditedData({ commit, rootState, rootGetters, dispatch }, user) {
-        try {
+            let user = state.userForm.user;
             if (user.imagefile != null) {
                 user.image = await dispatch('general/saveFile', user.imagefile, { root: true });
             }
-            let id = user.id
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.put('/users/' + id, user, config);
-            if (rootState.user.loginuser.id == id) {
-                commit('user/userStore', { data: res.data }, { root: true });
+            let res = await Axios.put('/users/' + user._id, user, config);
+            if (rootState.user.loginUser._id == user._id) {
+                commit('user/userStore', res.data, { root: true });
             }
-            commit('menu/notification', ['primary', 3, 'Changed data Succesfully'], { root: true });
-            commit('undoEdit');
-            commit('menu/cancelDialog', 'edituser', { root: true });
             commit('userLoad', res.data);
+            commit('menu/cancelDialog', 'edituser', { root: true });
+            commit('menu/notification', ['primary', 3, 'User saved correctly'], { root: true });
         }
         catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+    // TODO: finally deleted not implemented
     async deleteUser({ rootState, commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let resTasks = await Axios.get('/tasks/', config);
-            let resWorkgroups = await Axios.get('/workgroups/', config)
-            let tasks = resTasks.data, workgroups = resWorkgroups.data;
-            // TODO: eliminar de acciones cuando se termine el CRUD de acciones
-            for (let i = 0; i < tasks.length; i++) {
-                console.log('T')
-            }
-            for (let i = 0; i < workgroups.length; i++) {
-                let updatedWorkgroup = {
-                    members: workgroups[i].members.filter(a => a != params.id),
-                    coordinators: workgroups[i].coordinators.filter(a => a != params.id)
-                };
-                await Axios.put('/workgroups/' + workgroups[i]._id, updatedWorkgroup, config);
-            }
             config.data = {
-                email: rootState.user.loginuser.email,
+                email: rootState.user.loginUser.email,
                 password: params.password
             }
             await Axios.delete('/users/finally/' + params.id, config);
@@ -248,38 +185,26 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async deleteUserSoft({ rootState, commit, dispatch, rootGetters }, params) {
         try {
             let config = rootGetters['general/cookieAuth'];
             config.data = {
-                email: rootState.user.loginuser.email,
+                email: rootState.user.loginUser.email,
                 password: params.password
             }
-            await Axios.delete('/users/' + params.id, config);
+            let res = await Axios.delete('/users/' + params.id, config);
             commit('menu/cancelDialog', 'confirmSoft', { root: true });
-            Cookies.remove('catapa-jwt')
-            Cookies.remove('teamcoo-catapa-userdata')
-            commit('menu/cancelDialog', 'logout', { root: true })
-            commit('user/clearUser', null, { root: true })
-            router.push('/');
-            commit('menu/notification', ['success', 3, 'You are succesfully close your account. Goodbye!'], { root: true });
+            if (rootState.user.loginUser._id == res.data._id) {
+                await dispatch('user/logOut', null, { root: true })
+                commit('menu/notification', ['success', 3, 'You are succesfully close your account. Goodbye!'], { root: true });
+            } else {
+                commit('userLoad', res.data);
+            }
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async saveCommonQuestions({ commit, rootGetters, dispatch }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            let user = new Object;
-            user.commonquestions = params.answers;
-            let res = await Axios.put('/users/' + params.idUser, user, config);
-            commit('menu/notification', ['primary', 3, 'Common question saved'], { root: true });
-            commit('menu/cancelDialog', 'editcommonquestion', { root: true });
-            commit('userLoad', res.data);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    }
 }
 
 export default {

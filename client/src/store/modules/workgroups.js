@@ -1,25 +1,31 @@
+import Vue from 'vue'
 import Axios from 'axios'
 import router from '@/router'
 import { generateRandomColor, isDiferentArray, treeBuild } from '../../utils/utils'
 
 const state = {
     workgroups: [],
-    secretworkgroups: [],
+    secretWorkgroups: [],
     nestedWorkgroups: [],
     secretNestedWorkgroups: [],
-    searchedWorkgroup: {},
+    workgroup: {},
+    answers: [],
+    rules: [],
     workgroupForm: {
-        name: '',
-        description: '',
-        dossier: null,
-        link: '',
-        color: '',
-        questionsSelected: [],
-        parent: null,
-        secretparent: null,
-        secret: false
+        workgroup: {
+            name: '',
+            parent: null,
+            color: '#E0E0E0',
+            questions: [],
+            description: '',
+            dossier: [],
+            secret: false,
+            link: '',
+            newDossier: []
+        },
+        loading: false
     },
-    editmemberform: {
+    editMemberForm: {
         members: [],
         coordinators: [],
         loading: false
@@ -27,83 +33,81 @@ const state = {
     loading: false,
     skeleton: false,
     usersforadd: [],
-    loadedSuscription: {}
+    loadedSuscription: {},
+    workgroupsByUser: []
 }
 
 const mutations = {
-    verifySecret: (state) => {
-        if (state.workgroupForm.secret) { state.workgroupForm.parent = null }
-    },
-    changeLoaded: (state, bool) => { state.loaded = bool },
     clearWorkgroupForm: (state) => {
-        state.workgroupForm.name = '',
-            state.workgroupForm.description = '',
-            state.workgroupForm.questionsSelected = [],
-            state.workgroupForm.parent = null,
-            state.workgroupForm.dossier = null,
-            state.workgroupForm.secret = false,
-            state.workgroupForm.link = '',
-            state.workgroupForm.color = '#E0E0E0'
+        state.workgroupForm.workgroup.name = '';
+        state.workgroupForm.workgroup.description = '';
+        state.workgroupForm.workgroup.questions = [];
+        state.workgroupForm.workgroup.parent = null;
+        state.workgroupForm.workgroup.dossier = [];
+        state.workgroupForm.workgroup.secret = false;
+        state.workgroupForm.workgroup.link = '';
+        state.workgroupForm.workgroup.color = '#E0E0E0';
     },
     loadEditedWorkgroup: (state) => {
-        state.workgroupForm.name = state.searchedWorkgroup.name,
-            state.workgroupForm.description = state.searchedWorkgroup.description,
-            state.workgroupForm.link = state.searchedWorkgroup.linktodocuments,
-            state.workgroupForm.color = state.searchedWorkgroup.color,
-            state.workgroupForm.textcolor = state.searchedWorkgroup.textcolor
-        if (state.searchedWorkgroup.dossier != null) { state.workgroupForm.oldDossier = state.searchedWorkgroup.dossier, state.workgroupForm.dossier = null }
-        else { state.workgroupForm.oldDossier = null }
-        state.workgroupForm.questionsSelected = state.searchedWorkgroup.questions
+        state.workgroupForm.workgroup = Object.assign({}, state.workgroup);
     },
-    workgroupLoad: (state, workgroups) => { state.workgroups = workgroups },
-    secretWorkgroupLoad: (state, secretworkgroups) => { state.secretworkgroups = secretworkgroups },
-    workgroupNested: (state, nestedWorkgroups) => { state.nestedWorkgroups = nestedWorkgroups },
-    secretWorkgroupNested: (state, secretNestedWorkgroups) => { state.secretNestedWorkgroups = secretNestedWorkgroups },
-    workgroupSuscription: (state, workgroup) => { state.loadedSuscription = workgroup[0] },
-    pullWorkgroup: (state, workgroup) => { state.searchedWorkgroup = workgroup },
-    newMembers: (state, members) => {
-        state.searchedWorkgroup.members = []
-        for (let x = 0; x < members.length; x++) {
-            state.searchedWorkgroup.members.push(members[x])
-        }
+    workgroupsLoad: (state, workgroups) => {
+        state.workgroups = workgroups
     },
-    newCoordinators: (state, coors) => {
-        state.searchedWorkgroup.coordinators = []
-        for (let x = 0; x < coors.length; x++) {
-            state.searchedWorkgroup.coordinators.push(coors[x])
-        }
+    secretWorkgroupsLoad: (state, secretWorkgroups) => {
+        state.secretWorkgroups = secretWorkgroups
     },
-    addallusers: (state, users) => {
-        state.usersforadd = []
-        for (let x = 0; x < users.length; x++) {
-            state.usersforadd.push(users[x])
-        }
+    workgroupNested: (state, nestedWorkgroups) => {
+        state.nestedWorkgroups = nestedWorkgroups
     },
-    loadMembers: (state, members) => {
-        state.editmemberform.members = Array(members.members.length)
-        for (let x = 0; x < members.members.length; x++) {
-            state.editmemberform.members[x] = members.members[x];
-        }
-        state.editmemberform.coordinators = Array(members.coordinators.length)
-        for (let x = 0; x < members.coordinators.length; x++) {
-            state.editmemberform.coordinators[x] = members.coordinators[x];
-        }
+    secretWorkgroupNested: (state, secretNestedWorkgroups) => {
+        state.secretNestedWorkgroups = secretNestedWorkgroups
+    },
+    workgroupSuscription: (state, workgroup) => {
+        state.loadedSuscription = workgroup[0]
+    },
+    pullWorkgroup: (state, workgroup) => {
+        state.workgroup = Object.assign({}, workgroup);
+    },
+    setWorkgroup: (state, workgroup) => {
+        Vue.set(state, 'workgroup', workgroup);
+    },
+    loadMembers: (state) => {
+        state.editMemberForm.members = JSON.parse(JSON.stringify(state.workgroup.members));
+        state.editMemberForm.coordinators = JSON.parse(JSON.stringify(state.workgroup.coordinators));
     },
     randomWorkgroupColor: (state) => {
-        state.workgroupForm.color = generateRandomColor(30);
+        state.workgroupForm.workgroup.color = generateRandomColor(30);
     },
-    changeLoading: (state, loading) => state.loading = loading,
-    changeSkeleton: (state, skeleton) => state.skeleton = skeleton
+    changeLoading: (state, loading) => {
+        state.loading = loading
+    },
+    changeSkeleton: (state, skeleton) => {
+        state.skeleton = skeleton
+    },
+    setRules: (state, rules) => {
+        state.rules = rules;
+    },
+    setAnswers: (state, answers) => {
+        state.answers = answers;
+    },
+    clearJoinForm: (state) => {
+        state.rules = [];
+        state.answers = [];
+    },
+    setWorkgroupsByUser: (state, workgroups) => {
+        state.workgroupsByUser = workgroups
+    }
 }
 
 const getters = {
     validWorkgroup: (state) => {
         if (
-            state.workgroupForm.name != '' &&
-            state.workgroupForm.description != '' &&
-            state.workgroupForm.description.length <= 380 &&
-            state.workgroupForm.name.length >= 3 &&
-            state.workgroupForm.questionsSelected.length != 0
+            state.workgroupForm.workgroup.name != '' &&
+            state.workgroupForm.workgroup.description != '' &&
+            state.workgroupForm.workgroup.description.length <= 380 &&
+            state.workgroupForm.workgroup.name.length >= 3 &&
+            state.workgroupForm.workgroup.questions.length != 0
         ) {
             return false
         }
@@ -111,15 +115,17 @@ const getters = {
             return true
         }
     },
+
     editedWorkgroup: (state) => {
         if (
-            state.workgroupForm.name != state.searchedWorkgroup.name ||
-            state.workgroupForm.description != state.searchedWorkgroup.description ||
-            state.workgroupForm.link != state.searchedWorkgroup.linktodocuments ||
-            state.workgroupForm.color.toUpperCase() != state.searchedWorkgroup.color.toUpperCase() ||
-            state.workgroupForm.oldDossier != state.searchedWorkgroup.dossier ||
-            state.workgroupForm.dossier != null ||
-            isDiferentArray(state.workgroupForm.questionsSelected, state.searchedWorkgroup.questions, '_id', '_id')
+            state.workgroupForm.workgroup.name != state.workgroup.name ||
+            state.workgroupForm.workgroup.description != state.workgroup.description ||
+            state.workgroupForm.workgroup.link != state.workgroup.link ||
+            state.workgroupForm.workgroup.parent != state.workgroup.parent ||
+            state.workgroupForm.workgroup.color.toUpperCase() != state.workgroup.color.toUpperCase() ||
+            state.workgroupForm.workgroup.newDossier != null ||
+            state.workgroupForm.workgroup.secret != state.workgroup.secret ||
+            isDiferentArray(state.workgroupForm.workgroup.questions, state.workgroup.questions, '_id', '_id')
         ) {
             return false
         }
@@ -127,28 +133,27 @@ const getters = {
             return true
         }
     },
+
     editedMembers: (state) => {
-        if (isDiferentArray(state.searchedWorkgroup.members, state.editmemberform.members, 'id', 'id')) {
+        if (isDiferentArray(state.workgroup.members, state.editMemberForm.members, '_id', '_id')) {
             return false
         }
-        if (isDiferentArray(state.searchedWorkgroup.coordinators, state.editmemberform.coordinators, 'id', 'id')) {
+        if (isDiferentArray(state.workgroup.coordinators, state.editMemberForm.coordinators, '_id', '_id')) {
             return false
         }
         return true
     },
-    correctWorkgroup: (state) => {
-        if (
-            state.workgroupForm.name != '' &&
-            state.workgroupForm.description != '' &&
-            state.workgroupForm.description.length <= 380 &&
-            state.workgroupForm.name.length >= 3 &&
-            state.workgroupForm.questionsSelected.length != 0
-        ) {
-            return false
-        }
-        else {
-            return true
-        }
+
+    isValidJoin: (state) => {
+        let valid = 0;
+        let answers = state.answers;
+        state.workgroup.questions.forEach((q, index) => {
+            let check = q.type != 'text' ? state.rules[index](answers[index].answer) : state.rules[index](answers[index].text);
+            if (typeof check == 'boolean') {
+                valid++
+            }
+        });
+        return valid == state.workgroup.questions.length;
     }
 }
 
@@ -156,262 +161,153 @@ const actions = {
     async createWorkGroup({ state, commit, dispatch, rootGetters }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let dossier = state.workgroupForm.dossier
-            if (dossier != null) {
-                dossier = await dispatch('general/saveFile', dossier, { root: true });
+            commit('menu/notification', ['info', 5, state.workgroupForm.workgroup.dossier], { root: true });
+            if (!state.workgroupForm.workgroup.dossier) {
+                state.workgroupForm.workgroup.dossier = await dispatch('general/saveFile', state.workgroupForm.workgroup.dossier, { root: true });
+            } else {
+                state.workgroupForm.workgroup.dossier = null;
             }
-            let body = {
-                name: state.workgroupForm.name,
-                description: state.workgroupForm.description,
-                textcolor: state.workgroupForm.textcolor,
-                color: state.workgroupForm.color,
-                questions: state.workgroupForm.questionsSelected,
-                secret: state.workgroupForm.secret,
-                parent: state.workgroupForm.parent,
-                _userId: userId,
-                dossier: dossier,
-                coordinators: [userId],
-                linktodocuments: state.workgroupForm.link
-            }
+            let body = state.workgroupForm.workgroup;
+            body.creator = userId;
+            body.coordinators = [userId];
             await Axios.post('/workgroups/', body, config)
-            commit('menu/notification', ['info', 5, 'Work group created'], { root: true })
-            dispatch('loadWorkgroups')
-            commit('menu/cancelDialog', 'createworkgroup', { root: true })
-            commit('clearWorkgroupForm')
+            commit('menu/notification', ['info', 5, 'Workgroup created correctly'], { root: true });
+            dispatch('loadWorkgroups');
+            commit('menu/cancelDialog', 'createworkgroup', { root: true });
+            commit('clearWorkgroupForm');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async delWorkgroup({ commit, dispatch, rootGetters }, params) {
+
+    async loadWorkgroups({ commit, dispatch, rootGetters }) {
+        try {
+            commit('changeLoading', true);
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/workgroups/', config);
+            commit('workgroupsLoad', res.data);
+            commit('workgroupNested', treeBuild(res.data));
+            commit('changeLoading', false);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeLoading', false);
+        }
+    },
+
+    async loadSecretWorkgroups({ commit, dispatch, rootGetters }) {
+        try {
+            commit('changeLoading', true);
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/workgroups/secret/', config);
+            commit('secretWorkgroupsLoad', res.data);
+            commit('secretWorkgroupNested', treeBuild(res.data));
+            commit('changeLoading', false);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeLoading', false);
+        }
+    },
+
+    async searchWorkgroup({ commit, dispatch }, id) {
+        try {
+            commit('changeSkeleton', true);
+            await dispatch('searchWorkgroupSilent', id);
+            commit('changeSkeleton', false);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeSkeleton', false);
+        }
+    },
+
+    async searchWorkgroupSilent({ commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let resTasks = await Axios.get('/tasks/', config);
-            let resUsers = await Axios.get('/users/', config);
-            let tasks = resTasks.data, users = resUsers.data;
-            // TODO: eliminar de acciones cuando se termine el CRUD de acciones
-            for (let i = 0; i < tasks.length; i++) {
-                console.log('T')
-            }
-            for (let i = 0; i < users.length; i++) {
-                let workgroups = users[i].workgroups;
-                if (workgroups.some(a => a._wgId == params.id)) {
-                    let workgroupsUpdate = workgroups.filter(a => a._wgId != params.id)
-                    await Axios.put('/users/' + users[i].id, { workgroups: workgroupsUpdate }, config);
-                }
-            }
-            await Axios.delete('/workgroups/' + params.id, config);
+            let res = await Axios.get('/workgroups/' + id, config);
+            commit('pullWorkgroup', res.data);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
 
+    async saveEditedworkgroup({ state, commit, dispatch, rootGetters }, id) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let body = state.workgroupForm.workgroup;
+            if (state.workgroupForm.workgroup.newDossier != null) {
+                body.dossier = await dispatch('general/saveFile', state.workgroupForm.workgroup.newDossier, { root: true });
+            }
+            let res = await Axios.put('/workgroups/' + id, body, config);
+            commit('setWorkgroup', res.data);
+            commit('menu/cancelDialog', 'editworkgroup', { root: true });
+            commit('clearWorkgroupForm');
+            commit('menu/notification', ['success', 5, 'Workgroup saved correctly'], { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+    // TODO: finally deleted not implemented
+    async delWorkgroup({ state, commit, dispatch, rootGetters }) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.delete('/workgroups/finally/' + state.workgroup._id, config);
             await dispatch('loadWorkgroups');
             router.push('/workgroups');
-            commit('menu/notification', ['info', 3, 'Workgroup deleted'], { root: true });
+            commit('menu/notification', ['info', 3, 'Workgroup removed'], { root: true });
             commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async loadWorkgroups({ commit, dispatch, rootState, rootGetters }) {
+
+    async delWorkgroupSoft({ state, commit, dispatch, rootGetters }) {
         try {
-            commit('changeLoading', true);
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/workgroups/', config);
-            let allWorkgroups = res.data;
-            for (let i = 0; i < allWorkgroups.length; i++) {
-                let workgroup = allWorkgroups[i];
-                await dispatch('users/loadUserByID', workgroup._userId, { root: true });
-                workgroup['creator'] = rootState.users.temporaluser;
-                let tempCoordinators = Array(workgroup.coordinators.length), tempMembers = Array(workgroup.members.length), tempQuestions = Array(workgroup.questions.length);
-                for (let x = 0; x < workgroup.coordinators.length; x++) {
-                    await dispatch('users/loadUserByID', workgroup.coordinators[x], { root: true });
-                    tempCoordinators[x] = rootState.users.temporaluser;
-                }
-                for (let x = 0; x < workgroup.members.length; x++) {
-                    await dispatch('users/loadUserByID', workgroup.members[x], { root: true });
-                    tempMembers[x] = rootState.users.temporaluser;
-                }
-                for (let x = 0; x < workgroup.questions.length; x++) {
-                    await dispatch('questions/searchQuestionSilent', workgroup.questions[x], { root: true });
-                    tempQuestions[x] = rootState.questions.searchedQuestion;
-                }
-                workgroup.coordinators = tempCoordinators;
-                workgroup.members = tempMembers;
-                workgroup.questions = tempQuestions;
-            }
-            let workgroups = allWorkgroups.filter(w => !w.secret);
-            let secretWorkgroups = allWorkgroups.filter(w => w.secret);
-            commit('workgroupLoad', workgroups);
-            commit('secretWorkgroupLoad', secretWorkgroups);
-            commit('workgroupNested', treeBuild(workgroups));
-            commit('secretWorkgroupNested', treeBuild(secretWorkgroups));
-            commit('changeLoading', false);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-            commit('changeLoading', false);
-        }
-    },
-    async searchWorkgroup({ commit, dispatch, rootState, rootGetters }, id) {
-        try {
-            commit('changeSkeleton', true);
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/workgroups/' + id, config);
-            let workgroup = res.data
-            await dispatch('users/loadUserByID', workgroup._userId, { root: true });
-            workgroup['creator'] = rootState.users.temporaluser;
-            let tempCoordinators = Array(workgroup.coordinators.length), tempMembers = Array(workgroup.members.length), tempQuestions = Array(workgroup.questions.length);
-            for (let x = 0; x < workgroup.coordinators.length; x++) {
-                await dispatch('users/loadUserByID', workgroup.coordinators[x], { root: true });
-                tempCoordinators[x] = rootState.users.temporaluser;
-            }
-            for (let x = 0; x < workgroup.members.length; x++) {
-                await dispatch('users/loadUserByID', workgroup.members[x], { root: true });
-                tempMembers[x] = rootState.users.temporaluser;
-            }
-            for (let x = 0; x < workgroup.questions.length; x++) {
-                await dispatch('questions/searchQuestionSilent', workgroup.questions[x], { root: true });
-                tempQuestions[x] = rootState.questions.searchedQuestion;
-            }
-            let resTasks = await Axios.get('/tasks/', config);
-            let tasks = resTasks.data, tempTasks = [];
-            for (let x = 0; x < tasks.length; x++) {
-                if (tasks[x].workgroups.some(v => v == id)) tempTasks.push(tasks[x]);
-            }
-            workgroup.tasks = tempTasks;
-            workgroup.coordinators = tempCoordinators;
-            workgroup.members = tempMembers;
-            workgroup.questions = tempQuestions;
-            commit('pullWorkgroup', workgroup);
-            commit('changeSkeleton', false);
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-            commit('changeSkeleton', false);
-        }
-    },
-    async searchWorkgroupSilent({ commit, dispatch, rootState, rootGetters }, workgroup) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            if (workgroup.constructor.name !== 'Object') {
-                let res = await Axios.get('/workgroups/' + workgroup, config)
-                workgroup = res.data
-            }
-            await dispatch('users/loadUserByID', workgroup._userId, { root: true });
-            workgroup['creator'] = rootState.users.temporaluser;
-            let tempCoordinators = Array(workgroup.coordinators.length), tempMembers = Array(workgroup.members.length), tempQuestions = Array(workgroup.questions.length);
-            for (let x = 0; x < workgroup.coordinators.length; x++) {
-                await dispatch('users/loadUserByID', workgroup.coordinators[x], { root: true });
-                tempCoordinators[x] = rootState.users.temporaluser;
-            }
-            for (let x = 0; x < workgroup.members.length; x++) {
-                await dispatch('users/loadUserByID', workgroup.members[x], { root: true });
-                tempMembers[x] = rootState.users.temporaluser;
-            }
-            for (let x = 0; x < workgroup.questions.length; x++) {
-                await dispatch('questions/searchQuestionSilent', workgroup.questions[x], { root: true });
-                tempQuestions[x] = rootState.questions.searchedQuestion;
-            }
-            let resTasks = await Axios.get('/tasks/', config);
-            let tasks = resTasks.data, tempTasks = [];
-            for (let x = 0; x < tasks.length; x++) {
-                if (tasks[x].workgroups.some(v => v == workgroup._id)) tempTasks.push(tasks[x]);
-            }
-            workgroup.tasks = tempTasks;
-            workgroup.coordinators = tempCoordinators;
-            workgroup.members = tempMembers;
-            workgroup.questions = tempQuestions;
-            commit('pullWorkgroup', workgroup);
+            let config = rootGetters['general/cookieAuth']
+            let res = await Axios.delete('/workgroups/' + state.workgroup._id, config);
+            commit('setWorkgroup', res.data);
+            await dispatch('loadWorkgroups');
+            router.push('/workgroups');
+            commit('menu/notification', ['info', 3, 'Workgroup removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async saveEditedworkgroup({ state, commit, dispatch, rootGetters }, id) {
+
+    async joinWorkgroup({ state, commit, rootGetters, dispatch }, userId) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let dossier = state.workgroupForm.dossier;
-            if (dossier != null) {
-                dossier = await dispatch('general/saveFile', dossier, { root: true });
-            }
-            else {
-                dossier = state.workgroupForm.oldDossier;
-            }
-            let body = {
-                name: state.workgroupForm.name,
-                description: state.workgroupForm.description,
-                textcolor: state.workgroupForm.textcolor,
-                color: state.workgroupForm.color,
-                questions: state.workgroupForm.questionsSelected.map(q => q._id),
-                dossier: dossier,
-                linktodocuments: state.workgroupForm.link
-            }
-            let res = await Axios.put('/workgroups/' + id, body, config);
-            commit('menu/cancelDialog', 'editworkgroup', { root: true });
-            await dispatch('searchWorkgroupSilent', res.data._id);
-            commit('clearWorkgroupForm');
-            commit('menu/notification', ['success', 5, 'Workgroup edited'], { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-    async joinWorkgroup({ commit, rootState, rootGetters, dispatch }, params) {
-        try {
-            let workgroupId = params.idWorkgroup, userId = params.idUser;
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/' + userId, config);
-            let unsuscribed = res.data.unsuscribedworkgroups.filter(w => w._wgId != workgroupId);
-            let suscribed = res.data.workgroups;
-            suscribed.push({
-                _wgId: workgroupId,
-                updatedDate: Date.now(),
-                answers: params.answers ? params.answers : 'Joined by Coordinator/Admin: ' + rootState.user.loginuser.username
-            });
-            await Axios.put('/users/' + userId, { unsuscribedworkgroups: unsuscribed, workgroups: suscribed }, config);
+            let answers = state.answers.map(answer => {
+                let a = answer;
+                if (typeof a.answer === 'string') a.answer = [answer.answer];
+                return a;
+            })
+            let res = await Axios.put('/workgroups/join/' + state.workgroup._id, { user: userId, answers: answers }, config);
+            commit('setWorkgroup', res.data);
+            commit('menu/notification', ['info', 10, 'Joined Succesfully 😀'], { root: true });
             commit('menu/cancelDialog', 'suscribeto', { root: true })
+            commit('clearJoinForm');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async unjoinWorkgroup({ commit, rootState, rootGetters, dispatch }, params) {
+
+    async unjoinWorkgroup({ state, commit, rootGetters, dispatch }, { userId }) {
         try {
-            let workgroupId = params.idWorkgroup, userId = params.idUser;
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/' + userId, config);
-            let unsuscribed = res.data.unsuscribedworkgroups.filter(w => w._wgId != workgroupId);
-            let suscribed = res.data.workgroups.filter(w => w._wgId != workgroupId);
-            let suscription = res.data.workgroups.find(w => w._wgId == workgroupId);
-            unsuscribed.push({
-                _wgId: workgroupId,
-                updatedDate: Date.now(),
-                answers: suscription.answers instanceof Array ? suscription.answers : 'Unjoined by Coordinator/Admin: ' + rootState.user.loginuser.username
-            });
-            await Axios.put('/users/' + userId, { unsuscribedworkgroups: unsuscribed, workgroups: suscribed }, config);
+            let res = await Axios.put('/workgroups/unjoin/' + state.workgroup._id, { user: userId }, config);
+            commit('setWorkgroup', res.data);
+            commit('menu/notification', ['info', 10, 'Unjoined Succesfully 🙁'], { root: true });
             commit('menu/cancelDialog', 'unsuscribeworkgroup', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async unsuscribeWorkgroup({ dispatch }, params) {
-        await dispatch('users/searchUser', params.idUser, { root: true })
-        await dispatch('unjoinWorkgroup', params);
-        await dispatch('saveMember', params);
-    },
-    async saveMembers({ state, commit, dispatch, rootState, rootGetters }) {
+
+    async saveMembers({ state, commit, dispatch, rootGetters }) {
         try {
-            let idWorkgroup = state.searchedWorkgroup._id;
-            let idMembersOld = state.searchedWorkgroup.members.map(m => m.id)
-            let idMembers = state.editmemberform.members.map(m => m.id);
-            let idCoordinators = state.editmemberform.coordinators.map(m => m.id);
             let config = rootGetters['general/cookieAuth'];
-            for (let x = 0; x < idMembers.length; x++) {
-                await dispatch('users/loadUserByID', idMembers[x], { root: true });
-                if (!rootState.users.temporaluser.workgroups.some(w => w._wgId == idWorkgroup)) {
-                    await dispatch('joinWorkgroup', { idWorkgroup: idWorkgroup, idUser: idMembers[x] });
-                }
-            }
-            for (let x = 0; x < idMembersOld.length; x++) {
-                await dispatch('users/loadUserByID', idMembersOld[x], { root: true });
-                if (!idMembers.some(w => w == idMembersOld[x])) {
-                    await dispatch('unjoinWorkgroup', { idWorkgroup: idWorkgroup, idUser: idMembersOld[x] });
-                }
-            }
-            let res = await Axios.put('/workgroups/' + idWorkgroup, { members: idMembers, coordinators: idCoordinators }, config);
-            await dispatch('searchWorkgroupSilent', res.data);
+            let res = await Axios.put('/workgroups/' + state.workgroup._id, { members: state.editMemberForm.members, coordinators: state.editMemberForm.coordinators }, config);
+            commit('setWorkgroup', res.data);
             await dispatch('user/refreshLoadedUser', null, { root: true });
             commit('menu/cancelDialog', 'editmembers', { root: true });
             commit('menu/notification', ['info', 10, 'Members updated'], { root: true });
@@ -419,23 +315,45 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async saveMember({ commit, dispatch, rootGetters }, params) {
+
+    async createRules({ state, commit, dispatch }) {
         try {
-            let userId = params.idUser, workgroupId = params.idWorkgroup;
-            let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/workgroups/' + workgroupId, config);
-            let members = res.data.members;
-            members = members.filter(m => m != userId);
-            if (params.suscribe) members.push(userId);
-            let resPut = await Axios.put('/workgroups/' + workgroupId, { members: members }, config);
-            await dispatch('searchWorkgroupSilent', resPut.data);
-            await dispatch('user/refreshLoadedUser', null, { root: true });
-            commit('menu/cancelDialog', 'suscribeto', { root: true });
-            commit('menu/notification', ['info', 10, params.suscribe ? 'Joined Succesfully 😀' : 'Unjoined Succesfully 🙁'], { root: true });
+            let rules = state.workgroup.questions.map(q => {
+                if (q.type == 'text') return (v) => !!v || "Required";
+                else if (q.type == 'checkbox') return (v) => v.length != 0 || "Select one at least";
+                else if (q.type == 'select') return (v) => v.length != 0 || "Select one";
+                else if (q.type == 'radio') return (v) => v.length != 0 || "A selection is required";
+            })
+            commit('setRules', rules);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
-    }
+    },
+
+    async createAnswers({ state, commit, dispatch }) {
+        try {
+            let answers = state.workgroup.questions.map(q => {
+                return {
+                    question: q._id,
+                    answer: [],
+                    text: ''
+                }
+            })
+            commit('setAnswers', answers);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async loadWorkgroupsByUser({ commit, dispatch, rootGetters }, id) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/workgroups/workgroupsByUser/' + id, config);
+            commit('setWorkgroupsByUser', res.data);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
 }
 
 export default {

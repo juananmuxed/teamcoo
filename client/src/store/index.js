@@ -36,8 +36,8 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      key: 'teamcoo-catapa-userdata',
-      paths: ['user.loginuser'],
+      key: 'teamcoo-userdata',
+      paths: ['user.loginUser', 'user.userConfigs'],
       storage: {
         getItem: (key) => ls.get(key),
         setItem: (key, value) => ls.set(key, value),

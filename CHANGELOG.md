@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration in the backoffice for Web customization and mails #55 FEATURE
 - Mail Endpoint
 - Static Pages Creation #38 FEATURE
+- Refactor and redesign
+- Soft deleted items in DB
+- Loading before all colors and images load
 
 ### Changed
 

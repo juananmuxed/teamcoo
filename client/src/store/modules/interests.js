@@ -5,16 +5,22 @@ const state = {
     interests: [],
     interestsNames: [],
     interest: {},
-    interestTemp: {},
     interestForm: {
         interest: {
             name: '',
             description: '',
-            color: ''
+            color: '',
+            creator: null
         },
         loading: false,
     },
-    loading: false
+    search: {
+        options: {},
+        name: null,
+        creator: {}
+    },
+    totalInterests: 0,
+    loading: false,
 }
 
 const mutations = {
@@ -25,6 +31,7 @@ const mutations = {
         state.interestForm.interest.name = '';
         state.interestForm.interest.description = '';
         state.interestForm.interest.color = '';
+        state.interestForm.interest.creator = null;
     },
     randomInterestColor: (state) => {
         state.interestForm.interest.color = generateRandomColor(30);
@@ -35,6 +42,12 @@ const mutations = {
     },
     changeLoading: (state) => {
         state.loading = !state.loading;
+    },
+    setOptions: (state, options) => {
+        state.options = options;
+    },
+    setTotalInterest: (state, total) => {
+        state.totalInterests = total;
     }
 }
 
@@ -51,10 +64,12 @@ const getters = {
             return true
         }
     },
+
     isEditedInterest: (state) => {
         if (
             state.interestForm.interest.name != state.interest.name ||
             state.interestForm.interest.description != state.interest.description ||
+            state.interestForm.interest.creator != state.interest.creator ||
             state.interestForm.interest.color.toUpperCase() != state.interest.color.toUpperCase()
         ) {
             return true
@@ -62,7 +77,7 @@ const getters = {
         else {
             return false
         }
-    }
+    },
 }
 
 const actions = {
@@ -71,8 +86,7 @@ const actions = {
             commit('changeLoading');
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/interests/', config)
-            let interests = res.data;
-            commit('loadInterests', interests);
+            commit('loadInterests', res.data);
             commit('changeLoading');
         } catch (error) {
             commit('changeLoading');
@@ -80,54 +94,19 @@ const actions = {
         }
     },
 
-    async createInterest({ state, commit, dispatch, rootGetters }, id) {
+    async loadInterestPaginated({ state, commit, dispatch, rootGetters }) {
         try {
-            let body = state.interestForm;
-            body.creator = id;
-            let config = rootGetters['general/cookieAuth'];
-            await Axios.post('/interests/', body, config);
-            await dispatch('loadInterests');
-            commit('menu/cancelDialog', 'createinterest', { root: true });
-            commit('menu/notification', ['info', 3, 'Interest created correctly'], { root: true });
-            commit('clearInterestForm');
+            commit('changeLoading');
+            let config = Object.assign({}, rootGetters['general/cookieAuth']);
+            config.params = state.search.options;
+            config.params.searchName = state.search.name;
+            config.params.searchCreator = state.search.creator?._id;
+            let res = await Axios.get('/interests/paged', config);
+            commit('loadInterests', res.data.items);
+            commit('setTotalInterest', res.data.totalItems);
+            commit('changeLoading');
         } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-
-    async saveEditedInterest({ state, commit, dispatch, rootGetters }, id) {
-        try {
-            let config = rootGetters['general/cookieAuth'];
-            await Axios.put('/interests/' + id, state.interestForm, config);
-            commit('menu/cancelDialog', 'editinterest', { root: true });
-            await dispatch('loadInterests');
-            commit('menu/notification', ['info', 3, 'Interest saved correctly'], { root: true });
-            commit('clearInterestForm');
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-    // Not implemented TODO: add User data to body and table to work
-    async delInterest({ commit, dispatch, rootGetters }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth']
-            await Axios.delete('/interests/finally/' + params.id, config);
-            await dispatch('loadInterests');
-            commit('menu/notification', ['info', 3, 'Interest permanently removed'], { root: true });
-            commit('menu/cancelDialog', 'confirm', { root: true });
-        } catch (error) {
-            dispatch('menu/notificationError', error, { root: true });
-        }
-    },
-
-    async delInterestSoft({ commit, dispatch, rootGetters }, params) {
-        try {
-            let config = rootGetters['general/cookieAuth']
-            await Axios.delete('/interests/' + params.id, config);
-            await dispatch('loadInterests');
-            commit('menu/notification', ['info', 3, 'Interest removed'], { root: true });
-            commit('menu/cancelDialog', 'confirm', { root: true });
-        } catch (error) {
+            commit('changeLoading');
             dispatch('menu/notificationError', error, { root: true });
         }
     },
@@ -144,6 +123,59 @@ const actions = {
             setTimeout(() => {
                 state.interestForm.loading = false;
             }, 400)
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async createInterest({ state, commit, dispatch, rootGetters }, id) {
+        try {
+            let body = state.interestForm.interest;
+            body.creator = id;
+            commit('menu/notification', ['info', 3, body], { root: true });
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.post('/interests/', body, config);
+            await dispatch('loadInterestPaginated');
+            commit('menu/cancelDialog', 'createinterest', { root: true });
+            commit('menu/notification', ['info', 3, 'Interest created correctly'], { root: true });
+            commit('clearInterestForm');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async saveEditedInterest({ state, commit, dispatch, rootGetters }, id) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            await Axios.put('/interests/' + id, state.interestForm.interest, config);
+            commit('menu/cancelDialog', 'editinterest', { root: true });
+            await dispatch('loadInterestPaginated');
+            commit('menu/notification', ['info', 3, 'Interest saved correctly'], { root: true });
+            commit('clearInterestForm');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+    // TODO: finally deleted not implemented
+    async delInterest({ commit, dispatch, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth']
+            await Axios.delete('/interests/finally/' + params.id, config);
+            await dispatch('loadInterestPaginated');
+            commit('menu/notification', ['info', 3, 'Interest permanently removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async delInterestSoft({ commit, dispatch, rootGetters }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth']
+            await Axios.delete('/interests/' + params.id, config);
+            await dispatch('loadInterestPaginated');
+            commit('menu/notification', ['info', 3, 'Interest removed'], { root: true });
+            commit('menu/cancelDialog', 'confirm', { root: true });
+        } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },

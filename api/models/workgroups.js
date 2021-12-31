@@ -14,13 +14,10 @@ const workgroupScheme = new schema({
         type: String,
         default: 'grey'
     },
-    textcolor: {
-        type: String,
-        default: 'white'
-    },
     parent: {
         type: mongoose.Schema.Types.ObjectId,
-        default: null
+        default: null,
+        ref: 'Workgroup'
     },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +39,7 @@ const workgroupScheme = new schema({
         type: String,
         default: null
     },
-    linktodocuments: {
+    link: {
         type: String,
         default: null
     },

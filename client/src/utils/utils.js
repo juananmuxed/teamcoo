@@ -5,7 +5,7 @@ const treeBuild = (dataset) => {
     });
     let tree = [];
     dataset.forEach((item) => {
-        if (item.parent != null) {
+        if (item.parent != null && hash[item.parent]) {
             hash[item.parent].childs.push(hash[item._id]);
         } else {
             tree.push(hash[item._id]);
@@ -13,6 +13,10 @@ const treeBuild = (dataset) => {
     });
     return tree;
 };
+
+const outdated = (date) => {
+    return new Date(date) < new Date();
+}
 
 const dateToBeauty = (date) => {
     const day = new Date(date).getDate();
@@ -149,6 +153,7 @@ const sleep = async (ms) => {
 export {
     treeBuild,
     dateToBeauty,
+    outdated,
     dateToFormat,
     todayFormatToPicker,
     generateRandomColor,

@@ -37,7 +37,7 @@ const taskschema = new schema({
         type: String,
         default: ''
     },
-    usersjoined: {
+    suscribers: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
@@ -66,6 +66,6 @@ const taskschema = new schema({
     }
 }, { timestamps: true })
 
-const task = mongoose.model('Tasks', taskschema)
+const task = mongoose.model('Task', taskschema)
 
 module.exports = task

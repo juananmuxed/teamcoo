@@ -2,14 +2,15 @@
   <v-app>
     <v-overlay
       opacity="1"
-      :color="this.loginuser.dark ? 'black' : 'white'"
+      :color="userConfigs.dark ? 'black' : 'white'"
       :z-index="9999"
       :value="loading"
     >
       <div class="text-center">
         <v-progress-circular
           indeterminate
-          :color="!this.loginuser.dark ? 'black' : 'white'"
+          size="80"
+          :color="!userConfigs.dark ? 'black' : 'white'"
         ></v-progress-circular>
       </div>
     </v-overlay>
@@ -26,7 +27,7 @@
         ></v-progress-linear
       ></v-slide-y-transition>
       <v-fade-transition mode="out-in"
-        ><router-view></router-view
+        ><router-view :key="$route.fullPath"></router-view
       ></v-fade-transition>
       <v-scale-transition origin="center center">
         <v-btn
@@ -34,7 +35,7 @@
           v-if="menu.upDown"
           fixed
           fab
-          top
+          bottom
           right
           depressed
           color="secondary"
@@ -60,9 +61,9 @@
 </template>
 
 <script>
-import lateralmenu from "./components/general/lateralmenu.vue";
-import toolbar from "./components/general/toolbar.vue";
-import footer from "./components/general/footer.vue";
+import lateralmenu from "./components/general/LateralMenu.vue";
+import toolbar from "./components/general/Toolbar.vue";
+import footer from "./components/general/Footer.vue";
 import Vuetify from "./plugins/vuetify";
 
 import { mapActions, mapMutations, mapState } from "vuex";
@@ -80,12 +81,12 @@ export default {
       loading: (state) => state.general.loading,
       menu: (state) => state.menu.menu,
       snackbar: (state) => state.menu.snackbar,
-      loginuser: (state) => state.user.loginuser,
+      userConfigs: (state) => state.user.userConfigs,
     }),
   },
 
   async created() {
-    Vuetify.framework.theme.dark = this.loginuser.dark;
+    Vuetify.framework.theme.dark = this.userConfigs.dark;
     await this.getThemeColors();
     await this.getLogosPage();
     this.changeLoadingApp();

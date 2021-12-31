@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import router from '@/router'
 import Axios from 'axios'
 import Cookies from 'js-cookie'
@@ -12,40 +13,29 @@ const state = {
         newshow: false,
         confshow: false
     },
-    loginuser: {
-        firstname: '',
-        lastname: '',
-        username: '',
-        email: '',
-        rol: {},
-        id: '',
-        image: '',
-        verifiedemail: null,
+    loginUser: {},
+    userConfigs: {
         logged: false,
         dark: false,
-        workgroups: [],
-        unsuscribedworkgroups: [],
-        membership: {},
-        emailconfig: [],
-        password: ''
     },
     user: {
-        passshow: false,
+        passShow: false,
         password: '',
         email: '',
+        loading: false
     },
-    newuser: {
-        firstname: '',
-        lastname: '',
+    newUser: {
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
-        passwordconfirm: '',
-        passshow: false,
-        bevolunteer: false,
-        verifiedemail: false,
+        passwordConfirm: '',
+        passShow: false,
+        volunteer: false,
+        verifiedEmail: false,
         accept: {
-            termsconditions: false,
-            privacycookiepolicy: false
+            termsConditions: false,
+            privacyCookiePolicy: false
         },
     },
     sendingEmail: false,
@@ -54,42 +44,19 @@ const state = {
 
 const mutations = {
     userStore: (state, user) => {
-        state.loginuser.username = user.data.username,
-            state.loginuser.firstname = user.data.firstname,
-            state.loginuser.lastname = user.data.lastname,
-            state.loginuser.email = user.data.email,
-            state.loginuser.rol = user.data.rol,
-            state.loginuser.id = user.data._id,
-            state.loginuser.image = user.data.image,
-            state.loginuser.verifiedemail = user.data.verifiedemail,
-            state.loginuser.logged = true,
-            state.loginuser.workgroups = user.data.workgroups,
-            state.loginuser.unsuscribedworkgroups = user.data.unsuscribedworkgroups,
-            state.loginuser.membership = user.data.membership,
-            state.loginuser.password = user.data.password,
-            state.loginuser.emailconfig = user.data.emailconfig
+        Vue.set(state, 'loginUser', user);
     },
-    verifiedEmailOk: (state) => { state.loginuser.verifiedemail = true },
-    checkVolunteer: (state) => { state.newuser.bevolunteer = true },
+    changeLogged: (state, logged) => {
+        state.userConfigs.logged = logged;
+    },
+    verifiedEmailOk: (state) => { state.loginUser.verifiedemail = true },
+    checkVolunteer: (state) => { state.newUser.volunteer = true },
     clearUser: (state) => {
-        state.loginuser.username = '',
-            state.loginuser.firstname = '',
-            state.loginuser.lastname = '',
-            state.loginuser.email = '',
-            state.loginuser.rol = {},
-            state.loginuser.image = '',
-            state.loginuser.verifiedemail = null,
-            state.loginuser.emailconfig = [],
-            state.loginuser.id = '',
-            state.loginuser.logged = false,
-            state.loginuser.workgroups = [],
-            state.loginuser.unsuscribedworkgroups = [],
-            state.loginuser.membership = {},
-            state.loginuser.password = ''
+        state.loginUser = {}
     },
     onOffLights: (state) => {
-        state.loginuser.dark = !state.loginuser.dark,
-            Vuetify.framework.theme.dark = state.loginuser.dark
+        state.userConfigs.dark = !state.userConfigs.dark;
+        Vuetify.framework.theme.dark = state.userConfigs.dark;
     },
     clearpass: (state) => {
         state.password.oldpassword = '',
@@ -106,35 +73,40 @@ const mutations = {
 
 const getters = {
     isvalid(state, getters, rootState) {
-        if (state.user.password != '' && state.user.email != '' && !rootState.general.rules.emailrules(state.user.email)[0]) {
+        if (state.user.password != '' &&
+            state.user.email != '' &&
+            !rootState.general.rules.emailrules(state.user.email)[0]
+        ) {
             return false
         }
         else { return true }
     },
+
     signUpIsValid(state, getters, rootState) {
-        if (state.newuser.firstname != '' &&
-            state.newuser.lastname != '' &&
-            state.newuser.password != '' &&
-            state.newuser.passwordconfirm != '' &&
-            state.newuser.accept.privacycookiepolicy &&
-            state.newuser.accept.termsconditions &&
-            state.newuser.passwordconfirm == state.newuser.password &&
-            !rootState.general.rules.emailrules(state.newuser.email)[0] &&
-            !rootState.general.rules.nospaces(state.newuser.password)[0]) {
+        if (state.newUser.firstName != '' &&
+            state.newUser.lastName != '' &&
+            state.newUser.password != '' &&
+            state.newUser.passwordConfirm != '' &&
+            state.newUser.accept.privacyCookiePolicy &&
+            state.newUser.accept.termsConditions &&
+            state.newUser.passwordConfirm == state.newUser.password &&
+            !rootState.general.rules.emailrules(state.newUser.email)[0] &&
+            !rootState.general.rules.nospaces(state.newUser.password)[0]) {
             return false
         }
         else { return true }
     },
+
     isLogged(state) {
-        if (state.loginuser.logged) {
-            return true
-        }
-        else {
-            return false
-        }
+        return state.userConfigs.logged
     },
+
     isChangePass(state) {
-        if (state.password.oldpassword != '' && state.password.newpassword != '' && state.password.confirmnewpassword != '' && state.password.confirmnewpassword == state.password.newpassword) {
+        if (state.password.oldpassword != '' &&
+            state.password.newpassword != '' &&
+            state.password.confirmnewpassword != '' &&
+            state.password.confirmnewpassword == state.password.newpassword
+        ) {
             return false
         }
         else {
@@ -142,104 +114,115 @@ const getters = {
         }
     },
     isDiferentPass(state) {
-        if (state.password.newpassword != '' && state.password.confirmnewpassword != '' && state.password.confirmnewpassword == state.password.newpassword) {
+        if (state.password.newpassword != '' &&
+            state.password.confirmnewpassword != '' &&
+            state.password.confirmnewpassword == state.password.newpassword
+        ) {
             return false
         }
         else {
             return true
         }
+    },
+    invalidEmail(state, getters, rootState) {
+        return !(!rootState.general.rules.emailrules(state.user.email)[0] && state.user.email != '')
     }
-
 }
 
 const actions = {
-    async signup({ state, commit, dispatch, rootGetters }) {
+    async signUp({ state, commit, dispatch, rootGetters }) {
         try {
             commit('changeSending');
-            let user = state.newuser
-            if (state.newuser.bevolunteer) {
+            let user = state.newUser
+            if (state.newUser.volunteer) {
                 user.rol = { name: 'Volunteer', value: 'volu' }
             }
-            user.username = state.newuser.firstname.toLowerCase();
-            let response = await Axios.post('/users/signup', user);
-            let token = response.data.token;
-            if (token) {
-                Cookies.set('catapa-jwt', token, { expires: 30 });
-                commit('userStore', { data: response.data.data });
-                let config = rootGetters['general/cookieAuth'];
-                router.push('/dashboard');
+            user.username = state.newUser.firstName.toLowerCase();
+            const res = await Axios.post('/users/signup', user);
 
-                await Axios.post("/mail/send", {
-                    sendTo: response.data.data.email,
-                    userTo: response.data.data.firstname,
-                    template: 'user/new',
-                    subject: 'Welcome ' + response.data.data.firstname,
-                    variables: { recoveryUrlPass: window.location.origin + '/validation/' + token, name: response.data.data.firstname + ' ' + response.data.data.lastname }
-                }, config);
-
-                commit('changeSending');
-                commit('menu/notification', ['success', 3, 'Correct registration. Welcome to Catapa, ' + response.data.data.firstname + '. Please verify your mail.'], { root: true });
+            if (Cookies.get('teamcoo-jwt') == undefined) {
+                Cookies.set('teamcoo-jwt', res.data.token, { expires: 30 });
             }
+            commit('userStore', res.data.user);
+            commit('changeLogged', true);
+
+            const config = rootGetters['general/cookieAuth'];
+
+            router.push('/dashboard');
+            await Axios.post("/mail/send", {
+                sendTo: res.data.user.email,
+                userTo: res.data.user.firstName,
+                template: 'user/new',
+                subject: 'Welcome ' + res.data.user.firstName,
+                variables: { recoveryUrlPass: window.location.origin + '/validation/' + res.data.token, name: res.data.user.firstName + ' ' + res.data.user.lastName }
+            }, config);
+
+            commit('changeSending');
+            commit('menu/notification', ['success', 3, 'Correct registration. Welcome, ' + res.data.user.firstName + '. Please verify your mail.'], { root: true });
         }
         catch (error) {
             commit('changeSending');
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async login({ commit, dispatch }) {
+
+    async login({ state, commit, dispatch }) {
         try {
-            let response = await Axios.post('/users/login', state.user)
-            let token = response.data.token;
-            if (Cookies.get('catapa-jwt') == undefined) {
-                Cookies.set('catapa-jwt', token, { expires: 30 });
+            let res = await Axios.post('/users/login', state.user)
+            if (Cookies.get('teamcoo-jwt') == undefined) {
+                Cookies.set('teamcoo-jwt', res.data.token, { expires: 30 });
             }
-            if (token) {
-                commit('userStore', { data: response.data.user });
-                commit('menu/cancelDialog', 'login', { root: true });
-                commit('menu/notification', ['success', 3, 'Correct Login. Welcome ' + response.data.user.username], { root: true });
-                router.push('/dashboard');
-            }
-            else {
-                commit('menu/notification', ['error', 3, 'Server error. Try again.'], { root: true });
-            }
+            commit('userStore', res.data.user);
+            commit('changeLogged', true);
+            commit('menu/cancelDialog', 'login', { root: true });
+            commit('menu/notification', ['success', 3, 'Correct Login. Welcome ' + res.data.user.username], { root: true });
+            router.push('/dashboard');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true })
         }
     },
+
     async refreshLoadedUser({ state, commit, dispatch, rootGetters }) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/' + state.loginuser.id, config)
-            commit('userStore', { data: res.data });
+            let res = await Axios.get('/users/' + state.loginUser._id, config)
+            commit('userStore', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true })
         }
     },
-    async logOut({ commit, dispatch }) {
+
+    async logOut({ commit, dispatch }, message) {
         try {
-            Cookies.remove('catapa-jwt')
-            Cookies.remove('teamcoo-catapa-userdata')
+            Cookies.remove('teamcoo-jwt')
+            Cookies.remove('teamcoo-userdata')
             commit('menu/cancelDialog', 'logout', { root: true })
+            commit('changeLogged', false);
             commit('clearUser')
             router.push('/');
-            commit('menu/notification', ['success', 3, 'You are correctly log out.'], { root: true })
+            commit('menu/notification', ['success', 3, !message ? 'You are correctly log out.' : message], { root: true })
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true })
         }
     },
+
+    expiredLogOut({ dispatch }) {
+        dispatch('logOut', 'Your credentials expired. Login again.');
+    },
+
     async changePasswordNotLogged({ state, commit, dispatch }, token) {
         try {
-            let data = {
+            await Axios.post('/tokens/changepassexternal', {
                 token: token,
                 password: state.password.confirmnewpassword
-            }
-            await Axios.post('/tokens/changepassexternal', data);
+            });
             commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true });
             router.push('/login');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async sendResetPassMail({ commit, dispatch }, email) {
         try {
             await Axios.post('/tokens/sendpassemail', {
@@ -252,10 +235,11 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     async sendVerificationMail({ commit, dispatch }, email) {
         try {
             commit('changeSending');
-            await Axios.post('/tokens/resend', { email: email, name: state.loginuser.firstname, url: window.location.origin + '/validation/' })
+            await Axios.post('/tokens/resend', { email: email, name: state.loginUser.firstName, url: window.location.origin + '/validation/' })
             commit('changeSending');
             commit('menu/notification', ['primary', 3, 'Verification email send to ' + email + '. Please check your account.'], { root: true });
         } catch (error) {
@@ -275,15 +259,15 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
-    async changepassword({ state, commit, dispatch, rootGetters }) {
+    async changePassword({ state, commit, dispatch, rootGetters }) {
         try {
             let user = {
-                email: state.loginuser.email,
+                email: state.loginUser.email,
                 newpassword: state.password.newpassword,
                 password: state.password.oldpassword
             }
             let config = rootGetters['general/cookieAuth'];
-            await Axios.put('/users/password/' + state.loginuser.id, user, config)
+            await Axios.put('/users/password/' + state.loginUser._id, user, config)
             commit('menu/notification', ['primary', 3, 'Changed password Succesfully'], { root: true });
             commit('clearpass');
             commit('menu/cancelDialog', 'changepassword', { root: true });
@@ -291,18 +275,21 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
     goToSignin({ rootState }) {
         if (rootState.menu.menu.dialogs.login) {
             rootState.menu.menu.dialogs.login = false
         }
         router.push('/signup')
     },
+
     goToRemeberme({ rootState }) {
         if (rootState.menu.menu.dialogs.login) {
             rootState.menu.menu.dialogs.login = false
         }
         router.push('/sendreset')
     },
+
     goToSignUpAsVolunteer({ commit }) {
         router.push('/signup')
         commit('checkVolunteer')
