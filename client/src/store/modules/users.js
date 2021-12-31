@@ -125,10 +125,9 @@ const actions = {
     async searchUsersByName({ state, rootGetters, commit, dispatch }, string) {
         try {
             if (state.isLoadingUser) return
+            if (string && string.trim() === "") return
             if (!string) {
                 string = null
-            } else {
-                if (string.length < 3) return
             }
             commit('changeIsLoadingUser', true);
             let config = rootGetters['general/cookieAuth'];

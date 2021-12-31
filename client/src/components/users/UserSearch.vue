@@ -7,16 +7,18 @@
     outlined
     clearable
     no-filter
-    hide-selected
+    cache-items
     :return-object="returnObject"
     :loading="isLoadingUser"
     :search-input.sync="searchName"
     clear-icon="fas fa-times"
-    item-text="username"
     item-value="_id"
     :label="label"
     :prepend-icon="icon"
   >
+    <template v-slot:selection="{ item }">
+      {{ item.firstName + " " + item.lastName + " (" + item.username + ")" }}
+    </template>
     <template v-slot:no-data>
       <v-list-item>
         <v-list-item-title>Search user</v-list-item-title>
@@ -75,9 +77,6 @@ export default {
   watch: {
     searchName(val) {
       this.searchUsersByName(val);
-    },
-    value(val) {
-      if (!val) this.clearSearch();
     },
   },
   methods: {
