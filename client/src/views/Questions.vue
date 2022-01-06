@@ -255,7 +255,7 @@
     </v-row>
     <v-dialog
       max-width="650"
-      v-model="dialogs.createinterest"
+      v-model="dialogs.createquestion"
       v-if="loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'"
     >
       <template v-slot:activator="{ on: onDialog }">

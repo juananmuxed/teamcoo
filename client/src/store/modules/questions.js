@@ -210,7 +210,7 @@ const actions = {
     async createQuestion({ state, commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let body = state.questionForm.question;
+            let body = Object.assign({}, state.questionForm.question);
             body.creator = id;
             body.interests = body.interests.map(interest => interest.name)
             await Axios.post('/questions/', body, config)
