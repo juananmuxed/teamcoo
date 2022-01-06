@@ -76,6 +76,127 @@ exports.getAllSecretWorkgroups = async (req, res) => {
     }
 }
 
+exports.getAllWorkgroupsPaged = async (req, res) => {
+    try {
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null, searchMember = null, searchCoordinator = null, searchQuestions = [], searchMode } = req.query;
+        let sort = {};
+        let searchObject = {
+            $and: [
+                { deleted: false }
+            ]
+        }
+        if (searchName) searchObject.$and.push({
+            $or: [
+                { name: { $regex: searchName, $options: 'i' } },
+                { description: { $regex: searchName, $options: 'i' } }
+            ]
+        })
+        if (searchCreator) searchObject.$and.push({ creator: searchCreator })
+        if (searchMember) searchObject.$and.push({ members: { $in: [searchMember] } })
+        if (searchCoordinator) searchObject.$and.push({ coordinators: { $in: [searchCoordinator] } })
+        if (searchQuestions.length != 0) {
+            const questionsObject = {
+                questions: { [!JSON.parse(searchMode.toLowerCase()) ? '$in' : '$all']: searchQuestions }
+            }
+            searchObject.$and.push(questionsObject)
+        }
+        sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
+        const workgroupsDB = await Workgroups.find({
+            $and: [
+                { deleted: false }, { secret: false }, searchObject
+            ]
+        })
+            .limit(itemsPerPage * 1)
+            .skip((page - 1) * itemsPerPage)
+            .sort(sort)
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'questions',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'coordinators',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'members',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'parent',
+                match: { deleted: false }
+            });
+        const count = await Workgroups.countDocuments({ deleted: false, secret: false });
+        res.json({ items: workgroupsDB, totalItems: count });
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+
+
+exports.getAllSecretWorkgroupsPaged = async (req, res) => {
+    try {
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null, searchMember = null, searchCoordinator = null, searchQuestions = [], searchMode } = req.query;
+        let sort = {};
+        let searchObject = {
+            $and: [
+                { deleted: false }
+            ]
+        }
+        if (searchName) searchObject.$and.push({
+            $or: [
+                { name: { $regex: searchName, $options: 'i' } },
+                { description: { $regex: searchName, $options: 'i' } }
+            ]
+        })
+        if (searchCreator) searchObject.$and.push({ creator: searchCreator })
+        if (searchMember) searchObject.$and.push({ members: { $in: [searchMember] } })
+        if (searchCoordinator) searchObject.$and.push({ coordinators: { $in: [searchCoordinator] } })
+        if (searchQuestions.length != 0) {
+            const questionsObject = {
+                questions: { [!JSON.parse(searchMode.toLowerCase()) ? '$in' : '$all']: searchQuestions }
+            }
+            searchObject.$and.push(questionsObject)
+        }
+        sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
+        const workgroupsDB = await Workgroups.find({
+            $and: [
+                { deleted: false }, { secret: true }, searchObject
+            ]
+        })
+            .limit(itemsPerPage * 1)
+            .skip((page - 1) * itemsPerPage)
+            .sort(sort)
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'questions',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'coordinators',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'members',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'parent',
+                match: { deleted: false }
+            });
+        const count = await Workgroups.countDocuments({ deleted: false, secret: true });
+        res.json({ items: workgroupsDB, totalItems: count });
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+
 exports.getAllWorkgroupsDeleted = async (req, res) => {
     try {
         const workgroupDB = await Workgroups.find({ deleted: true })

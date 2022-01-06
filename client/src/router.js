@@ -14,6 +14,7 @@ import membership from './views/Membership.vue'
 import users from './views/Users.vue'
 import user from './views/User.vue'
 import workgroups from './views/Workgroups.vue'
+import privateworkgroups from './views/PrivateWorkgroups.vue'
 import workgroup from './views/Workgroup.vue'
 import tasks from './views/Tasks.vue'
 import task from './views/Task.vue'
@@ -127,6 +128,16 @@ const router = new Router({
                 requiresAuth: true,
                 validRol: true,
                 title: 'Workgroups'
+            }
+        },
+        {
+            path: '/privateworkgroups',
+            name: 'privateworkgroups',
+            component: privateworkgroups,
+            meta: {
+                requiresAuth: true,
+                validRol: true,
+                title: 'Private Workgroups'
             }
         },
         {
