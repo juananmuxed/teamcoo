@@ -15,121 +15,22 @@
             >Coordinators</v-col
           >
           <v-col cols="12" class="py-1">
-            <v-autocomplete
-              label="Members"
-              v-model="editMemberForm.coordinators"
-              multiple
-              chips
-              outlined
-              item-value="id"
-              item-text="username"
-              :items="users"
-              :filter="customFilter"
+            <users-search-component
+              label="Coordinators"
               return-object
-            >
-              <template v-slot:selection="data">
-                <v-chip v-bind="data.attrs" :input-value="data.selected">
-                  <v-avatar left v-if="data.item.image != ''">
-                    <v-img :src="data.item.image"></v-img>
-                  </v-avatar>
-                  <v-avatar left v-else>
-                    <v-icon color="primary" small>fas fa-user</v-icon>
-                  </v-avatar>
-                  <span class="pr-2">
-                    {{ data.item.username }}
-                  </span>
-                  <v-icon small @click="data.parent.selectItem(data.item)">
-                    fas fa-times-circle
-                  </v-icon>
-                </v-chip>
-              </template>
-              <template v-slot:item="data">
-                <v-list-item-avatar v-if="data.item.image != ''">
-                  <img :src="data.item.image" />
-                </v-list-item-avatar>
-                <v-list-item-avatar v-else color="secondary"
-                  ><v-icon color="primary"
-                    >fas fa-user</v-icon
-                  ></v-list-item-avatar
-                >
-                <v-list-item-content>
-                  <v-list-item-title
-                    v-html="
-                      data.item.firstName +
-                      ' ' +
-                      data.item.lastName +
-                      ' (' +
-                      data.item.username +
-                      ')'
-                    "
-                  ></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-html="data.item.rol.name"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-              </template>
-            </v-autocomplete>
+              v-model="editMemberForm.coordinators"
+            ></users-search-component>
           </v-col>
         </template>
         <v-col cols="12" class="py-1 text-uppercase font-weight-light title"
           >Members</v-col
         >
-
         <v-col cols="12" class="py-1">
-          <v-autocomplete
+          <users-search-component
             label="Members"
-            v-model="editMemberForm.members"
-            multiple
-            chips
-            outlined
-            item-value="id"
-            item-text="username"
-            :items="users"
-            :filter="customFilter"
             return-object
-          >
-            <template v-slot:selection="data">
-              <v-chip v-bind="data.attrs" :input-value="data.selected">
-                <v-avatar left v-if="data.item.image != ''">
-                  <v-img :src="data.item.image"></v-img>
-                </v-avatar>
-                <v-avatar left v-else>
-                  <v-icon color="primary" small>fas fa-user</v-icon>
-                </v-avatar>
-                <span class="pr-2">
-                  {{ data.item.username }}
-                </span>
-                <v-icon small @click="data.parent.selectItem(data.item)">
-                  fas fa-times-circle
-                </v-icon>
-              </v-chip>
-            </template>
-            <template v-slot:item="data">
-              <v-list-item-avatar v-if="data.item.image != ''">
-                <img :src="data.item.image" />
-              </v-list-item-avatar>
-              <v-list-item-avatar v-else color="secondary"
-                ><v-icon color="primary"
-                  >fas fa-user</v-icon
-                ></v-list-item-avatar
-              >
-              <v-list-item-content>
-                <v-list-item-title
-                  v-html="
-                    data.item.firstName +
-                    ' ' +
-                    data.item.lastName +
-                    ' (' +
-                    data.item.username +
-                    ')'
-                  "
-                ></v-list-item-title>
-                <v-list-item-subtitle
-                  v-html="data.item.rol.name"
-                ></v-list-item-subtitle>
-              </v-list-item-content>
-            </template>
-          </v-autocomplete>
+            v-model="editMemberForm.members"
+          ></users-search-component>
         </v-col>
       </v-row>
       <v-btn
@@ -164,37 +65,22 @@
 
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
+import UsersSearchVue from "../users/UsersSearch.vue";
 export default {
+  components: {
+    "users-search-component": UsersSearchVue,
+  },
   computed: {
     ...mapState({
       workgroup: (state) => state.workgroups.workgroup,
       editMemberForm: (state) => state.workgroups.editMemberForm,
-      users: (state) => state.users.users,
       loginUser: (state) => state.user.loginUser,
     }),
   },
   methods: {
-    ...mapActions("users", ["loadUsersSilent"]),
     ...mapActions("workgroups", ["saveMembers"]),
     ...mapGetters("workgroups", ["editedMembers"]),
     ...mapMutations("workgroups", ["loadMembers"]),
-    customFilter(item, queryText) {
-      const username = item.username.toLowerCase();
-      const firstName = item.firstName.toLowerCase();
-      const lastName = item.lastName.toLowerCase();
-      const name = firstName + " " + lastName;
-      const search = queryText.toLowerCase();
-
-      return (
-        username.indexOf(search) > -1 ||
-        firstName.indexOf(search) > -1 ||
-        lastName.indexOf(search) > -1 ||
-        name.indexOf(search) > -1
-      );
-    },
-  },
-  created() {
-    this.loadUsersSilent();
   },
 };
 </script>

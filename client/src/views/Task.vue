@@ -198,7 +198,7 @@
               ></v-divider>
               <v-toolbar dense elevation="0" color="primary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
-                  >Members
+                  >Suscribers
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialogs.editmembers" max-width="650">
