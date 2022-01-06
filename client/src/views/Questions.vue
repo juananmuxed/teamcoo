@@ -80,13 +80,6 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <user-search-component
-                        label="Creator"
-                        return-object
-                        v-model="search.creator"
-                      ></user-search-component>
-                    </v-col>
-                    <v-col cols="12" md="6">
                       <v-select
                         outlined
                         :items="questionForm.types"
@@ -112,6 +105,13 @@
                         :label="search.interestsAll ? 'All' : 'One'"
                         inset
                       ></v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <user-search-component
+                        label="Creator"
+                        return-object
+                        v-model="search.creator"
+                      ></user-search-component>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>

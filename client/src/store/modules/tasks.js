@@ -22,6 +22,17 @@ const state = {
         },
         loading: false
     },
+    search: {
+        name: null,
+        creator: {},
+        suscriber: {},
+        interests: [],
+        interestsAll: false,
+        workgroups: [],
+        workgroupsAll: false,
+        options: {},
+    },
+    totalTasks: 0,
     loading: false,
     skeleton: false
 }
@@ -62,7 +73,10 @@ const mutations = {
     },
     loadMembers: (state) => {
         state.tasksForm.task.suscribers = JSON.parse(JSON.stringify(state.task.suscribers));
-    }
+    },
+    setTotalTasks: (state, total) => {
+        state.totalTasks = total;
+    },
 }
 
 const getters = {
@@ -131,6 +145,28 @@ const actions = {
             commit('changeLoading');
             let res = await Axios.get('/tasks/');
             commit('tasksLoad', res.data);
+            commit('changeLoading');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeLoading');
+        }
+    },
+
+    async loadTasksPaged({ state, commit, dispatch, rootGetters }) {
+        try {
+            commit('changeLoading');
+            let config = Object.assign({}, rootGetters['general/cookieAuth']);
+            config.params = state.search.options;
+            config.params.searchName = state.search.name;
+            config.params.searchCreator = state.search.creator?._id;
+            config.params.searchSuscriber = state.search.suscriber?._id;
+            config.params.searchWorkgroups = state.search.workgroups.map(i => i._id);
+            config.params.searchModeWorkgroups = state.search.workgroupsAll;
+            config.params.searchInterests = state.search.interests.map(i => i._id);
+            config.params.searchModeInterests = state.search.interestsAll;
+            let res = await Axios.get('/tasks/paged', config);
+            commit('tasksLoad', res.data.items);
+            commit('setTotalTasks', res.data.totalItems);
             commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });

@@ -4,7 +4,7 @@
     @click:clear="emitClear"
     @change="emitChange"
     :value="value"
-    :items="questions"
+    :items="workgroups"
     outlined
     clearable
     :return-object="returnObject"
@@ -18,17 +18,25 @@
   >
     <template v-slot:no-data>
       <v-list-item>
-        <v-list-item-title>Search question</v-list-item-title>
+        <v-list-item-title>Search workgroup</v-list-item-title>
       </v-list-item>
     </template>
     <template v-slot:selection="data">
-      <v-chip v-bind="data.attrs" :input-value="data.selected" small>
+      <v-chip
+        v-bind="data.attrs"
+        :input-value="data.selected"
+        :color="data.item.color"
+        small
+      >
         {{ data.item.name }}
       </v-chip>
     </template>
     <template v-slot:item="{ item }">
       <v-list-item-content>
-        <v-list-item-title v-text="item.name"></v-list-item-title>
+        <v-list-item-title
+          :color="item.color"
+          v-text="item.name"
+        ></v-list-item-title>
       </v-list-item-content>
     </template>
   </v-autocomplete>
@@ -56,11 +64,11 @@ export default {
   },
   computed: {
     ...mapState({
-      questions: (state) => state.questions.questions,
+      workgroups: (state) => state.workgroups.workgroups,
     }),
   },
   methods: {
-    ...mapActions("questions", ["loadQuestions"]),
+    ...mapActions("workgroups", ["loadWorkgroups"]),
     handleInput(val) {
       this.$emit("input", val);
     },
@@ -72,7 +80,7 @@ export default {
     },
   },
   created() {
-    this.loadQuestions();
+    this.loadWorkgroups();
   },
 };
 </script>

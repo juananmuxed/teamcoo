@@ -56,7 +56,6 @@
                             v-for="(question, index) in search.questions"
                             class="mx-1"
                             v-text="question.name"
-                            :color="question.color"
                             :key="index"
                           ></v-chip>
                           <v-chip
@@ -89,13 +88,6 @@
                     </v-col>
                     <v-col cols="12" md="6">
                       <user-search-component
-                        label="Creator"
-                        return-object
-                        v-model="search.creator"
-                      ></user-search-component>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <user-search-component
                         label="Coordinator"
                         return-object
                         v-model="search.coordinator"
@@ -124,6 +116,13 @@
                         :label="search.questionsAll ? 'All' : 'One'"
                         inset
                       ></v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <user-search-component
+                        label="Creator"
+                        return-object
+                        v-model="search.creator"
+                      ></user-search-component>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>
