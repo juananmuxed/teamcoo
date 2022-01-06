@@ -7,7 +7,7 @@ router.post("/", auth, tasksController.createTask);
 
 router.get("/", tasksController.getAllTasks);
 
-router.get("/secret/", auth, tasksController.getAllSecretTasks);
+router.get("/paged", tasksController.getAllTasksPaged);
 
 router.get("/archived/", auth, tasksController.getAllTasksDeleted);
 

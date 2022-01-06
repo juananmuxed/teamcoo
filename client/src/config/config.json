@@ -1,6 +1,6 @@
 {
   "global": {
-    "versionApp": "0.18.0",
+    "versionApp": "0.22.3",
     "versionApi": 1,
     "development": {
       "hostApi": "http://localhost:3000"
@@ -40,6 +40,12 @@
       "link": "/workgroups",
       "roles": ["coor", "dire", "admin", "volu"],
       "icon": "fas fa-network-wired"
+    },
+    {
+      "name": "Private Workgroups",
+      "link": "/privateworkgroups",
+      "roles": ["coor", "dire", "admin"],
+      "icon": "fas fa-user-lock"
     },
     {
       "name": "Questions",

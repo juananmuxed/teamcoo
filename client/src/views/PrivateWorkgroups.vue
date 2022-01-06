@@ -2,18 +2,19 @@
   <v-container class="pa-10" fluid>
     <v-row class="text-center">
       <v-col>
-        <p class="display-1 font-weight-thin text-uppercase">Workgroups</p>
+        <p class="display-1 font-weight-thin text-uppercase">
+          Private Workgroups
+        </p>
       </v-col>
     </v-row>
-
     <v-row>
       <v-col cols="12">
         <v-data-table
-          :items="workgroups"
+          :items="secretWorkgroups"
           :headers="headers"
-          :loading="loading"
-          :options.sync="search.options"
-          :server-items-length="totalWorkgroups"
+          :loading="loadingSecret"
+          :options.sync="searchSecret.options"
+          :server-items-length="totalSecretWorkgroups"
           :footer-props="{ 'items-per-page-options': [5, 10, 20] }"
           :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
         >
@@ -34,41 +35,49 @@
                         <v-row v-else>
                           <v-chip
                             class="mx-1"
-                            v-if="search.name"
-                            v-text="'Text: ' + search.name"
+                            v-if="searchSecret.name"
+                            v-text="'Text: ' + searchSecret.name"
                             color="primary"
                           ></v-chip>
                           <v-chip
-                            v-if="search.coordinator && search.coordinator._id"
+                            v-if="
+                              searchSecret.coordinator &&
+                              searchSecret.coordinator._id
+                            "
                             color="secondary"
                             class="mx-1"
                             v-text="
-                              'Coordinator: ' + search.coordinator.username
+                              'Coordinator: ' +
+                              searchSecret.coordinator.username
                             "
                           ></v-chip>
                           <v-chip
-                            v-if="search.member && search.member._id"
+                            v-if="
+                              searchSecret.member && searchSecret.member._id
+                            "
                             color="secondary"
                             class="mx-1"
-                            v-text="'Member: ' + search.member.username"
+                            v-text="'Member: ' + searchSecret.member.username"
                           ></v-chip>
                           <v-chip
-                            v-for="(question, index) in search.questions"
+                            v-for="(question, index) in searchSecret.questions"
                             class="mx-1"
                             v-text="question.name"
                             :key="index"
                           ></v-chip>
                           <v-chip
-                            v-if="search.questionsAll"
+                            v-if="searchSecret.questionsAll"
                             color="success"
                             class="mx-1"
                             >All answers</v-chip
                           >
                           <v-chip
-                            v-if="search.creator && search.creator._id"
+                            v-if="
+                              searchSecret.creator && searchSecret.creator._id
+                            "
                             color="secondary"
                             class="mx-1"
-                            v-text="'Creator: ' + search.creator.username"
+                            v-text="'Creator: ' + searchSecret.creator.username"
                           ></v-chip>
                         </v-row>
                       </v-fade-transition>
@@ -79,7 +88,7 @@
                   <v-row>
                     <v-col cols="12" md="6">
                       <v-text-field
-                        v-model="search.name"
+                        v-model="searchSecret.name"
                         label="Name or description"
                         clearable
                         clear-icon="fas fa-times"
@@ -88,41 +97,42 @@
                     </v-col>
                     <v-col cols="12" md="6">
                       <user-search-component
+                        label="Creator"
+                        return-object
+                        v-model="searchSecret.creator"
+                      ></user-search-component>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <user-search-component
                         label="Coordinator"
                         return-object
-                        v-model="search.coordinator"
+                        v-model="searchSecret.coordinator"
                       ></user-search-component>
                     </v-col>
                     <v-col cols="12" md="6">
                       <user-search-component
                         label="Member"
                         return-object
-                        v-model="search.member"
+                        v-model="searchSecret.member"
                       ></user-search-component>
                     </v-col>
                     <v-col cols="11" md="5">
                       <question-search-component
-                        label="Questions"
+                        label="Answers"
                         return-object
-                        v-model="search.questions"
+                        v-model="searchSecret.questions"
                       ></question-search-component>
                     </v-col>
                     <v-col cols="1">
                       <v-switch
                         :disabled="
-                          search.questions && search.questions.length == 0
+                          searchSecret.questions &&
+                          searchSecret.questions.length == 0
                         "
-                        v-model="search.questionsAll"
-                        :label="search.questionsAll ? 'All' : 'One'"
+                        v-model="searchSecret.questionsAll"
+                        :label="searchSecret.questionsAll ? 'All' : 'One'"
                         inset
                       ></v-switch>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <user-search-component
-                        label="Creator"
-                        return-object
-                        v-model="search.creator"
-                      ></user-search-component>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>
@@ -130,12 +140,12 @@
             </v-expansion-panels>
           </template>
           <template v-slot:loading>
-            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-4"
+            <span class="display-1 text-uppercase font-weight-thin ma-5"
               >Loading Work Groups</span
             >
           </template>
           <template v-slot:no-data>
-            <span class="display-1 text-uppercase font-weight-thin ma-5 pa-4"
+            <span class="display-1 text-uppercase font-weight-thin ma-5"
               >No Work Groups</span
             >
           </template>
@@ -172,7 +182,7 @@
               <v-avatar
                 size="24px"
                 left
-                v-for="(user, index) in item.members"
+                v-for="(user, index) in item.coordinators"
                 :key="index"
                 class="ma-1"
               >
@@ -363,24 +373,24 @@ export default {
   },
   computed: {
     ...mapState({
-      workgroups: (state) => state.workgroups.workgroups,
+      secretWorkgroups: (state) => state.workgroups.secretWorkgroups,
       loginUser: (state) => state.user.loginUser,
-      totalWorkgroups: (state) => state.workgroups.totalWorkgroups,
-      search: (state) => state.workgroups.search,
-      loading: (state) => state.workgroups.loading,
+      totalSecretWorkgroups: (state) => state.workgroups.totalSecretWorkgroups,
+      searchSecret: (state) => state.workgroups.searchSecret,
+      loadingSecret: (state) => state.workgroups.loadingSecret,
       dialogs: (state) => state.menu.menu.dialogs,
     }),
   },
   watch: {
-    search: {
+    searchSecret: {
       handler() {
-        if (!this.loading) this.loadWorkgroupsPaginated();
+        if (!this.loadingSecret) this.loadSecretWorkgroupsPaginated();
       },
       deep: true,
     },
   },
   methods: {
-    ...mapActions("workgroups", ["loadWorkgroupsPaginated"]),
+    ...mapActions("workgroups", ["loadSecretWorkgroupsPaginated"]),
     ...mapMutations("workgroups", [
       "clearWorkgroupForm",
       "randomWorkgroupColor",

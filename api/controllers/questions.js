@@ -25,6 +25,7 @@ exports.createQuestion = async (req, res) => {
                 body.interests[i] = interest._id;
             }
         }
+        // TODO: No guardar antiguas
         const questionsDB = await Questions.create(body)
         res.json(questionsDB)
     } catch (error) {
@@ -174,20 +175,29 @@ exports.updateQuestion = async (req, res) => {
         if (question.length >= 1) {
             return res.status(409).json({ message: "This question already exist" });
         }
-        for (let i = 0; i < body.interests.length; i++) {
-            let interestName = body.interests[i];
+        let interests = body.interests;
+        for (let i = 0; i < interests.length; i++) {
+            let interestName = interests[i];
             let interest = await Interests.findOne({ name: interestName });
             if (interest) {
-                body.interests[i] = interest._id;
+                interests[i] = interest._id;
             } else {
                 interest = await Interests.create({
                     name: interestName,
                     description: 'Created for "' + body.name + '" question.',
                     creator: question.creator
                 });
-                body.interests[i] = interest._id;
+                interests = interest._id;
             }
         }
+        await Questions.findByIdAndUpdate(_id, {
+            $addToSet: {
+                interests: {
+                    $each: interests
+                }
+            }
+        })
+        delete body.interests;
         const questionDb = await Questions.findByIdAndUpdate(_id, body, { new: true })
             .populate({
                 path: 'creator',
@@ -199,6 +209,7 @@ exports.updateQuestion = async (req, res) => {
             });
         res.json(questionDb)
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'An error has occurred', error: error })
     }
 }

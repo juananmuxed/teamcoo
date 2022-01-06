@@ -8,9 +8,13 @@ router.post("/", auth, workgingGroupsController.createWorkgroup);
 
 router.get("/", auth, workgingGroupsController.getAllWorkgroups);
 
+router.get("/paged", auth, workgingGroupsController.getAllWorkgroupsPaged)
+
 router.get("/workgroupsByUser/:id", auth, workgingGroupsController.getWorkgroupsByUser);
 
 router.get("/secret/", auth, workgingGroupsController.getAllSecretWorkgroups);
+
+router.get("/secret/paged", auth, workgingGroupsController.getAllSecretWorkgroupsPaged);
 
 router.get("/archived/", auth, workgingGroupsController.getAllWorkgroupsDeleted);
 

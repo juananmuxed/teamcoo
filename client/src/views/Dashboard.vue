@@ -37,7 +37,6 @@
       </v-col>
       <v-col cols="12" md="8" xl="10" class="pa-3">
         <not-user-tasks v-if="loginUser.rol.value != 'user'"></not-user-tasks>
-        <home-buttons v-else></home-buttons>
       </v-col>
     </v-row>
   </v-container>
@@ -46,13 +45,11 @@
 <script>
 import { mapState } from "vuex";
 import privatedata from "../components/users/PrivateData.vue";
-import homebuttons from "../components/general/HomeButtons.vue";
 import notusertasks from "../components/users/NotUserTasks.vue";
 
 export default {
   components: {
     "private-data-column": privatedata,
-    "home-buttons": homebuttons,
     "not-user-tasks": notusertasks,
   },
   computed: {

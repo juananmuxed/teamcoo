@@ -18,7 +18,7 @@
           :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
         >
           <template v-slot:top>
-            <v-expansion-panels>
+            <v-expansion-panels class="mb-3">
               <v-expansion-panel>
                 <v-expansion-panel-header v-slot="{ open }">
                   <v-row no-gutters>

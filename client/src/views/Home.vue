@@ -21,22 +21,17 @@
         </v-skeleton-loader>
       </v-col>
     </v-row>
-    <home-buttons></home-buttons>
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-import homebuttons from "../components/general/HomeButtons.vue";
 import { sleep } from "../utils/utils";
 export default {
   data() {
     return {
       skeleton: true,
     };
-  },
-  components: {
-    "home-buttons": homebuttons,
   },
   computed: {
     ...mapState({

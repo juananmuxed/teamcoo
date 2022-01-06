@@ -18,7 +18,7 @@
           :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
         >
           <template v-slot:top>
-            <v-expansion-panels>
+            <v-expansion-panels class="mb-3">
               <v-expansion-panel>
                 <v-expansion-panel-header v-slot="{ open }">
                   <v-row no-gutters>
@@ -80,13 +80,6 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6">
-                      <user-search-component
-                        label="Creator"
-                        return-object
-                        v-model="search.creator"
-                      ></user-search-component>
-                    </v-col>
-                    <v-col cols="12" md="6">
                       <v-select
                         outlined
                         :items="questionForm.types"
@@ -112,6 +105,13 @@
                         :label="search.interestsAll ? 'All' : 'One'"
                         inset
                       ></v-switch>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <user-search-component
+                        label="Creator"
+                        return-object
+                        v-model="search.creator"
+                      ></user-search-component>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>
@@ -255,7 +255,7 @@
     </v-row>
     <v-dialog
       max-width="650"
-      v-model="dialogs.createinterest"
+      v-model="dialogs.createquestion"
       v-if="loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor'"
     >
       <template v-slot:activator="{ on: onDialog }">

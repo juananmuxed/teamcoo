@@ -3,26 +3,40 @@
     @input="handleInput"
     @click:clear="emitClear"
     @change="emitChange"
-    :items="usersByName"
+    :value="value"
+    :items="users"
     outlined
     clearable
-    no-filter
-    cache-items
     :return-object="returnObject"
-    :loading="isLoadingUser"
-    :search-input.sync="searchName"
+    hide-selected
     clear-icon="fas fa-times"
+    item-text="name"
     item-value="_id"
     :label="label"
     :prepend-icon="icon"
+    :filter="customFilter"
+    multiple
   >
-    <template v-slot:selection="{ item }">
-      {{ item.firstName + " " + item.lastName + " (" + item.username + ")" }}
-    </template>
     <template v-slot:no-data>
       <v-list-item>
         <v-list-item-title>Search user</v-list-item-title>
       </v-list-item>
+    </template>
+    <template v-slot:selection="data">
+      <v-chip v-bind="data.attrs" :input-value="data.selected">
+        <v-avatar left v-if="data.item.image != ''">
+          <v-img :src="data.item.image"></v-img>
+        </v-avatar>
+        <v-avatar left v-else>
+          <v-icon color="primary" small>fas fa-user</v-icon>
+        </v-avatar>
+        <span class="pr-2">
+          {{ data.item.username }}
+        </span>
+        <v-icon small @click="data.parent.selectItem(data.item)">
+          fas fa-times-circle
+        </v-icon>
+      </v-chip>
     </template>
     <template v-slot:item="{ item }">
       <v-list-item-avatar v-if="item.image != ''">
@@ -63,24 +77,13 @@ export default {
       default: "",
     },
   },
-  data() {
-    return {
-      searchName: null,
-    };
-  },
   computed: {
     ...mapState({
-      isLoadingUser: (state) => state.users.isLoadingUser,
-      usersByName: (state) => state.users.usersByName,
+      users: (state) => state.users.users,
     }),
   },
-  watch: {
-    searchName(val) {
-      this.searchUsersByName(val);
-    },
-  },
   methods: {
-    ...mapActions("users", ["searchUsersByName"]),
+    ...mapActions("users", ["loadUsersSilent"]),
     handleInput(val) {
       this.$emit("input", val);
     },
@@ -90,9 +93,23 @@ export default {
     emitChange(val) {
       this.$emit("change", val);
     },
-    clearSearch() {
-      this.searchName = null;
+    customFilter(item, queryText) {
+      const username = item.username.toLowerCase();
+      const firstName = item.firstName.toLowerCase();
+      const lastName = item.lastName.toLowerCase();
+      const name = firstName + " " + lastName;
+      const search = queryText.toLowerCase();
+
+      return (
+        username.indexOf(search) > -1 ||
+        firstName.indexOf(search) > -1 ||
+        lastName.indexOf(search) > -1 ||
+        name.indexOf(search) > -1
+      );
     },
+  },
+  created() {
+    this.loadUsersSilent();
   },
 };
 </script>

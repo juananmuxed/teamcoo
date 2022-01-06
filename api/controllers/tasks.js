@@ -40,9 +40,44 @@ exports.getAllTasks = async (req, res) => {
     }
 }
 
-exports.getAllSecretTasks = async (req, res) => {
+exports.getAllTasksPaged = async (req, res) => {
     try {
-        const taskDB = await Tasks.find({ deleted: false, secret: true })
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null, searchInterests = [], searchModeInterests, searchWorkgroups = [], searchModeWorkgroups, searchSuscriber = null } = req.query;
+        let sort = {};
+        let searchObject = {
+            $and: [
+                { deleted: false }
+            ]
+        }
+        if (searchName) searchObject.$and.push({
+            $or: [
+                { name: { $regex: searchName, $options: 'i' } },
+                { description: { $regex: searchName, $options: 'i' } }
+            ]
+        })
+        if (searchCreator) searchObject.$and.push({ creator: searchCreator })
+        if (searchSuscriber) searchObject.$and.push({ suscribers: { $in: [searchSuscriber] } })
+        if (searchInterests.length != 0) {
+            const interestsObject = {
+                interests: { [!JSON.parse(searchModeInterests.toLowerCase()) ? '$in' : '$all']: searchInterests }
+            }
+            searchObject.$and.push(interestsObject)
+        }
+        if (searchWorkgroups.length != 0) {
+            const workgroupsObject = {
+                workgroups: { [!JSON.parse(searchModeWorkgroups.toLowerCase()) ? '$in' : '$all']: searchWorkgroups }
+            }
+            searchObject.$and.push(workgroupsObject)
+        }
+        sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
+        const tasksDB = await Tasks.find({
+            $and: [
+                { deleted: false }, searchObject
+            ]
+        })
+            .limit(itemsPerPage * 1)
+            .skip((page - 1) * itemsPerPage)
+            .sort(sort)
             .populate({
                 path: 'creator',
                 match: { deleted: false }
@@ -59,9 +94,10 @@ exports.getAllSecretTasks = async (req, res) => {
                 path: 'suscribers',
                 match: { deleted: false }
             });
-        res.json(taskDB)
+        const count = await Tasks.countDocuments({ deleted: false });
+        res.json({ items: tasksDB, totalItems: count });
     } catch (error) {
-        res.status(500).json({ message: 'An error has occurred', error: error })
+        res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }
 

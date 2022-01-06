@@ -489,7 +489,13 @@
                 <v-row>
                   <v-col cols="12" class="font-weight-light ml-5"
                     >Created by
+                    <v-chip v-if="!workgroup.creator">
+                      <v-avatar left color="primary"
+                        ><v-icon x-small>fas fa-user-slash</v-icon></v-avatar
+                      >Closed account
+                    </v-chip>
                     <v-chip
+                      v-else
                       class="font-italic ml-2"
                       :to="`/users/` + workgroup.creator._id"
                     >
@@ -524,6 +530,7 @@
                           v-on="{ ...onTooltip, ...onDialog }"
                           v-if="
                             loginUser.rol.value == 'admin' ||
+                            !item.creator ||
                             workgroup.creator._id == loginUser._id ||
                             workgroup.coordinators.some(
                               (coor) => coor._id == loginUser._id
@@ -556,6 +563,7 @@
                           v-on="{ ...onTooltip, ...onDialog }"
                           v-if="
                             loginUser.rol.value == 'admin' ||
+                            !item.creator ||
                             workgroup.creator._id == loginUser._id
                           "
                         >
