@@ -132,7 +132,6 @@ const actions = {
         try {
             let body = state.interestForm.interest;
             body.creator = id;
-            commit('menu/notification', ['info', 3, body], { root: true });
             let config = rootGetters['general/cookieAuth'];
             await Axios.post('/interests/', body, config);
             await dispatch('loadInterestPaginated');
