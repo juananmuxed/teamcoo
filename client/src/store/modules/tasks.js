@@ -55,7 +55,6 @@ const mutations = {
         delete state.tasksForm.task.updatedAt;
         delete state.tasksForm.task.creator;
         delete state.tasksForm.task.suscribers;
-        delete state.tasksForm.task.workgroups;
     },
     tasksLoad: (state, tasks) => {
         state.tasks = tasks

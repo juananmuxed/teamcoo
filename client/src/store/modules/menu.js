@@ -35,7 +35,8 @@ const state = {
             editcommonquestion: false,
             edittask: false,
             savemembertask: false,
-            deletePage: false
+            deletePage: false,
+            changeToVolunteer: false
         },
         loader: {
             workgroup: false,

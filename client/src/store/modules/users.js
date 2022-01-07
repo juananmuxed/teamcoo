@@ -198,6 +198,24 @@ const actions = {
             dispatch('menu/notificationError', error, { root: true });
         }
     },
+
+    async makeUserVolunteer({ commit, rootState, rootGetters, dispatch }, params) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.put('/users/' + params.id, { rol: { name: "Volunteer", value: "volu" } }, config);
+            if (rootState.user.loginUser._id == params.id) {
+                commit('user/userStore', res.data, { root: true });
+            }
+            commit('userLoad', res.data);
+            commit('menu/cancelDialog', 'edituser', { root: true });
+            commit('menu/notification', ['primary', 3, 'User role changed correctly'], { root: true });
+        }
+        catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+
     // TODO: finally deleted not implemented
     async deleteUser({ rootState, commit, dispatch, rootGetters }, params) {
         try {
