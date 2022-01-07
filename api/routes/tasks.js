@@ -9,6 +9,8 @@ router.get("/", auth, tasksController.getAllTasks);
 
 router.get("/workgroup/:id", auth, tasksController.getAllTasksByWorkgroup);
 
+router.get("/user/:id", auth, tasksController.getAllTasksByUser);
+
 router.get("/paged", auth, tasksController.getAllTasksPaged);
 
 router.get("/archived/", auth, tasksController.getAllTasksDeleted);

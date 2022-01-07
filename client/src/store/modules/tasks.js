@@ -5,6 +5,7 @@ import { todayFormatToPicker, generateRandomColor, isDiferentArray } from '../..
 const state = {
     tasks: [],
     tasksByWorkgroup: [],
+    tasksByUser: [],
     task: {},
     tasksForm: {
         task: {
@@ -18,8 +19,7 @@ const state = {
             eventEndDate: '',
             image: null,
             newImage: null,
-            imagelink: '',
-            secret: false
+            imagelink: ''
         },
         loading: false
     },
@@ -42,6 +42,7 @@ const mutations = {
     clearTaskForm: (state) => {
         state.tasksForm.task.name = '';
         state.tasksForm.task.description = '';
+        state.tasksForm.task.color = '#E0E0E0';
         state.tasksForm.task.interests = [];
         state.tasksForm.task.workgroups = [];
         state.tasksForm.task.link = '';
@@ -49,13 +50,21 @@ const mutations = {
         state.tasksForm.task.eventEndDate = '';
         state.tasksForm.task.image = null;
         state.tasksForm.task.imagelink = '';
-        state.tasksForm.task.secret = false;
+        delete state.tasksForm.task._id;
+        delete state.tasksForm.task.createdAt;
+        delete state.tasksForm.task.updatedAt;
+        delete state.tasksForm.task.creator;
+        delete state.tasksForm.task.suscribers;
+        delete state.tasksForm.task.workgroups;
     },
     tasksLoad: (state, tasks) => {
         state.tasks = tasks
     },
     tasksByWorkgroupLoad: (state, tasks) => {
         state.tasksByWorkgroup = tasks
+    },
+    tasksByUserLoad: (state, tasks) => {
+        state.tasksByUser = tasks
     },
     changeSkeleton: (state) => {
         state.skeleton = !state.skeleton
@@ -184,6 +193,16 @@ const actions = {
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/tasks/workgroup/' + workgroupId, config);
             commit('tasksByWorkgroupLoad', res.data);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+        }
+    },
+
+    async loadTasksByUser({ commit, dispatch, rootGetters }, userId) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/tasks/user/' + userId, config);
+            commit('tasksByUserLoad', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }

@@ -32,6 +32,10 @@ const mutations = {
         state.interestForm.interest.description = '';
         state.interestForm.interest.color = '';
         state.interestForm.interest.creator = null;
+        delete state.interestForm.interest._id;
+        delete state.interestForm.interest.createdAt;
+        delete state.interestForm.interest.updatedAt;
+        delete state.interestForm.interest.creator;
     },
     randomInterestColor: (state) => {
         state.interestForm.interest.color = generateRandomColor(30);

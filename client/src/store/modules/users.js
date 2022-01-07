@@ -1,5 +1,4 @@
 import Axios from 'axios'
-import Vue from 'vue'
 import Vuetify from '../../plugins/vuetify'
 import { generatePalette, isDiferentArray } from '../../utils/utils'
 
@@ -30,7 +29,7 @@ const mutations = {
         state.users = users
     },
     usersByNameLoad: (state, users) => {
-        Vue.set(state, 'usersByName', users);
+        state.usersByName = users;
     },
     userLoad: (state, user) => {
         state.user = user
@@ -161,7 +160,7 @@ const actions = {
             }
             commit('changeIsLoadingUser');
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/users/usersByName/' + string, config);
+            let res = await Axios.get('/users/name/' + string, config);
             commit('usersByNameLoad', res.data);
             commit('changeIsLoadingUser');
         } catch (error) {

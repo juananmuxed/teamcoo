@@ -10,7 +10,7 @@ router.get("/", auth, workgingGroupsController.getAllWorkgroups);
 
 router.get("/paged", auth, workgingGroupsController.getAllWorkgroupsPaged)
 
-router.get("/workgroupsByUser/:id", auth, workgingGroupsController.getWorkgroupsByUser);
+router.get("/user/:id", auth, workgingGroupsController.getWorkgroupsByUser);
 
 router.get("/secret/", auth, workgingGroupsController.getAllSecretWorkgroups);
 

@@ -1,5 +1,4 @@
 import Axios from 'axios'
-import Vue from 'vue'
 import { isDiferentArray } from '../../utils/utils'
 
 const state = {
@@ -45,13 +44,15 @@ const mutations = {
         state.questionForm.question = Object.assign({}, question);
     },
     clearquestionForm: (state) => {
-        Vue.set(state.questionForm, 'question', {
-            interests: [],
-            name: '',
-            type: '',
-            description: '',
-            common: false
-        })
+        state.questionForm.question.name = '';
+        state.questionForm.question.description = '';
+        state.questionForm.question.interests = [];
+        state.questionForm.question.common = false;
+        state.questionForm.question.type = '';
+        delete state.questionForm.question._id;
+        delete state.questionForm.question.createdAt;
+        delete state.questionForm.question.updatedAt;
+        delete state.questionForm.question.creator;
     },
     questionsLoad: (state, questions) => {
         state.questions = questions;
@@ -283,7 +284,7 @@ const actions = {
     async loadAnswersByUser({ commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/questions/answersByUser/' + id, config);
+            let res = await Axios.get('/questions/answers/user/' + id, config);
             commit('answersByUserLoad', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });

@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import Axios from 'axios'
 import router from '@/router'
 import { generateRandomColor, isDiferentArray, treeBuild } from '../../utils/utils'
@@ -69,6 +68,12 @@ const mutations = {
         state.workgroupForm.workgroup.secret = false;
         state.workgroupForm.workgroup.link = '';
         state.workgroupForm.workgroup.color = '#E0E0E0';
+        delete state.workgroupForm.workgroup._id;
+        delete state.workgroupForm.workgroup.createdAt;
+        delete state.workgroupForm.workgroup.updatedAt;
+        delete state.workgroupForm.workgroup.coordinators;
+        delete state.workgroupForm.workgroup.members;
+        delete state.workgroupForm.workgroup.creator;
     },
     loadEditedWorkgroup: (state) => {
         state.workgroupForm.workgroup = Object.assign({}, state.workgroup);
@@ -95,7 +100,7 @@ const mutations = {
         state.workgroup = Object.assign({}, workgroup);
     },
     setWorkgroup: (state, workgroup) => {
-        Vue.set(state, 'workgroup', workgroup);
+        state.workgroup = workgroup;
     },
     loadMembers: (state) => {
         state.editMemberForm.members = JSON.parse(JSON.stringify(state.workgroup.members));
@@ -434,7 +439,7 @@ const actions = {
     async loadWorkgroupsByUser({ commit, dispatch, rootGetters }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.get('/workgroups/workgroupsByUser/' + id, config);
+            let res = await Axios.get('/workgroups/user/' + id, config);
             commit('setWorkgroupsByUser', res.data);
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
