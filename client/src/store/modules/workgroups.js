@@ -5,6 +5,7 @@ import { generateRandomColor, isDiferentArray, treeBuild } from '../../utils/uti
 
 const state = {
     workgroups: [],
+    childreWorkgroups: [],
     secretWorkgroups: [],
     nestedWorkgroups: [],
     secretNestedWorkgroups: [],
@@ -74,6 +75,9 @@ const mutations = {
     },
     workgroupsLoad: (state, workgroups) => {
         state.workgroups = workgroups
+    },
+    childrenWorkgroupsLoad: (state, workgroups) => {
+        state.childreWorkgroups = workgroups
     },
     secretWorkgroupsLoad: (state, secretWorkgroups) => {
         state.secretWorkgroups = secretWorkgroups
@@ -255,6 +259,16 @@ const actions = {
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
             commit('changeLoadingSecret');
+        }
+    },
+
+    async loadChildrenWorkgroups({ commit, dispatch, rootGetters }, id) {
+        try {
+            let config = Object.assign({}, rootGetters['general/cookieAuth']);
+            let res = await Axios.get('/workgroups/' + id + '/childrens', config);
+            commit('childrenWorkgroupsLoad', res.data);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 

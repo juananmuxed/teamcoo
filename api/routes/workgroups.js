@@ -20,6 +20,8 @@ router.get("/archived/", auth, workgingGroupsController.getAllWorkgroupsDeleted)
 
 router.get("/:id", auth, workgingGroupsController.getWorkgroup)
 
+router.get("/:id/childrens", auth, workgingGroupsController.getChildrenWorkgroups)
+
 router.put("/:id", auth, workgingGroupsController.updateWorkgroup)
 
 router.put("/join/:id", auth, workgingGroupsController.joinWorkgroup)

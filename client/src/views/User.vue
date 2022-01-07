@@ -207,8 +207,8 @@
                           </v-tooltip>
                         </template>
                         <confirmation-template
-                          title="Close your account"
-                          description="You are about to close your account. <br><br>Are you sure?"
+                          title="Close this account"
+                          description="You are about to close this account. <br><br>Are you sure?"
                           :cancelFunction="null"
                           textButton="Delete"
                           :actionparams="{ id: user._id }"
@@ -385,14 +385,14 @@
                 loginUser._id == user._id
               "
             >
-              <v-col v-if="workgroups.length != 0 && answers.length != 0">
+              <v-col v-if="workgroupsByUser.length != 0 && answers.length != 0">
                 <v-row>
                   <v-col
                     cols="12"
                     md="4"
                     xl="3"
                     class="pa-3"
-                    v-for="(workgroup, indexW) in workgroups"
+                    v-for="(workgroup, indexW) in workgroupsByUser"
                     :key="indexW"
                   >
                     <v-card>
@@ -591,7 +591,7 @@ export default {
       user: (state) => state.users.user,
       skeleton: (state) => state.users.skeleton,
       skeletonQuestions: (state) => state.questions.skeleton,
-      workgroups: (state) => state.workgroups.workgroupsByUser,
+      workgroupsByUser: (state) => state.workgroups.workgroupsByUser,
       commonQuestions: (state) => state.questions.commonQuestions,
       dialogs: (state) => state.menu.menu.dialogs,
       loginUser: (state) => state.user.loginUser,

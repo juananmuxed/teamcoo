@@ -40,6 +40,37 @@ exports.getAllTasks = async (req, res) => {
     }
 }
 
+exports.getAllTasksByWorkgroup = async (req, res) => {
+    try {
+        const _workgroupId = req.params.id
+        const tasksDB = await Tasks.find({
+            $and: [
+                { deleted: false },
+                { workgroups: { $in: [_workgroupId] } }
+            ]
+        })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'workgroups',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'suscribers',
+                match: { deleted: false }
+            });
+        res.json(tasksDB)
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error })
+    }
+}
+
 exports.getAllTasksPaged = async (req, res) => {
     try {
         const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null, searchInterests = [], searchModeInterests, searchWorkgroups = [], searchModeWorkgroups, searchSuscriber = null } = req.query;

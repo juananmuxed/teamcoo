@@ -4,6 +4,7 @@ import { todayFormatToPicker, generateRandomColor, isDiferentArray } from '../..
 
 const state = {
     tasks: [],
+    tasksByWorkgroup: [],
     task: {},
     tasksForm: {
         task: {
@@ -52,6 +53,9 @@ const mutations = {
     },
     tasksLoad: (state, tasks) => {
         state.tasks = tasks
+    },
+    tasksByWorkgroupLoad: (state, tasks) => {
+        state.tasksByWorkgroup = tasks
     },
     changeSkeleton: (state) => {
         state.skeleton = !state.skeleton
@@ -140,10 +144,11 @@ const actions = {
         }
     },
 
-    async loadTasks({ commit, dispatch }) {
+    async loadTasks({ commit, dispatch, rootGetters }) {
         try {
             commit('changeLoading');
-            let res = await Axios.get('/tasks/');
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/tasks/', config);
             commit('tasksLoad', res.data);
             commit('changeLoading');
         } catch (error) {
@@ -171,6 +176,16 @@ const actions = {
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
             commit('changeLoading');
+        }
+    },
+
+    async loadTasksByWorkgroup({ commit, dispatch, rootGetters }, workgroupId) {
+        try {
+            let config = rootGetters['general/cookieAuth'];
+            let res = await Axios.get('/tasks/workgroup/' + workgroupId, config);
+            commit('tasksByWorkgroupLoad', res.data);
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 

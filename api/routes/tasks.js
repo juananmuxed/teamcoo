@@ -5,13 +5,15 @@ const tasksController = require("../controllers/tasks");
 
 router.post("/", auth, tasksController.createTask);
 
-router.get("/", tasksController.getAllTasks);
+router.get("/", auth, tasksController.getAllTasks);
 
-router.get("/paged", tasksController.getAllTasksPaged);
+router.get("/workgroup/:id", auth, tasksController.getAllTasksByWorkgroup);
+
+router.get("/paged", auth, tasksController.getAllTasksPaged);
 
 router.get("/archived/", auth, tasksController.getAllTasksDeleted);
 
-router.get("/:id", tasksController.getTask)
+router.get("/:id", auth, tasksController.getTask)
 
 router.put("/:id", auth, tasksController.updateTask)
 
