@@ -83,9 +83,6 @@ const mutations = {
     setAnswers: (state, answers) => {
         state.answers = answers;
     },
-    setOptions: (state, options) => {
-        state.options = options;
-    },
     setTotalQuestions: (state, total) => {
         state.totalQuestions = total;
     }

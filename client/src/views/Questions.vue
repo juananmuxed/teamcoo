@@ -344,11 +344,7 @@ export default {
       "delQuestionSoft",
       "searchQuestion",
     ]),
-    ...mapMutations("questions", [
-      "clearquestionForm",
-      "loadEditedQuestion",
-      "setOptions",
-    ]),
+    ...mapMutations("questions", ["clearquestionForm", "loadEditedQuestion"]),
     textColor(color) {
       return idealTextColor(color);
     },

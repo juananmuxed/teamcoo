@@ -34,15 +34,12 @@
           </v-text-field>
         </v-col>
         <v-col cols="12" class="py-1" v-if="loginUser.rol.value == 'admin'">
-          <v-select
-            outlined
-            label="Role"
+          <role-select-component
             v-model="userForm.user.rol"
-            :items="roles"
-            item-text="name"
-            item-value="value"
+            label="Role"
             return-object
-          ></v-select>
+          >
+          </role-select-component>
         </v-col>
         <v-col cols="12" class="py-1">
           <v-file-input
@@ -129,13 +126,16 @@
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+import RoleSelectorVue from "../general/RoleSelector.vue";
 export default {
+  components: {
+    "role-select-component": RoleSelectorVue,
+  },
   computed: {
     ...mapState({
       userForm: (state) => state.users.userForm,
       user: (state) => state.users.user,
       rules: (state) => state.general.rules,
-      roles: (state) => state.roles,
       interests: (state) => state.interests.interests,
       loginUser: (state) => state.user.loginUser,
     }),

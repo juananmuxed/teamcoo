@@ -43,9 +43,6 @@ const mutations = {
     changeLoading: (state) => {
         state.loading = !state.loading;
     },
-    setOptions: (state, options) => {
-        state.options = options;
-    },
     setTotalInterest: (state, total) => {
         state.totalInterests = total;
     }

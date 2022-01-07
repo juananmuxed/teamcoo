@@ -11,6 +11,14 @@ const state = {
 
         }
     },
+    search: {
+        name: null,
+        rol: null,
+        interests: [],
+        interestsAll: false,
+        options: {},
+    },
+    totalUsers: 0,
     loading: false,
     skeleton: false,
     isLoadingUser: false,
@@ -31,14 +39,17 @@ const mutations = {
         state.userForm.user = Object.assign({}, state.user);
         state.userForm.user.imagefile = null;
     },
-    changeLoading: (state, loading) => {
-        state.loading = loading
+    changeLoading: (state) => {
+        state.loading = !state.loading;
     },
-    changeIsLoadingUser: (state, loading) => {
-        state.isLoadingUser = loading
+    changeIsLoadingUser: (state) => {
+        state.isLoadingUser = !state.isLoadingUser;
     },
-    changeSkeleton: (state, skeleton) => {
-        state.skeleton = skeleton
+    changeSkeleton: (state) => {
+        state.skeleton = !state.skeleton
+    },
+    setTotalUsers: (state, total) => {
+        state.totalUsers = total;
     }
 }
 
@@ -92,12 +103,12 @@ const getters = {
 const actions = {
     async loadUsers({ commit, dispatch }) {
         try {
-            commit('changeLoading', true);
+            commit('changeLoading');
             await dispatch('loadUsersSilent');
-            commit('changeLoading', false);
+            commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeLoading', false);
+            commit('changeLoading');
         }
     },
 
@@ -111,14 +122,33 @@ const actions = {
         }
     },
 
-    async searchUser({ commit, dispatch }, userId) {
+    async loadUsersPaginated({ state, commit, dispatch, rootGetters }) {
         try {
-            commit('changeSkeleton', true);
-            await dispatch('searchUserSilent', userId)
-            commit('changeSkeleton', false);
+            commit('changeLoading');
+            let config = Object.assign({}, rootGetters['general/cookieAuth']);
+            config.params = state.search.options;
+            config.params.searchName = state.search.name;
+            config.params.searchRol = state.search.rol?.value;
+            config.params.searchInterests = state.search.interests.map(i => i._id);
+            config.params.searchMode = state.search.interestsAll;
+            let res = await Axios.get('/users/paged', config);
+            commit('usersLoad', res.data.items);
+            commit('setTotalUsers', res.data.totalItems);
+            commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeSkeleton', false);
+            commit('changeLoading');
+        }
+    },
+
+    async searchUser({ commit, dispatch }, userId) {
+        try {
+            commit('changeSkeleton');
+            await dispatch('searchUserSilent', userId)
+            commit('changeSkeleton');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeSkeleton');
         }
     },
 
@@ -129,14 +159,14 @@ const actions = {
             if (!string) {
                 string = null
             }
-            commit('changeIsLoadingUser', true);
+            commit('changeIsLoadingUser');
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/users/usersByName/' + string, config);
             commit('usersByNameLoad', res.data);
-            commit('changeIsLoadingUser', false);
+            commit('changeIsLoadingUser');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeIsLoadingUser', false);
+            commit('changeIsLoadingUser');
         }
     },
 

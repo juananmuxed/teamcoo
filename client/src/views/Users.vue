@@ -11,17 +11,98 @@
         <v-data-table
           :items="users"
           :headers="headers"
-          :search="search"
           :loading="loading"
+          :options.sync="search.options"
+          :server-items-length="totalUsers"
+          :footer-props="{ 'items-per-page-options': [5, 10, 20] }"
+          :header-props="{ 'sort-icon': 'fas fa-arrow-up' }"
         >
           <template v-slot:top>
-            <v-text-field
-              v-model="search"
-              label="Search by name"
-              class="mx-4"
-              append-icon="fas fa-search"
-              outlined
-            ></v-text-field>
+            <v-expansion-panels class="mb-3">
+              <v-expansion-panel>
+                <v-expansion-panel-header v-slot="{ open }">
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      <v-icon>fas fa-search</v-icon>
+                    </v-col>
+                    <v-col cols="10" class="text--secondary">
+                      <v-fade-transition leave-absolute>
+                        <span v-if="open"
+                          >Search by username, name, role and interests</span
+                        >
+                        <v-row v-else>
+                          <v-chip
+                            class="mx-1"
+                            v-if="search.name"
+                            v-text="'Text: ' + search.name"
+                            color="primary"
+                          ></v-chip>
+                          <v-chip
+                            class="mx-1"
+                            v-if="search.rol && search.rol.value"
+                            v-text="'Role: ' + search.rol.name"
+                            :color="getColor(search.rol.value)"
+                            :text-color="getTextColor(search.rol.value)"
+                          ></v-chip>
+                          <v-chip
+                            v-for="(interest, index) in search.interests"
+                            class="mx-1"
+                            v-text="interest.name"
+                            :color="interest.color"
+                            :key="index"
+                          ></v-chip>
+                          <v-chip
+                            v-if="search.interestsAll"
+                            color="success"
+                            class="mx-1"
+                            >All answers</v-chip
+                          >
+                        </v-row>
+                      </v-fade-transition>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-row>
+                    <v-col cols="12" md="6">
+                      <v-text-field
+                        v-model="search.name"
+                        label="Username or name"
+                        clearable
+                        clear-icon="fas fa-times"
+                        outlined
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <role-select-component
+                        label="Role"
+                        return-object
+                        clearable
+                        v-model="search.rol"
+                      >
+                      </role-select-component>
+                    </v-col>
+                    <v-col cols="11" md="5">
+                      <interest-search-component
+                        label="Interests"
+                        return-object
+                        v-model="search.interests"
+                      ></interest-search-component>
+                    </v-col>
+                    <v-col cols="1">
+                      <v-switch
+                        :disabled="
+                          search.interests && search.interests.length == 0
+                        "
+                        v-model="search.interestsAll"
+                        :label="search.interestsAll ? 'All' : 'One'"
+                        inset
+                      ></v-switch>
+                    </v-col>
+                  </v-row>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </template>
           <template v-slot:no-data>
             <span class="display-1 text-uppercase font-weight-thin"
@@ -38,7 +119,7 @@
               >No Users found</span
             >
           </template>
-          <template v-slot:item.role="{ item }">
+          <template v-slot:item.rol="{ item }">
             <v-chip
               class="text-uppercase"
               :color="getColor(item.rol.value)"
@@ -99,19 +180,20 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import RoleSelectorVue from "../components/general/RoleSelector.vue";
+import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
 import { idealTextColor } from "../utils/utils";
 export default {
   data() {
     return {
-      search: "",
       headers: [
         {
-          text: "Users",
+          text: "Username",
           value: "username",
         },
         {
           text: "Role",
-          value: "role",
+          value: "rol",
           sortable: true,
         },
         {
@@ -123,25 +205,40 @@ export default {
           text: "Interests",
           value: "interests",
           sortable: false,
-          width: 200,
+          width: 400,
         },
         {
           text: "",
           value: "actions",
           sortable: false,
+          width: 120,
         },
       ],
     };
+  },
+  components: {
+    "interest-search-component": InterestsSearchVue,
+    "role-select-component": RoleSelectorVue,
   },
   computed: {
     ...mapState({
       users: (state) => state.users.users,
       loginUser: (state) => state.user.loginUser,
+      search: (state) => state.users.search,
+      totalUsers: (state) => state.users.totalUsers,
       loading: (state) => state.users.loading,
     }),
   },
+  watch: {
+    search: {
+      handler() {
+        if (!this.loading) this.loadUsersPaginated();
+      },
+      deep: true,
+    },
+  },
   methods: {
-    ...mapActions("users", ["loadUsers"]),
+    ...mapActions("users", ["loadUsersPaginated"]),
     getColor(role) {
       return this.$store.getters["users/getRoleColor"](role).color;
     },
@@ -151,9 +248,6 @@ export default {
     textColor(color) {
       return idealTextColor(color);
     },
-  },
-  created() {
-    this.loadUsers();
   },
 };
 </script>
