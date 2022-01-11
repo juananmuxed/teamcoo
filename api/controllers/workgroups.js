@@ -47,6 +47,36 @@ exports.getAllWorkgroups = async (req, res) => {
     }
 }
 
+exports.getChildrenWorkgroups = async (req, res) => {
+    try {
+        const _id = req.params.id
+        const workgroupsDB = await Workgroups.find({ deleted: false, parent: _id })
+            .populate({
+                path: 'creator',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'questions',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'coordinators',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'members',
+                match: { deleted: false }
+            })
+            .populate({
+                path: 'parent',
+                match: { deleted: false }
+            });
+        res.json(workgroupsDB)
+    } catch (error) {
+        res.status(400).json({ message: 'An error has ocurred', error: error });
+    }
+}
+
 exports.getAllSecretWorkgroups = async (req, res) => {
     try {
         const workgroupDB = await Workgroups.find({ secret: true, deleted: false })

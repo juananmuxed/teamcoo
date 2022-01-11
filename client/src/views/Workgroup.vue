@@ -111,7 +111,7 @@
                 <span class="text-right caption font-weight-light">Back</span>
               </v-tooltip>
               <v-tooltip
-                right
+                top
                 :color="
                   workgroup.members.some(
                     (member) => member._id == loginUser._id
@@ -119,7 +119,7 @@
                     ? 'info'
                     : 'error'
                 "
-                transition="scroll-x-transition"
+                transition="scroll-y-reverse-transition"
               >
                 <template v-slot:activator="{ on }">
                   <span
@@ -136,18 +136,25 @@
                     : "Unjoined"
                 }}</span>
               </v-tooltip>
-              <span
-                v-if="workgroup.parent"
-                class="text-uppercase font-weight-thin subtitle-4 ml-4"
-                >in {{ workgroup.parent.name }}</span
-              >
+              <template v-if="workgroup.parent">
+                <span class="text-uppercase font-weight-thin subtitle-4 ml-4">
+                  in
+                </span>
+                <v-btn
+                  class="ml-4"
+                  v-text="workgroup.parent.name"
+                  text
+                  small
+                  :to="`/workgroups/${workgroup.parent._id}`"
+                ></v-btn>
+              </template>
               <v-spacer></v-spacer>
               <v-chip small label color="secondary" v-if="workgroup.secret">
                 Private
               </v-chip>
             </v-card-title>
             <v-divider></v-divider>
-            <v-card-text :class="`${textColor(workgroup.color)}--text`">
+            <v-card-text>
               <v-dialog v-model="dialogs.editmembers" max-width="650">
                 <edit-members></edit-members>
               </v-dialog>
@@ -181,29 +188,16 @@
                   ></v-col
                 >
               </v-row>
-              <v-divider
-                class="my-4"
-                :color="textColor(workgroup.color)"
-              ></v-divider>
+              <v-divider class="my-4"></v-divider>
               <v-toolbar dense elevation="0" color="secondary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Children workgroups</v-toolbar-title
                 >
               </v-toolbar>
               <v-row>
-                <v-col
-                  v-if="
-                    workgroups.filter(
-                      (wg) => wg.parent && wg.parent._id == workgroup._id
-                    ).length != 0
-                  "
-                >
+                <v-col v-if="childreWorkgroups.length != 0">
                   <v-data-iterator
-                    :items="
-                      workgroups.filter(
-                        (wg) => wg.parent && wg.parent._id == workgroup._id
-                      )
-                    "
+                    :items="childreWorkgroups"
                     items-per-page.sync="6"
                   >
                     <template v-slot:default="props">
@@ -263,10 +257,7 @@
                   No children workgroups
                 </v-col>
               </v-row>
-              <v-divider
-                class="my-4"
-                :color="textColor(workgroup.color)"
-              ></v-divider>
+              <v-divider class="my-4"></v-divider>
               <v-toolbar dense elevation="0" color="primary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Coordinators</v-toolbar-title
@@ -284,10 +275,7 @@
                   small
                   color="secondary"
                   @click="
-                    loadMembers({
-                      members: workgroup.members,
-                      coordinators: workgroup.coordinators,
-                    });
+                    loadMembers();
                     dialogs.editmembers = true;
                   "
                   >Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn
@@ -336,10 +324,7 @@
                   small
                   color="primary"
                   @click="
-                    loadMembers({
-                      members: workgroup.members,
-                      coordinators: workgroup.coordinators,
-                    });
+                    loadMembers();
                     dialogs.editmembers = true;
                   "
                   >Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn
@@ -367,10 +352,7 @@
                   No members for this workgroup
                 </v-col>
               </v-row>
-              <v-divider
-                class="my-4"
-                :color="textColor(workgroup.color)"
-              ></v-divider>
+              <v-divider class="my-4"></v-divider>
               <v-toolbar dense elevation="0" color="primary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Tasks</v-toolbar-title
@@ -380,18 +362,10 @@
                 <v-col
                   cols="12"
                   class="mb-4"
-                  v-if="
-                    tasks.filter((task) =>
-                      task.workgroups.some((wg) => wg._id == workgroup._id)
-                    ).length > 0
-                  "
+                  v-if="tasksByWorkgroup.length > 0"
                 >
                   <v-data-iterator
-                    :items="
-                      tasks.filter((task) =>
-                        task.workgroups.some((wg) => wg._id == workgroup._id)
-                      )
-                    "
+                    :items="tasksByWorkgroup"
                     items-per-page.sync="6"
                   >
                     <template v-slot:default="props">
@@ -603,7 +577,7 @@ import confirm from "../components/general/Confirm.vue";
 import invalidstatic from "../components/general/Invalid.vue";
 import editworkgroup from "../components/workgroups/EditWorkgroup.vue";
 import editmembers from "../components/workgroups/EditMembers.vue";
-import { dateToBeauty, idealTextColor, outdated } from "../utils/utils";
+import { dateToBeauty, outdated } from "../utils/utils";
 export default {
   data() {
     return {
@@ -620,8 +594,8 @@ export default {
   computed: {
     ...mapState({
       workgroup: (state) => state.workgroups.workgroup,
-      workgroups: (state) => state.workgroups.workgroups,
-      tasks: (state) => state.tasks.tasks,
+      childreWorkgroups: (state) => state.workgroups.childreWorkgroups,
+      tasksByWorkgroup: (state) => state.tasks.tasksByWorkgroup,
       loginUser: (state) => state.user.loginUser,
       dialogs: (state) => state.menu.menu.dialogs,
       skeleton: (state) => state.workgroups.skeleton,
@@ -633,21 +607,18 @@ export default {
       "delWorkgroupSoft",
       "unjoinWorkgroup",
       "searchWorkgroupSilent",
+      "loadChildrenWorkgroups",
     ]),
     ...mapActions("menu", ["goBack"]),
     ...mapActions("interests", ["loadInterests"]),
-    ...mapActions("workgroups", ["loadWorkgroups"]),
-    ...mapActions("tasks", ["loadTasks"]),
+    ...mapActions("tasks", ["loadTasksByWorkgroup"]),
     ...mapMutations("workgroups", ["loadMembers", "loadEditedWorkgroup"]),
     refreshing() {
       this.polling = setInterval(() => {
         this.searchWorkgroupSilent(this.$route.params.id);
-        this.loadWorkgroups();
-        this.loadTasks();
+        this.loadChildrenWorkgroups(this.$route.params.id);
+        this.loadTasksByWorkgroup(this.$route.params.id);
       }, 5 * 60 * 1000);
-    },
-    textColor(color) {
-      return idealTextColor(color);
     },
     dateFormated(date) {
       return dateToBeauty(date);
@@ -659,8 +630,8 @@ export default {
   created() {
     this.refreshing();
     this.searchWorkgroup(this.$route.params.id);
-    this.loadWorkgroups();
-    this.loadTasks();
+    this.loadChildrenWorkgroups(this.$route.params.id);
+    this.loadTasksByWorkgroup(this.$route.params.id);
   },
   beforeDestroy() {
     clearInterval(this.polling);

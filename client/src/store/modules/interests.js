@@ -32,6 +32,10 @@ const mutations = {
         state.interestForm.interest.description = '';
         state.interestForm.interest.color = '';
         state.interestForm.interest.creator = null;
+        delete state.interestForm.interest._id;
+        delete state.interestForm.interest.createdAt;
+        delete state.interestForm.interest.updatedAt;
+        delete state.interestForm.interest.creator;
     },
     randomInterestColor: (state) => {
         state.interestForm.interest.color = generateRandomColor(30);
@@ -42,9 +46,6 @@ const mutations = {
     },
     changeLoading: (state) => {
         state.loading = !state.loading;
-    },
-    setOptions: (state, options) => {
-        state.options = options;
     },
     setTotalInterest: (state, total) => {
         state.totalInterests = total;
@@ -131,7 +132,6 @@ const actions = {
         try {
             let body = state.interestForm.interest;
             body.creator = id;
-            commit('menu/notification', ['info', 3, body], { root: true });
             let config = rootGetters['general/cookieAuth'];
             await Axios.post('/interests/', body, config);
             await dispatch('loadInterestPaginated');

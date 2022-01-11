@@ -10,7 +10,7 @@ router.get("/", auth, workgingGroupsController.getAllWorkgroups);
 
 router.get("/paged", auth, workgingGroupsController.getAllWorkgroupsPaged)
 
-router.get("/workgroupsByUser/:id", auth, workgingGroupsController.getWorkgroupsByUser);
+router.get("/user/:id", auth, workgingGroupsController.getWorkgroupsByUser);
 
 router.get("/secret/", auth, workgingGroupsController.getAllSecretWorkgroups);
 
@@ -19,6 +19,8 @@ router.get("/secret/paged", auth, workgingGroupsController.getAllSecretWorkgroup
 router.get("/archived/", auth, workgingGroupsController.getAllWorkgroupsDeleted);
 
 router.get("/:id", auth, workgingGroupsController.getWorkgroup)
+
+router.get("/:id/childrens", auth, workgingGroupsController.getChildrenWorkgroups)
 
 router.put("/:id", auth, workgingGroupsController.updateWorkgroup)
 

@@ -87,6 +87,49 @@ exports.getAllUsers = async (req, res) => {
     }
 }
 
+exports.getAllUsersPaged = async (req, res) => {
+    try {
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchRol = null, searchInterests = [], searchMode } = req.query;
+        let sort = {};
+        let searchObject = {
+            $and: [
+                { deleted: false }
+            ]
+        }
+        if (searchName) searchObject.$and.push({
+            $or: [
+                { username: { $regex: searchName, $options: 'i' } },
+                { firstName: { $regex: searchName, $options: 'i' } },
+                { lastName: { $regex: searchName, $options: 'i' } }
+            ]
+        })
+        if (searchRol) searchObject.$and.push({ 'rol.value': searchRol })
+        if (searchInterests.length != 0) {
+            const interestsObject = {
+                interests: { [!JSON.parse(searchMode.toLowerCase()) ? '$in' : '$all']: searchInterests }
+            }
+            searchObject.$and.push(interestsObject)
+        }
+        sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
+        const usersDB = await User.find({
+            $and: [
+                { deleted: false }, searchObject
+            ]
+        })
+            .limit(itemsPerPage * 1)
+            .skip((page - 1) * itemsPerPage)
+            .sort(sort)
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            });
+        const count = await User.countDocuments({ deleted: false });
+        res.json({ items: usersDB, totalItems: count });
+    } catch (error) {
+        res.status(500).json({ message: 'An error has occurred', error: error });
+    }
+}
+
 exports.getUserByString = async (req, res) => {
     try {
         const string = req.params.name;

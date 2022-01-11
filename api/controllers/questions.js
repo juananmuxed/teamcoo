@@ -25,7 +25,6 @@ exports.createQuestion = async (req, res) => {
                 body.interests[i] = interest._id;
             }
         }
-        // TODO: No guardar antiguas
         const questionsDB = await Questions.create(body)
         res.json(questionsDB)
     } catch (error) {
