@@ -182,6 +182,8 @@ $RECYCLE.BIN/
 
 ### dotenv ###
 .env
+client/.env.production
+.env.production
 
 ## PSDs ###
 

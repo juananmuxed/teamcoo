@@ -7,10 +7,8 @@ import router from './router'
 import vuex from 'vuex'
 import vuetify from './plugins/vuetify'
 import store from './store/index'
-import globalConfig from './config/config.json'
 
-const host = process.env.NODE_ENV == 'development' ? globalConfig.global.development.hostApi : globalConfig.global.production.hostApi;
-const urlApi = `${host}/api/v${globalConfig.global.versionApi}/`;
+const urlApi = `${process.env.VUE_APP_BASE_URL_API}/api/v${process.env.VUE_APP_API_VERSION}/`;
 
 Vue.use(vueaxios, axios, router, vuex)
 Vue.config.productionTip = false;

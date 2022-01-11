@@ -10,6 +10,8 @@ COPY . .
 
 RUN npm install
 
-EXPOSE 3000
+RUN npm install pm2@3.5.0 -g
 
-CMD ["npm", "run", "dev"]
+CMD pm2 start app.js -i 4
+
+EXPOSE 3000
