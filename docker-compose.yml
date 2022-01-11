@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: ./api
-      dockerfile: Dockerfile-dev
+      dockerfile: Dockerfile
     networks:
       - teamcoo
     ports:
@@ -16,21 +16,9 @@ services:
     depends_on:
       - db
     env_file:
-      - .env
+      - .env.production
     environment:
       - NODE_ENV=production
-  web:
-    build:
-      context: ./client
-      dockerfile: Dockerfile-dev
-    networks:
-      - teamcoo
-    ports:
-      - "8080:8080"
-    container_name: ${WEB_NAME}-web
-    volumes:
-      - ./client:/teamcoo
-      - /teamcoo/node_modules
   db:
     image: mongo
     networks:

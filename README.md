@@ -156,7 +156,7 @@ cd teamcoo
 
 #### Config
 
-Create (or modify example.env) the .env to Enviorement Variables
+Create the .env.production like .env.development
 
 ```js
 WEB_NAME = name_ong;
@@ -170,23 +170,14 @@ DATABASE_HOST = localhost;
 DATABASE_NAME = teamcoo;
 DATABASE_PORT = 27017;
 API_PORT = 3000;
-NODE_ENV = development;
 ```
 
-Change the "production" urls to API
+Create the "production" urls to API
 
 ```js
-  // client/src/config/config.json
-  "global": {
-    "versionApp": "0.10.0",
-    "versionApi": 1,
-    "development": {
-      "hostApi": "http://localhost:3000"
-    },
-    "production": { // This
-      "hostApi": "http://localhost:3000"
-    }
-  },
+  // client/.env.production
+  VUE_APP_BASE_URL_API=http://localhost:3000 // https://api.domain.com/
+  VUE_APP_API_VERSION=1
 ```
 
 This is just for external use like Emails or other next features (for example Share)
