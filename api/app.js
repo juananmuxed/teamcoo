@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const fs = require('fs');
-require('dotenv').config({ path: require('find-config')('.env') });
+require('dotenv').config({ path: require('find-config')('.env.' + process.env.NODE_ENV) });
 
 const colors = {
   black: '\u001b[30m',
@@ -30,7 +30,6 @@ const {
   DATABASE_NAME,
   DATABASE_HOST,
   DATABASE_PORT,
-  NODE_ENV,
   WEB_NAME,
   API_VERSION
 } = process.env;
@@ -46,11 +45,11 @@ let options = {
   useUnifiedTopology: true
 }
 
-if (NODE_ENV == 'production') options.user = process.env.MONGO_ROOT_USER;
-if (NODE_ENV == 'production') options.pass = process.env.MONGO_ROOT_PASSWORD;
-if (NODE_ENV == 'production') options.auth = { authSource: 'admin' };
+if (process.env.NODE_ENV == 'production') options.user = process.env.MONGO_ROOT_USER;
+if (process.env.NODE_ENV == 'production') options.pass = process.env.MONGO_ROOT_PASSWORD;
+if (process.env.NODE_ENV == 'production') options.auth = { authSource: 'admin' };
 
-const url = `mongodb://${NODE_ENV == 'production' ? WEB_NAME + '-db' : DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
+const url = `mongodb://${process.env.NODE_ENV == 'production' ? WEB_NAME + '-db' : DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
 
 // Promises
 mongoose.connect(url, options);
