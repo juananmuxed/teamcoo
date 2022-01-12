@@ -101,7 +101,7 @@ Access to the folder
 cd teamcoo
 ```
 
-Create (or modify) the .env to Enviorement Variables
+Create (or modify) the .env.development to Enviorement Variables
 
 ```js
 WEB_NAME = name_ong;
@@ -109,6 +109,7 @@ MONGO_ROOT_USER = rootname;
 MONGO_ROOT_PASSWORD = rootpass;
 MONGOEXPRESS_LOGIN = teamcoo;
 MONGOEXPRESS_PASSWORD = pass;
+MONGODB_ADMIN_PORT = 8081;
 SECRET_STRING = verysecret;
 API_VERSION = 1;
 DATABASE_HOST = localhost;
@@ -167,6 +168,7 @@ MONGO_ROOT_USER = rootname;
 MONGO_ROOT_PASSWORD = rootpass;
 MONGOEXPRESS_LOGIN = teamcoo;
 MONGOEXPRESS_PASSWORD = pass;
+MONGODB_ADMIN_PORT = 8081;
 SECRET_STRING = verysecret;
 API_VERSION = 1;
 DATABASE_HOST = localhost;
@@ -187,7 +189,7 @@ This is just for external use like Emails or other next features (for example Sh
 
 #### Build
 
-I prefer build de vue app with the `npm run build` command and create a `.htaccess` file in the `.dist` folder with this content (just Apache):
+Build de vue app with the `npm run build` command and create a `.htaccess` file in the `.dist` folder with this content (just Apache):
 
 ```
 <IfModule mod_rewrite.c>
@@ -210,10 +212,10 @@ Build the Dockers with docker-compose
 docker-compose build
 ```
 
-And up the Network
+And up the Network and use de .env.production
 
 ```bash
-docker-compose up -d
+docker-compose --env-file ./.env.production up -d
 ```
 
 #### Next
@@ -221,7 +223,6 @@ docker-compose up -d
 The ports by default:
 
 - API: 3000
-- APP: 8080 -> Just in case you use the Dockerized version
 - DB-Admin: 8081
 - Database: 27017
 
