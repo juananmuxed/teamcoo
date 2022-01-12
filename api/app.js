@@ -3,7 +3,8 @@ const morgan = require('morgan')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const fs = require('fs');
-require('dotenv').config({ path: require('find-config')('.env.' + process.env.NODE_ENV) });
+const environment = process.env.NODE_ENV || 'development';
+require('dotenv').config({ path: require('find-config')('.env.' + environment) });
 
 const colors = {
   black: '\u001b[30m',
@@ -45,11 +46,11 @@ let options = {
   useUnifiedTopology: true
 }
 
-if (process.env.NODE_ENV == 'production') options.user = process.env.MONGO_ROOT_USER;
-if (process.env.NODE_ENV == 'production') options.pass = process.env.MONGO_ROOT_PASSWORD;
-if (process.env.NODE_ENV == 'production') options.auth = { authSource: 'admin' };
+if (environment == 'production') options.user = process.env.MONGO_ROOT_USER;
+if (environment == 'production') options.pass = process.env.MONGO_ROOT_PASSWORD;
+if (environment == 'production') options.auth = { authSource: 'admin' };
 
-const url = `mongodb://${process.env.NODE_ENV == 'production' ? WEB_NAME + '-db' : DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
+const url = `mongodb://${environment == 'production' ? WEB_NAME + '-db' : DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
 
 // Promises
 mongoose.connect(url, options);
@@ -91,7 +92,7 @@ const history = require('connect-history-api-fallback')
 app.use(history());
 
 app.set('port', process.env.API_PORT || 3000)
-app.set('host', NODE_ENV == 'production' ? process.env.WEB_NAME + '-api' : 'localhost')
+app.set('host', environment == 'production' ? process.env.WEB_NAME + '-api' : 'localhost')
 app.listen(app.get('port'), app.get('host'), () => {
   console.log(colors.bgmagenta + colors.white + '[______________________________________________________________]' + colors.reset);
   console.log(colors.bgmagenta + colors.white + '[________________________________API___________________________]' + colors.reset);

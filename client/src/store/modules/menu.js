@@ -1,7 +1,8 @@
 import Vuetify from '../../plugins/vuetify'
 import Axios from 'axios'
 import router from '@/router'
-import config from '../../../package.json'
+import configPackage from '../../../package.json'
+import config from '../../config/config.json'
 import { generateRandomColor } from '../../utils/utils'
 import Vue from 'vue'
 
@@ -12,7 +13,7 @@ const state = {
         scroll: 0,
         upDown: false,
         links: config.menuLinks,
-        version: config.version,
+        version: configPackage.version,
         staticFooter: [],
         staticLateral: [],
         dialogs: {
