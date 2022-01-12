@@ -5,9 +5,9 @@ services:
       context: ./api
       dockerfile: Dockerfile
     networks:
-      - ${WEB_NAME}
+      - teamcoo
     ports:
-      - "3000:3000"
+      - "${API_PORT}:3000"
     container_name: ${WEB_NAME}-api
     volumes:
       - ./api:/teamcoo/v1
@@ -22,9 +22,9 @@ services:
   db:
     image: mongo
     networks:
-      - ${WEB_NAME}
+      - teamcoo
     ports:
-      - "27017:27017"
+      - "${DATABASE_PORT}:27017"
     container_name: ${WEB_NAME}-db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
@@ -38,7 +38,7 @@ services:
     container_name: ${WEB_NAME}-admin-db
     environment:
       - ME_CONFIG_MONGODB_SERVER=${WEB_NAME}-db
-      - ME_CONFIG_MONGODB_PORT=${DATABASE_PORT}
+      - ME_CONFIG_MONGODB_PORT=27017
       - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_ROOT_USER}
       - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_ROOT_PASSWORD}
       - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
@@ -46,9 +46,9 @@ services:
     depends_on:
       - db
     ports:
-      - "8081:8081"
+      - "${MONGODB_ADMIN_PORT}:8081"
     networks:
-      - ${WEB_NAME}
+      - teamcoo
 networks:
   teamcoo:
     name: ${WEB_NAME}
