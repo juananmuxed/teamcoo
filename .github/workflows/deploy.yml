@@ -24,4 +24,4 @@ jobs:
             npm run build
             cp example.htaccess dist/.htaccess
             cd ../
-            docker-compose --env-file ./.env.production -d up
+            docker-compose --env-file ./.env.production up -d
