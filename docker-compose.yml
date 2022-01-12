@@ -5,7 +5,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     networks:
-      - teamcoo
+      - ${WEB_NAME}
     ports:
       - "3000:3000"
     container_name: ${WEB_NAME}-api
@@ -22,7 +22,7 @@ services:
   db:
     image: mongo
     networks:
-      - teamcoo
+      - ${WEB_NAME}
     ports:
       - "27017:27017"
     container_name: ${WEB_NAME}-db
@@ -48,7 +48,7 @@ services:
     ports:
       - "8081:8081"
     networks:
-      - teamcoo
+      - ${WEB_NAME}
 networks:
   teamcoo:
     name: ${WEB_NAME}
