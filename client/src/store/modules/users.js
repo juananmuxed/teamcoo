@@ -7,7 +7,10 @@ const state = {
     user: {},
     userForm: {
         user: {
-
+            firstName: '',
+            lastName: '',
+            rol: {},
+            image: null,
         }
     },
     search: {
@@ -34,8 +37,9 @@ const mutations = {
     userLoad: (state, user) => {
         state.user = user
     },
-    loadEditedUser: (state) => {
-        state.userForm.user = Object.assign({}, state.user);
+    loadEditedUser: (state, user) => {
+        state.user = user;
+        state.userForm.user = Object.assign({}, user);
         state.userForm.user.imagefile = null;
     },
     changeLoading: (state) => {
