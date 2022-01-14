@@ -9,19 +9,17 @@
           <v-text-field
             outlined
             label="Old Password"
-            v-model="password.oldpassword"
+            v-model="password.old"
             :rules="[rules.required]"
-            :type="password.oldshow ? 'text' : 'password'"
+            :type="password.oldShow ? 'text' : 'password'"
           >
             <template v-slot:append>
               <v-icon
                 class="pl-2"
                 color="primary"
-                @click="password.oldshow = !password.oldshow"
-                >{{
-                  password.oldshow ? "fas fa-eye" : "fas fa-eye-slash"
-                }}</v-icon
-              >
+                @click="password.oldShow = !password.oldShow"
+                v-text="password.oldShow ? 'fas fa-eye' : 'fas fa-eye-slash'"
+              ></v-icon>
             </template>
           </v-text-field>
         </v-col>
@@ -29,43 +27,17 @@
           <v-text-field
             outlined
             label="New Password"
-            v-model="password.newpassword"
+            v-model="password.new"
             :rules="[rules.required]"
-            :type="password.newshow ? 'text' : 'password'"
+            :type="password.newShow ? 'text' : 'password'"
           >
             <template v-slot:append>
               <v-icon
                 class="pl-2"
                 color="primary"
-                @click="password.newshow = !password.newshow"
-                >{{
-                  password.newshow ? "fas fa-eye" : "fas fa-eye-slash"
-                }}</v-icon
-              >
-            </template>
-          </v-text-field>
-          <v-text-field
-            outlined
-            label="Confirm new Password"
-            v-model="password.confirmnewpassword"
-            :rules="[
-              rules.required,
-              rules.passwordconfirm(
-                this.password.newpassword,
-                this.password.confirmnewpassword
-              ),
-            ]"
-            :type="password.confshow ? 'text' : 'password'"
-          >
-            <template v-slot:append>
-              <v-icon
-                class="pl-2"
-                color="primary"
-                @click="password.confshow = !password.confshow"
-                >{{
-                  password.confshow ? "fas fa-eye" : "fas fa-eye-slash"
-                }}</v-icon
-              >
+                @click="password.newShow = !password.newShow"
+                v-text="password.newShow ? 'fas fa-eye' : 'fas fa-eye-slash'"
+              ></v-icon>
             </template>
           </v-text-field>
         </v-col>
@@ -75,7 +47,7 @@
             depressed
             color="primary"
             @click="changePassword()"
-            :disabled="isChangePass()"
+            :disabled="isChangePass() || !isDiferentPass()"
           >
             Change Password
           </v-btn>
@@ -86,7 +58,7 @@
             depressed
             color="primary"
             @click="changePasswordNotLogged(token)"
-            :disabled="isDiferentPass()"
+            :disabled="!isDiferentPass()"
           >
             Change it!
           </v-btn>

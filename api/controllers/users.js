@@ -186,14 +186,14 @@ exports.updatePassword = async (req, res) => {
 
         const email = req.body.email
         const password = req.body.password
-        if (!req.body.newpassword) {
+        if (!req.body.new) {
             return res.status(401).json({ error: "Need a new password" })
         }
-        const newpassword = await bcrypt.hash(req.body.newpassword, 8)
+        const newpassword = await bcrypt.hash(req.body.new, 8)
         const user = await User.findByCredentials(email, password)
 
-        if (!user) {
-            return res.status(401).json({ error: "Credentials error" })
+        if (user instanceof Error) {
+            return res.status(409).json({ message: user.message });
         }
 
         const userDB = await User.findByIdAndUpdate(_id, { password: newpassword }, { new: true })
@@ -296,13 +296,13 @@ exports.changePassExternal = async (req, res) => {
         }
 
         let user = await User.findOne({ _id: token._userId });
-        if (!user) {
+        if (!user || user.deleted) {
             return res.status(400).json({ message: 'We were unable to find the user for this token', type: "not-user" })
         }
 
         user.password = password;
         await user.save()
-        res.status(200).json({ message: 'Correct password change.', type: "correct" })
+        res.status(200).json({ message: 'Correct password change', type: "correct" })
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }

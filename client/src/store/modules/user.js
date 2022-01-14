@@ -6,12 +6,10 @@ import Vuetify from '../../plugins/vuetify'
 
 const state = {
     password: {
-        oldpassword: '',
-        newpassword: '',
-        confirmnewpassword: '',
-        oldshow: false,
-        newshow: false,
-        confshow: false
+        old: '',
+        new: '',
+        oldShow: false,
+        newShow: false
     },
     loginUser: {},
     userConfigs: {
@@ -59,12 +57,10 @@ const mutations = {
         Vuetify.framework.theme.dark = state.userConfigs.dark;
     },
     clearpass: (state) => {
-        state.password.oldpassword = '',
-            state.password.newpassword = '',
-            state.password.confirmnewpassword = '',
-            state.password.oldshow = false,
-            state.password.newshow = false,
-            state.password.confshow = false
+        state.password.old = '';
+        state.password.new = '';
+        state.password.oldShow = false;
+        state.password.newShow = false;
     },
     changeSending: (state) => {
         state.sendingEmail = !state.sendingEmail
@@ -102,28 +98,20 @@ const getters = {
     },
 
     isChangePass(state) {
-        if (state.password.oldpassword != '' &&
-            state.password.newpassword != '' &&
-            state.password.confirmnewpassword != '' &&
-            state.password.confirmnewpassword == state.password.newpassword
+        if (state.password.old != '' &&
+            state.password.new != ''
         ) {
-            return false
+            return false;
         }
         else {
-            return true
+            return true;
         }
     },
+
     isDiferentPass(state) {
-        if (state.password.newpassword != '' &&
-            state.password.confirmnewpassword != '' &&
-            state.password.confirmnewpassword == state.password.newpassword
-        ) {
-            return false
-        }
-        else {
-            return true
-        }
+        return state.password.old != state.password.new;
     },
+
     invalidEmail(state, getters, rootState) {
         return !(!rootState.general.rules.emailrules(state.user.email)[0] && state.user.email != '')
     }
@@ -214,7 +202,7 @@ const actions = {
         try {
             await Axios.post('/tokens/changepassexternal', {
                 token: token,
-                password: state.password.confirmnewpassword
+                password: state.password.new
             });
             commit('menu/notification', ['primary', 3, 'Changed password for your account. You can Login with the new password.'], { root: true });
             router.push('/login');
@@ -263,12 +251,12 @@ const actions = {
         try {
             let user = {
                 email: state.loginUser.email,
-                newpassword: state.password.newpassword,
-                password: state.password.oldpassword
+                new: state.password.new,
+                password: state.password.old
             }
             let config = rootGetters['general/cookieAuth'];
             await Axios.put('/users/password/' + state.loginUser._id, user, config)
-            commit('menu/notification', ['primary', 3, 'Changed password Succesfully'], { root: true });
+            commit('menu/notification', ['primary', 3, 'Changed password succesfully'], { root: true });
             commit('clearpass');
             commit('menu/cancelDialog', 'changepassword', { root: true });
         } catch (error) {
