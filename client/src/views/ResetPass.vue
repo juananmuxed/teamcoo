@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import changePassword from "../components/users/ChangePass.vue";
+import ChangePassVue from "../components/users/ChangePass.vue";
 export default {
   components: {
-    "change-pass": changePassword,
+    "change-pass": ChangePassVue,
   },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <v-col>
-    <v-row v-if="!loginUser.verifiedemail" class="px-3">
+    <v-row v-if="!loginUser.verifiedEmail" class="px-3">
       <v-col class="subtitle-1 font-weight-light text-justify">
         You need verify your email to edit or change data from this web.
         <v-btn
@@ -14,59 +14,12 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-card elevation="8" :disabled="!loginUser.verifiedemail">
-      <v-card-title>
-        <v-avatar v-if="loginUser.image">
-          <img :src="loginUser.image" />
-        </v-avatar>
-        <v-avatar v-else color="primary">
-          <v-icon>fas fa-user</v-icon>
-        </v-avatar>
-        <span class="title font-weight-light pa-3">{{
-          loginUser.username
-        }}</span>
-      </v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12">
-            Email: {{ loginUser.email }}<br />
-            <span
-              cols="12"
-              v-if="
-                loginUser.rol.value == 'admin' ||
-                loginUser.rol.value == 'coor' ||
-                loginUser.rol.value == 'dire'
-              "
-              >Rol: {{ loginUser.rol.name }}</span
-            >
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-    <v-row class="px-3">
-      <v-col>
-        <v-btn
-          :to="'/users/' + loginUser._id"
-          block
-          color="primary"
-          class="my-2"
-          :disabled="!loginUser.verifiedemail"
-        >
-          <v-icon left>fas fa-user-edit</v-icon> Edit Information
-        </v-btn>
-        <v-dialog max-width="650" v-model="menu.dialogs.changepassword">
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" block color="accent" class="my-2">
-              <v-icon left>fas fa-key</v-icon> Change your Password
-            </v-btn>
-          </template>
-          <change-pass></change-pass>
-        </v-dialog>
-      </v-col>
-    </v-row>
+    <user-card-component
+      :user="loginUser"
+      :disabled="!loginUser.verifiedEmail"
+    ></user-card-component>
     <v-card
-      elevation="5"
-      :disabled="!loginUser.verifiedemail"
+      :disabled="!loginUser.verifiedEmail"
       v-if="loginUser.rol.value != 'user'"
       class="my-3"
     >
@@ -246,18 +199,19 @@
 
 <script>
 import { mapState, mapActions, mapMutations, mapGetters } from "vuex";
-import changePassword from "./ChangePass.vue";
-import createworkgroup from "../workgroups/CreateWorkgroup.vue";
+import CreateWorkgroupVue from "../workgroups/CreateWorkgroup.vue";
+import UserCardVue from "./UserCard.vue";
 
 export default {
   components: {
-    "change-pass": changePassword,
-    "create-work-group": createworkgroup,
+    "create-work-group": CreateWorkgroupVue,
+    "user-card-component": UserCardVue,
   },
   computed: {
     ...mapState({
       menu: (state) => state.menu.menu,
       loginUser: (state) => state.user.loginUser,
+      dialogs: (state) => state.menu.menu.dialogs,
       sendingEmail: (state) => state.user.sendingEmail,
       tasks: (state) => state.tasks.tasks,
       workgroups: (state) => state.workgroups.nestedWorkgroups,

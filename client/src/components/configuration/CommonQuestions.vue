@@ -197,15 +197,15 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import createquestion from "../questions/CreateQuestion.vue";
-import editquestion from "../questions/EditQuestion.vue";
-import confirmation from "../general/Confirm.vue";
 import { idealTextColor } from "../../utils/utils";
+import CreateQuestionVue from "../questions/CreateQuestion.vue";
+import ConfirmVue from "../general/Confirm.vue";
+import EditQuestionVue from "../questions/EditQuestion.vue";
 export default {
   components: {
-    "create-question": createquestion,
-    "edit-question": editquestion,
-    "confirmation-template": confirmation,
+    "create-question": CreateQuestionVue,
+    "edit-question": EditQuestionVue,
+    "confirmation-template": ConfirmVue,
   },
   computed: {
     ...mapState({
