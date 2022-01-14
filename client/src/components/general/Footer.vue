@@ -138,13 +138,13 @@
 </template>
 
 <script>
-import loginVue from "./LoginTemplate.vue";
-import confirm from "./Confirm.vue";
 import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import LoginTemplateVue from "./LoginTemplate.vue";
+import ConfirmVue from "./Confirm.vue";
 export default {
   components: {
-    "login-template": loginVue,
-    "confirmation-template": confirm,
+    "login-template": LoginTemplateVue,
+    "confirmation-template": ConfirmVue,
   },
   computed: {
     ...mapState({

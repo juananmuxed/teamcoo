@@ -504,7 +504,7 @@
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
 import { idealTextColor } from "../../utils/utils";
-import createtask from "../tasks/CreateTask.vue";
+import CreateTaskVue from "../tasks/CreateTask.vue";
 
 export default {
   data() {
@@ -516,7 +516,7 @@ export default {
     };
   },
   components: {
-    "create-new-task": createtask,
+    "create-new-task": CreateTaskVue,
   },
   computed: {
     ...mapState({

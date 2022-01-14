@@ -118,8 +118,8 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import textareaeditorVue from "./TextAreaEditor.vue";
-import confirm from "../general/Confirm.vue";
+import ConfirmVue from "../general/Confirm.vue";
+import TextAreaEditorVue from "./TextAreaEditor.vue";
 
 export default {
   data() {
@@ -135,8 +135,8 @@ export default {
     };
   },
   components: {
-    "textarea-editor": textareaeditorVue,
-    "confirmation-template": confirm,
+    "textarea-editor": TextAreaEditorVue,
+    "confirmation-template": ConfirmVue,
   },
   computed: {
     ...mapState({

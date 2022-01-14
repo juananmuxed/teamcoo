@@ -30,16 +30,16 @@
 
 <script>
 import { mapState } from "vuex";
-import general from "../components/configuration/General";
-import commonQuestion from "../components/configuration/CommonQuestions";
-import customization from "../components/configuration/Customization";
-import email from "../components/configuration/Email";
+import GeneralVue from "../components/configuration/General.vue";
+import CustomizationVue from "../components/configuration/Customization.vue";
+import CommonQuestionsVue from "../components/configuration/CommonQuestions.vue";
+import EmailVue from "../components/configuration/Email.vue";
 export default {
   components: {
-    "configuration-general": general,
-    "configuration-custom": customization,
-    "configuration-common-question": commonQuestion,
-    "configuration-email": email,
+    "configuration-general": GeneralVue,
+    "configuration-custom": CustomizationVue,
+    "configuration-common-question": CommonQuestionsVue,
+    "configuration-email": EmailVue,
   },
   computed: {
     ...mapState({

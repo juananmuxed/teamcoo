@@ -326,10 +326,10 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
+import { idealTextColor } from "../utils/utils";
 import QuestionsSearchVue from "../components/questions/QuestionsSearch.vue";
 import UserSearchVue from "../components/users/UserSearch.vue";
-import createworkgroup from "../components/workgroups/CreateWorkgroup.vue";
-import { idealTextColor } from "../utils/utils";
+import CreateWorkgroupVue from "../components/workgroups/CreateWorkgroup.vue";
 export default {
   data() {
     return {
@@ -357,7 +357,7 @@ export default {
     };
   },
   components: {
-    "create-work-group": createworkgroup,
+    "create-work-group": CreateWorkgroupVue,
     "user-search-component": UserSearchVue,
     "question-search-component": QuestionsSearchVue,
   },
