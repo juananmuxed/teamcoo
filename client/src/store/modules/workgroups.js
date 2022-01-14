@@ -6,8 +6,6 @@ const state = {
     workgroups: [],
     childreWorkgroups: [],
     secretWorkgroups: [],
-    nestedWorkgroups: [],
-    secretNestedWorkgroups: [],
     workgroup: {},
     answers: [],
     rules: [],
@@ -86,12 +84,6 @@ const mutations = {
     },
     secretWorkgroupsLoad: (state, secretWorkgroups) => {
         state.secretWorkgroups = secretWorkgroups
-    },
-    workgroupNested: (state, nestedWorkgroups) => {
-        state.nestedWorkgroups = nestedWorkgroups
-    },
-    secretWorkgroupNested: (state, secretNestedWorkgroups) => {
-        state.secretNestedWorkgroups = secretNestedWorkgroups
     },
     workgroupSuscription: (state, workgroup) => {
         state.loadedSuscription = workgroup[0]
@@ -193,35 +185,41 @@ const getters = {
             }
         });
         return valid == state.workgroup.questions.length;
+    },
+
+    getNestedWorkgroups: (state) => {
+        return treeBuild(state.workgroups);
+    },
+
+    getNestedSecretWorkgroups: (state) => {
+        return treeBuild(state.secretWorkgroups);
     }
 }
 
 const actions = {
     async loadWorkgroups({ commit, dispatch, rootGetters }) {
         try {
-            commit('changeLoading', true);
+            commit('changeLoading');
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/workgroups/', config);
             commit('workgroupsLoad', res.data);
-            commit('workgroupNested', treeBuild(res.data));
-            commit('changeLoading', false);
+            commit('changeLoading');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeLoading', false);
+            commit('changeLoading');
         }
     },
 
     async loadSecretWorkgroups({ commit, dispatch, rootGetters }) {
         try {
-            commit('changeLoading', true);
+            commit('changeLoadingSecret');
             let config = rootGetters['general/cookieAuth'];
             let res = await Axios.get('/workgroups/secret/', config);
             commit('secretWorkgroupsLoad', res.data);
-            commit('secretWorkgroupNested', treeBuild(res.data));
-            commit('changeLoading', false);
+            commit('changeLoadingSecret');
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
-            commit('changeLoading', false);
+            commit('changeLoadingSecret');
         }
     },
 

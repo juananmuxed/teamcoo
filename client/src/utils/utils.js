@@ -5,8 +5,8 @@ const treeBuild = (dataset) => {
     });
     let tree = [];
     dataset.forEach((item) => {
-        if (item.parent != null && hash[item.parent]) {
-            hash[item.parent].childs.push(hash[item._id]);
+        if (item.parent != null && hash[item.parent._id]) {
+            hash[item.parent._id].childs.push(hash[item._id]);
         } else {
             tree.push(hash[item._id]);
         }
