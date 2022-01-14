@@ -114,7 +114,7 @@
         top
         absolute
         color="info"
-        @click="loadEditedUser"
+        @click="loadEditedUser(user)"
         :disabled="!isChangeUser()"
         class="mt-8 mr-12"
       >

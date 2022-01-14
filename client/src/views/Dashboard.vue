@@ -13,14 +13,12 @@
               >fas fa-star</v-icon
             >
           </template>
-          <span class="text-right caption font-weight-light"
-            >Membershiped!!</span
-          >
+          <span class="text-right caption font-weight-light">Membership</span>
         </v-tooltip>
         {{ loginUser.username }}'s Dashboard
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-icon v-on="on" v-if="loginUser.verifiedemail" color="primary"
+            <v-icon v-on="on" v-if="loginUser.verifiedEmail" color="primary"
               >fas fa-check</v-icon
             >
           </template>
@@ -44,13 +42,13 @@
 
 <script>
 import { mapState } from "vuex";
-import privatedata from "../components/users/PrivateData.vue";
-import notusertasks from "../components/users/NotUserTasks.vue";
+import PrivateDataVue from "../components/users/PrivateData.vue";
+import NotUserTasksVue from "../components/users/NotUserTasks.vue";
 
 export default {
   components: {
-    "private-data-column": privatedata,
-    "not-user-tasks": notusertasks,
+    "private-data-column": PrivateDataVue,
+    "not-user-tasks": NotUserTasksVue,
   },
   computed: {
     ...mapState({
