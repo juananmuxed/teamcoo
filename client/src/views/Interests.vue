@@ -233,11 +233,11 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import createinterest from "../components/interests/CreateInterest.vue";
-import editinterest from "../components/interests/EditInterest.vue";
-import confirm from "../components/general/Confirm.vue";
-import UserSearchVue from "../components/users/UserSearch.vue";
 import { idealTextColor } from "../utils/utils";
+import UserSearchVue from "../components/users/UserSearch.vue";
+import CreateInterestVue from "../components/interests/CreateInterest.vue";
+import EditInterestVue from "../components/interests/EditInterest.vue";
+import ConfirmVue from "../components/general/Confirm.vue";
 export default {
   data() {
     return {
@@ -258,9 +258,9 @@ export default {
     };
   },
   components: {
-    "create-interest": createinterest,
-    "edit-interest": editinterest,
-    "confirmation-template": confirm,
+    "create-interest": CreateInterestVue,
+    "edit-interest": EditInterestVue,
+    "confirmation-template": ConfirmVue,
     "user-search-component": UserSearchVue,
   },
   computed: {

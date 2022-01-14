@@ -346,11 +346,11 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import invalidstatic from "../components/general/Invalid.vue";
-import confirm from "../components/general/Confirm.vue";
-import edittask from "../components/tasks/EditTask.vue";
-import editmembers from "../components/tasks/EditMembers.vue";
 import { dateToBeauty, idealTextColor, outdated } from "../utils/utils";
+import InvalidVue from "../components/general/Invalid.vue";
+import ConfirmVue from "../components/general/Confirm.vue";
+import EditTaskVue from "../components/tasks/EditTask.vue";
+import EditMembersVue from "../components/tasks/EditMembers.vue";
 export default {
   data() {
     return {
@@ -358,10 +358,10 @@ export default {
     };
   },
   components: {
-    "invalid-static": invalidstatic,
-    "confirmation-template": confirm,
-    "edit-task": edittask,
-    "edit-members": editmembers,
+    "invalid-static": InvalidVue,
+    "confirmation-template": ConfirmVue,
+    "edit-task": EditTaskVue,
+    "edit-members": EditMembersVue,
   },
   computed: {
     ...mapState({

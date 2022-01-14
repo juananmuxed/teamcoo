@@ -572,12 +572,12 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import suscribeto from "../components/workgroups/SuscribeTo.vue";
-import confirm from "../components/general/Confirm.vue";
-import invalidstatic from "../components/general/Invalid.vue";
-import editworkgroup from "../components/workgroups/EditWorkgroup.vue";
-import editmembers from "../components/workgroups/EditMembers.vue";
 import { dateToBeauty, outdated } from "../utils/utils";
+import SuscribeToVue from "../components/workgroups/SuscribeTo.vue";
+import EditWorkgroupVue from "../components/workgroups/EditWorkgroup.vue";
+import ConfirmVue from "../components/general/Confirm.vue";
+import EditMembersVue from "../components/workgroups/EditMembers.vue";
+import InvalidVue from "../components/general/Invalid.vue";
 export default {
   data() {
     return {
@@ -585,11 +585,11 @@ export default {
     };
   },
   components: {
-    "suscribe-to-work-group": suscribeto,
-    "edit-work-group": editworkgroup,
-    "confirmation-template": confirm,
-    "edit-members": editmembers,
-    "invalid-static": invalidstatic,
+    "suscribe-to-work-group": SuscribeToVue,
+    "edit-work-group": EditWorkgroupVue,
+    "confirmation-template": ConfirmVue,
+    "edit-members": EditMembersVue,
+    "invalid-static": InvalidVue,
   },
   computed: {
     ...mapState({

@@ -284,12 +284,12 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import createquestion from "../components/questions/CreateQuestion.vue";
-import editquestion from "../components/questions/EditQuestion.vue";
-import confirm from "../components/general/Confirm.vue";
-import UserSearchVue from "../components/users/UserSearch.vue";
 import { idealTextColor } from "../utils/utils";
+import UserSearchVue from "../components/users/UserSearch.vue";
 import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
+import CreateQuestionVue from "../components/questions/CreateQuestion.vue";
+import EditQuestionVue from "../components/questions/EditQuestion.vue";
+import ConfirmVue from "../components/general/Confirm.vue";
 export default {
   data() {
     return {
@@ -312,9 +312,9 @@ export default {
     };
   },
   components: {
-    "create-question": createquestion,
-    "edit-question": editquestion,
-    "confirmation-template": confirm,
+    "create-question": CreateQuestionVue,
+    "edit-question": EditQuestionVue,
+    "confirmation-template": ConfirmVue,
     "user-search-component": UserSearchVue,
     "interest-search-component": InterestsSearchVue,
   },

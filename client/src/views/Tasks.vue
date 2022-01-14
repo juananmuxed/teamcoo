@@ -286,11 +286,11 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
+import { idealTextColor } from "../utils/utils";
 import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
-import createtask from "../components/tasks/CreateTask.vue";
+import CreateTaskVue from "../components/tasks/CreateTask.vue";
 import UserSearchVue from "../components/users/UserSearch.vue";
 import WorkgroupsSearchVue from "../components/workgroups/WorkgroupsSearch.vue";
-import { idealTextColor } from "../utils/utils";
 export default {
   data() {
     return {
@@ -316,7 +316,7 @@ export default {
     };
   },
   components: {
-    "create-task": createtask,
+    "create-task": CreateTaskVue,
     "user-search-component": UserSearchVue,
     "interest-search-component": InterestsSearchVue,
     "workgroup-search-component": WorkgroupsSearchVue,
