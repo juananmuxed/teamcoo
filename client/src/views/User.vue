@@ -198,6 +198,38 @@
                           ></confirmation-template>
                         </v-dialog>
                       </template>
+                      <template v-if="loginUser._id == user._id">
+                        <v-dialog
+                          max-width="650"
+                          v-model="dialogs.changepassword"
+                        >
+                          <template v-slot:activator="{ on: onDialog }">
+                            <v-tooltip
+                              max-width="200"
+                              left
+                              transition="slide-x-reverse-transition"
+                              open-delay="100"
+                            >
+                              <template v-slot:activator="{ on: onTooltip }">
+                                <v-btn
+                                  class="mx-1"
+                                  depressed
+                                  fab
+                                  small
+                                  color="accent"
+                                  v-on="{ ...onTooltip, ...onDialog }"
+                                >
+                                  <v-icon small>fas fa-key</v-icon>
+                                </v-btn>
+                              </template>
+                              <span class="text-right font-weight-light"
+                                >Change password</span
+                              >
+                            </v-tooltip>
+                          </template>
+                          <change-pass></change-pass>
+                        </v-dialog>
+                      </template>
                       <v-dialog max-width="650" v-model="dialogs.edituser">
                         <template v-slot:activator="{ on: onDialog }">
                           <v-tooltip
@@ -682,9 +714,6 @@
           </v-card>
           <invalid-static v-else item="User" goto="/users"></invalid-static>
         </v-skeleton-loader>
-        <v-dialog max-width="650" v-model="dialogs.changepassword">
-          <change-pass></change-pass>
-        </v-dialog>
       </v-col>
     </v-row>
   </v-container>
