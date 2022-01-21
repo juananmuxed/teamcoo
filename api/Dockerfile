@@ -1,8 +1,8 @@
 FROM node:12-alpine as builder
 
-RUN mkdir -p /teamcoo
+RUN mkdir -p /teamcoo/v1
 
-WORKDIR /teamcoo
+WORKDIR /teamcoo/v1
 
 COPY . .
 
