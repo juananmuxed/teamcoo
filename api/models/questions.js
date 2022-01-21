@@ -30,10 +30,6 @@ const questionSchema = new schema({
         required: true,
         ref: 'User'
     },
-    active: {
-        type: Boolean,
-        default: true
-    },
     common: {
         type: Boolean,
         default: false

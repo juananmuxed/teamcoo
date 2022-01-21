@@ -28,7 +28,7 @@ exports.getAllTasks = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -59,7 +59,7 @@ exports.getAllTasksByWorkgroup = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -90,7 +90,7 @@ exports.getAllTasksByUser = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -150,7 +150,7 @@ exports.getAllTasksPaged = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -176,7 +176,7 @@ exports.getAllTasksDeleted = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -203,7 +203,7 @@ exports.getTask = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -235,7 +235,7 @@ exports.updateTask = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -262,7 +262,7 @@ exports.deleteTaskSoft = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -304,7 +304,7 @@ exports.joinTask = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
@@ -333,7 +333,7 @@ exports.unjoinTask = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false }
+                match: { deleted: false, secret: false }
             })
             .populate({
                 path: 'suscribers',
