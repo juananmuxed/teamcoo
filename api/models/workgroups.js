@@ -24,10 +24,6 @@ const workgroupScheme = new schema({
         required: true,
         ref: 'User'
     },
-    active: {
-        type: Boolean,
-        default: true
-    },
     questions: {
         type: [{
             type: mongoose.Schema.Types.ObjectId,
