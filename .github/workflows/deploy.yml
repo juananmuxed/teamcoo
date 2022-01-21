@@ -19,6 +19,7 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull
+            yes | cp -rf api/uploads/*.png uploads/
             cd client/
             npm install
             npm run build
