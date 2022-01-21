@@ -1,8 +1,8 @@
 FROM node:12-alpine as builder
 
-RUN mkdir -p /teamcoo/v1
+RUN mkdir -p /teamcoo
 
-WORKDIR /teamcoo/v1
+WORKDIR /teamcoo
 
 COPY . .
 
@@ -10,6 +10,6 @@ RUN npm install
 
 RUN npm install pm2@3.5.0 -g
 
-CMD pm2 start app.js -i 2 && tail -f /dev/null && pm2 monit
+CMD pm2 start app.js -i 2
 
 EXPOSE 3000
