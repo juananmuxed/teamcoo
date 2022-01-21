@@ -10,8 +10,8 @@ services:
       - "${API_PORT}:3000"
     container_name: ${WEB_NAME}-api
     volumes:
-      - ./api:/teamcoo/v1
-      - ./uploads:/teamcoo/v1/uploads
+      - ./api:/teamcoo
+      - ./uploads:/teamcoo/uploads
     depends_on:
       - db
     env_file:
