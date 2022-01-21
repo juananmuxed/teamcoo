@@ -21,7 +21,6 @@ jobs:
             git pull
             yes | cp -rf api/uploads/*.png uploads/
             cd client/
-            npm install
             npm run build
             cp example.htaccess dist/.htaccess
             cd ../
