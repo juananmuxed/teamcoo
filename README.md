@@ -20,11 +20,12 @@
 
 ![Release](https://img.shields.io/github/v/release/juananmuxed/teamcoo?include_prereleases&label=Release&logo=github) ![GitHub issues by-label](https://img.shields.io/github/issues/juananmuxed/teamcoo/bug?label=Bugs%20Opened&logo=github) ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/juananmuxed/teamcoo/v0.10.0/master?color=green&label=Commits%20since%20v0.10.0&logo=github) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/juananmuxed/teamcoo?label=Activity&logo=github)
 
-### Actions Status
+### Demo deploy status
 
 [![Develop Status](https://img.shields.io/github/workflow/status/juananmuxed/teamcoo/Deploy%20to%20develop/develop?label=Develop%20status)](https://teamcoo.muxed.es)
+[![Website](https://img.shields.io/website?down_color=red&down_message=Offline&label=Demo&up_color=green&up_message=Online&url=https://teamcoo.muxed.es)](https://teamcoo.muxed.es)
 
-# What is TeamCoo 🥓
+# 🥓 TeamCoo
 
 TeamCoo is a platform for non-profit Associations that need to manage large numbers of Volunteers. MEVN (Mongo, Express, Vue, Node) technology based.
 
@@ -49,7 +50,7 @@ Deleted until standards
 - [Mongo-express](https://github.com/mongo-express/mongo-express)
 - [Docker](https://www.docker.com/)
 
-### 🪃 Dependencies
+### 🌳 Dependencies
 
 - [Vuex](https://github.com/vuejs/vuex)
 - [Vuetify](https://vuetifyjs.com/)
@@ -68,10 +69,10 @@ Deleted until standards
 
 ## 🎉 Features
 
-- Create roles and admin Users
-- Add Work Groups to group people and start to join this Work Groups
-- Add Common or Specific question for Users to join Work Groups
-- Add Tasks for the Work Groups to start to work in it and control members
+- Signup new users and user flow
+- Add Workgroups to group people and start to join it
+- Add Common or Specific question for Users to join Workgroups
+- Add Tasks for the Workgroups to start to work in it and control members
 - Add new Static Pages or configure the basics (CMS)
 - Edit and delete all from the database
 
@@ -206,13 +207,7 @@ Use this for other config files: [History mode Vue](https://router.vuejs.org/gui
 
 And point the web to `.dist` folder
 
-Build the Dockers with docker-compose
-
-```bash
-docker-compose build
-```
-
-And up the Network and use de .env.production
+And up the Network and use de `.env.production`
 
 ```bash
 docker-compose --env-file ./.env.production up -d
