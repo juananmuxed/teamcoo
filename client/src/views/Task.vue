@@ -34,9 +34,7 @@
               <span class="text-right caption font-weight-light">Back</span>
             </v-tooltip>
             <v-overlay absolute :value="task.deleted">
-              <v-alert color="error" dark icon="fas fa-archive" dense>
-                Archived
-              </v-alert>
+              <v-alert color="error" dark icon="fas fa-archive" dense> Archived </v-alert>
             </v-overlay>
             <v-img
               v-if="task.image"
@@ -89,6 +87,10 @@
                   <v-tooltip bottom transition="scroll-y-transition">
                     <template v-slot:activator="{ on: onTooltip }">
                       <v-btn
+                        v-if="
+                          task.suscribers.length < task.limit ||
+                          task.suscribers.some((m) => m._id == loginUser._id)
+                        "
                         v-on="{ ...onDialog, ...onTooltip }"
                         class="mr-n12"
                         absolute
@@ -167,10 +169,7 @@
                   </span>
                 </v-col>
               </v-row>
-              <v-divider
-                class="my-4"
-                :color="textColor(task.color)"
-              ></v-divider>
+              <v-divider class="my-4" :color="textColor(task.color)"></v-divider>
               <v-toolbar dense elevation="0" color="secondary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Interests</v-toolbar-title
@@ -192,13 +191,14 @@
                   No interests
                 </v-col>
               </v-row>
-              <v-divider
-                class="my-4"
-                :color="textColor(task.color)"
-              ></v-divider>
+              <v-divider class="my-4" :color="textColor(task.color)"></v-divider>
               <v-toolbar dense elevation="0" color="primary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
-                  >Suscribers
+                  >Subscribers
+                  <b>{{ task.suscribers.length }}/{{ task.limit }}</b>
+                  <v-chip class="ml-3" small label color="error" v-if="task.suscribers.length >= task.limit">
+                    Full
+                  </v-chip>
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-dialog v-model="dialogs.editmembers" max-width="650">
@@ -238,33 +238,23 @@
                 </v-col>
               </v-row>
               <v-row v-else>
-                <v-col class="text-uppercase title font-weight-light">
-                  No members
-                </v-col>
+                <v-col class="text-uppercase title font-weight-light"> No members </v-col>
               </v-row>
             </v-card-text>
             <template
-              v-if="
-                loginUser.rol.value == 'admin' ||
-                loginUser._id == task.creator._id
-              "
+              v-if="loginUser.rol.value == 'admin' || loginUser._id == task.creator._id"
             >
               <v-divider></v-divider>
               <v-card-actions>
                 <v-row>
                   <v-col cols="12" class="font-weight-light ml-5"
                     >Created by
-                    <v-chip
-                      class="font-italic ml-2"
-                      :to="`/users/` + task.creator._id"
-                    >
+                    <v-chip class="font-italic ml-2" :to="`/users/` + task.creator._id">
                       <v-avatar left v-if="task.creator.image != ''"
                         ><v-img :src="task.creator.image"></v-img
                       ></v-avatar>
                       <v-avatar left v-else
-                        ><v-icon small color="info"
-                          >fas fa-user</v-icon
-                        ></v-avatar
+                        ><v-icon small color="info">fas fa-user</v-icon></v-avatar
                       >
                       {{ task.creator.username }}
                     </v-chip>

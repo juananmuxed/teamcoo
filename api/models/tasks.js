@@ -44,6 +44,10 @@ const taskschema = new schema({
         }],
         default: []
     },
+    limit: {
+        type: Number,
+        required: true 
+    },
     secret: {
         type: Boolean,
         default: false
