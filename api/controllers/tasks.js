@@ -224,6 +224,10 @@ exports.updateTask = async (req, res) => {
     const body = req.body
 
     try {
+        const taskSearch = await Tasks.findById(_id);
+        if(body.suscribers > taskSearch.limit) {
+            return res.status(401).json({ message: "Task limit exceeded" });
+        }
         const taskDB = await Tasks.findByIdAndUpdate(_id, body, { new: true })
             .populate({
                 path: 'creator',
@@ -291,6 +295,10 @@ exports.joinTask = async (req, res) => {
     const _id = req.params.id
     try {
         const userId = req.body.user;
+        const taskSearch = await Tasks.findById(_id);
+        if(taskSearch.suscribers.length >= taskSearch.limit) {
+            return res.status(401).json({ message: "This task is full" });
+        }
         const taskDB = await Tasks.findByIdAndUpdate(_id, {
             $push: { suscribers: userId }
         }, { new: true })

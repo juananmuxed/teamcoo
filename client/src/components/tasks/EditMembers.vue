@@ -1,7 +1,7 @@
 <template>
   <v-card max-width="650" class="mx-auto">
     <v-card-title class="headline font-weight-medium text-uppercase"
-      >Edit suscribers from "{{ task.name }}"</v-card-title
+      >Subscribers "{{ task.name }}"</v-card-title
     >
     <v-card-text>
       <v-row>
@@ -9,6 +9,7 @@
           <users-search-component
             label="Suscribers"
             return-object
+            :counter="tasksForm.task.limit"
             v-model="tasksForm.task.suscribers"
           ></users-search-component>
         </v-col>
@@ -21,7 +22,7 @@
         absolute
         color="primary"
         @click="saveMembers()"
-        :disabled="editedMembers()"
+        :disabled="editedMembers() || limitExceeded()"
         class="mt-8"
       >
         <v-icon small>fas fa-save</v-icon>
@@ -59,7 +60,7 @@ export default {
   },
   methods: {
     ...mapActions("tasks", ["saveMembers"]),
-    ...mapGetters("tasks", ["editedMembers"]),
+    ...mapGetters("tasks", ["editedMembers", "limitExceeded"]),
     ...mapMutations("tasks", ["loadMembers"]),
   },
 };

@@ -190,27 +190,34 @@
             >
           </template>
           <template v-slot:item.suscribers="{ item }">
-            <v-avatar
-              size="24px"
-              left
-              v-for="(user, index) in item.suscribers"
-              :key="index"
-              class="ma-1"
-            >
-              <v-tooltip bottom transition="slide-y-transition">
-                <template v-slot:activator="{ on }">
-                  <template v-if="user.image != ''">
-                    <v-img :src="user.image" v-on="on"></v-img>
-                  </template>
-                  <template v-else>
-                    <v-icon small color="info" v-on="on">fas fa-user</v-icon>
-                  </template>
-                </template>
-                <span class="text-right caption font-weight-light">{{
-                  user.username
-                }}</span>
-              </v-tooltip>
-            </v-avatar>
+            <v-row>
+              <v-col cols="6">
+                <v-avatar
+                  size="24px"
+                  left
+                  v-for="(user, index) in item.suscribers"
+                  :key="index"
+                  class="ma-1"
+                >
+                  <v-tooltip bottom transition="slide-y-transition">
+                    <template v-slot:activator="{ on }">
+                      <template v-if="user.image != ''">
+                        <v-img :src="user.image" v-on="on"></v-img>
+                      </template>
+                      <template v-else>
+                        <v-icon small color="info" v-on="on">fas fa-user</v-icon>
+                      </template>
+                    </template>
+                    <span class="text-right caption font-weight-light">{{
+                      user.username
+                    }}</span>
+                  </v-tooltip>
+                </v-avatar>
+              </v-col>
+              <v-col cols="6">
+                <span :class="item.suscribers.length >= item.limit ? 'success--text': ''">{{ item.suscribers.length }}/{{ item.limit }}</span>
+              </v-col>
+            </v-row>
           </template>
           <template v-slot:item.color="{ item }">
             <v-chip :color="item.color" :text-color="textColor(item.color)">{{
@@ -301,7 +308,7 @@ export default {
           value: "name",
         },
         { text: "Description", value: "description", sortable: false },
-        { text: "Joined", value: "suscribers", sortable: false, width: 100 },
+        { text: "Joined", value: "suscribers", sortable: false, width: 200 },
         {
           text: "Workgroups",
           value: "workgroups",
