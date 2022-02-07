@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Soft deleted items in DB
 - Loading before all colors and images load
 - Tables server sided
+- New Limit property to tasks
 
 ### Changed
 
