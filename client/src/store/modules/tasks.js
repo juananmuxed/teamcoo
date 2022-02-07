@@ -117,6 +117,7 @@ const getters = {
             state.tasksForm.task.link != state.task.link ||
             state.tasksForm.task.newImage != null ||
             state.tasksForm.task.secret != state.task.secret ||
+            state.tasksForm.task.limit != state.task.limit ||
             state.tasksForm.task.color.toUpperCase() != state.task.color.toUpperCase() ||
             isDiferentArray(state.tasksForm.task.workgroups, state.task.workgroups, '_id', '_id') ||
             isDiferentArray(state.tasksForm.task.interests, state.task.interests, '_id', '_id')
@@ -131,6 +132,10 @@ const getters = {
     editedMembers: (state) => {
         return !isDiferentArray(state.task.suscribers, state.tasksForm.task.suscribers, '_id', '_id')
     },
+
+    limitExceeded: (state) => {
+        return state.tasksForm.task.suscribers.length > state.tasksForm.task.limit
+    }
 }
 
 const actions = {

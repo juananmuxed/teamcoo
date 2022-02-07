@@ -158,6 +158,23 @@
           >
           </v-text-field>
         </v-col>
+        <v-col cols="9" class="py-1">
+          <v-slider
+            v-model="tasksForm.task.limit"
+            :max="1000"
+            :min="tasksForm.task.suscribers.length"
+            thumb-label
+            label="Users limit"
+          >
+          </v-slider>
+        </v-col>
+        <v-col cols="3" class="py-1">
+          <v-text-field
+            outlined
+            v-model="tasksForm.task.limit"
+            type="number"
+          ></v-text-field>
+        </v-col>
         <v-col cols="12" class="py-1">
           <v-autocomplete
             label="Workgroups"

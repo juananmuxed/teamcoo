@@ -12,9 +12,11 @@
     clear-icon="fas fa-times"
     item-text="name"
     item-value="_id"
+    :counter="counter"
     :label="label"
     :prepend-icon="icon"
     :filter="customFilter"
+    :rules="[value.length <= counter || 'Task limit exceeded']"
     multiple
   >
     <template v-slot:no-data>
@@ -76,6 +78,10 @@ export default {
       type: String,
       default: "",
     },
+    counter: {
+      type: Number,
+      default: 99999,
+    }
   },
   computed: {
     ...mapState({
