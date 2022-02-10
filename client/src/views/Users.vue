@@ -52,10 +52,29 @@
                             :key="index"
                           ></v-chip>
                           <v-chip
-                            v-if="search.interestsAll"
+                            v-if="
+                              search.interestsAll &&
+                              search.interests.length != 0
+                            "
                             color="success"
                             class="mx-1"
                             >All answers</v-chip
+                          >
+                          <v-chip
+                            v-for="(workgroup, index) in search.workgroups"
+                            class="mx-1"
+                            v-text="workgroup.name"
+                            :color="workgroup.color"
+                            :key="index + '_wg'"
+                          ></v-chip>
+                          <v-chip
+                            v-if="
+                              search.workgroupsAll &&
+                              search.workgroups.length != 0
+                            "
+                            color="success"
+                            class="mx-1"
+                            >All workgroups</v-chip
                           >
                         </v-row>
                       </v-fade-transition>
@@ -96,6 +115,23 @@
                         "
                         v-model="search.interestsAll"
                         :label="search.interestsAll ? 'All' : 'One'"
+                        inset
+                      ></v-switch>
+                    </v-col>
+                    <v-col cols="11" md="5">
+                      <workgroup-search-component
+                        label="Workgroups"
+                        return-object
+                        v-model="search.workgroups"
+                      ></workgroup-search-component>
+                    </v-col>
+                    <v-col cols="1">
+                      <v-switch
+                        :disabled="
+                          search.workgroups && search.workgroups.length == 0
+                        "
+                        v-model="search.workgroupsAll"
+                        :label="search.workgroupsAll ? 'All' : 'One'"
                         inset
                       ></v-switch>
                     </v-col>
@@ -182,6 +218,7 @@
 import { mapActions, mapState } from "vuex";
 import RoleSelectorVue from "../components/general/RoleSelector.vue";
 import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
+import WorkgroupsSearchVue from "../components/workgroups/WorkgroupsSearch.vue";
 import { idealTextColor } from "../utils/utils";
 export default {
   data() {
@@ -219,6 +256,7 @@ export default {
   components: {
     "interest-search-component": InterestsSearchVue,
     "role-select-component": RoleSelectorVue,
+    "workgroup-search-component": WorkgroupsSearchVue,
   },
   computed: {
     ...mapState({

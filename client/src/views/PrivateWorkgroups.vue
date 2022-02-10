@@ -66,7 +66,10 @@
                             :key="index"
                           ></v-chip>
                           <v-chip
-                            v-if="searchSecret.questionsAll"
+                            v-if="
+                              searchSecret.questionsAll &&
+                              searchSecret.questions.length != 0
+                            "
                             color="success"
                             class="mx-1"
                             >All answers</v-chip
