@@ -52,7 +52,10 @@
                             :key="index"
                           ></v-chip>
                           <v-chip
-                            v-if="search.interestsAll"
+                            v-if="
+                              search.interestsAll &&
+                              search.interests.length != 0
+                            "
                             color="success"
                             class="mx-1"
                             >All answers</v-chip
