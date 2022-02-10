@@ -45,7 +45,10 @@
                             :key="index + '_int'"
                           ></v-chip>
                           <v-chip
-                            v-if="search.interestsAll"
+                            v-if="
+                              search.interestsAll &&
+                              search.interests.length != 0
+                            "
                             color="success"
                             class="mx-1"
                             >All interests</v-chip
@@ -58,7 +61,10 @@
                             :key="index + '_wg'"
                           ></v-chip>
                           <v-chip
-                            v-if="search.workgroupsAll"
+                            v-if="
+                              search.workgroupsAll &&
+                              search.workgroups.length != 0
+                            "
                             color="success"
                             class="mx-1"
                             >All workgroups</v-chip
@@ -205,7 +211,9 @@
                         <v-img :src="user.image" v-on="on"></v-img>
                       </template>
                       <template v-else>
-                        <v-icon small color="info" v-on="on">fas fa-user</v-icon>
+                        <v-icon small color="info" v-on="on"
+                          >fas fa-user</v-icon
+                        >
                       </template>
                     </template>
                     <span class="text-right caption font-weight-light">{{
@@ -215,7 +223,12 @@
                 </v-avatar>
               </v-col>
               <v-col cols="6">
-                <span :class="item.suscribers.length >= item.limit ? 'success--text': ''">{{ item.suscribers.length }}/{{ item.limit }}</span>
+                <span
+                  :class="
+                    item.suscribers.length >= item.limit ? 'success--text' : ''
+                  "
+                  >{{ item.suscribers.length }}/{{ item.limit }}</span
+                >
               </v-col>
             </v-row>
           </template>

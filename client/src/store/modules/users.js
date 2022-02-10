@@ -19,6 +19,8 @@ const state = {
         interests: [],
         interestsAll: false,
         options: {},
+        workgroups: [],
+        workgroupsAll: false,
     },
     totalUsers: 0,
     loading: false,
@@ -133,7 +135,9 @@ const actions = {
             config.params.searchName = state.search.name;
             config.params.searchRol = state.search.rol?.value;
             config.params.searchInterests = state.search.interests.map(i => i._id);
-            config.params.searchMode = state.search.interestsAll;
+            config.params.searchModeInterests = state.search.interestsAll;
+            config.params.searchWorkgroups = state.search.workgroups.map(i => i._id);
+            config.params.searchModeWorkgroups = state.search.workgroupsAll;
             let res = await Axios.get('/users/paged', config);
             commit('usersLoad', res.data.items);
             commit('setTotalUsers', res.data.totalItems);

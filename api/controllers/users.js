@@ -1,5 +1,6 @@
 const User = require('../models/users')
 const Token = require('../models/tokens')
+const Workgroups = require('../models/workgroups')
 const bcrypt = require('bcryptjs');
 const mailer = require("../controllers/mail");
 
@@ -89,12 +90,43 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getAllUsersPaged = async (req, res) => {
     try {
-        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchRol = null, searchInterests = [], searchMode } = req.query;
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchRol = null, searchInterests = [], searchModeInterests, searchWorkgroups = [], searchModeWorkgroups } = req.query;
         let sort = {};
         let searchObject = {
             $and: [
                 { deleted: false }
             ]
+        }
+
+        if (searchWorkgroups.length != 0) {
+            const workgroupsDB = await Workgroups.find({
+                $and: [
+                    { deleted: false },
+                    { secret: false },
+                    { _id: { $in: searchWorkgroups } }
+                ]
+            })
+
+            const arraysMembers = workgroupsDB.map(w => w.members);
+            let concatenatedMembers, members = [], uniqMembers = [];
+
+            if (!JSON.parse(searchModeWorkgroups.toLowerCase())) {
+                concatenatedMembers = [].concat.apply([], arraysMembers);
+                members = concatenatedMembers.map(w => JSON.parse(JSON.stringify(w)))
+                uniqMembers = [... new Set(members)]
+            } else {
+                uniqMembers = arraysMembers.shift().reduce((res, value) => {
+                    let v = JSON.parse(JSON.stringify(value))
+                    if (res.indexOf(v) === -1 && arraysMembers.every(a => {
+                        return a.indexOf(v) !== -1;
+                    })) res.push(v);
+                    return res;
+                }, []);
+            }
+
+            searchObject.$and.push({
+                _id: { $in: uniqMembers }
+            })
         }
         if (searchName) searchObject.$and.push({
             $or: [
@@ -106,7 +138,7 @@ exports.getAllUsersPaged = async (req, res) => {
         if (searchRol) searchObject.$and.push({ 'rol.value': searchRol })
         if (searchInterests.length != 0) {
             const interestsObject = {
-                interests: { [!JSON.parse(searchMode.toLowerCase()) ? '$in' : '$all']: searchInterests }
+                interests: { [!JSON.parse(searchModeInterests.toLowerCase()) ? '$in' : '$all']: searchInterests }
             }
             searchObject.$and.push(interestsObject)
         }
