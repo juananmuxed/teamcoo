@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Loading before all colors and images load
 - Tables server sided
 - New Limit property to tasks
+- Added a filter to a users searcher by Workgroups
+- Added a conditional to the filters (if no selected, no One/All option chip)
 
 ### Changed
 
