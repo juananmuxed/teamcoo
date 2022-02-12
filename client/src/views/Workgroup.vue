@@ -287,19 +287,11 @@
                 "
               >
                 <v-col cols="12" class="my-1">
-                  <v-chip
-                    v-for="(coor, index) in workgroup.coordinators"
+                  <user-options-menu-component
+                    v-for="(user, index) in workgroup.coordinators"
                     v-bind:key="index"
-                    class="mx-1"
-                  >
-                    <v-avatar left v-if="coor.image != ''"
-                      ><v-img :src="coor.image"></v-img
-                    ></v-avatar>
-                    <v-avatar left v-else
-                      ><v-icon small color="info">fas fa-user</v-icon></v-avatar
-                    >
-                    {{ coor.username }}
-                  </v-chip>
+                    :user="user"
+                  ></user-options-menu-component>
                 </v-col>
               </v-row>
               <v-row v-else>
@@ -332,19 +324,11 @@
               </v-toolbar>
               <v-row v-if="workgroup.members && workgroup.members.length != 0">
                 <v-col cols="12" class="my-1">
-                  <v-chip
-                    v-for="(member, index) in workgroup.members"
+                  <user-options-menu-component
+                    v-for="(user, index) in workgroup.members"
                     v-bind:key="index"
-                    class="mx-1"
-                  >
-                    <v-avatar left v-if="member.image != ''"
-                      ><v-img :src="member.image"></v-img
-                    ></v-avatar>
-                    <v-avatar left v-else
-                      ><v-icon small color="info">fas fa-user</v-icon></v-avatar
-                    >
-                    {{ member.username }}
-                  </v-chip>
+                    :user="user"
+                  ></user-options-menu-component>
                 </v-col>
               </v-row>
               <v-row v-else>
@@ -460,31 +444,6 @@
             >
               <v-divider></v-divider>
               <v-card-actions>
-                <v-row>
-                  <v-col cols="12" class="font-weight-light ml-5"
-                    >Created by
-                    <v-chip v-if="!workgroup.creator">
-                      <v-avatar left color="primary"
-                        ><v-icon x-small>fas fa-user-slash</v-icon></v-avatar
-                      >Closed account
-                    </v-chip>
-                    <v-chip
-                      v-else
-                      class="font-italic ml-2"
-                      :to="`/users/` + workgroup.creator._id"
-                    >
-                      <v-avatar left v-if="workgroup.creator.image != ''"
-                        ><v-img :src="workgroup.creator.image"></v-img
-                      ></v-avatar>
-                      <v-avatar left v-else
-                        ><v-icon small color="info"
-                          >fas fa-user</v-icon
-                        ></v-avatar
-                      >
-                      {{ workgroup.creator.username }}
-                    </v-chip>
-                  </v-col>
-                </v-row>
                 <v-spacer></v-spacer>
                 <v-dialog max-width="650" v-model="dialogs.editworkgroup">
                   <template v-slot:activator="{ on: onDialog }">
@@ -578,6 +537,7 @@ import EditWorkgroupVue from "../components/workgroups/EditWorkgroup.vue";
 import ConfirmVue from "../components/general/Confirm.vue";
 import EditMembersVue from "../components/workgroups/EditMembers.vue";
 import InvalidVue from "../components/general/Invalid.vue";
+import UserOptionsMenuVue from "../components/users/UserOptionsMenu.vue";
 export default {
   data() {
     return {
@@ -590,6 +550,7 @@ export default {
     "confirmation-template": ConfirmVue,
     "edit-members": EditMembersVue,
     "invalid-static": InvalidVue,
+    "user-options-menu-component": UserOptionsMenuVue,
   },
   computed: {
     ...mapState({

@@ -34,7 +34,9 @@
               <span class="text-right caption font-weight-light">Back</span>
             </v-tooltip>
             <v-overlay absolute :value="task.deleted">
-              <v-alert color="error" dark icon="fas fa-archive" dense> Archived </v-alert>
+              <v-alert color="error" dark icon="fas fa-archive" dense>
+                Archived
+              </v-alert>
             </v-overlay>
             <v-img
               v-if="task.image"
@@ -169,7 +171,10 @@
                   </span>
                 </v-col>
               </v-row>
-              <v-divider class="my-4" :color="textColor(task.color)"></v-divider>
+              <v-divider
+                class="my-4"
+                :color="textColor(task.color)"
+              ></v-divider>
               <v-toolbar dense elevation="0" color="secondary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Interests</v-toolbar-title
@@ -191,12 +196,21 @@
                   No interests
                 </v-col>
               </v-row>
-              <v-divider class="my-4" :color="textColor(task.color)"></v-divider>
+              <v-divider
+                class="my-4"
+                :color="textColor(task.color)"
+              ></v-divider>
               <v-toolbar dense elevation="0" color="primary" class="my-1">
                 <v-toolbar-title class="text-uppercase title font-weight-light"
                   >Subscribers
                   <b>{{ task.suscribers.length }}/{{ task.limit }}</b>
-                  <v-chip class="ml-3" small label color="error" v-if="task.suscribers.length >= task.limit">
+                  <v-chip
+                    class="ml-3"
+                    small
+                    label
+                    color="error"
+                    v-if="task.suscribers.length >= task.limit"
+                  >
                     Full
                   </v-chip>
                 </v-toolbar-title>
@@ -222,44 +236,27 @@
               </v-toolbar>
               <v-row v-if="task.suscribers.length != 0">
                 <v-col cols="12" class="my-1">
-                  <v-chip
+                  <user-options-menu-component
                     v-for="(user, index) in task.suscribers"
                     v-bind:key="index"
-                    class="mx-1"
-                  >
-                    <v-avatar left v-if="user.image != ''"
-                      ><v-img :src="user.image"></v-img
-                    ></v-avatar>
-                    <v-avatar left v-else
-                      ><v-icon small color="info">fas fa-user</v-icon></v-avatar
-                    >
-                    {{ user.username }}
-                  </v-chip>
+                    :user="user"
+                  ></user-options-menu-component>
                 </v-col>
               </v-row>
               <v-row v-else>
-                <v-col class="text-uppercase title font-weight-light"> No members </v-col>
+                <v-col class="text-uppercase title font-weight-light">
+                  No members
+                </v-col>
               </v-row>
             </v-card-text>
             <template
-              v-if="loginUser.rol.value == 'admin' || loginUser._id == task.creator._id"
+              v-if="
+                loginUser.rol.value == 'admin' ||
+                loginUser._id == task.creator._id
+              "
             >
               <v-divider></v-divider>
               <v-card-actions>
-                <v-row>
-                  <v-col cols="12" class="font-weight-light ml-5"
-                    >Created by
-                    <v-chip class="font-italic ml-2" :to="`/users/` + task.creator._id">
-                      <v-avatar left v-if="task.creator.image != ''"
-                        ><v-img :src="task.creator.image"></v-img
-                      ></v-avatar>
-                      <v-avatar left v-else
-                        ><v-icon small color="info">fas fa-user</v-icon></v-avatar
-                      >
-                      {{ task.creator.username }}
-                    </v-chip>
-                  </v-col>
-                </v-row>
                 <v-spacer></v-spacer>
                 <v-dialog max-width="650" v-model="dialogs.edittask">
                   <template v-slot:activator="{ on: onDialog }">
@@ -341,6 +338,7 @@ import InvalidVue from "../components/general/Invalid.vue";
 import ConfirmVue from "../components/general/Confirm.vue";
 import EditTaskVue from "../components/tasks/EditTask.vue";
 import EditMembersVue from "../components/tasks/EditMembers.vue";
+import UserOptionsMenuVue from "../components/users/UserOptionsMenu.vue";
 export default {
   data() {
     return {
@@ -352,6 +350,7 @@ export default {
     "confirmation-template": ConfirmVue,
     "edit-task": EditTaskVue,
     "edit-members": EditMembersVue,
+    "user-options-menu-component": UserOptionsMenuVue,
   },
   computed: {
     ...mapState({
