@@ -103,7 +103,10 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-        <v-divider :key="index" v-if="index != pages.length - 1"></v-divider>
+        <v-divider
+          :key="index + '-divider'"
+          v-if="index != pages.length - 1"
+        ></v-divider>
       </template>
       <v-dialog v-model="menu.dialogs.confirm" max-width="400">
         <confirmation-template
