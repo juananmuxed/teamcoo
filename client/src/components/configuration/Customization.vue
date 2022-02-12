@@ -8,11 +8,15 @@
   >
     <v-card flat>
       <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
-        >Web name</v-card-title
+        >Web config</v-card-title
       >
       <v-row>
         <v-col cols="12" sm="4" class="py-1">
           <v-text-field outlined label="Name" v-model="web.name">
+          </v-text-field>
+        </v-col>
+        <v-col cols="12" sm="4" class="py-1">
+          <v-text-field outlined label="API Url" v-model="web.urlApi">
           </v-text-field>
         </v-col>
       </v-row>
@@ -199,6 +203,13 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-card-title class="display-2 text-uppercase font-weight-thin ml-4 mt-3"
+        >Social media
+        <v-chip small label color="info" class="ml-4">
+          <v-icon x-small left>fas fa-tag</v-icon>Not implemented</v-chip
+        >
+        <!-- TODO: socialmedia --></v-card-title
+      >
       <v-btn
         absolute
         fab

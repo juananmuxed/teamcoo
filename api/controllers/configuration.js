@@ -55,6 +55,7 @@ exports.updateConfig = async (req, res) => {
     const body = req.body
 
     try {
+        console.log(body)
         const configDB = await Config.findOneAndUpdate({ name: name }, body, { new: true })
         res.json(configDB)
     } catch (error) {
