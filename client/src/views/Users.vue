@@ -250,7 +250,7 @@ export default {
           width: 400,
         },
         {
-          text: "Created date",
+          text: "Registration date",
           value: "createdAt",
           sortable: true,
         },
