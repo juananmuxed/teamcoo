@@ -110,18 +110,19 @@ exports.sendMail = async (req, res) => {
         const mail = await mailModel.save();
 
         transporter.sendMail(mailOptions, async (error, info) => {
-            if (error) {
-                await Mail.findByIdAndUpdate(mail._id, {
-                    responseError: error.message
-                }, { new: true })
-                res.status(400).json({ message: error.message, error: error });
-            } else {
+            try {
                 await Mail.findByIdAndUpdate(mail._id, {
                     response: info,
                     sended: true,
                     sendDate: new Date()
                 }, { new: true })
                 res.status(200).json({ info });
+                throw error
+            } catch (error) {
+                await Mail.findByIdAndUpdate(mail._id, {
+                    responseError: error.message
+                }, { new: true })
+                res.status(400).json({ message: error.message, error: error });
             }
         });
 
