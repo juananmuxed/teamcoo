@@ -175,6 +175,11 @@
           <template v-slot:item.name="{ item }"
             >{{ item.firstName }} {{ item.lastName }}</template
           >
+          <template v-slot:item.createdAt="{ item }">
+            <v-chip color="secondary" small>{{
+              formatDate(item.createdAt)
+            }}</v-chip>
+          </template>
           <template v-slot:item.interests="{ item }">
             <v-chip
               small
@@ -219,7 +224,7 @@ import { mapActions, mapState } from "vuex";
 import RoleSelectorVue from "../components/general/RoleSelector.vue";
 import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
 import WorkgroupsSearchVue from "../components/workgroups/WorkgroupsSearch.vue";
-import { idealTextColor } from "../utils/utils";
+import { dateToFormat, idealTextColor } from "../utils/utils";
 export default {
   data() {
     return {
@@ -243,6 +248,11 @@ export default {
           value: "interests",
           sortable: false,
           width: 400,
+        },
+        {
+          text: "Created date",
+          value: "createdAt",
+          sortable: true,
         },
         {
           text: "",
@@ -285,6 +295,9 @@ export default {
     },
     textColor(color) {
       return idealTextColor(color);
+    },
+    formatDate(date) {
+      return dateToFormat(date);
     },
   },
 };
