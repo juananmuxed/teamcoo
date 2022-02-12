@@ -142,6 +142,7 @@ exports.getAllUsersPaged = async (req, res) => {
             }
             searchObject.$and.push(interestsObject)
         }
+        if (sortBy.length === 0) sort = { createdAt: -1 }
         sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
         const usersDB = await User.find({
             $and: [
