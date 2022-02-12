@@ -11,8 +11,7 @@
         >
           <v-card flat max-width="1080" class="mx-auto pa-4">
             <v-card-title class="mb-3">
-              <v-icon size="60" color="primary">{{ homePage.icon }}</v-icon>
-              <span class="display-2 font-weight-medium ml-6">{{
+              <span class="display-2 font-weight-medium">{{
                 homePage.title
               }}</span>
             </v-card-title>
