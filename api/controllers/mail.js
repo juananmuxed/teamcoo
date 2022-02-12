@@ -50,7 +50,7 @@ exports.sendMail = async (req, res) => {
 
         const configWeb = await Config.findOne({ name: "web" });
         context.webpage = !configWeb ? 'TeamCoo' : configWeb.values.name;
-        context.url = !configWeb ? 'http://localhost:3000' : configWeb.values.url;
+        context.url = !configWeb ? 'http://localhost:3000' : configWeb.values.urlApi;
 
         const configLogo = await Config.findOne({ name: "logos" });
         context.logoUrl = !configLogo ? context.url + '/uploads/TEAMCOO_LOGO.png' : configLogo.values.logo;
@@ -112,7 +112,7 @@ exports.sendMail = async (req, res) => {
         transporter.sendMail(mailOptions, async (error, info) => {
             try {
                 await Mail.findByIdAndUpdate(mail._id, {
-                    response: info,
+                    response: info.response,
                     sended: true,
                     sendDate: new Date()
                 }, { new: true })

@@ -126,12 +126,7 @@ const mutations = {
         state.loading = !state.loading
     },
     setEmailConfig: (state, config) => {
-        state.config.email.host = config.host;
-        state.config.email.port = config.port;
-        state.config.email.secure = config.secure;
-        state.config.email.user = config.user;
-        state.config.email.pass = config.pass;
-        state.config.email.email = config.email;
+        state.config.email = config;
     },
     changeSending: (state) => {
         state.config.sendingEmail = !state.config.sendingEmail
