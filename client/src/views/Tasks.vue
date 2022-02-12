@@ -238,15 +238,9 @@
             }}</v-chip>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip class="mx-1" :to="'/users/' + item.creator._id">
-              <v-avatar left v-if="item.creator.image != ''"
-                ><v-img :src="item.creator.image"></v-img
-              ></v-avatar>
-              <v-avatar left v-else
-                ><v-icon small color="info">fas fa-user</v-icon></v-avatar
-              >
-              {{ item.creator.username }}
-            </v-chip>
+            <user-options-menu-component
+              :user="item.creator"
+            ></user-options-menu-component>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-tooltip
@@ -311,6 +305,7 @@ import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
 import CreateTaskVue from "../components/tasks/CreateTask.vue";
 import UserSearchVue from "../components/users/UserSearch.vue";
 import WorkgroupsSearchVue from "../components/workgroups/WorkgroupsSearch.vue";
+import UserOptionsMenuVue from "../components/users/UserOptionsMenu.vue";
 export default {
   data() {
     return {
@@ -340,6 +335,7 @@ export default {
     "user-search-component": UserSearchVue,
     "interest-search-component": InterestsSearchVue,
     "workgroup-search-component": WorkgroupsSearchVue,
+    "user-options-menu-component": UserOptionsMenuVue,
   },
   computed: {
     ...mapState({

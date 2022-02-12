@@ -145,20 +145,9 @@
             </v-tooltip>
           </template>
           <template v-slot:item.creator="{ item }">
-            <v-chip v-if="!item.creator">
-              <v-avatar left color="primary"
-                ><v-icon x-small>fas fa-user-slash</v-icon></v-avatar
-              >Closed account
-            </v-chip>
-            <v-chip v-else class="mx-1" :to="'/users/' + item.creator._id">
-              <v-avatar left v-if="item.creator.image != ''"
-                ><v-img :src="item.creator.image"></v-img
-              ></v-avatar>
-              <v-avatar left v-else
-                ><v-icon small color="info">fas fa-user</v-icon></v-avatar
-              >
-              {{ item.creator.username }}
-            </v-chip>
+            <user-options-menu-component
+              :user="item.creator"
+            ></user-options-menu-component>
           </template>
           <template v-slot:item.type="{ item }">
             <span class="text-uppercase">{{ item.type }}</span>
@@ -293,6 +282,7 @@ import InterestsSearchVue from "../components/interests/InterestsSearch.vue";
 import CreateQuestionVue from "../components/questions/CreateQuestion.vue";
 import EditQuestionVue from "../components/questions/EditQuestion.vue";
 import ConfirmVue from "../components/general/Confirm.vue";
+import UserOptionsMenuVue from "../components/users/UserOptionsMenu.vue";
 export default {
   data() {
     return {
@@ -320,6 +310,7 @@ export default {
     "confirmation-template": ConfirmVue,
     "user-search-component": UserSearchVue,
     "interest-search-component": InterestsSearchVue,
+    "user-options-menu-component": UserOptionsMenuVue,
   },
   computed: {
     ...mapState({
