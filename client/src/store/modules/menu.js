@@ -37,7 +37,8 @@ const state = {
             edittask: false,
             savemembertask: false,
             deletePage: false,
-            changeToVolunteer: false
+            changeToVolunteer: false,
+            sendMessage: false,
         },
         loader: {
             workgroup: false,
