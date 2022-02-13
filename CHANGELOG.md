@@ -19,10 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Limit property to tasks
 - Added a filter to a users searcher by Workgroups
 - Added a conditional to the filters (if no selected, no One/All option chip)
+- Added one-to-one email send for admin/volu roles
 
 ### Changed
 
 - MJML and Handlebars for template the mails
+- Card users and menu in user chips
 
 ### Fixed
 
