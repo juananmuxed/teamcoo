@@ -44,6 +44,9 @@
           <v-icon>fas fa-arrow-up</v-icon>
         </v-btn>
       </v-scale-transition>
+      <v-dialog max-width="650" v-model="dialogs.sendMessage">
+        <send-message-component></send-message-component>
+      </v-dialog>
     </v-content>
     <footer-bot></footer-bot>
     <v-snackbar
@@ -67,6 +70,7 @@ import footer from "./components/general/Footer.vue";
 import Vuetify from "./plugins/vuetify";
 
 import { mapActions, mapMutations, mapState } from "vuex";
+import SendMessageVue from "./components/general/SendMessage.vue";
 
 export default {
   name: "App",
@@ -75,10 +79,12 @@ export default {
     "lateral-menu": lateralmenu,
     "toolbar-top": toolbar,
     "footer-bot": footer,
+    "send-message-component": SendMessageVue,
   },
   computed: {
     ...mapState({
       loading: (state) => state.general.loading,
+      dialogs: (state) => state.menu.menu.dialogs,
       menu: (state) => state.menu.menu,
       snackbar: (state) => state.menu.snackbar,
       userConfigs: (state) => state.user.userConfigs,
