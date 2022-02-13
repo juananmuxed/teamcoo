@@ -92,6 +92,8 @@ exports.sendMail = async (req, res) => {
             text: plainTemplate
         };
 
+        if (body.variables && body.variables.anonymous === false && body.variables.emailFrom) mailOptions.replyTo = body.variables.emailFrom;
+
         let mailObj = {
             sendTo: body.sendTo,
             sendFrom: body.sendFrom,
@@ -105,6 +107,7 @@ exports.sendMail = async (req, res) => {
             response: '',
             responseError: ''
         }
+
 
         const mailModel = new Mail(mailObj);
         const mail = await mailModel.save();

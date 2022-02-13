@@ -1,0 +1,11 @@
+You have a message
+
+{{#unless anonymous}}
+From: {{ userFrom }} <{{ emailFrom }}>
+{{/unless}}
+
+{{ subject }}
+"{{ message }}"
+
+-----
+{{ legalText }}

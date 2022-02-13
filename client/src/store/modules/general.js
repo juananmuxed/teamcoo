@@ -118,7 +118,14 @@ const state = {
         title: 'This page is not for you',
         value: '<h2>This pages is protected for login users, please login or register</h2>'
     },
-    icons: icons
+    icons: icons,
+    userEmail: {},
+    emailForm: {
+        subject: '',
+        message: '',
+        anonymous: true,
+        sending: false
+    }
 }
 
 const mutations = {
@@ -130,6 +137,9 @@ const mutations = {
     },
     changeSending: (state) => {
         state.config.sendingEmail = !state.config.sendingEmail
+    },
+    changeMessageSending: (state) => {
+        state.emailForm.sending = !state.emailForm.sending
     },
     addPageBlank: (state) => {
         state.config.pages.push({
@@ -155,6 +165,14 @@ const mutations = {
     },
     setConfig: (state, config) => {
         Vue.set(state.pagesValues, config.name, config.value);
+    },
+    setUserToMessage: (state, user) => {
+        state.userEmail = user;
+    },
+    clearFormMessage: (state) => {
+        state.emailForm.subject = '';
+        state.emailForm.message = '';
+        state.emailForm.anonymous = true;
     }
 }
 
@@ -178,6 +196,18 @@ const getters = {
 
     isValidEmailTest: (state) => {
         return state.config.testEmail != '' && emailPattern.test(state.config.testEmail);
+    },
+
+    validMessage: (state) => {
+        if (
+            state.emailForm.subject != '' &&
+            state.emailForm.message != ''
+        ) {
+            return true
+        }
+        else {
+            return false
+        }
     },
 }
 
@@ -320,6 +350,32 @@ const actions = {
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
             commit('changeSending');
+        }
+    },
+
+    async sendMessage({ state, commit, getters, dispatch, rootState }) {
+        try {
+            let config = getters.cookieAuth;
+            commit('changeMessageSending');
+            await Axios.post("/mail/send", {
+                sendTo: state.userEmail.email,
+                template: 'generic/sendMessage',
+                subject: 'You have a new message',
+                variables: {
+                    webpageurl: window.location.origin,
+                    anonymous: state.emailForm.anonymous,
+                    subject: state.emailForm.subject,
+                    message: state.emailForm.message,
+                    userFrom: rootState.user.loginUser.username,
+                    emailFrom: rootState.user.loginUser.email,
+                }
+            }, config);
+            commit('menu/notification', ['success', 3, 'Message sended'], { root: true });
+            commit('menu/cancelDialog', 'sendMessage', { root: true });
+            commit('changeMessageSending');
+        } catch (error) {
+            dispatch('menu/notificationError', error, { root: true });
+            commit('changeMessageSending');
         }
     },
 

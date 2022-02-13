@@ -1,0 +1,40 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto" />
+  </mj-head>
+  <mj-body>
+    <mj-section background-color="#fff">
+      <mj-column>
+        <mj-image width="120px" src="{{ logoUrl }}" />
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="{{ primary }}">
+      <mj-column width="600px">
+        <mj-text align="center" color="#fff" font-size="28px" font-family="Roboto">Message received from {{ webpage }}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#fafafa">
+      <mj-column width="400px">
+        {{#unless anonymous}}
+          <mj-text font-family="Roboto" font-style="italic" font-size="10px" color="#626262">From: {{ userFrom }} [{{ emailFrom }}]</mj-text>
+        {{else}}
+          <mj-text font-family="Roboto" font-style="italic" font-size="10px" color="#626262">Do not reply to this email</mj-text>
+        {{/unless}}
+        <mj-text font-family="Roboto" font-style="italic" font-size="20px" color="#626262">{{ subject }}</mj-text>
+        <mj-text color="#525252" font-family="Roboto">"{{ message }}"</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="{{ secondary }}">
+      <mj-column>
+        <mj-button background-color="{{ primary }}" href="{{ webpageurl }}">Check the website</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#fafafa">
+      <mj-column>
+        <mj-text font-size="9px" font-family="Roboto" color="#525252">
+          {{ legalText }}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
