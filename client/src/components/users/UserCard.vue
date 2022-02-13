@@ -27,8 +27,22 @@
             <v-list-item-title v-text="user.email"></v-list-item-title>
             <v-list-item-subtitle>Email</v-list-item-subtitle>
           </v-list-item-content>
-          <v-list-item-action v-if="sendMessage">
-            <v-btn icon disabled>
+          <v-list-item-action
+            v-if="
+              sendMessage &&
+              (loginUser.rol.value == 'admin' ||
+                loginUser.rol.value == 'coor') &&
+              user._id != loginUser._id
+            "
+          >
+            <v-btn
+              icon
+              @click="
+                setUserToMessage(user);
+                clearFormMessage();
+                dialogs.sendMessage = true;
+              "
+            >
               <v-icon color="primary darken-1"> fas fa-comment-dots </v-icon>
             </v-btn>
           </v-list-item-action>
@@ -270,6 +284,7 @@ export default {
   },
   methods: {
     ...mapMutations("users", ["loadEditedUser"]),
+    ...mapMutations("general", ["setUserToMessage", "clearFormMessage"]),
     ...mapActions("users", ["deleteUserSoft", "makeUserVolunteer"]),
   },
 };
