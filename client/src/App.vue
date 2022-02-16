@@ -64,21 +64,21 @@
 </template>
 
 <script>
-import lateralmenu from "./components/general/LateralMenu.vue";
-import toolbar from "./components/general/Toolbar.vue";
-import footer from "./components/general/Footer.vue";
 import Vuetify from "./plugins/vuetify";
 
 import { mapActions, mapMutations, mapState } from "vuex";
 import SendMessageVue from "./components/general/SendMessage.vue";
+import LateralMenuVue from "./components/general/LateralMenu.vue";
+import ToolbarVue from "./components/general/Toolbar.vue";
+import FooterVue from "./components/general/Footer.vue";
 
 export default {
   name: "App",
 
   components: {
-    "lateral-menu": lateralmenu,
-    "toolbar-top": toolbar,
-    "footer-bot": footer,
+    "lateral-menu": LateralMenuVue,
+    "toolbar-top": ToolbarVue,
+    "footer-bot": FooterVue,
     "send-message-component": SendMessageVue,
   },
   computed: {
