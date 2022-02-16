@@ -100,14 +100,18 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 export default {
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
   computed: {
     ...mapState({
       menu: (state) => state.menu.menu,
       commonQuestions: (state) => state.questions.commonQuestions,
       answers: (state) => state.questions.answers,
       rules: (state) => state.questions.rules,
-      loginUser: (state) => state.user.loginUser,
-      user: (state) => state.users.user,
     }),
   },
   methods: {

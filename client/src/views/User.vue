@@ -163,7 +163,7 @@
                     <v-spacer></v-spacer>
                     <v-dialog
                       max-width="650"
-                      v-model="dialogs.editcommonquestion"
+                      v-model="dialogs.editCommonQuestion"
                     >
                       <template v-slot:activator="{ on: onDialog }">
                         <v-tooltip
@@ -189,7 +189,7 @@
                           >
                         </v-tooltip>
                       </template>
-                      <edit-common-question></edit-common-question>
+                      <edit-common-question :user="user"></edit-common-question>
                     </v-dialog>
                   </v-card-actions>
                 </v-card>
@@ -494,14 +494,14 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import invalidstatic from "../components/general/Invalid.vue";
-import editcommonquestions from "../components/users/EditCommonQuestions.vue";
 import { dateToBeauty, idealTextColor, outdated } from "../utils/utils";
 import UserCardVue from "../components/users/UserCard.vue";
+import EditCommonQuestionsVue from "../components/users/EditCommonQuestions.vue";
+import InvalidVue from "../components/general/Invalid.vue";
 export default {
   components: {
-    "invalid-static": invalidstatic,
-    "edit-common-question": editcommonquestions,
+    "invalid-static": InvalidVue,
+    "edit-common-question": EditCommonQuestionsVue,
     "user-card-component": UserCardVue,
   },
   data() {
