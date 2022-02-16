@@ -1,5 +1,6 @@
 <template>
   <v-container class="pa-10" fluid>
+    <alert-messages-component></alert-messages-component>
     <v-row>
       <v-col cols="12" class="display-1 font-weight-thin">
         <v-tooltip top>
@@ -44,11 +45,13 @@
 import { mapState } from "vuex";
 import PrivateDataVue from "../components/users/PrivateData.vue";
 import NotUserTasksVue from "../components/users/NotUserTasks.vue";
+import AlertMessagesVue from "../components/general/AlertMessages.vue";
 
 export default {
   components: {
     "private-data-column": PrivateDataVue,
     "not-user-tasks": NotUserTasksVue,
+    "alert-messages-component": AlertMessagesVue,
   },
   computed: {
     ...mapState({

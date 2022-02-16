@@ -132,6 +132,16 @@ const getters = {
             }
         });
         return valid == state.commonQuestions.length;
+    },
+
+    isCommonQuestionAnswered: (state) => {
+        let answered = 0;
+
+        state.commonQuestions.forEach((q) => {
+            if (state.answersByUser.some(answer => answer.question == q._id)) ++answered;
+        })
+
+        return state.commonQuestions.length == answered;
     }
 }
 
@@ -251,7 +261,7 @@ const actions = {
             commit('menu/notification', ['primary', 3, 'Common question saved correctly'], { root: true });
             await dispatch('loadAnswersByUser', userId);
             await dispatch('createAnswers');
-            commit('menu/cancelDialog', 'editcommonquestion', { root: true });
+            commit('menu/cancelDialog', 'editCommonQuestion', { root: true });
         } catch (error) {
             dispatch('menu/notificationError', error, { root: true });
         }
