@@ -33,7 +33,7 @@ const state = {
             confirmSoft: false,
             editmembers: false,
             editquestion: false,
-            editcommonquestion: false,
+            editCommonQuestion: false,
             edittask: false,
             savemembertask: false,
             deletePage: false,
