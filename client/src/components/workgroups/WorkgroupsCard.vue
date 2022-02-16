@@ -48,12 +48,30 @@
             </v-tooltip>
           </template>
           <template v-slot:append="{ item }">
-            <v-tooltip transition="slide-x-transition" open-delay="100" right>
+            <v-tooltip
+              transition="slide-x-reverse-transition"
+              open-delay="100"
+              left
+            >
               <template v-slot:activator="{ on }">
-                <v-icon v-on="on"></v-icon>
+                <v-icon
+                  :color="
+                    item.members.some((m) => m._id === loginUser._id)
+                      ? 'success'
+                      : 'error'
+                  "
+                  v-on="on"
+                  >{{
+                    item.members.some((m) => m._id === loginUser._id)
+                      ? "fas fa-check"
+                      : "fas fa-times"
+                  }}</v-icon
+                >
               </template>
               <span class="text-right caption font-weight-light">{{
-                item._id
+                item.members.some((m) => m._id === loginUser._id)
+                  ? "Joined"
+                  : "Not joined"
               }}</span>
             </v-tooltip>
           </template>
@@ -76,12 +94,13 @@
               fab
               right
               top
+              small
               absolute
               color="info"
-              class="mt-12 ml-2"
+              class="mt-8"
               @click="clearWorkgroupForm"
             >
-              <v-icon>fas fa-network-wired</v-icon>
+              <v-icon small>fas fa-network-wired</v-icon>
             </v-btn>
           </template>
           <span class="text-right caption font-weight-light">Create new</span>

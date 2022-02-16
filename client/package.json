@@ -1,6 +1,7 @@
 {
   "name": "teamcoo",
-  "version": "0.23.4",
+  "version": "0.23.5",
+  "description": "HR Collaborative team manager for Non-profit Associations",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
