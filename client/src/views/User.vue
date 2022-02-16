@@ -237,6 +237,25 @@
                                 workgroup.name
                               }}</v-list-item-title>
                             </v-list-item-content>
+                            <v-list-item-action>
+                              <v-tooltip left>
+                                <template v-slot:activator="{ on }">
+                                  <v-btn
+                                    icon
+                                    :to="`/workgroups/${workgroup._id}`"
+                                    v-on="on"
+                                  >
+                                    <v-icon color="primary darken-2"
+                                      >fas fa-arrow-right</v-icon
+                                    >
+                                  </v-btn>
+                                </template>
+                                <span
+                                  class="text-right caption font-weight-light"
+                                  >See more</span
+                                >
+                              </v-tooltip>
+                            </v-list-item-action>
                           </v-list-item>
                         </v-card-title>
                         <v-divider></v-divider>
