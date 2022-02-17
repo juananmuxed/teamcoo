@@ -45,21 +45,22 @@
                             color="warning"
                           ></v-chip>
                           <v-chip
+                            v-if="search.interests.length > 0"
+                            color="success"
+                            class="mx-1"
+                            v-text="
+                              search.interestsAll
+                                ? 'All of this:'
+                                : 'One of this:'
+                            "
+                          ></v-chip>
+                          <v-chip
                             v-for="(interest, index) in search.interests"
                             class="mx-1"
                             v-text="interest.name"
                             :color="interest.color"
                             :key="index"
                           ></v-chip>
-                          <v-chip
-                            v-if="
-                              search.interestsAll &&
-                              search.interests.length != 0
-                            "
-                            color="success"
-                            class="mx-1"
-                            >All answers</v-chip
-                          >
                           <v-chip
                             v-if="search.creator && search.creator._id"
                             color="secondary"

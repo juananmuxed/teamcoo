@@ -60,20 +60,21 @@
                             v-text="'Member: ' + searchSecret.member.username"
                           ></v-chip>
                           <v-chip
+                            v-if="search.questions.length > 0"
+                            color="success"
+                            class="mx-1"
+                            v-text="
+                              search.questionsAll
+                                ? 'All of this:'
+                                : 'One of this:'
+                            "
+                          ></v-chip>
+                          <v-chip
                             v-for="(question, index) in searchSecret.questions"
                             class="mx-1"
                             v-text="question.name"
                             :key="index"
                           ></v-chip>
-                          <v-chip
-                            v-if="
-                              searchSecret.questionsAll &&
-                              searchSecret.questions.length != 0
-                            "
-                            color="success"
-                            class="mx-1"
-                            >All answers</v-chip
-                          >
                           <v-chip
                             v-if="
                               searchSecret.creator && searchSecret.creator._id

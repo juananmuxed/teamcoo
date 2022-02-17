@@ -34,8 +34,14 @@
       <v-col cols="12" md="4" xl="2" class="pa-3">
         <private-data-column></private-data-column>
       </v-col>
-      <v-col cols="12" md="8" xl="10" class="pa-3">
-        <not-user-tasks v-if="loginUser.rol.value != 'user'"></not-user-tasks>
+      <v-col
+        cols="12"
+        md="8"
+        xl="10"
+        class="pa-3"
+        v-if="loginUser.verifiedEmail && loginUser.rol.value != 'user'"
+      >
+        <user-tasks></user-tasks>
       </v-col>
     </v-row>
   </v-container>
@@ -44,13 +50,13 @@
 <script>
 import { mapState } from "vuex";
 import PrivateDataVue from "../components/users/PrivateData.vue";
-import NotUserTasksVue from "../components/users/NotUserTasks.vue";
 import AlertMessagesVue from "../components/general/AlertMessages.vue";
+import UserTasksVue from "../components/users/UserTasks.vue";
 
 export default {
   components: {
     "private-data-column": PrivateDataVue,
-    "not-user-tasks": NotUserTasksVue,
+    "user-tasks": UserTasksVue,
     "alert-messages-component": AlertMessagesVue,
   },
   computed: {
