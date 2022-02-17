@@ -56,6 +56,20 @@
         <make-volunteer :user="loginUser"></make-volunteer>
       </v-dialog>
     </v-col>
+    <v-col v-if="!loginUser.verifiedEmail">
+      <v-alert
+        transition="slide-y-transition"
+        border="left"
+        type="error"
+        dismissible
+      >
+        <v-row no-gutters align="center">
+          <v-col class="grow">
+            Verify your email before continue using the app
+          </v-col>
+        </v-row>
+      </v-alert>
+    </v-col>
   </v-row>
 </template>
 

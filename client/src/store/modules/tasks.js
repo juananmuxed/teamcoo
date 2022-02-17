@@ -32,6 +32,7 @@ const state = {
         workgroups: [],
         workgroupsAll: false,
         options: {},
+        status: null,
     },
     totalTasks: 0,
     loading: false,
@@ -88,6 +89,36 @@ const mutations = {
     },
     setTotalTasks: (state, total) => {
         state.totalTasks = total;
+    },
+    setWorkgroupsToSearch: (state, workgroups) => {
+        state.search.workgroups = workgroups;
+        state.search.workgroupsAll = false;
+    },
+    setInterestsToSearch: (state, interests) => {
+        state.search.interests = interests;
+        state.search.interestsAll = false;
+    },
+    setOpenedToSearch: (state) => {
+        state.search.status = 0;
+    },
+    setCreatedByMeSearch: (state, user) => {
+        state.search.creator = user;
+    },
+    setJoinedByMeSearch: (state, user) => {
+        state.search.suscriber = user;
+    },
+    clearTaskSearch: (state) => {
+        state.search = {
+            name: null,
+            creator: {},
+            suscriber: {},
+            interests: [],
+            interestsAll: false,
+            workgroups: [],
+            workgroupsAll: false,
+            options: {},
+            status: null,
+        }
     },
 }
 
@@ -198,6 +229,7 @@ const actions = {
             config.params.searchModeWorkgroups = state.search.workgroupsAll;
             config.params.searchInterests = state.search.interests.map(i => i._id);
             config.params.searchModeInterests = state.search.interestsAll;
+            config.params.searchStatus = state.search.status;
             let res = await Axios.get('/tasks/paged', config);
             commit('tasksLoad', res.data.items);
             commit('setTotalTasks', res.data.totalItems);

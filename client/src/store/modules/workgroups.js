@@ -207,8 +207,7 @@ const getters = {
             userId == rootState.user.loginUser._id;
     },
 
-    isWorkgroupPermit: (state, getters, rootState) => (workgroupId) => {
-        const workgroup = state.workgroupsByUser.find(w => w._id == workgroupId)
+    isWorkgroupPermit: (state, getters, rootState) => (workgroup) => {
         const areYouCoordinator = workgroup.coordinators.some(c => c._id == rootState.user.loginUser._id) || workgroup.creator._id == rootState.user.loginUser._id
         return areYouCoordinator || rootState.user.loginUser.rol.value == 'admin';
     },
