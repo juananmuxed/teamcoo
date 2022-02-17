@@ -253,7 +253,7 @@
                       v-for="(workgroup, indexW) in workgroupsByUser"
                       :key="indexW"
                     >
-                      <template v-if="isWorkgroupPermit(workgroup._id)">
+                      <template v-if="isWorkgroupPermit(workgroup)">
                         <v-card>
                           <v-img
                             height="100"

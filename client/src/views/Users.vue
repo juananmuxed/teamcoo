@@ -45,6 +45,16 @@
                             :text-color="getTextColor(search.rol.value)"
                           ></v-chip>
                           <v-chip
+                            v-if="search.interests.length > 0"
+                            color="success"
+                            class="mx-1"
+                            v-text="
+                              search.interestsAll
+                                ? 'All of this:'
+                                : 'One of this:'
+                            "
+                          ></v-chip>
+                          <v-chip
                             v-for="(interest, index) in search.interests"
                             class="mx-1"
                             v-text="interest.name"
@@ -52,14 +62,15 @@
                             :key="index"
                           ></v-chip>
                           <v-chip
-                            v-if="
-                              search.interestsAll &&
-                              search.interests.length != 0
-                            "
+                            v-if="search.workgroups.length > 0"
                             color="success"
                             class="mx-1"
-                            >All answers</v-chip
-                          >
+                            v-text="
+                              search.workgroupsAll
+                                ? 'All of this:'
+                                : 'One of this:'
+                            "
+                          ></v-chip>
                           <v-chip
                             v-for="(workgroup, index) in search.workgroups"
                             class="mx-1"
@@ -67,15 +78,6 @@
                             :color="workgroup.color"
                             :key="index + '_wg'"
                           ></v-chip>
-                          <v-chip
-                            v-if="
-                              search.workgroupsAll &&
-                              search.workgroups.length != 0
-                            "
-                            color="success"
-                            class="mx-1"
-                            >All workgroups</v-chip
-                          >
                         </v-row>
                       </v-fade-transition>
                     </v-col>

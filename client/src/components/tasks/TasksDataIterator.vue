@@ -4,9 +4,80 @@
     :loading="loading"
     :options.sync="search.options"
     :server-items-length="totalTasks"
-    :footer-props="{ 'items-per-page-options': [5, 10, 20] }"
+    :footer-props="{ 'items-per-page-options': [4, 8, 12] }"
   >
     <template v-slot:header>
+      <v-row no-gutters fluid>
+        <v-col class="grow">
+          <p class="display-1 font-weight-thin text-uppercase">Tasks</p>
+        </v-col>
+        <v-col class="shrink">
+          <v-tooltip
+            left
+            transition="slide-x-reverse-transition"
+            open-delay="100"
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                depressed
+                right
+                color="success lighten-1"
+                fab
+                v-on="on"
+                @click="
+                  clearTaskSearch();
+                  feedLoad();
+                "
+                ><v-icon>fas fa-rss</v-icon></v-btn
+              >
+            </template>
+            <span class="text-right caption font-weight-light">Your feed</span>
+          </v-tooltip>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="3">
+          <v-btn
+            depressed
+            block
+            color="success"
+            @click="
+              clearTaskSearch();
+              setOpenedToSearch();
+            "
+            >Open tasks</v-btn
+          >
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-btn
+            depressed
+            block
+            color="primary"
+            @click="
+              clearTaskSearch();
+              setJoinedByMeSearch(loginUser);
+            "
+            >My tasks</v-btn
+          >
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-btn
+            depressed
+            block
+            color="secondary"
+            @click="
+              clearTaskSearch();
+              setCreatedByMeSearch(loginUser);
+            "
+            >Created by me</v-btn
+          >
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-btn depressed block color="warning" @click="clearTaskSearch"
+            >All</v-btn
+          >
+        </v-col>
+      </v-row>
       <v-expansion-panels class="mb-3">
         <v-expansion-panel>
           <v-expansion-panel-header v-slot="{ open }">
@@ -28,31 +99,57 @@
                       color="primary"
                     ></v-chip>
                     <v-chip
-                      v-for="(interests, index) in search.interests"
-                      class="mx-1"
-                      v-text="interests.name"
-                      :color="interests.color"
-                      :key="index + '_int'"
-                    ></v-chip>
-                    <v-chip
-                      v-if="search.interestsAll"
+                      v-if="
+                        search.interests.length > 0 &&
+                        search.interests.length <= 3
+                      "
                       color="success"
                       class="mx-1"
-                      >All interests</v-chip
-                    >
-                    <v-chip
-                      v-for="(workgroup, index) in search.workgroups"
-                      class="mx-1"
-                      v-text="workgroup.name"
-                      :color="workgroup.color"
-                      :key="index + '_wg'"
+                      v-text="
+                        search.interestsAll ? 'All of this:' : 'One of this:'
+                      "
                     ></v-chip>
                     <v-chip
-                      v-if="search.workgroupsAll"
+                      v-if="search.interests.length > 3"
+                      color="primary"
+                      class="mx-1"
+                      >Several interests chosen</v-chip
+                    >
+                    <template v-else>
+                      <v-chip
+                        v-for="(interests, index) in search.interests"
+                        class="mx-1"
+                        v-text="interests.name"
+                        :color="interests.color"
+                        :key="index + '_int'"
+                      ></v-chip>
+                    </template>
+                    <v-chip
+                      v-if="
+                        search.workgroups.length > 0 &&
+                        search.workgroups.length <= 3
+                      "
                       color="success"
                       class="mx-1"
-                      >All workgroups</v-chip
+                      v-text="
+                        search.workgroupsAll ? 'All of this:' : 'One of this:'
+                      "
+                    ></v-chip>
+                    <v-chip
+                      v-if="search.workgroups.length > 3"
+                      color="primary"
+                      class="mx-1"
+                      >Several workgroups chosen</v-chip
                     >
+                    <template v-else>
+                      <v-chip
+                        v-for="(workgroup, index) in search.workgroups"
+                        class="mx-1"
+                        v-text="workgroup.name"
+                        :color="workgroup.color"
+                        :key="index + '_wg'"
+                      ></v-chip>
+                    </template>
                     <v-chip
                       v-if="search.suscriber && search.suscriber._id"
                       color="secondary"
@@ -64,6 +161,12 @@
                       color="secondary"
                       class="mx-1"
                       v-text="'Creator: ' + search.creator.username"
+                    ></v-chip>
+                    <v-chip
+                      v-if="search.status != null"
+                      :color="search.status == 1 ? 'error' : 'success'"
+                      class="mx-1"
+                      v-text="search.status == 1 ? 'Closed' : 'Opened'"
                     ></v-chip>
                   </v-row>
                 </v-fade-transition>
@@ -125,6 +228,19 @@
                   v-model="search.creator"
                 ></user-search-component>
               </v-col>
+              <v-col cols="12" md="6">
+                <v-select
+                  outlined
+                  v-model="search.status"
+                  :items="[
+                    { value: null, text: 'All' },
+                    { value: 0, text: 'Opened' },
+                    { value: 1, text: 'Closed' },
+                  ]"
+                  closable
+                  label="Status"
+                ></v-select>
+              </v-col>
             </v-row>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -163,122 +279,9 @@
           v-for="(task, index) in props.items"
           :key="index"
         >
-          <v-card>
-            <v-img
-              v-if="task.image"
-              height="200"
-              :src="task.image"
-              class="align-end"
-              gradient="to bottom, rgba(0,0,0,0), rgba(245,245,245,.7)"
-            >
-              <v-chip
-                small
-                v-for="(workgroup, index) in task.workgroups"
-                :key="index"
-                :color="workgroup.color"
-                class="ma-2"
-              >
-                <span :class="`${textColor(workgroup.color)}--text`">{{
-                  workgroup.name
-                }}</span>
-              </v-chip>
-            </v-img>
-            <v-img
-              v-else
-              height="200"
-              class="align-end"
-              :gradient="`to bottom, ${task.color}, ${task.color} 30%`"
-              :style="`background:linear-gradient(to bottom, ${task.color}, rgba(245,245,245,.2))`"
-            >
-              <v-chip
-                small
-                v-for="(workgroup, index) in task.workgroups"
-                :key="index"
-                :color="workgroup.color"
-                class="ma-2"
-              >
-                <span :class="`${textColor(workgroup.color)}--text`">{{
-                  workgroup.name
-                }}</span>
-              </v-chip>
-            </v-img>
-            <v-card-title class="text-uppercase font-weight-light">{{
-              task.name
-            }}</v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
-              <template v-if="task.interests.length != 0">
-                <v-row>
-                  <h3 class="pa-1">
-                    <span class="text-uppercase font-weight-light"
-                      >Interests</span
-                    >
-                  </h3>
-                  <v-col cols="12">
-                    <v-chip
-                      small
-                      v-for="(interest, index) in task.interests"
-                      :key="index"
-                      class="ma-1"
-                      >{{ interest.name }}</v-chip
-                    >
-                  </v-col>
-                </v-row>
-              </template>
-              <template v-if="task.suscribers.length != 0">
-                <v-row>
-                  <h3 class="pa-1">
-                    <span class="text-uppercase font-weight-light"
-                      >Volunteers</span
-                    >
-                  </h3>
-                  <v-col cols="12" class="pa-0">
-                    <v-avatar
-                      left
-                      v-for="(user, index) in task.suscribers"
-                      :key="index"
-                      class="ma-1"
-                    >
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on }">
-                          <template v-if="user.image != ''">
-                            <v-avatar size="36">
-                              <img :src="user.image" v-on="on" />
-                            </v-avatar>
-                          </template>
-                          <template v-else>
-                            <v-avatar size="36" color="secondary">
-                              <v-icon small color="primary" v-on="on"
-                                >fas fa-user</v-icon
-                              >
-                            </v-avatar>
-                          </template>
-                        </template>
-                        <span class="text-right caption font-weight-light">{{
-                          user.username
-                        }}</span>
-                      </v-tooltip>
-                    </v-avatar>
-                  </v-col>
-                </v-row>
-              </template>
-            </v-card-text>
-            <v-card-actions>
-              <v-chip>
-                <v-avatar v-if="task.creator.image != ''" left
-                  ><v-img :src="task.creator.image"></v-img
-                ></v-avatar>
-                <v-avatar v-else left color="primary"
-                  ><v-icon x-small>fas fa-user</v-icon></v-avatar
-                >
-                {{ task.creator.username }}
-              </v-chip>
-              <v-spacer></v-spacer>
-              <v-btn small color="info" :to="`/tasks/${task._id}`">
-                <v-icon left>fas fa-eye</v-icon> See
-              </v-btn>
-            </v-card-actions>
-          </v-card>
+          <task-complete-card-component
+            :task="task"
+          ></task-complete-card-component>
         </v-col>
       </v-row>
     </template>
@@ -287,20 +290,22 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import { idealTextColor } from "../../utils/utils";
 import InterestsSearchVue from "../interests/InterestsSearch.vue";
 import UserSearchVue from "../users/UserSearch.vue";
 import WorkgroupsSearchVue from "../workgroups/WorkgroupsSearch.vue";
+import TaskCompleteCardVue from "./TaskCompleteCard.vue";
 export default {
   components: {
     "user-search-component": UserSearchVue,
     "interest-search-component": InterestsSearchVue,
     "workgroup-search-component": WorkgroupsSearchVue,
+    "task-complete-card-component": TaskCompleteCardVue,
   },
   computed: {
     ...mapState({
       tasks: (state) => state.tasks.tasks,
       loginUser: (state) => state.user.loginUser,
+      workgroupsByUser: (state) => state.workgroups.workgroupsByUser,
       search: (state) => state.tasks.search,
       totalTasks: (state) => state.tasks.totalTasks,
       loading: (state) => state.tasks.loading,
@@ -317,10 +322,27 @@ export default {
   },
   methods: {
     ...mapActions("tasks", ["loadTasksPaged"]),
-    ...mapMutations("tasks", ["clearTaskForm", "randomTaskColor"]),
-    textColor(color) {
-      return idealTextColor(color);
+    ...mapActions("workgroups", ["loadWorkgroupsByUser"]),
+    ...mapMutations("tasks", [
+      "clearTaskForm",
+      "randomTaskColor",
+      "setWorkgroupsToSearch",
+      "setInterestsToSearch",
+      "setOpenedToSearch",
+      "setCreatedByMeSearch",
+      "setJoinedByMeSearch",
+      "clearTaskSearch",
+    ]),
+    async feedLoad() {
+      await this.loadWorkgroupsByUser(this.loginUser._id);
+      this.setWorkgroupsToSearch(this.workgroupsByUser);
+      this.setInterestsToSearch(this.loginUser.interests);
+      this.setOpenedToSearch();
+      await this.loadTasksPaged();
     },
+  },
+  async created() {
+    await this.feedLoad();
   },
 };
 </script>

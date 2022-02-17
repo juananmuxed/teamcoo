@@ -104,7 +104,7 @@ exports.getAllTasksByUser = async (req, res) => {
 
 exports.getAllTasksPaged = async (req, res) => {
     try {
-        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null, searchInterests = [], searchModeInterests, searchWorkgroups = [], searchModeWorkgroups, searchSuscriber = null } = req.query;
+        const { page = 1, itemsPerPage = 10, sortBy = [], sortDesc = [], searchName = null, searchCreator = null, searchInterests = [], searchModeInterests, searchWorkgroups = [], searchModeWorkgroups, searchSuscriber = null, searchStatus = null } = req.query;
         let sort = {};
         let searchObject = {
             $and: [
@@ -132,6 +132,9 @@ exports.getAllTasksPaged = async (req, res) => {
             searchObject.$and.push(workgroupsObject)
         }
         sortBy.forEach((key, i) => sort[key] = sortDesc[i] === 'true' ? -1 : 1);
+        if (sortBy.length == 0) {
+            sort.eventEndDate = 1
+        }
         const tasksDB = await Tasks.find({
             $and: [
                 { deleted: false }, searchObject
@@ -157,7 +160,11 @@ exports.getAllTasksPaged = async (req, res) => {
                 match: { deleted: false }
             });
         const filteredSecret = tasksDB.filter(task => task.workgroups.filter(w => w.secret).length != task.workgroups.length);
-        res.json({ items: filteredSecret, totalItems: filteredSecret.length });
+        let filteredStatus = filteredSecret;
+        if (searchStatus != null) {
+            filteredStatus = filteredSecret.filter(task => searchStatus == 1 ? task.suscribers.length >= task.limit : task.suscribers.length < task.limit);
+        }
+        res.json({ items: filteredStatus, totalItems: filteredStatus.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }

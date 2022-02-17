@@ -38,6 +38,16 @@
                             color="primary"
                           ></v-chip>
                           <v-chip
+                            v-if="search.interests.length > 0"
+                            color="success"
+                            class="mx-1"
+                            v-text="
+                              search.interestsAll
+                                ? 'All of this:'
+                                : 'One of this:'
+                            "
+                          ></v-chip>
+                          <v-chip
                             v-for="(interests, index) in search.interests"
                             class="mx-1"
                             v-text="interests.name"
@@ -45,14 +55,15 @@
                             :key="index + '_int'"
                           ></v-chip>
                           <v-chip
-                            v-if="
-                              search.interestsAll &&
-                              search.interests.length != 0
-                            "
+                            v-if="search.workgroups.length > 0"
                             color="success"
                             class="mx-1"
-                            >All interests</v-chip
-                          >
+                            v-text="
+                              search.workgroupsAll
+                                ? 'All of this:'
+                                : 'One of this:'
+                            "
+                          ></v-chip>
                           <v-chip
                             v-for="(workgroup, index) in search.workgroups"
                             class="mx-1"
@@ -60,15 +71,6 @@
                             :color="workgroup.color"
                             :key="index + '_wg'"
                           ></v-chip>
-                          <v-chip
-                            v-if="
-                              search.workgroupsAll &&
-                              search.workgroups.length != 0
-                            "
-                            color="success"
-                            class="mx-1"
-                            >All workgroups</v-chip
-                          >
                           <v-chip
                             v-if="search.suscriber && search.suscriber._id"
                             color="secondary"
@@ -80,6 +82,12 @@
                             color="secondary"
                             class="mx-1"
                             v-text="'Creator: ' + search.creator.username"
+                          ></v-chip>
+                          <v-chip
+                            v-if="search.status != null"
+                            :color="search.status == 1 ? 'error' : 'success'"
+                            class="mx-1"
+                            v-text="search.status == 1 ? 'Closed' : 'Opened'"
                           ></v-chip>
                         </v-row>
                       </v-fade-transition>
@@ -144,6 +152,19 @@
                         return-object
                         v-model="search.creator"
                       ></user-search-component>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-select
+                        outlined
+                        v-model="search.status"
+                        :items="[
+                          { value: null, text: 'All' },
+                          { value: 0, text: 'Opened' },
+                          { value: 1, text: 'Closed' },
+                        ]"
+                        closable
+                        label="Status"
+                      ></v-select>
                     </v-col>
                   </v-row>
                 </v-expansion-panel-content>
@@ -359,10 +380,13 @@ export default {
   },
   methods: {
     ...mapActions("tasks", ["loadTasksPaged"]),
-    ...mapMutations("tasks", ["clearTaskForm", "randomTaskColor"]),
+    ...mapMutations("tasks", ["clearTaskForm", "randomTaskColor","clearTaskSearch"]),
     textColor(color) {
       return idealTextColor(color);
     },
+  },
+  created() {
+    this.clearTaskSearch()
   },
 };
 </script>
