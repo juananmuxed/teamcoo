@@ -174,16 +174,18 @@
             </v-tooltip>
           </template>
           <template v-slot:item.workgroups="{ item }">
-            <v-chip
-              small
-              class="ma-1"
-              v-for="(wg, index) in item.workgroups"
-              v-bind:key="index"
-              :color="wg.color"
-              :text-color="textColor(wg.color)"
-              :to="'/workgroups/' + wg._id"
-              >{{ wg.name }}</v-chip
-            >
+            <template v-for="(wg, index) in item.workgroups">
+              <v-chip
+                small
+                class="ma-1"
+                v-if="!wg.secret"
+                v-bind:key="index"
+                :color="wg.color"
+                :text-color="textColor(wg.color)"
+                :to="'/workgroups/' + wg._id"
+                >{{ wg.name }}</v-chip
+              >
+            </template>
           </template>
           <template v-slot:item.interests="{ item }">
             <v-chip

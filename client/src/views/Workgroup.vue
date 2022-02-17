@@ -10,7 +10,11 @@
           transition="fade-transition"
           :loading="skeleton"
         >
-          <v-card class="mx-auto" v-if="workgroup._id" max-width="1080">
+          <v-card
+            class="mx-auto"
+            v-if="workgroup._id && isAccessibleUser(workgroup)"
+            max-width="1080"
+          >
             <v-overlay absolute :value="workgroup.deleted">
               <v-alert color="error" dark icon="fas fa-archive" dense>
                 Archived
@@ -461,14 +465,6 @@
                           small
                           color="info"
                           v-on="{ ...onTooltip, ...onDialog }"
-                          v-if="
-                            loginUser.rol.value == 'admin' ||
-                            !item.creator ||
-                            workgroup.creator._id == loginUser._id ||
-                            workgroup.coordinators.some(
-                              (coor) => coor._id == loginUser._id
-                            )
-                          "
                         >
                           <v-icon small class="ml-1">fas fa-edit</v-icon>
                         </v-btn>
@@ -494,11 +490,6 @@
                           small
                           color="error"
                           v-on="{ ...onTooltip, ...onDialog }"
-                          v-if="
-                            loginUser.rol.value == 'admin' ||
-                            !item.creator ||
-                            workgroup.creator._id == loginUser._id
-                          "
                         >
                           <v-icon small class="ml-1">fas fa-trash</v-icon>
                         </v-btn>
@@ -586,6 +577,9 @@ export default {
     },
     outdated(date) {
       return outdated(date);
+    },
+    isAccessibleUser(workgroup) {
+      return this.$store.getters["workgroups/isAccessibleUser"](workgroup);
     },
   },
   created() {

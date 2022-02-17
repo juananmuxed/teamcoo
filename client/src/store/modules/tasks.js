@@ -135,7 +135,15 @@ const getters = {
 
     limitExceeded: (state) => {
         return state.tasksForm.task.suscribers.length > state.tasksForm.task.limit
-    }
+    },
+
+    isAccessibleUser: (state, getters, rootState) => (task) => {
+        const areYouCreator = task.creator._id == rootState.user.loginUser._id;
+        const areYouAdminDirector = rootState.user.loginUser.rol.value == 'admin' || rootState.user.loginUser.rol.value == 'dire';
+        const areYouSubscriber = task.suscribers.some(s => s._id == rootState.user.loginUser._id);
+        const areJustInSecretWorkgroups = task.workgroups.filter(w => w.secret).length == task.workgroups.length;
+        return areYouCreator || areYouAdminDirector || areYouSubscriber || !areJustInSecretWorkgroups;
+    },
 }
 
 const actions = {

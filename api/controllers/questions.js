@@ -109,8 +109,7 @@ exports.getAllQuestionsPaged = async (req, res) => {
                 path: 'interests',
                 match: { deleted: false }
             });
-        const count = await Questions.countDocuments({ deleted: false });
-        res.json({ items: questionsDB, totalItems: count });
+        res.json({ items: questionsDB, totalItems: questionsDB.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }

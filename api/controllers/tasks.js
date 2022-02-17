@@ -150,14 +150,15 @@ exports.getAllTasksPaged = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false, secret: false }
+                match: { deleted: false }
             })
             .populate({
                 path: 'suscribers',
                 match: { deleted: false }
             });
-        const count = await Tasks.countDocuments({ deleted: false });
-        res.json({ items: tasksDB, totalItems: count });
+        const filteredSecret = tasksDB.filter(task => task.workgroups.filter(w => w.secret).length != task.workgroups.length)
+        console.log(filteredSecret)
+        res.json({ items: filteredSecret, totalItems: filteredSecret.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
@@ -203,7 +204,7 @@ exports.getTask = async (req, res) => {
             })
             .populate({
                 path: 'workgroups',
-                match: { deleted: false, secret: false }
+                match: { deleted: false }
             })
             .populate({
                 path: 'suscribers',
@@ -225,7 +226,7 @@ exports.updateTask = async (req, res) => {
 
     try {
         const taskSearch = await Tasks.findById(_id);
-        if(body.suscribers > taskSearch.limit) {
+        if (body.suscribers > taskSearch.limit) {
             return res.status(401).json({ message: "Task limit exceeded" });
         }
         const taskDB = await Tasks.findByIdAndUpdate(_id, body, { new: true })
@@ -296,7 +297,7 @@ exports.joinTask = async (req, res) => {
     try {
         const userId = req.body.user;
         const taskSearch = await Tasks.findById(_id);
-        if(taskSearch.suscribers.length >= taskSearch.limit) {
+        if (taskSearch.suscribers.length >= taskSearch.limit) {
             return res.status(401).json({ message: "This task is full" });
         }
         const taskDB = await Tasks.findByIdAndUpdate(_id, {

@@ -17,80 +17,41 @@
     <v-divider></v-divider>
 
     <v-card-text>
-      <v-list two-line>
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon color="primary">fas fa-envelope</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title v-text="user.email"></v-list-item-title>
-            <v-list-item-subtitle>Email</v-list-item-subtitle>
-          </v-list-item-content>
-          <v-list-item-action
-            v-if="
-              sendMessage &&
-              (loginUser.rol.value == 'admin' ||
-                loginUser.rol.value == 'coor') &&
-              user._id != loginUser._id
-            "
-          >
-            <v-btn
-              icon
-              @click="
-                setUserToMessage(user);
-                clearFormMessage();
-                dialogs.sendMessage = true;
-              "
-            >
-              <v-icon color="primary darken-1"> fas fa-comment-dots </v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-
-        <v-divider inset></v-divider>
-
-        <v-list-item>
-          <v-list-item-icon>
-            <v-icon color="primary">fas fa-user</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title v-text="user.firstName"></v-list-item-title>
-            <v-list-item-subtitle>Firstname</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-action></v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="user.lastName"></v-list-item-title>
-            <v-list-item-subtitle>Lastname</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-action></v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="user.rol.name"></v-list-item-title>
-            <v-list-item-subtitle>Role</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-
-        <template v-if="user.membership.status == 'active'">
-          <v-divider inset></v-divider>
+      <template v-if="isAccessibleVolunteerForUser(user._id)">
+        <v-list two-line>
           <v-list-item>
             <v-list-item-icon>
-              <v-icon color="primary">fas fa-star</v-icon>
+              <v-icon color="primary">fas fa-user</v-icon>
             </v-list-item-icon>
+
             <v-list-item-content>
-              <v-list-item-title>Membership</v-list-item-title>
+              <v-list-item-title v-text="user.firstName"></v-list-item-title>
+              <v-list-item-subtitle>Firstname</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-        </template>
-      </v-list>
+
+          <v-list-item>
+            <v-list-item-action></v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="user.lastName"></v-list-item-title>
+              <v-list-item-subtitle>Lastname</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+
+          <template v-if="user.membership.status == 'active'">
+            <v-divider inset></v-divider>
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon color="primary">fas fa-star</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>Membership</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-list>
+      </template>
       <template v-if="interests">
-        <v-divider></v-divider>
         <v-list>
           <v-list-item>
             <v-list-item-icon>
@@ -107,6 +68,26 @@
           v-text="interest.name"
         ></v-chip>
       </template>
+      <v-btn
+        fab
+        right
+        top
+        absolute
+        class="mt-10"
+        color="success"
+        v-if="
+          sendMessage &&
+          (loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor') &&
+          user._id != loginUser._id
+        "
+        @click="
+          setUserToMessage(user);
+          clearFormMessage();
+          dialogs.sendMessage = true;
+        "
+      >
+        <v-icon> fas fa-comment-dots </v-icon>
+      </v-btn>
     </v-card-text>
 
     <template
@@ -286,6 +267,13 @@ export default {
     ...mapMutations("users", ["loadEditedUser"]),
     ...mapMutations("general", ["setUserToMessage", "clearFormMessage"]),
     ...mapActions("users", ["deleteUserSoft", "makeUserVolunteer"]),
+    ...mapActions("workgroups", ["loadWorkgroups"]),
+    isAccessibleVolunteerForUser(user) {
+      return this.$store.getters["workgroups/isAccessibleVolunteer"](user);
+    },
+  },
+  async created() {
+    await this.loadWorkgroups();
   },
 };
 </script>
