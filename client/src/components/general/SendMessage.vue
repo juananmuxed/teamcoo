@@ -19,7 +19,7 @@
           >
           </v-text-field>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" v-if="isAccessibleVolunteerForUser(user._id)">
           <v-text-field
             outlined
             disabled
@@ -84,6 +84,13 @@ export default {
   methods: {
     ...mapActions("general", ["sendMessage"]),
     ...mapGetters("general", ["validMessage"]),
+    ...mapActions("workgroups", ["loadWorkgroups"]),
+    isAccessibleVolunteerForUser(user) {
+      return this.$store.getters["workgroups/isAccessibleVolunteer"](user);
+    },
+  },
+  async created() {
+    await this.loadWorkgroups();
   },
 };
 </script>

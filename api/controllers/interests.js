@@ -59,8 +59,7 @@ exports.getAllInterestsPaged = async (req, res) => {
                 path: 'creator',
                 match: { deleted: false }
             });
-        const count = await Interests.countDocuments({ deleted: false });
-        res.json({ items: interestDB, totalItems: count });
+        res.json({ items: interestDB, totalItems: interestDB.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
@@ -92,8 +91,7 @@ exports.getAllInterestsArchivedPaged = async (req, res) => {
                 path: 'creator',
                 match: { deleted: false }
             });
-        const count = await Interests.countDocuments({ deleted: false });
-        res.json({ items: interestDB, totalItems: count });
+        res.json({ items: interestDB, totalItems: interestDB.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }

@@ -159,8 +159,7 @@ exports.getAllWorkgroupsPaged = async (req, res) => {
                 path: 'parent',
                 match: { deleted: false }
             });
-        const count = await Workgroups.countDocuments({ deleted: false, secret: false });
-        res.json({ items: workgroupsDB, totalItems: count });
+        res.json({ items: workgroupsDB, totalItems: workgroupsDB.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
@@ -220,8 +219,7 @@ exports.getAllSecretWorkgroupsPaged = async (req, res) => {
                 path: 'parent',
                 match: { deleted: false }
             });
-        const count = await Workgroups.countDocuments({ deleted: false, secret: true });
-        res.json({ items: workgroupsDB, totalItems: count });
+        res.json({ items: workgroupsDB, totalItems: workgroupsDB.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
@@ -467,7 +465,7 @@ exports.unjoinWorkgroup = async (req, res) => {
 exports.getWorkgroupsByUser = async (req, res) => {
     try {
         const userId = req.params.id;
-        const workgroupDB = await Workgroups.find({ 'members': mongoose.Types.ObjectId(userId) })
+        const workgroupDB = await Workgroups.find({ 'members': mongoose.Types.ObjectId(userId), secret: false })
             .populate({
                 path: 'creator',
                 match: { deleted: false }
