@@ -26,7 +26,14 @@ const state = {
     loading: false,
     skeleton: false,
     isLoadingUser: false,
-    usersByName: []
+    usersByName: [],
+    newVolunteer: {
+        volunteer: false,
+        accept: {
+            termsConditions: false,
+            privacyCookiePolicy: false
+        },
+    },
 }
 
 const mutations = {
@@ -103,6 +110,10 @@ const getters = {
             return true
         }
     },
+
+    isCheckedVolunteer(state) {
+        return state.newVolunteer.volunteer && state.newVolunteer.accept.termsConditions && state.newVolunteer.accept.privacyCookiePolicy;
+    }
 }
 
 const actions = {
@@ -207,11 +218,13 @@ const actions = {
         }
     },
 
-    async makeUserVolunteer({ commit, rootState, rootGetters, dispatch }, params) {
+    async makeUserVolunteer({ commit, rootState, rootGetters, dispatch }, id) {
         try {
             let config = rootGetters['general/cookieAuth'];
-            let res = await Axios.put('/users/' + params.id, { rol: { name: "Volunteer", value: "volu" } }, config);
-            if (rootState.user.loginUser._id == params.id) {
+            let res = await Axios.put('/users/' + id, {
+                rol: { name: "Volunteer", value: "volu" }, accept: { termsConditions: true, privacyCookiePolicy: true }
+            }, config);
+            if (rootState.user.loginUser._id == id) {
                 commit('user/userStore', res.data, { root: true });
             }
             commit('userLoad', res.data);

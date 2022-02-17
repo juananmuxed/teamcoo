@@ -14,7 +14,11 @@
         >
           <v-card
             elevation="0"
-            v-if="user._id && loginUser.rol.value != 'user'"
+            v-if="
+              user._id &&
+              (loginUser.rol.value != 'user' ||
+                loginUser._id == this.$route.params.id)
+            "
             color="rgba(0,0,0,0)"
           >
             <v-overlay absolute :value="user.deleted">
@@ -52,7 +56,40 @@
                 ></user-card-component>
               </v-col>
               <v-col
-                v-if="isAccessibleVolunteerForUser(user._id)"
+                cols="12"
+                md="7"
+                xl="8"
+                v-if="loginUser.rol.value == 'user'"
+              >
+                <v-alert
+                  transition="slide-y-transition"
+                  border="left"
+                  type="error"
+                  dismissible
+                >
+                  <v-row no-gutters align="center">
+                    <v-col class="grow"> You are not yet a volunteer </v-col>
+                    <v-col class="shrink">
+                      <v-btn
+                        depressed
+                        small
+                        color="primary"
+                        @click="dialogs.makeVolunteer = true"
+                      >
+                        Volunteer now
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-alert>
+                <v-dialog max-width="650" v-model="dialogs.makeVolunteer">
+                  <make-volunteer :user="loginUser"></make-volunteer>
+                </v-dialog>
+              </v-col>
+              <v-col
+                v-if="
+                  isAccessibleVolunteerForUser(user._id) &&
+                  loginUser.rol.value != 'user'
+                "
                 cols="12"
                 md="7"
                 xl="8"
@@ -191,7 +228,12 @@
                 </v-card>
               </v-col>
             </v-row>
-            <template v-if="isAccessibleVolunteerForUser(user._id)">
+            <template
+              v-if="
+                isAccessibleVolunteerForUser(user._id) &&
+                loginUser.rol.value != 'user'
+              "
+            >
               <v-row>
                 <v-col
                   cols="12"
@@ -201,9 +243,7 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col
-                  v-if="workgroupsByUser.length != 0 && answers.length != 0"
-                >
+                <v-col v-if="workgroupsByUser.length != 0">
                   <v-row>
                     <v-col
                       cols="12"
@@ -411,67 +451,71 @@
                       v-for="(task, index) in tasksByUser"
                       :key="index"
                     >
-                      <v-hover>
-                        <template v-slot:default="{ hover }">
-                          <v-card>
-                            <v-img
-                              v-if="task.image"
-                              height="100"
-                              :src="task.image"
-                              class="align-end"
-                            >
-                            </v-img>
-                            <v-img
-                              v-else
-                              height="100"
-                              class="align-end"
-                              :style="`background:${task.color}`"
-                            >
-                            </v-img>
-                            <v-card-title
-                              class="text-uppercase font-weight-light"
-                            >
-                              <v-list-item two-line>
-                                <v-list-item-content>
-                                  <v-list-item-title>{{
-                                    task.name
-                                  }}</v-list-item-title>
-                                  <v-list-item-subtitle
-                                    >{{ dateFormated(task.eventStartDate) }}
-                                    -
-                                    {{
-                                      dateFormated(task.eventEndDate)
-                                    }}</v-list-item-subtitle
-                                  >
-                                </v-list-item-content>
-                              </v-list-item>
-                            </v-card-title>
-                            <v-card-actions v-if="outdated(task.eventEndDate)">
-                              <v-spacer></v-spacer>
-                              <v-chip color="error">Outdated</v-chip>
-                            </v-card-actions>
-                            <v-fade-transition>
-                              <v-overlay
-                                v-if="hover"
-                                absolute
-                                :color="
-                                  outdated(task.eventEndDate)
-                                    ? 'error'
-                                    : 'primary'
-                                "
+                      <template v-if="isTaskPermit(task._id)">
+                        <v-hover>
+                          <template v-slot:default="{ hover }">
+                            <v-card>
+                              <v-img
+                                v-if="task.image"
+                                height="100"
+                                :src="task.image"
+                                class="align-end"
                               >
-                                <v-btn
-                                  :to="`/tasks/${task._id}`"
-                                  color="primary"
-                                  fab
+                              </v-img>
+                              <v-img
+                                v-else
+                                height="100"
+                                class="align-end"
+                                :style="`background:${task.color}`"
+                              >
+                              </v-img>
+                              <v-card-title
+                                class="text-uppercase font-weight-light"
+                              >
+                                <v-list-item two-line>
+                                  <v-list-item-content>
+                                    <v-list-item-title>{{
+                                      task.name
+                                    }}</v-list-item-title>
+                                    <v-list-item-subtitle
+                                      >{{ dateFormated(task.eventStartDate) }}
+                                      -
+                                      {{
+                                        dateFormated(task.eventEndDate)
+                                      }}</v-list-item-subtitle
+                                    >
+                                  </v-list-item-content>
+                                </v-list-item>
+                              </v-card-title>
+                              <v-card-actions
+                                v-if="outdated(task.eventEndDate)"
+                              >
+                                <v-spacer></v-spacer>
+                                <v-chip color="error">Outdated</v-chip>
+                              </v-card-actions>
+                              <v-fade-transition>
+                                <v-overlay
+                                  v-if="hover"
+                                  absolute
+                                  :color="
+                                    outdated(task.eventEndDate)
+                                      ? 'error'
+                                      : 'primary'
+                                  "
                                 >
-                                  <v-icon>fas fa-eye</v-icon>
-                                </v-btn>
-                              </v-overlay>
-                            </v-fade-transition>
-                          </v-card>
-                        </template>
-                      </v-hover>
+                                  <v-btn
+                                    :to="`/tasks/${task._id}`"
+                                    color="primary"
+                                    fab
+                                  >
+                                    <v-icon>fas fa-eye</v-icon>
+                                  </v-btn>
+                                </v-overlay>
+                              </v-fade-transition>
+                            </v-card>
+                          </template>
+                        </v-hover>
+                      </template>
                     </v-col>
                   </v-row>
                 </v-col>
@@ -494,11 +538,13 @@ import { dateToBeauty, idealTextColor, outdated } from "../utils/utils";
 import UserCardVue from "../components/users/UserCard.vue";
 import EditCommonQuestionsVue from "../components/users/EditCommonQuestions.vue";
 import InvalidVue from "../components/general/Invalid.vue";
+import MakeVolunteerVue from "../components/users/MakeVolunteer.vue";
 export default {
   components: {
     "invalid-static": InvalidVue,
     "edit-common-question": EditCommonQuestionsVue,
     "user-card-component": UserCardVue,
+    "make-volunteer": MakeVolunteerVue,
   },
   data() {
     return {
@@ -551,6 +597,9 @@ export default {
     },
     isWorkgroupPermit(workgroupId) {
       return this.$store.getters["workgroups/isWorkgroupPermit"](workgroupId);
+    },
+    isTaskPermit(taskId) {
+      return this.$store.getters["tasks/isTaskPermit"](taskId);
     },
   },
   created() {

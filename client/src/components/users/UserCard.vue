@@ -96,45 +96,6 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <template
-          v-if="
-            (loginUser.rol.value == 'admin' || loginUser.rol.value == 'coor') &&
-            user.rol.value == 'user'
-          "
-        >
-          <v-dialog max-width="650" v-model="dialogs.changeToVolunteer">
-            <template v-slot:activator="{ on: onDialog }">
-              <v-tooltip
-                max-width="200"
-                left
-                transition="slide-x-reverse-transition"
-                open-delay="100"
-              >
-                <template v-slot:activator="{ on: onTooltip }">
-                  <v-btn
-                    class="mx-1"
-                    depressed
-                    fab
-                    small
-                    color="primary"
-                    v-on="{ ...onTooltip, ...onDialog }"
-                  >
-                    <v-icon small>fas fa-people-arrows</v-icon>
-                  </v-btn>
-                </template>
-                <span class="text-right font-weight-light">Make Volunteer</span>
-              </v-tooltip>
-            </template>
-            <confirmation-template
-              title="Make this user Volunteer"
-              description="You are about to close change the role of this user. <br><br>Are you sure?"
-              :cancelFunction="null"
-              textButton="Make new volunteer"
-              :actionparams="{ id: user._id }"
-              :action="makeUserVolunteer"
-            ></confirmation-template>
-          </v-dialog>
-        </template>
         <template v-if="loginUser._id == user._id">
           <v-dialog max-width="650" v-model="dialogs.changepassword">
             <template v-slot:activator="{ on: onDialog }">
@@ -266,7 +227,7 @@ export default {
   methods: {
     ...mapMutations("users", ["loadEditedUser"]),
     ...mapMutations("general", ["setUserToMessage", "clearFormMessage"]),
-    ...mapActions("users", ["deleteUserSoft", "makeUserVolunteer"]),
+    ...mapActions("users", ["deleteUserSoft"]),
     ...mapActions("workgroups", ["loadWorkgroups"]),
     isAccessibleVolunteerForUser(user) {
       return this.$store.getters["workgroups/isAccessibleVolunteer"](user);

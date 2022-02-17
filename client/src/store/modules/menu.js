@@ -39,6 +39,7 @@ const state = {
             deletePage: false,
             changeToVolunteer: false,
             sendMessage: false,
+            makeVolunteer: false,
         },
         loader: {
             workgroup: false,
