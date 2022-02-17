@@ -156,8 +156,7 @@ exports.getAllTasksPaged = async (req, res) => {
                 path: 'suscribers',
                 match: { deleted: false }
             });
-        const filteredSecret = tasksDB.filter(task => task.workgroups.filter(w => w.secret).length != task.workgroups.length)
-        console.log(filteredSecret)
+        const filteredSecret = tasksDB.filter(task => task.workgroups.filter(w => w.secret).length != task.workgroups.length);
         res.json({ items: filteredSecret, totalItems: filteredSecret.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });

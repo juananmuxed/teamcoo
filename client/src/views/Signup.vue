@@ -121,7 +121,7 @@
                   <v-checkbox
                     color="primary"
                     v-model="newUser.accept.termsConditions"
-                    :rules="[rules.acceptterms]"
+                    :rules="[rules.acceptTerms]"
                     dense
                   >
                     <template v-slot:label>
@@ -139,7 +139,7 @@
                     dense
                     color="primary"
                     v-model="newUser.accept.privacyCookiePolicy"
-                    :rules="[rules.acceptchecks]"
+                    :rules="[rules.acceptChecks]"
                   >
                     <template v-slot:label>
                       <div>
