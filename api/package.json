@@ -1,6 +1,6 @@
 {
   "name": "teamcoo",
-  "version": "0.23.5",
+  "version": "0.23.7",
   "description": "HR Collaborative team manager for Non-profit Associations",
   "main": "index.js",
   "scripts": {

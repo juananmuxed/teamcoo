@@ -193,7 +193,33 @@ const getters = {
 
     getNestedSecretWorkgroups: (state) => {
         return treeBuild(state.secretWorkgroups);
-    }
+    },
+
+    isAccessibleVolunteer: (state, getters, rootState) => (userId) => {
+        const wMember = state.workgroups.filter(w => w.members.some(member => member._id == userId)).map(w => w._id)
+        const wMemberLoginUser = state.workgroups.filter(w => w.members.some(member => member._id == rootState.user.loginUser._id)).map(w => w._id)
+        const wCoordinator = state.workgroups.filter(w => w.coordinators.some(coor => coor._id == rootState.user.loginUser._id)).map(w => w._id);
+        const intersectionMemberCoordinator = wMember.filter(w => wCoordinator.includes(w))
+        const intersectionMemberMember = wMember.filter(w => wMemberLoginUser.includes(w))
+        return intersectionMemberCoordinator.length > 0 ||
+            intersectionMemberMember.length > 0 ||
+            rootState.user.loginUser.rol.value == 'admin' ||
+            userId == rootState.user.loginUser._id;
+    },
+
+    isWorkgroupPermit: (state, getters, rootState) => (workgroupId) => {
+        const workgroup = state.workgroupsByUser.find(w => w._id == workgroupId)
+        const areYouCoordinator = workgroup.coordinators.some(c => c._id == rootState.user.loginUser._id) || workgroup.creator._id == rootState.user.loginUser._id
+        return areYouCoordinator || rootState.user.loginUser.rol.value == 'admin';
+    },
+
+    isAccessibleUser: (state, getters, rootState) => (workgroup) => {
+        const areYouCreator = workgroup.creator._id == rootState.user.loginUser._id;
+        const areYouCoordinator = workgroup.coordinators.some(c => c._id == rootState.user.loginUser._id);
+        const areYouMember = workgroup.members.some(m => m._id == rootState.user.loginUser._id);
+        const areYouAdminDirector = rootState.user.loginUser.rol.value == 'admin' || rootState.user.loginUser.rol.value == 'dire';
+        return areYouCoordinator || areYouAdminDirector || areYouMember || areYouCreator;
+    },
 }
 
 const actions = {

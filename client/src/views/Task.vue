@@ -13,7 +13,7 @@
           <v-card
             class="mx-auto"
             max-width="1080"
-            v-if="task._id"
+            v-if="task._id && isAccessibleUser(task)"
             :disabled="task.deleted"
           >
             <v-tooltip bottom transition="scroll-y-transition">
@@ -383,6 +383,9 @@ export default {
     },
     outdated(date) {
       return outdated(date);
+    },
+    isAccessibleUser(task) {
+      return this.$store.getters["tasks/isAccessibleUser"](task);
     },
   },
   created() {

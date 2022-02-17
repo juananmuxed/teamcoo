@@ -156,8 +156,7 @@ exports.getAllUsersPaged = async (req, res) => {
                 path: 'interests',
                 match: { deleted: false }
             });
-        const count = await User.countDocuments({ deleted: false });
-        res.json({ items: usersDB, totalItems: count });
+        res.json({ items: usersDB, totalItems: usersDB.length });
     } catch (error) {
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
