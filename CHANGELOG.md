@@ -17,9 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Loading before all colors and images load
 - Tables server sided
 - New Limit property to tasks
-- Added a filter to a users searcher by Workgroups
-- Added a conditional to the filters (if no selected, no One/All option chip)
-- Added one-to-one email send for admin/coordinator roles
+- Filter to a users searcher by Workgroups
+- Conditional to the filters (if no selected, no One/All option chip)
+- One-to-one email send for admin/coordinator roles
+- Users can be volunteer accepting a form
 
 ### Changed
 

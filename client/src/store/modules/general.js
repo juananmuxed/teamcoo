@@ -61,8 +61,9 @@ const state = {
                 return false || 'Passwords must match'
             }
         },
-        acceptchecks: v => !!v || 'Check the policy.',
-        acceptterms: v => !!v || 'Check the terms.',
+        acceptChecks: v => !!v || 'Check the policy.',
+        acceptTerms: v => !!v || 'Check the terms.',
+        acceptVolunteer: v => !!v || 'You need to check this.',
         delete: v => {
             if (v != 'DELETE') {
                 return false || 'DELETE'

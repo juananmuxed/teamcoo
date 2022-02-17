@@ -137,6 +137,14 @@ const getters = {
         return state.tasksForm.task.suscribers.length > state.tasksForm.task.limit
     },
 
+    isTaskPermit: (state, getters, rootState) => (taskId) => {
+        const task = state.tasksByUser.find(t => t._id == taskId)
+        const areYouMember = task.suscribers.some(s => s._id == rootState.user.loginUser._id) || task.creator._id == rootState.user.loginUser._id
+        const areJustInSecretWorkgroups = task.workgroups.filter(w => w.secret).length == task.workgroups.length;
+        const areYouAdmin = rootState.user.loginUser.rol.value == 'admin';
+        return areYouMember || areYouAdmin || !areJustInSecretWorkgroups;
+    },
+
     isAccessibleUser: (state, getters, rootState) => (task) => {
         const areYouCreator = task.creator._id == rootState.user.loginUser._id;
         const areYouAdminDirector = rootState.user.loginUser.rol.value == 'admin' || rootState.user.loginUser.rol.value == 'dire';
