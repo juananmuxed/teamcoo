@@ -249,7 +249,7 @@ export default {
           text: "Interests",
           value: "interests",
           sortable: false,
-          width: 400,
+          width: 600,
         },
         {
           text: "Registration date",

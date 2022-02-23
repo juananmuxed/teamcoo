@@ -166,6 +166,7 @@ exports.getAllTasksPaged = async (req, res) => {
         }
         res.json({ items: filteredStatus, totalItems: filteredStatus.length });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'An error has occurred', error: error });
     }
 }
