@@ -9,7 +9,7 @@ exports.createUser = async (req, res) => {
         let isUser = await User.find({ email: req.body.email });
         if (isUser.length >= 1) {
             return res.status(409).json({
-                message: "E-mail already in use"
+                message: "E-mail already in use. It means your account is already in the system. Click on 'Login' below and make/recover your password if necessary."
             });
         }
 
@@ -23,8 +23,13 @@ exports.createUser = async (req, res) => {
         if (!tokenModel) {
             return res.status(500).json({ message: 'Not asigned token', error })
         }
+        const userDB = await User.findById(user._id)
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            })
         await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
-        res.status(201).json({ user, token });
+        res.status(201).json({ user: userDB, token });
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }
@@ -51,8 +56,13 @@ exports.loginUser = async (req, res) => {
         if (!tokenModel) {
             return res.status(500).json({ message: 'Not asigned token', error })
         }
+        const userDB = await User.findById(user._id)
+            .populate({
+                path: 'interests',
+                match: { deleted: false }
+            })
         await User.findByIdAndUpdate(user._id, { $push: { tokens: tokenModel._id } });
-        res.status(201).json({ user, token })
+        res.status(201).json({ user: userDB, token })
     } catch (error) {
         res.status(400).json({ message: 'An error has ocurred', error: error });
     }

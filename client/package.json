@@ -1,6 +1,6 @@
 {
   "name": "teamcoo",
-  "version": "0.24.0",
+  "version": "0.24.1",
   "description": "HR Collaborative team manager for Non-profit Associations",
   "private": true,
   "scripts": {

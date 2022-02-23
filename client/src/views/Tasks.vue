@@ -346,7 +346,7 @@ export default {
           sortable: false,
           width: 300,
         },
-        { text: "Interests", value: "interests", sortable: false, width: 200 },
+        { text: "Interests", value: "interests", sortable: false, width: 600 },
         { text: "Creator", value: "creator", sortable: false },
         { text: "Color", value: "color", sortable: false },
         { text: "", value: "actions", sortable: false, width: 80 },
