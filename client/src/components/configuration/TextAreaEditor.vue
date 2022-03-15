@@ -328,37 +328,10 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Dropcursor from "@tiptap/extension-dropcursor";
-import Heading from "@tiptap/extension-heading";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import Image from "@tiptap/extension-image";
 import { mapActions, mapMutations } from "vuex";
 
-const mapHeaders = {
-  1: {
-    class: "display-4",
-  },
-  2: {
-    class: "display-3",
-  },
-  3: {
-    class: "display-2",
-  },
-  4: {
-    class: "display-1",
-  },
-  5: {
-    class: "headline",
-  },
-  6: {
-    class: "title",
-  },
-};
-
-const CustomHeading = Heading.extend({
-  renderHTML(data) {
-    return ["div", { class: mapHeaders[data.node.attrs.level].class }, 0];
-  },
-});
 const CustomDivider = HorizontalRule.extend({
   renderHTML() {
     return ["hr", { class: "v-divider theme--light", role: "separator" }, 0];
@@ -438,7 +411,6 @@ export default {
         }),
         Image,
         Dropcursor,
-        CustomHeading,
         CustomDivider,
       ],
       onUpdate: () => {

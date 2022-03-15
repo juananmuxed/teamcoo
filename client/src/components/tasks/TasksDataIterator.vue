@@ -35,7 +35,7 @@
           </v-tooltip>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row class="mb-1">
         <v-col cols="12" md="3">
           <v-btn
             depressed
@@ -85,15 +85,15 @@
               <v-col cols="2">
                 <v-icon>fas fa-search</v-icon>
               </v-col>
-              <v-col cols="10" class="text--secondary">
+              <v-col cols="9">
                 <v-fade-transition leave-absolute>
                   <span v-if="open"
                     >Search by name, description, interests, workgroups,
                     suscriber and creator</span
                   >
-                  <v-row v-else>
+                  <v-row v-else no-gutters>
                     <v-chip
-                      class="mx-1"
+                      class="mx-1 "
                       v-if="search.name"
                       v-text="'Text: ' + search.name"
                       color="primary"

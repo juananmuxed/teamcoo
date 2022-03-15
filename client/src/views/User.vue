@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-10">
+  <v-container class="pa-12">
     <v-row>
       <v-col cols="12">
         <v-skeleton-loader

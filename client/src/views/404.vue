@@ -1,6 +1,6 @@
 <template>
     <v-container
-        class="pa-10"
+        class="pa-12"
         fluid
     >
     

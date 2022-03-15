@@ -1,6 +1,6 @@
 <template>
-  <v-container class="pa-10">
-    <v-row>
+  <v-container class="pa-12">
+    <v-row no-gutters>
       <v-col cols="12">
         <v-skeleton-loader
           type="skeleton"
@@ -162,14 +162,14 @@
               <v-dialog v-model="dialogs.editmembers" max-width="650">
                 <edit-members></edit-members>
               </v-dialog>
-              <v-row>
+              <v-row no-gutters>
                 <v-col cols="12" class="mb-4">
                   <span class="font-italic">
                     {{ workgroup.description }}
                   </span>
                 </v-col>
               </v-row>
-              <v-row>
+              <v-row no-gutters>
                 <v-col cols="12" md="6" v-if="workgroup.dossier != null"
                   ><v-btn
                     color="info"
@@ -198,14 +198,14 @@
                   >Children workgroups</v-toolbar-title
                 >
               </v-toolbar>
-              <v-row>
+              <v-row no-gutters>
                 <v-col v-if="childreWorkgroups.length != 0">
                   <v-data-iterator
                     :items="childreWorkgroups"
                     items-per-page.sync="6"
                   >
                     <template v-slot:default="props">
-                      <v-row>
+                      <v-row no-gutters>
                         <v-col
                           cols="12"
                           md="4"
@@ -285,7 +285,7 @@
                   >Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn
                 >
               </v-toolbar>
-              <v-row
+              <v-row no-gutters
                 v-if="
                   workgroup.coordinators && workgroup.coordinators.length != 0
                 "
@@ -298,7 +298,7 @@
                   ></user-options-menu-component>
                 </v-col>
               </v-row>
-              <v-row v-else>
+              <v-row no-gutters v-else>
                 <v-col class="text-uppercase title font-weight-light">
                   No coordinators for this workgroup
                 </v-col>
@@ -326,7 +326,7 @@
                   >Modify <v-icon right x-small>fas fa-edit</v-icon></v-btn
                 >
               </v-toolbar>
-              <v-row v-if="workgroup.members && workgroup.members.length != 0">
+              <v-row no-gutters v-if="workgroup.members && workgroup.members.length != 0">
                 <v-col cols="12" class="my-1">
                   <user-options-menu-component
                     v-for="(user, index) in workgroup.members"
@@ -335,7 +335,7 @@
                   ></user-options-menu-component>
                 </v-col>
               </v-row>
-              <v-row v-else>
+              <v-row no-gutters v-else>
                 <v-col class="text-uppercase title font-weight-light">
                   No members for this workgroup
                 </v-col>
@@ -346,7 +346,7 @@
                   >Tasks</v-toolbar-title
                 >
               </v-toolbar>
-              <v-row>
+              <v-row no-gutters>
                 <v-col
                   cols="12"
                   class="mb-4"
@@ -357,7 +357,7 @@
                     items-per-page.sync="6"
                   >
                     <template v-slot:default="props">
-                      <v-row>
+                      <v-row no-gutters>
                         <v-col
                           cols="12"
                           md="4"

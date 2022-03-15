@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-10" fluid>
+  <v-container class="pa-12" fluid>
     <alert-messages-component></alert-messages-component>
     <v-row>
       <v-col cols="12" class="display-1 font-weight-thin">

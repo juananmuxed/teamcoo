@@ -128,13 +128,13 @@
                 :key="index + '-' + i"
               >
                 <v-col cols="12" class="py-1">
-                  <v-row>
-                    <v-col cols="12" sm="3" class="py-0">
+                  <v-row no-gutters>
+                    <v-col cols="12" sm="3" class="px-2">
                       <h3 class="headline font-weight-thin">
                         {{ color[0] }}
                       </h3>
                     </v-col>
-                    <v-col cols="4" sm="3" class="py-0">
+                    <v-col cols="4" sm="3" class="px-2">
                       <v-text-field
                         outlined
                         dense
@@ -143,7 +143,7 @@
                         v-model="colors[theme[0]][color[0]]"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="6" sm="4" class="py-0">
+                    <v-col cols="6" sm="4" class="px-2">
                       <v-menu
                         :close-on-content-click="false"
                         :nudge-height="0"
@@ -181,7 +181,7 @@
                         </v-card>
                       </v-menu>
                     </v-col>
-                    <v-col cols="2" class="py-0">
+                    <v-col cols="2" class="px-2">
                       <v-btn
                         :color="colors[theme[0]][color[0]]"
                         block

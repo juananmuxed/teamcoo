@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-10" fluid>
+  <v-container class="pa-12" fluid>
     <v-row v-if="page">
       <v-col>
         <v-skeleton-loader

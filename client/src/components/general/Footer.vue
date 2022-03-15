@@ -1,8 +1,28 @@
 <template>
   <v-footer padless app elevation="10">
-    <v-container fluid class="py-0 px-3">
+    <v-container fluid class="p-3">
       <v-row align="center">
         <v-col cols="4">
+          <v-tooltip
+            v-if="isLogged()"
+            transition="slide-y-reverse-transition"
+            open-delay="100"
+            top
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                icon
+                :to="'/users/' + loginUser._id"
+                class="mx-1"
+                :ripple="false"
+                v-on="on"
+              >
+                <v-icon>fas fa-user</v-icon>
+              </v-btn>
+            </template>
+            <span class="text-right caption font-weight-light">Your account</span>
+          </v-tooltip>
+
           <v-tooltip
             transition="slide-y-reverse-transition"
             open-delay="100"
