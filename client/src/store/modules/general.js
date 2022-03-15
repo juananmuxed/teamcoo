@@ -213,7 +213,7 @@ const getters = {
 }
 
 const actions = {
-    async saveFile({ rootState }, file) {
+    async saveFile({ rootState, dispatch }, file) {
         try {
             let formData = new FormData()
             const config = { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -223,7 +223,7 @@ const actions = {
             let date = destination[destination.length - 4] + '/' + destination[destination.length - 3] + '/' + destination[destination.length - 2] + '/';
             return rootState.urlApi + '/uploads/' + date + resImg.data.file.filename;
         } catch (error) {
-            return error;
+            dispatch('menu/notificationError', error, { root: true });
         }
     },
 
