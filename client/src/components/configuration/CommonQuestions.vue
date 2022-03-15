@@ -69,7 +69,7 @@
         </v-row>
       </v-col>
       <v-col cols="12" md="6">
-        <v-row>
+        <v-row no-gutters>
           <v-col cols="12">
             <p class="headline font-weight-medium text-uppercase primary--text">
               Preview
@@ -119,12 +119,13 @@
               <v-card-subtitle>{{ question.description }}</v-card-subtitle>
               <v-row class="px-5">
                 <v-col cols="6" md="4" class="py-0">
-                  <v-radio-group column>
+                  <v-radio-group>
                     <v-radio
                       v-for="(radio, index) in question.interests"
                       v-bind:key="index"
                       outlined
                       :label="radio.name"
+                      :value="radio._id"
                       color="primary"
                     ></v-radio>
                   </v-radio-group>

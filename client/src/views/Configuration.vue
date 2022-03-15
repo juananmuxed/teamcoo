@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-10" fluid>
+  <v-container class="pa-12" fluid>
     <v-col cols="12" class="mb-3 text-uppercase display-1 font-weight-thin">
       Portal Configuration
     </v-col>

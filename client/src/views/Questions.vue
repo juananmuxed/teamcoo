@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-10" fluid>
+  <v-container class="pa-12" fluid>
     <v-row class="text-center">
       <v-col>
         <p class="display-1 font-weight-thin text-uppercase">Questions</p>
@@ -31,7 +31,7 @@
                           >Search by name, description, answers, type and
                           creator</span
                         >
-                        <v-row v-else>
+                        <v-row v-else no-gutters>
                           <v-chip
                             class="mx-1"
                             v-if="search.name"

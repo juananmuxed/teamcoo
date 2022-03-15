@@ -16,11 +16,7 @@
         transition="slide-x-transition"
       >
         <template v-slot:activator="{ on }">
-          <v-list-item
-            link
-            @click="menu.drawerMini = !menu.drawerMini"
-            v-on="on"
-          >
+          <v-list-item link @click="menu.drawerMini = !menu.drawerMini" v-on="on">
             <v-list-item-icon>
               <v-icon>fas fa-arrow-right</v-icon>
             </v-list-item-icon>
@@ -29,7 +25,7 @@
         <span class="text-right caption font-weight-light">Expand</span>
       </v-tooltip>
 
-      <v-list-item two-line :to="'/users/' + loginUser._id">
+      <v-list-item two-line>
         <v-list-item-avatar v-if="loginUser.image">
           <img :src="loginUser.image" />
         </v-list-item-avatar>
@@ -41,9 +37,9 @@
           <v-list-item-subtitle>{{ loginUser.username }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action link class="hidden-sm-and-down">
-          <v-icon @click="menu.drawerMini = !menu.drawerMini"
-            >fas fa-arrow-left</v-icon
-          >
+          <v-btn icon @click="menu.drawerMini = !menu.drawerMini">
+            <v-icon>fas fa-arrow-left</v-icon>
+          </v-btn>
         </v-list-item-action>
       </v-list-item>
 
@@ -73,9 +69,7 @@
               </v-list-item-content>
             </v-list-item>
           </template>
-          <span class="text-right caption font-weight-light">{{
-            item.name
-          }}</span>
+          <span class="text-right caption font-weight-light">{{ item.name }}</span>
         </v-tooltip>
         <v-divider class="mt-1 mb-1"></v-divider>
         <v-tooltip
@@ -96,9 +90,7 @@
               </v-list-item-content>
             </v-list-item>
           </template>
-          <span class="text-right caption font-weight-light">{{
-            item.name
-          }}</span>
+          <span class="text-right caption font-weight-light">{{ item.name }}</span>
         </v-tooltip>
       </template>
 

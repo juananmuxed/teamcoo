@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-10" fluid>
+  <v-container class="pa-12" fluid>
     <v-row class="text-center">
       <v-col>
         <p class="display-1 font-weight-thin text-uppercase">Users</p>
@@ -30,7 +30,7 @@
                         <span v-if="open"
                           >Search by username, name, role and interests</span
                         >
-                        <v-row v-else>
+                        <v-row v-else no-gutters>
                           <v-chip
                             class="mx-1"
                             v-if="search.name"
