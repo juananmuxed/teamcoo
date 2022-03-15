@@ -1,10 +1,6 @@
 <template>
   <v-card outlined elevation="0">
-    <bubble-menu
-      :tippy-options="{ duration: 100 }"
-      :editor="editor"
-      v-if="editor"
-    >
+    <bubble-menu :tippy-options="{ duration: 100 }" :editor="editor" v-if="editor">
       <v-btn-toggle multiple dark>
         <v-btn
           fab
@@ -44,14 +40,10 @@
         </v-btn>
       </v-btn-toggle>
     </bubble-menu>
-    <floating-menu
-      :tippy-options="{ duration: 100 }"
-      :editor="editor"
-      v-if="editor"
-    >
+    <floating-menu :tippy-options="{ duration: 100 }" :editor="editor" v-if="editor">
       <v-btn-toggle dark>
         <v-btn
-          v-for="(item, index) in 4"
+          v-for="(item, index) in 6"
           :key="index"
           @click="
             editor
@@ -75,7 +67,7 @@
       </v-btn-toggle>
     </floating-menu>
     <v-toolbar elevation="1" dense v-if="editor" class="ma-0 pa-0">
-      <v-btn-toggle multiple borderless>
+      <v-btn-toggle multiple>
         <v-btn
           fab
           small
@@ -112,16 +104,11 @@
         >
           <v-icon>fas fa-strikethrough</v-icon>
         </v-btn>
+        <v-btn fab small text @click="editor.chain().focus().unsetAllMarks().run()">
+          <v-icon>fas fa-remove-format</v-icon>
+        </v-btn>
       </v-btn-toggle>
-      <v-btn
-        fab
-        small
-        text
-        @click="editor.chain().focus().unsetAllMarks().run()"
-      >
-        <v-icon>fas fa-remove-format</v-icon>
-      </v-btn>
-      <v-btn-toggle class="ml-2" borderless>
+      <v-btn-toggle class="ml-2">
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" fab small text>
@@ -132,7 +119,7 @@
             <v-list-item-group>
               <v-list-item
                 active-class="is-active"
-                v-for="(item, index) in 4"
+                v-for="(item, index) in 6"
                 :key="index"
                 @click="
                   editor
@@ -147,18 +134,20 @@
               >
                 <span>Heading {{ index + 1 }}</span>
               </v-list-item>
-              <v-list-item
-                active-class="is-active"
-                @click="editor.chain().focus().setParagraph().run()"
-                :class="{ 'is-active': editor.isActive('paragraph') }"
-              >
-                <span>Paragraph</span>
-              </v-list-item>
             </v-list-item-group>
           </v-list>
         </v-menu>
+        <v-btn
+          fab
+          small
+          text
+          @click="editor.chain().focus().setParagraph().run()"
+          :class="{ 'is-active': editor.isActive('paragraph') }"
+        >
+          <v-icon>fas fa-paragraph</v-icon>
+        </v-btn>
       </v-btn-toggle>
-      <v-btn-toggle class="ml-2" borderless>
+      <v-btn-toggle class="ml-2">
         <v-btn
           fab
           small
@@ -196,7 +185,7 @@
           <v-icon>fas fa-align-justify</v-icon>
         </v-btn>
       </v-btn-toggle>
-      <v-btn-toggle class="ml-2" borderless>
+      <v-btn-toggle class="ml-2">
         <v-btn
           fab
           small
@@ -216,40 +205,99 @@
           <v-icon>fas fa-list-ol</v-icon>
         </v-btn>
       </v-btn-toggle>
-      <v-btn
-        fab
-        small
-        text
-        @click="editor.chain().focus().toggleCodeBlock().run()"
-        :class="{ 'is-active': editor.isActive('codeBlock') }"
-      >
-        <v-icon>fas fa-code</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        small
-        text
-        @click="editor.chain().focus().toggleBlockquote().run()"
-        :class="{ 'is-active': editor.isActive('blockquote') }"
-      >
-        <v-icon>fas fa-quote-right</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        small
-        text
-        @click="editor.chain().focus().setHorizontalRule().run()"
-      >
-        <v-icon>fas fa-grip-lines</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        small
-        text
-        @click="editor.chain().focus().setHardBreak().run()"
-      >
-        <v-icon>fas fa-level-down-alt</v-icon>
-      </v-btn>
+      <v-btn-toggle class="ml-2">
+        <v-btn fab small text @click="editor.chain().focus().setHorizontalRule().run()">
+          <v-icon>fas fa-grip-lines</v-icon>
+        </v-btn>
+        <v-menu
+          offset-y
+          :nudge-width="300"
+          :close-on-content-click="false"
+          v-model="imageMenu"
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn fab small text v-on="on">
+              <v-icon>fas fa-image</v-icon>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>Add image</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+              <v-row no-gutters>
+                <v-col cols="12">
+                  <v-file-input
+                    prepend-icon="fas fa-file-image"
+                    dense
+                    label="Image"
+                    outlined
+                    v-model="imageFile"
+                    clearable
+                    :disabled="uploadingImage"
+                  >
+                    <template v-slot:append>
+                      <v-progress-circular
+                        v-if="uploadingImage"
+                        size="24"
+                        color="primary"
+                        indeterminate
+                      ></v-progress-circular>
+                      <v-icon
+                        v-else
+                        color="primary"
+                        @click="uploadImage"
+                        :disabled="imageFile == null"
+                      >
+                        fas fa-upload
+                      </v-icon>
+                    </template>
+                  </v-file-input>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field dense label="URL" outlined v-model="imageUrl">
+                  </v-text-field>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-btn
+              fab
+              right
+              small
+              top
+              absolute
+              color="primary"
+              @click="addImage(imageUrl)"
+              :disabled="imageUrl == '' || imageUrl == null"
+              class="mt-8"
+            >
+              <v-icon small>fas fa-save</v-icon>
+            </v-btn>
+          </v-card>
+        </v-menu>
+      </v-btn-toggle>
+      <v-btn-toggle class="ml-2" v-model="mode">
+        <v-btn
+          fab
+          small
+          text
+        >
+          <v-icon>fas fa-edit</v-icon>
+        </v-btn>
+        <v-btn
+          fab
+          small
+          text
+        >
+          <v-icon>fas fa-eye</v-icon>
+        </v-btn>
+        <v-btn
+          fab
+          small
+          text
+        >
+          <v-icon>fas fa-code</v-icon>
+        </v-btn>
+      </v-btn-toggle>
       <v-spacer></v-spacer>
       <v-btn fab small text @click="editor.chain().focus().undo().run()">
         <v-icon>fas fa-undo</v-icon>
@@ -259,16 +307,63 @@
       </v-btn>
     </v-toolbar>
     <v-card-text>
-      <editor-content :editor="editor" />
+      <editor-content :editor="editor" v-show="mode === 0" />
+      <v-row  v-show="mode === 1">
+        <v-col>
+          <div v-html="html"></div>
+        </v-col>
+      </v-row>
+      <v-row v-show="mode === 2">
+        <v-col>
+          <v-textarea v-model="html" outlined></v-textarea>
+        </v-col>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
 import { Editor, EditorContent, BubbleMenu, FloatingMenu } from "@tiptap/vue-2";
-import { defaultExtensions } from "@tiptap/starter-kit";
+import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
+import Dropcursor from "@tiptap/extension-dropcursor";
+import Heading from "@tiptap/extension-heading";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
+import Image from "@tiptap/extension-image";
+import { mapActions, mapMutations } from "vuex";
+
+const mapHeaders = {
+  1: {
+    class: "display-4",
+  },
+  2: {
+    class: "display-3",
+  },
+  3: {
+    class: "display-2",
+  },
+  4: {
+    class: "display-1",
+  },
+  5: {
+    class: "headline",
+  },
+  6: {
+    class: "title",
+  },
+};
+
+const CustomHeading = Heading.extend({
+  renderHTML(data) {
+    return ["div", { class: mapHeaders[data.node.attrs.level].class }, 0];
+  },
+});
+const CustomDivider = HorizontalRule.extend({
+  renderHTML() {
+    return ["hr", { class: "v-divider theme--light", role: "separator" }, 0];
+  },
+});
 
 export default {
   components: {
@@ -284,32 +379,73 @@ export default {
   },
   watch: {
     value(value) {
-      // HTML
+      this.html = value;
       const isSame = this.editor.getHTML() === value;
-      // JSON
-      // const isSame = this.editor.getJSON().toString() === value.toString()
       if (isSame) {
         return;
       }
       this.editor.commands.setContent(this.value, false);
     },
+    html(value) {
+      this.editor.commands.setContent(value, false);
+    }
   },
   data() {
     return {
       editor: null,
+      mode: 0,
+      html: '',
+      imageFile: null,
+      imageUrl: null,
+      imageMenu: false,
+      uploadingImage: false,
     };
+  },
+  methods: {
+    ...mapActions("general", ["saveFile"]),
+    ...mapMutations("menu", ["notification"]),
+    addImage(url) {
+      if (url) {
+        this.editor.chain().focus().setImage({ src: url }).run();
+        this.imageMenu = false;
+        this.imageUrl = null;
+      }
+    },
+    async uploadImage() {
+      try {
+        this.uploadingImage = true;
+        const url = await this.saveFile(this.imageFile);
+        if (!url) throw new Error("Error saving");
+        this.imageUrl = url;
+        this.uploadingImage = false;
+        this.imageFile = null;
+        this.notification(["success", 3, "File upload"]);
+      } catch (error) {
+        this.notification(["error", 3, "Error uploading"]);
+      } finally {
+        this.uploadingImage = false;
+      }
+    },
   },
   mounted() {
     this.editor = new Editor({
       content: this.value,
-      extensions: [...defaultExtensions(), Underline, TextAlign],
+      extensions: [
+        StarterKit,
+        Underline,
+        TextAlign.configure({
+          types: ["heading", "paragraph"],
+        }),
+        Image,
+        Dropcursor,
+        CustomHeading,
+        CustomDivider,
+      ],
       onUpdate: () => {
-        // HTML
         this.$emit("input", this.editor.getHTML());
-        // JSON
-        // this.$emit('input', this.editor.getJSON())
       },
     });
+    this.html = this.value;
   },
 
   beforeDestroy() {
@@ -321,5 +457,19 @@ export default {
 <style lang="scss">
 .focus-visible {
   outline: none;
+}
+.ProseMirror {
+  > * + * {
+    margin-top: 0.75em;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+
+    &.ProseMirror-selectednode {
+      outline: 3px solid #3cb673;
+    }
+  }
 }
 </style>
