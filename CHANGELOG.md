@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.24.1]
 
 ### Added
 
@@ -108,7 +109,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Duplicated README in public folder
 
-[unreleased]: https://github.com/juananmuxed/teamcoo/compare/v0.10.0...HEAD
+[unreleased]: https://github.com/juananmuxed/teamcoo/compare/v0.24.1...HEAD
+[0.10.0]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.24.1
 [0.10.0]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.10.0
 [0.9.0]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.9.0
 [0.3-beta]: https://github.com/juananmuxed/teamcoo/releases/tag/v0.3-beta
