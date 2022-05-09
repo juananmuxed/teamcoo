@@ -1,0 +1,26 @@
+name: Deploy new version in Catapa
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Push to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.CATAPA_SERVER_IP }}
+          username: ${{ secrets.CATAPA_SERVER_USERNAME }}
+          password: ${{ secrets.CATAPA_SERVER_PASSWORD }}
+          script: |
+            cd ${{ secrets.CATAPA_PROJECT_PATH }}
+            git pull
+            yes | cp -rf api/uploads/*.png uploads/
+            cd client/
+            npm run build
+            cp example.htaccess dist/.htaccess
+            cd ../
+            docker-compose --env-file ./.env.production up -d --build
